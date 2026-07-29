@@ -99,12 +99,28 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
         for generated_text, status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 128)), int(settings.get("num_steps", 32)), float(settings.get("noise_level", .5)), float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)) + prompt_index, bool(settings.get("permanent_unmask", False)), bool(settings.get("confidence_guided", False)), bool(settings.get("proportional_unmask", True))):
             states.append(generated_text)
         finals.append(states[-1] if states else "")
-        trajectories.append({"step": step, "prompt_index": prompt_index, "prompt": prompt, "states": states, "final": finals[-1]})
+        final_text = finals[-1]
+        trajectories.append({"step": step, "prompt_index": prompt_index, "ngram_repetition": _ngram_repetition(final_text), "prompt": prompt, "final": final_text, "states": states})
+    generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
+    for trajectory in trajectories:
+        # Rebuild the mapping to keep the JSONL field order stable/readable.
+        trajectory["generation_perplexity"] = generation_metrics["generation_perplexity"]
+        ordered = {"step": trajectory["step"], "prompt_index": trajectory["prompt_index"], "ngram_repetition": trajectory["ngram_repetition"], "generation_perplexity": trajectory["generation_perplexity"], "prompt": trajectory["prompt"], "final": trajectory["final"], "states": trajectory["states"]}
+        trajectory.clear(); trajectory.update(ordered)
     generation_path = output / "generation_metrics.jsonl"
     with generation_path.open("a") as stream:
         for trajectory in trajectories:
             stream.write(json.dumps(trajectory, ensure_ascii=False) + "\n")
-    return _base_perplexity(model, tokenizer, finals, initial_norms, device)
+    return generation_metrics
+
+
+def _ngram_repetition(text: str, n: int = 3) -> float:
+    """Return the fraction of n-gram occurrences repeated beyond their first use."""
+    words = text.split()
+    if len(words) < n:
+        return 0.0
+    grams = [tuple(words[i : i + n]) for i in range(len(words) - n + 1)]
+    return float(1.0 - len(set(grams)) / len(grams))
 
 
 @torch.no_grad()

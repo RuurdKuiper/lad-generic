@@ -232,12 +232,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     else:
         raise ValueError(f"Unknown optimizer={optimizer_name}; expected adamw or adamw8bit")
     grad_accumulation = int(config.get("gradient_accumulation_steps", 1))
-    # `max_steps` is defined as optimizer updates, while the dataloader loop
-    # advances once per microbatch. Convert the target to microbatches so
-    # gradient accumulation does not unexpectedly shorten a run.
     configured_steps = config.get("max_steps")
-    max_steps = int(configured_steps) * grad_accumulation if configured_steps else len(train_loader) * int(config.get("epochs", 1))
-    scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_steps)
+    max_updates = int(configured_steps) if configured_steps else (len(train_loader) * int(config.get("epochs", 1)) + grad_accumulation - 1) // grad_accumulation
+    max_steps = max_updates * grad_accumulation
+    scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_updates)
     model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)
     start_step = 0
     if resume := config.get("resume_from_checkpoint"):
@@ -246,10 +244,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         train_loader = accelerator.skip_first_batches(train_loader, start_step * int(config.get("gradient_accumulation_steps", 1)))
     best = float("inf"); metrics_path = output / "metrics.jsonl"
     model.train()
-    progress = tqdm(total=max_steps, initial=start_step, desc="training", unit="microbatch", disable=not accelerator.is_local_main_process)
+    progress = tqdm(total=max_updates, initial=start_step, desc="training", unit="update", disable=not accelerator.is_local_main_process)
     interval_loss_sum = 0.0
     interval_examples = 0
-    for step, batch in enumerate(train_loader, start=start_step + 1):
+    update_step = start_step
+    for microstep, batch in enumerate(train_loader, start=start_step * grad_accumulation + 1):
+        step = microstep
         if step > max_steps: break
         with accelerator.accumulate(model):
             logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
@@ -259,32 +259,36 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         batch_examples = int(info["valid_examples"])
         interval_loss_sum += loss_value * batch_examples
         interval_examples += batch_examples
-        progress.update(1)
-        progress.set_postfix(optimizer_steps=step // grad_accumulation, train_loss=f"{loss_value:.4f}", train_avg=f"{interval_loss_sum / max(interval_examples, 1):.4f}")
+        if accelerator.sync_gradients:
+            update_step += 1
+            progress.update(1)
+            progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{interval_loss_sum / max(interval_examples, 1):.4f}")
+        if not accelerator.sync_gradients:
+            continue
         if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
             _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": int(info["supervised_tokens"])})
-        if step % int(config.get("validation_steps", 100)) == 0 or step == max_steps:
+        if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
             metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"])
             if accelerator.is_main_process:
                 generation_settings = config.get("generation_perplexity", {})
                 if generation_settings.get("enabled", False):
                     unwrapped = accelerator.unwrap_model(model)
                     metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, step))
-                metrics.update({"split": "validation", "step": step}); _append_jsonl(metrics_path, metrics)
+                metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
                 generation_note = f" | generation_ppl={metrics['generation_perplexity']:.4f}" if "generation_perplexity" in metrics else ""
                 train_avg = interval_loss_sum / max(interval_examples, 1)
-                progress.write(f"step {step}/{max_steps} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
+                progress.write(f"step {update_step}/{max_updates} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
                 if accelerator.is_main_process:
-                    _append_jsonl(metrics_path, {"split": "train_interval", "step": step, "weighted_loss": train_avg, "examples": interval_examples})
+                    _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step, "weighted_loss": train_avg, "examples": interval_examples})
                 interval_loss_sum = 0.0
                 interval_examples = 0
                 if metrics["weighted_loss"] < best:
                     best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
             accelerator.wait_for_everyone()
             model.train()
-        if checkpoint_mode == "every_checkpoint" and (step % int(config.get("checkpoint_steps", 500)) == 0 or step == max_steps):
-            checkpoint = output / f"checkpoint-{step}"; accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
-            if accelerator.is_main_process: _write_json(checkpoint / "state.json", {"step": step, "best_validation_loss": best})
+        if checkpoint_mode == "every_checkpoint" and (update_step % int(config.get("checkpoint_steps", 500)) == 0 or update_step == max_updates):
+            checkpoint = output / f"checkpoint-{update_step}"; accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
+            if accelerator.is_main_process: _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
     progress.close()
     accelerator.wait_for_everyone()
     if accelerator.is_main_process and checkpoint_mode == "every_checkpoint":

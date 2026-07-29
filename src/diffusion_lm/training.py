@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 import atexit
+import hashlib
 from pathlib import Path
 from typing import Any
 
@@ -174,8 +175,14 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             return raw[spec]
         # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
         return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
+    prep_key = hashlib.sha256(json.dumps({"dataset": config["dataset_name"], "config": config.get("dataset_config"), "tokenizer": token_name, "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True))}, sort_keys=True).encode()).hexdigest()[:16]
+    prep_root = Path(config.get("prepared_data_cache_dir", "data/prepared")) / prep_key
     with accelerator.main_process_first():
-        train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
+        if config["corruption_mode"] == "structured" and (prep_root / "train").is_dir():
+            from datasets import load_from_disk
+            train_data, val_data, test_data = (load_from_disk(str(prep_root / split)) for split in ("train", "validation", "test"))
+        else:
+            train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
     if config["corruption_mode"] == "structured":
         model_name = token_name.lower()
         if not any(name in model_name for name in ("llama", "meta-llama")):
@@ -189,6 +196,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                 if key == "train": train_data = dataset
                 elif key == "validation": val_data = dataset
                 else: test_data = dataset
+            prep_root.mkdir(parents=True, exist_ok=True)
+            train_data.save_to_disk(str(prep_root / "train"))
+            val_data.save_to_disk(str(prep_root / "validation"))
+            test_data.save_to_disk(str(prep_root / "test"))
     validation_limit = config.get("validation_samples", 200)
     if validation_limit is not None:
         validation_limit = min(int(validation_limit), len(val_data))

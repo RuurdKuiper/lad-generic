@@ -231,7 +231,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         optimizer = AdamW(trainable_parameters, lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
     else:
         raise ValueError(f"Unknown optimizer={optimizer_name}; expected adamw or adamw8bit")
-    max_steps = int(config.get("max_steps") or (len(train_loader) * int(config.get("epochs", 1))))
+    grad_accumulation = int(config.get("gradient_accumulation_steps", 1))
+    # `max_steps` is defined as optimizer updates, while the dataloader loop
+    # advances once per microbatch. Convert the target to microbatches so
+    # gradient accumulation does not unexpectedly shorten a run.
+    configured_steps = config.get("max_steps")
+    max_steps = int(configured_steps) * grad_accumulation if configured_steps else len(train_loader) * int(config.get("epochs", 1))
     scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_steps)
     model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)
     start_step = 0

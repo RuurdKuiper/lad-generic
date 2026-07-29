@@ -219,7 +219,18 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     initial_norms = _normalization_state(model)
     resolved = dict(config); resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
-    optimizer = AdamW((p for p in model.parameters() if p.requires_grad), lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
+    trainable_parameters = (p for p in model.parameters() if p.requires_grad)
+    optimizer_name = str(config.get("optimizer", "adamw")).lower()
+    if optimizer_name in {"adamw8bit", "8bit_adamw", "paged_adamw8bit"}:
+        try:
+            import bitsandbytes as bnb
+        except ImportError as exc:
+            raise ImportError("optimizer=adamw8bit requires bitsandbytes; install it on CUDA Linux with `pip install bitsandbytes`") from exc
+        optimizer = bnb.optim.AdamW8bit(trainable_parameters, lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
+    elif optimizer_name == "adamw":
+        optimizer = AdamW(trainable_parameters, lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
+    else:
+        raise ValueError(f"Unknown optimizer={optimizer_name}; expected adamw or adamw8bit")
     max_steps = int(config.get("max_steps") or (len(train_loader) * int(config.get("epochs", 1))))
     scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_steps)
     model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)

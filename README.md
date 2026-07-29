@@ -15,6 +15,15 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
+On NVIDIA CUDA/Linux, install the optional 8-bit optimizer support as well:
+
+```bash
+python -m pip install -e '.[cuda]'
+```
+
+This extra is intentionally optional because `bitsandbytes` is not generally
+supported on macOS/MPS. Select it with `optimizer: adamw8bit` in the config.
+
 For gated Hugging Face models, put your token in a local `.env` file (do not commit it):
 
 ```dotenv

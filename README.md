@@ -69,6 +69,17 @@ For an exact interruption resume, set `checkpoint_mode: every_checkpoint` and us
 
 ## Interactive inference
 
+Generation parameters can be tuned with open-ended prompts using:
+
+```bash
+python optimize_generation.py --config configs/generation_search.yaml
+```
+
+The search varies the configured grid, generates each prompt repeatedly, and
+reports autoregressive perplexity plus repeated 3-gram fraction (decoded EOS
+tokens are not included). Results and the best parameter set are written to
+`outputs/generation_search.json`.
+
 After a validation step has created `outputs/<run>/best/`, launch the local Gradio app:
 
 ```bash

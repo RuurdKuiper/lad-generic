@@ -1,0 +1,19 @@
+model: llama-3.2-1b-structured/best
+outputs_dir: outputs
+device: auto
+num_prompts: 10
+repetitions: 5
+repetition_weight: 10.0
+generation:
+  max_new_tokens: 128
+  num_steps: 32
+  noise_level: 1.0
+  temperature: 0.7
+  top_k: 20
+  proportional_unmask: true
+search:
+  temperature: [0.1, 0.5, 1.0]
+  top_k: [3, 10, 100]
+  num_steps: [32]
+  noise_level: [0.1, 0.5, 1.0]
+output: outputs/generation_search.json

@@ -246,7 +246,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         train_loader = accelerator.skip_first_batches(train_loader, start_step * int(config.get("gradient_accumulation_steps", 1)))
     best = float("inf"); metrics_path = output / "metrics.jsonl"
     model.train()
-    progress = tqdm(total=max_steps, initial=start_step, desc="training", unit="batch", disable=not accelerator.is_local_main_process)
+    progress = tqdm(total=max_steps, initial=start_step, desc="training", unit="microbatch", disable=not accelerator.is_local_main_process)
     interval_loss_sum = 0.0
     interval_examples = 0
     for step, batch in enumerate(train_loader, start=start_step + 1):
@@ -260,7 +260,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         interval_loss_sum += loss_value * batch_examples
         interval_examples += batch_examples
         progress.update(1)
-        progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{interval_loss_sum / max(interval_examples, 1):.4f}")
+        progress.set_postfix(optimizer_steps=step // grad_accumulation, train_loss=f"{loss_value:.4f}", train_avg=f"{interval_loss_sum / max(interval_examples, 1):.4f}")
         if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
             _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": int(info["supervised_tokens"])})
         if step % int(config.get("validation_steps", 100)) == 0 or step == max_steps:

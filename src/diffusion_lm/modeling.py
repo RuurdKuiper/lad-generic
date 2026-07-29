@@ -6,7 +6,7 @@ from typing import Any
 import torch
 import os
 from pathlib import Path
-from peft import LoraConfig, PeftModel, TaskType, get_peft_model
+from peft import LoraConfig, PeftModel, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import AutoModelForCausalLM
 
 
@@ -64,8 +64,24 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
         raise ValueError(f"Unknown precision {precision}")
     # No device_map: accelerate owns device placement in distributed runs.
     model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
-    model = AutoModelForCausalLM.from_pretrained(checkpoint, dtype=dtype, trust_remote_code=False, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache))
+    quantization = str(config.get("quantization", "none")).lower()
+    load_kwargs = dict(dtype=dtype, trust_remote_code=False, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache))
+    if quantization in {"4bit", "4-bit", "qlora"}:
+        try:
+            from transformers import BitsAndBytesConfig
+            import bitsandbytes  # noqa: F401
+        except ImportError as exc:
+            raise ImportError("quantization=4bit requires CUDA bitsandbytes; install with `pip install -e '.[cuda]'`") from exc
+        if not torch.cuda.is_available():
+            raise RuntimeError("4-bit bitsandbytes quantization requires an NVIDIA CUDA device")
+        compute_dtype = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}.get(str(config.get("compute_dtype", precision)), dtype)
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type=str(config.get("quantization_type", "nf4")), bnb_4bit_compute_dtype=compute_dtype, bnb_4bit_use_double_quant=bool(config.get("double_quant", True)))
+    elif quantization not in {"none", "off", "false"}:
+        raise ValueError("quantization must be 'none' or '4bit'")
+    model = AutoModelForCausalLM.from_pretrained(checkpoint, **load_kwargs)
     model.config.use_cache = False
+    if quantization in {"4bit", "4-bit", "qlora"}:
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=bool(config.get("gradient_checkpointing", False)))
     for parameter in model.parameters():
         parameter.requires_grad = False
     targets = _target_modules(model, list(config.get("lora_targets", ["q_proj", "v_proj", "o_proj"])))

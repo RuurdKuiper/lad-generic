@@ -193,8 +193,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     if validation_limit is not None:
         validation_limit = min(int(validation_limit), len(val_data))
         val_data = val_data.select(range(validation_limit))
-    common = dict(tokenizer=tokenizer, corruption_mode=config["corruption_mode"], max_sequence_length=int(config["max_sequence_length"]), include_answer_eos=bool(config.get("include_answer_eos", True)), pad_to_multiple_of=config.get("pad_to_multiple_of"), structured_loss_behavior=config.get("structured_loss_behavior", "all_answer_tokens"), seed=seed, t_min=float(config.get("t_min", .1)))
+    common = dict(tokenizer=tokenizer, corruption_mode=config["corruption_mode"], max_sequence_length=int(config["max_sequence_length"]), include_answer_eos=bool(config.get("include_answer_eos", True)), pad_to_multiple_of=config.get("pad_to_multiple_of"), structured_loss_behavior=config.get("structured_loss_behavior", "all_answer_tokens"), seed=seed, t_min=float(config.get("t_min", .1)), multi_turn_prob=float(config.get("multi_turn_prob", 0.0)), max_history_turns=int(config.get("max_history_turns", 2)))
     train_collator = DenoisingCollator(**common, deterministic=False)
+    # Keep validation single-turn by default; multi-turn can be enabled
+    # explicitly when comparing models on conversational context.
     eval_collator = DenoisingCollator(**common, deterministic=True)
     train_loader = _loader(train_data.shuffle(seed=seed), train_collator, int(config["batch_size"]), True, seed, int(config.get("num_workers", 0)))
     val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))

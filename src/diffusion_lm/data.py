@@ -132,6 +132,8 @@ class DenoisingCollator:
     seed: int = 0
     deterministic: bool = False
     t_min: float = 0.1
+    multi_turn_prob: float = 0.0
+    max_history_turns: int = 2
 
     def __post_init__(self) -> None:
         """Validate collator configuration and cache this tokenizer's MASK token."""
@@ -177,6 +179,28 @@ class DenoisingCollator:
         prepared = [x for feature in features if (x := self._prepare(feature)) is not None]
         if not prepared:
             raise ValueError("Batch has no usable examples")
+        # Optionally prepend complete prior examples as context.  Historical
+        # answers are visible but never supervised; only the current target
+        # example retains its answer mask.
+        if self.multi_turn_prob > 0 and len(prepared) > 1:
+            import random
+            rng = random.Random(self.seed + (0 if self.deterministic else torch.initial_seed()))
+            for index, target in enumerate(prepared):
+                if rng.random() >= self.multi_turn_prob:
+                    continue
+                candidates = [i for i in range(len(prepared)) if i != index]
+                count = rng.randint(1, min(self.max_history_turns, len(candidates)))
+                for history_index in rng.sample(candidates, count):
+                    history = prepared[history_index]
+                    target["input_ids"] = list(history["labels"]) + target["input_ids"]
+                    target["labels"] = list(history["labels"]) + target["labels"]
+                    target["answer_mask"] = [False] * len(history["labels"]) + target["answer_mask"]
+                    target["padding_mask"] = [False] * len(history["labels"]) + target["padding_mask"]
+                if len(target["labels"]) > self.max_sequence_length:
+                    # Preserve the target turn and trim oldest history first.
+                    excess = len(target["labels"]) - self.max_sequence_length
+                    for key in ("input_ids", "labels", "answer_mask", "padding_mask"):
+                        target[key] = target[key][excess:]
         max_len = max(len(x["labels"]) for x in prepared)
         if self.pad_to_multiple_of:
             m = self.pad_to_multiple_of

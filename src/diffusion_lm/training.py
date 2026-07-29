@@ -155,7 +155,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     from datasets import load_dataset
     cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
     hf_token = os.getenv("HF_TOKEN")
-    raw = load_dataset(config["dataset_name"], config.get("dataset_config"), cache_dir=str(cache_dir), token=hf_token)
+    # Serialize the initial dataset download/cache population so distributed
+    # workers do not all perform the expensive preparation concurrently.
+    with accelerator.main_process_first():
+        raw = load_dataset(config["dataset_name"], config.get("dataset_config"), cache_dir=str(cache_dir), token=hf_token)
     split_names = config.get("splits", {"train": "train", "validation": "validation", "test": "test"})
     token_name = config.get("tokenizer_name_or_path", config["model_name_or_path"])
     model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
@@ -171,19 +174,21 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             return raw[spec]
         # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
         return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
-    train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
+    with accelerator.main_process_first():
+        train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
     if config["corruption_mode"] == "structured":
         model_name = token_name.lower()
         if not any(name in model_name for name in ("llama", "meta-llama")):
             raise ValueError("structured mode is supported only for Llama-tokenized data; use mask_only for Qwen/Gemma")
         marker_dropped = {}
-        for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
-            before = len(dataset)
-            dataset = dataset.filter(lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))))
-            marker_dropped[key] = before - len(dataset)
-            if key == "train": train_data = dataset
-            elif key == "validation": val_data = dataset
-            else: test_data = dataset
+        with accelerator.main_process_first():
+            for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
+                before = len(dataset)
+                dataset = dataset.filter(lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))))
+                marker_dropped[key] = before - len(dataset)
+                if key == "train": train_data = dataset
+                elif key == "validation": val_data = dataset
+                else: test_data = dataset
     validation_limit = config.get("validation_samples", 200)
     if validation_limit is not None:
         validation_limit = min(int(validation_limit), len(val_data))

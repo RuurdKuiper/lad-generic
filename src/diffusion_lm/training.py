@@ -100,12 +100,12 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
             states.append(generated_text)
         finals.append(states[-1] if states else "")
         final_text = finals[-1]
-        trajectories.append({"step": step, "prompt_index": prompt_index, "ngram_repetition": _ngram_repetition(final_text), "prompt": prompt, "final": final_text, "states": states})
+        trajectories.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, 1), "bigram_repetition": _ngram_repetition(final_text, 2), "trigram_repetition": _ngram_repetition(final_text, 3), "prompt": prompt, "final": final_text, "states": states})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     for trajectory in trajectories:
         # Rebuild the mapping to keep the JSONL field order stable/readable.
         trajectory["generation_perplexity"] = generation_metrics["generation_perplexity"]
-        ordered = {"step": trajectory["step"], "prompt_index": trajectory["prompt_index"], "ngram_repetition": trajectory["ngram_repetition"], "generation_perplexity": trajectory["generation_perplexity"], "prompt": trajectory["prompt"], "final": trajectory["final"], "states": trajectory["states"]}
+        ordered = {"step": trajectory["step"], "prompt_index": trajectory["prompt_index"], "unigram_repetition": trajectory["unigram_repetition"], "bigram_repetition": trajectory["bigram_repetition"], "trigram_repetition": trajectory["trigram_repetition"], "generation_perplexity": trajectory["generation_perplexity"], "prompt": trajectory["prompt"], "final": trajectory["final"], "states": trajectory["states"]}
         trajectory.clear(); trajectory.update(ordered)
     generation_path = output / "generation_metrics.jsonl"
     with generation_path.open("a") as stream:

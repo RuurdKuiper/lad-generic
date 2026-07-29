@@ -22,8 +22,8 @@ DEFAULT_PROMPTS = [
 ]
 
 
-def _repetition(text: str, n: int = 3) -> float:
-    """Calculate repeated n-gram fraction while ignoring special tokens."""
+def _repetition(text: str, n: int) -> float:
+    """Calculate repeated n-gram fraction over decoded text."""
     words = text.split()
     grams = [tuple(words[i:i + n]) for i in range(max(0, len(words) - n + 1))]
     return 0.0 if not grams else 1.0 - len(set(grams)) / len(grams)
@@ -76,9 +76,13 @@ def main() -> None:
                 for final, _status, _html in denoise_stream(session, prompt, candidate.get("system_prompt", "You are a helpful assistant."), int(candidate.get("max_new_tokens", 256)), int(candidate.get("num_steps", 32)), float(candidate.get("noise_level", 1.0)), float(candidate.get("temperature", .7)), int(candidate.get("top_k", 20)), int(candidate.get("seed", 1234)) + repeat * 10000 + index, bool(candidate.get("permanent_unmask", False)), bool(candidate.get("confidence_guided", False)), bool(candidate.get("proportional_unmask", True))): pass
                 texts.append(final)
                 print(f"  sample {len(texts)}/{len(prompts) * int(config.get('repetitions', 5))} | prompt={prompt}\n  output={final}\n", flush=True)
-        ppl = _perplexity(session, texts); repetition = sum(_repetition(t) for t in texts) / max(len(texts), 1)
+        ppl = _perplexity(session, texts)
+        unigram = sum(_repetition(t, 1) for t in texts) / max(len(texts), 1)
+        bigram = sum(_repetition(t, 2) for t in texts) / max(len(texts), 1)
+        trigram = sum(_repetition(t, 3) for t in texts) / max(len(texts), 1)
+        repetition = (unigram + bigram + trigram) / 3.0
         score = ppl + float(config.get("repetition_weight", 10.0)) * repetition
-        results.append({"parameters": candidate, "perplexity": ppl, "ngram_repetition": repetition, "score": score})
+        results.append({"parameters": candidate, "perplexity": ppl, "unigram_repetition": unigram, "bigram_repetition": bigram, "trigram_repetition": trigram, "ngram_repetition": repetition, "score": score})
         print(json.dumps(results[-1], ensure_ascii=False), flush=True)
     results.sort(key=lambda x: x["score"]); output = Path(config.get("output", "outputs/generation_search.json")); output.parent.mkdir(parents=True, exist_ok=True); output.write_text(json.dumps({"best": results[0], "results": results}, indent=2, ensure_ascii=False))
 

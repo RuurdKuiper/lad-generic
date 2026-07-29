@@ -185,6 +185,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             prepared_cache_loaded = True
         else:
             train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
+    marker_dropped = {}
     if config["corruption_mode"] == "structured" and not prepared_cache_loaded:
         model_name = token_name.lower()
         if not any(name in model_name for name in ("llama", "meta-llama")):

@@ -44,5 +44,5 @@ logging_steps: 10
 validation_steps: 20
 checkpoint_steps: 20
 checkpoint_mode: only_best_model
-resume_from_adapter: outputs/llama-3.2-1b-structured/best
+# resume_from_adapter: outputs/llama-3.2-1b-structured/best
 num_workers: 4

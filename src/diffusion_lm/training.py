@@ -1,6 +1,7 @@
 """Accelerate training/evaluation with reproducible denoising validation."""
 from __future__ import annotations
 import json
+import atexit
 from pathlib import Path
 from typing import Any
 
@@ -139,6 +140,14 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     """Execute model setup, training, validation, selection, and final testing."""
     output = Path(config["output_dir"]); output.mkdir(parents=True, exist_ok=True)
     accelerator = Accelerator(gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)), mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"])
+    # Ensure NCCL process groups are released when a worker is interrupted
+    # (for example with Ctrl-C or a scheduler pre-emption signal).
+    def _cleanup_process_group() -> None:
+        """Destroy the distributed process group during interpreter shutdown."""
+        import torch.distributed as dist
+        if dist.is_available() and dist.is_initialized():
+            dist.destroy_process_group()
+    atexit.register(_cleanup_process_group)
     checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
     if checkpoint_mode not in {"only_best_model", "every_checkpoint"}:
         raise ValueError("checkpoint_mode must be 'only_best_model' or 'every_checkpoint'")
@@ -201,6 +210,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     best = float("inf"); metrics_path = output / "metrics.jsonl"
     model.train()
     progress = tqdm(total=max_steps, initial=start_step, desc="training", unit="batch", disable=not accelerator.is_local_main_process)
+    interval_loss_sum = 0.0
+    interval_examples = 0
     for step, batch in enumerate(train_loader, start=start_step + 1):
         if step > max_steps: break
         with accelerator.accumulate(model):
@@ -208,8 +219,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             loss, info = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], batch["sampled_t"] if config["corruption_mode"] == "mask_only" else None)
             accelerator.backward(loss); optimizer.step(); scheduler.step(); optimizer.zero_grad()
         loss_value = float(loss.detach().cpu())
+        batch_examples = int(info["valid_examples"])
+        interval_loss_sum += loss_value * batch_examples
+        interval_examples += batch_examples
         progress.update(1)
-        progress.set_postfix(train_loss=f"{loss_value:.4f}")
+        progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{interval_loss_sum / max(interval_examples, 1):.4f}")
         if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
             _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": int(info["supervised_tokens"])})
         if step % int(config.get("validation_steps", 100)) == 0 or step == max_steps:
@@ -221,7 +235,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, step))
                 metrics.update({"split": "validation", "step": step}); _append_jsonl(metrics_path, metrics)
                 generation_note = f" | generation_ppl={metrics['generation_perplexity']:.4f}" if "generation_perplexity" in metrics else ""
-                progress.write(f"step {step}/{max_steps} | train_loss={loss_value:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
+                train_avg = interval_loss_sum / max(interval_examples, 1)
+                progress.write(f"step {step}/{max_steps} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
+                if accelerator.is_main_process:
+                    _append_jsonl(metrics_path, {"split": "train_interval", "step": step, "weighted_loss": train_avg, "examples": interval_examples})
+                interval_loss_sum = 0.0
+                interval_examples = 0
                 if metrics["weighted_loss"] < best:
                     best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
             accelerator.wait_for_everyone()
@@ -236,4 +255,5 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     # Test is deliberately after best-model selection/finalization.
     test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"])
     if accelerator.is_main_process: _write_json(output / "test_metrics.json", test_metrics)
+    accelerator.end_training()
     return test_metrics

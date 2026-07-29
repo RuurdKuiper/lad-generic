@@ -1,0 +1,239 @@
+"""Accelerate training/evaluation with reproducible denoising validation."""
+from __future__ import annotations
+import json
+from pathlib import Path
+from typing import Any
+
+import torch
+from tqdm.auto import tqdm
+from accelerate import Accelerator
+from torch.optim import AdamW
+from torch.utils.data import DataLoader
+from transformers import AutoTokenizer, get_scheduler
+
+from .data import DenoisingCollator, llama_stored_ids_compatible, stored_example_usable
+from .loss import masked_denoising_loss
+from .modeling import forward_bidirectional, load_denoising_model
+from .inference import InferenceSession, denoise_stream
+
+
+def _write_json(path: Path, value: Any) -> None:
+    """Write one structured artifact with deterministic formatting."""
+    path.write_text(json.dumps(value, indent=2, sort_keys=True, default=str) + "\n")
+
+
+def _append_jsonl(path: Path, value: Any) -> None:
+    """Append one metrics record to a JSON Lines file."""
+    with path.open("a") as f:
+        f.write(json.dumps(value, default=float) + "\n")
+
+
+def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.Tensor] | None = None) -> None:
+    """Save LoRA plus independently-unfrozen norm parameters for inference."""
+    model.save_pretrained(path, safe_serialization=True, save_embedding_layers=False)
+    norm_state = {name: parameter.detach().cpu() for name, parameter in model.named_parameters() if "norm" in name.lower()}
+    torch.save(norm_state, path / "normalization_state.pt")
+    if initial_norms is not None:
+        torch.save(initial_norms, path / "normalization_initial_state.pt")
+    tokenizer.save_pretrained(path)
+
+
+def _loader(dataset, collator, batch_size, shuffle, seed, workers):
+    """Build a reproducibly shuffled DataLoader using the supplied collator."""
+    generator = torch.Generator().manual_seed(seed)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collator, num_workers=workers, generator=generator, pin_memory=torch.cuda.is_available())
+
+
+def _normalization_state(model: torch.nn.Module) -> dict[str, torch.Tensor]:
+    """Clone all normalization parameters so base-model evaluation can restore them."""
+    return {name: parameter.detach().cpu().clone() for name, parameter in model.named_parameters() if "norm" in name.lower()}
+
+
+def _load_normalization_state(model: torch.nn.Module, state: dict[str, torch.Tensor]) -> None:
+    """Copy a saved normalization state into a model without changing adapters."""
+    current = dict(model.named_parameters())
+    for name, value in state.items():
+        if name in current:
+            current[name].data.copy_(value.to(current[name].device, dtype=current[name].dtype))
+
+
+@torch.no_grad()
+def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], initial_norms: dict[str, torch.Tensor], device: torch.device) -> dict[str, float]:
+    """Score generated answer text with the original base model, excluding LoRA and trained norms."""
+    trained_norms = _normalization_state(model)
+    model.eval()
+    total_nll = 0.0
+    total_tokens = 0
+    try:
+        _load_normalization_state(model, initial_norms)
+        with model.disable_adapter():
+            for text in texts:
+                encoded = tokenizer(text, return_tensors="pt", add_special_tokens=True)
+                input_ids = encoded["input_ids"].to(device)
+                if input_ids.shape[1] < 2:
+                    continue
+                outputs = model(input_ids=input_ids, use_cache=False)
+                logits = outputs.logits[:, :-1].float()
+                labels = input_ids[:, 1:]
+                nll = torch.nn.functional.cross_entropy(logits.transpose(1, 2), labels, reduction="sum")
+                total_nll += float(nll.cpu())
+                total_tokens += int(labels.numel())
+    finally:
+        _load_normalization_state(model, trained_norms)
+    mean_nll = total_nll / max(total_tokens, 1)
+    return {"generation_perplexity": float(torch.exp(torch.tensor(mean_nll))), "generation_mean_nll": mean_nll, "generation_tokens": total_tokens}
+
+
+def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int) -> dict[str, float]:
+    """Generate fixed prompts step-by-step, save trajectories, and calculate base perplexity."""
+    settings = config.get("generation_perplexity", {})
+    prompts = settings.get("prompts", ["What do you know about Amsterdam?", "Tell me a story about a little dwarf.", "Why is the sky blue?", "Explain how plants grow.", "What makes a good friend?"])
+    session = InferenceSession(model, tokenizer, device, output, config, mask_token_id)
+    trajectories = []
+    finals = []
+    model.eval()
+    for prompt_index, prompt in enumerate(prompts[: int(settings.get("num_prompts", 5))]):
+        states = []
+        for generated_text, status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 128)), int(settings.get("num_steps", 32)), float(settings.get("noise_level", .5)), float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)) + prompt_index, bool(settings.get("permanent_unmask", False)), bool(settings.get("confidence_guided", False)), bool(settings.get("proportional_unmask", True))):
+            states.append(generated_text)
+        finals.append(states[-1] if states else "")
+        trajectories.append({"step": step, "prompt_index": prompt_index, "prompt": prompt, "states": states, "final": finals[-1]})
+    generation_path = output / "generation_metrics.jsonl"
+    with generation_path.open("a") as stream:
+        for trajectory in trajectories:
+            stream.write(json.dumps(trajectory, ensure_ascii=False) + "\n")
+    return _base_perplexity(model, tokenizer, finals, initial_norms, device)
+
+
+@torch.no_grad()
+def evaluate(model, loader, accelerator, mode: str) -> dict[str, float]:
+    """Evaluate deterministic denoising loss and aggregate metrics across ranks."""
+    model.eval()
+    totals = {"weighted_loss_sum": 0.0, "unweighted_ce_sum": 0.0, "valid_examples": 0, "supervised_tokens": 0, "eligible_answer_tokens": 0, "masked_tokens": 0, "t_sum": 0.0, "t_count": 0}
+    for batch in loader:
+        logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
+        t = batch["sampled_t"] if mode == "mask_only" else None
+        loss, m = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], t)
+        valid = int(m["valid_examples"])
+        tokens = int(m["supervised_tokens"])
+        totals["weighted_loss_sum"] += float(loss) * valid
+        totals["unweighted_ce_sum"] += float(m["unweighted_masked_token_ce"]) * tokens
+        totals["valid_examples"] += valid
+        totals["supervised_tokens"] += tokens
+        totals["eligible_answer_tokens"] += int((batch["answer_mask"] & ~batch["padding_mask"]).sum())
+        totals["masked_tokens"] += int(batch["loss_mask"].sum())
+        if mode == "mask_only":
+            totals["t_sum"] += float(torch.nansum(batch["sampled_t"]))
+            totals["t_count"] += len(batch["sampled_t"])
+    totals = accelerator.reduce(torch.tensor([totals[k] for k in totals], device=accelerator.device), reduction="sum").tolist()
+    keys = ["weighted_loss_sum", "unweighted_ce_sum", "valid_examples", "supervised_tokens", "eligible_answer_tokens", "masked_tokens", "t_sum", "t_count"]
+    d = dict(zip(keys, totals))
+    d["weighted_loss"] = d["weighted_loss_sum"] / max(d["valid_examples"], 1)
+    d["unweighted_masked_token_ce"] = d["unweighted_ce_sum"] / max(d["supervised_tokens"], 1)
+    d["realized_masked_fraction"] = d["masked_tokens"] / max(d["eligible_answer_tokens"], 1)
+    if mode == "mask_only": d["mean_sampled_t"] = d["t_sum"] / max(d["t_count"], 1)
+    return d
+
+
+def run_training(config: dict[str, Any]) -> dict[str, Any]:
+    """Execute model setup, training, validation, selection, and final testing."""
+    output = Path(config["output_dir"]); output.mkdir(parents=True, exist_ok=True)
+    accelerator = Accelerator(gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)), mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"])
+    checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
+    if checkpoint_mode not in {"only_best_model", "every_checkpoint"}:
+        raise ValueError("checkpoint_mode must be 'only_best_model' or 'every_checkpoint'")
+    import os
+    from datasets import load_dataset
+    cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
+    hf_token = os.getenv("HF_TOKEN")
+    raw = load_dataset(config["dataset_name"], config.get("dataset_config"), cache_dir=str(cache_dir), token=hf_token)
+    split_names = config.get("splits", {"train": "train", "validation": "validation", "test": "test"})
+    token_name = config.get("tokenizer_name_or_path", config["model_name_or_path"])
+    model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
+    tokenizer = AutoTokenizer.from_pretrained(token_name, use_fast=True, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache), clean_up_tokenization_spaces=False)
+    if tokenizer.pad_token_id is None: tokenizer.pad_token = tokenizer.eos_token
+    seed = int(config.get("seed", 42)); torch.manual_seed(seed)
+    def indexed(ds):
+        """Attach stable original indices for deterministic evaluation corruption."""
+        return ds.map(lambda _, index: {"_index": index}, with_indices=True)
+    def get_split(spec):
+        """Resolve either a named split or a Hugging Face split expression."""
+        if spec in raw:
+            return raw[spec]
+        # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
+        return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
+    train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
+    if config["corruption_mode"] == "structured":
+        model_name = token_name.lower()
+        if not any(name in model_name for name in ("llama", "meta-llama")):
+            raise ValueError("structured mode is supported only for Llama-tokenized data; use mask_only for Qwen/Gemma")
+        marker_dropped = {}
+        for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
+            before = len(dataset)
+            dataset = dataset.filter(lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))))
+            marker_dropped[key] = before - len(dataset)
+            if key == "train": train_data = dataset
+            elif key == "validation": val_data = dataset
+            else: test_data = dataset
+    validation_limit = config.get("validation_samples", 200)
+    if validation_limit is not None:
+        validation_limit = min(int(validation_limit), len(val_data))
+        val_data = val_data.select(range(validation_limit))
+    common = dict(tokenizer=tokenizer, corruption_mode=config["corruption_mode"], max_sequence_length=int(config["max_sequence_length"]), include_answer_eos=bool(config.get("include_answer_eos", True)), pad_to_multiple_of=config.get("pad_to_multiple_of"), structured_loss_behavior=config.get("structured_loss_behavior", "all_answer_tokens"), seed=seed, t_min=float(config.get("t_min", .1)))
+    train_collator = DenoisingCollator(**common, deterministic=False)
+    eval_collator = DenoisingCollator(**common, deterministic=True)
+    train_loader = _loader(train_data.shuffle(seed=seed), train_collator, int(config["batch_size"]), True, seed, int(config.get("num_workers", 0)))
+    val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
+    test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
+    model, audit = load_denoising_model(config)
+    initial_norms = _normalization_state(model)
+    resolved = dict(config); resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}
+    _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
+    optimizer = AdamW((p for p in model.parameters() if p.requires_grad), lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
+    max_steps = int(config.get("max_steps") or (len(train_loader) * int(config.get("epochs", 1))))
+    scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_steps)
+    model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)
+    start_step = 0
+    if resume := config.get("resume_from_checkpoint"):
+        accelerator.load_state(resume)
+        state = json.loads((Path(resume) / "state.json").read_text()); start_step = int(state["step"])
+        train_loader = accelerator.skip_first_batches(train_loader, start_step * int(config.get("gradient_accumulation_steps", 1)))
+    best = float("inf"); metrics_path = output / "metrics.jsonl"
+    model.train()
+    progress = tqdm(total=max_steps, initial=start_step, desc="training", unit="batch", disable=not accelerator.is_local_main_process)
+    for step, batch in enumerate(train_loader, start=start_step + 1):
+        if step > max_steps: break
+        with accelerator.accumulate(model):
+            logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
+            loss, info = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], batch["sampled_t"] if config["corruption_mode"] == "mask_only" else None)
+            accelerator.backward(loss); optimizer.step(); scheduler.step(); optimizer.zero_grad()
+        loss_value = float(loss.detach().cpu())
+        progress.update(1)
+        progress.set_postfix(train_loss=f"{loss_value:.4f}")
+        if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
+            _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": int(info["supervised_tokens"])})
+        if step % int(config.get("validation_steps", 100)) == 0 or step == max_steps:
+            metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"])
+            if accelerator.is_main_process:
+                generation_settings = config.get("generation_perplexity", {})
+                if generation_settings.get("enabled", False):
+                    unwrapped = accelerator.unwrap_model(model)
+                    metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, step))
+                metrics.update({"split": "validation", "step": step}); _append_jsonl(metrics_path, metrics)
+                generation_note = f" | generation_ppl={metrics['generation_perplexity']:.4f}" if "generation_perplexity" in metrics else ""
+                progress.write(f"step {step}/{max_steps} | train_loss={loss_value:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
+                if metrics["weighted_loss"] < best:
+                    best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
+            accelerator.wait_for_everyone()
+            model.train()
+        if checkpoint_mode == "every_checkpoint" and (step % int(config.get("checkpoint_steps", 500)) == 0 or step == max_steps):
+            checkpoint = output / f"checkpoint-{step}"; accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
+            if accelerator.is_main_process: _write_json(checkpoint / "state.json", {"step": step, "best_validation_loss": best})
+    progress.close()
+    accelerator.wait_for_everyone()
+    if accelerator.is_main_process and checkpoint_mode == "every_checkpoint":
+        unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
+    # Test is deliberately after best-model selection/finalization.
+    test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"])
+    if accelerator.is_main_process: _write_json(output / "test_metrics.json", test_metrics)
+    return test_metrics

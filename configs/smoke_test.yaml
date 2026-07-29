@@ -1,0 +1,40 @@
+# Uses the public tiny random Llama checkpoint; intended after replacing dataset_name with a tiny local dataset in tests.
+model_name_or_path: hf-internal-testing/tiny-random-LlamaForCausalLM
+tokenizer_name_or_path: hf-internal-testing/llama-tokenizer
+dataset_name: Ruurd/LAD-training
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+splits: {train: 'train[:8]', validation: 'validation[:4]', test: 'test[:4]'}
+validation_samples: 4
+corruption_mode: structured
+output_dir: outputs/smoke
+seed: 7
+max_sequence_length: 128
+t_min: 0.5
+lora_r: 2
+lora_alpha: 4
+lora_dropout: 0.0
+lora_targets: [q_proj, v_proj, o_proj]
+learning_rate: 1.0e-3
+scheduler: constant
+warmup_steps: 0
+batch_size: 2
+gradient_accumulation_steps: 1
+max_steps: 2
+precision: fp32
+gradient_checkpointing: false
+train_normalization_layers: true
+generation_perplexity:
+  enabled: false
+  num_prompts: 2
+  num_steps: 2
+  max_new_tokens: 16
+  noise_level: 0.5
+  temperature: 0.7
+  top_k: 5
+  seed: 1234
+logging_steps: 1
+validation_steps: 1
+checkpoint_steps: 1
+checkpoint_mode: only_best_model
+num_workers: 0

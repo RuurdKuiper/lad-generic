@@ -1,0 +1,41 @@
+model_name_or_path: Qwen/Qwen2.5-7B-Instruct
+tokenizer_name_or_path: Qwen/Qwen2.5-7B-Instruct
+dataset_name: Ruurd/LAD-training
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+splits: {train: train, validation: validation, test: test}
+validation_samples: 200
+corruption_mode: mask_only
+output_dir: outputs/qwen25-7b-mask-only
+seed: 42
+max_sequence_length: 512
+t_min: 0.1
+include_answer_eos: true
+lora_r: 1024
+lora_alpha: 1024
+lora_dropout: 0.05
+lora_targets: [q_proj, v_proj, o_proj]
+learning_rate: 1.0e-5
+scheduler: linear
+warmup_steps: 100
+batch_size: 1
+eval_batch_size: 1
+gradient_accumulation_steps: 16
+epochs: 1
+precision: bf16
+gradient_checkpointing: true
+train_normalization_layers: true
+generation_perplexity:
+  enabled: false
+  num_prompts: 5
+  num_steps: 32
+  max_new_tokens: 128
+  noise_level: 0.5
+  temperature: 0.7
+  top_k: 20
+  seed: 1234
+logging_steps: 10
+validation_steps: 50
+checkpoint_steps: 250
+checkpoint_mode: only_best_model
+num_workers: 4

@@ -177,13 +177,15 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
     prep_key = hashlib.sha256(json.dumps({"dataset": config["dataset_name"], "config": config.get("dataset_config"), "tokenizer": token_name, "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True))}, sort_keys=True).encode()).hexdigest()[:16]
     prep_root = Path(config.get("prepared_data_cache_dir", "data/prepared")) / prep_key
+    prepared_cache_loaded = False
     with accelerator.main_process_first():
-        if config["corruption_mode"] == "structured" and (prep_root / "train").is_dir():
+        if config["corruption_mode"] == "structured" and all((prep_root / split).is_dir() for split in ("train", "validation", "test")):
             from datasets import load_from_disk
             train_data, val_data, test_data = (load_from_disk(str(prep_root / split)) for split in ("train", "validation", "test"))
+            prepared_cache_loaded = True
         else:
             train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
-    if config["corruption_mode"] == "structured":
+    if config["corruption_mode"] == "structured" and not prepared_cache_loaded:
         model_name = token_name.lower()
         if not any(name in model_name for name in ("llama", "meta-llama")):
             raise ValueError("structured mode is supported only for Llama-tokenized data; use mask_only for Qwen/Gemma")

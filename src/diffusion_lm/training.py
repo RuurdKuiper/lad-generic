@@ -100,7 +100,7 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
             states.append(generated_text)
         finals.append(states[-1] if states else "")
         final_text = finals[-1]
-        trajectories.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, 1), "bigram_repetition": _ngram_repetition(final_text, 2), "trigram_repetition": _ngram_repetition(final_text, 3), "prompt": prompt, "final": final_text, "states": states})
+        trajectories.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text, "states": states})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     for trajectory in trajectories:
         # Rebuild the mapping to keep the JSONL field order stable/readable.
@@ -114,12 +114,13 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
     return generation_metrics
 
 
-def _ngram_repetition(text: str, n: int = 3) -> float:
+def _ngram_repetition(text: str, tokenizer: Any, n: int = 3) -> float:
     """Return the fraction of n-gram occurrences repeated beyond their first use."""
-    words = text.split()
-    if len(words) < n:
+    tokens = [token for token in tokenizer.encode(text, add_special_tokens=False) if token not in set(getattr(tokenizer, "all_special_ids", []))]
+    if len(tokens) < n:
         return 0.0
-    grams = [tuple(words[i : i + n]) for i in range(len(words) - n + 1)]
+    # Compare non-overlapping chunks: [A B] vs [C D], not [A B] vs [B C].
+    grams = [tuple(tokens[i : i + n]) for i in range(0, len(tokens) - n + 1, n)]
     return float(1.0 - len(set(grams)) / len(grams))
 
 

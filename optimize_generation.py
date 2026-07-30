@@ -22,10 +22,13 @@ DEFAULT_PROMPTS = [
 ]
 
 
-def _repetition(text: str, n: int) -> float:
-    """Calculate repeated n-gram fraction over decoded text."""
-    words = text.split()
-    grams = [tuple(words[i:i + n]) for i in range(max(0, len(words) - n + 1))]
+def _repetition(text: str, n: int, tokenizer) -> float:
+    """Calculate repeated token n-gram fraction, excluding EOS/special IDs."""
+    tokens = tokenizer.encode(text, add_special_tokens=False)
+    special = set(getattr(tokenizer, "all_special_ids", []))
+    tokens = [token for token in tokens if token not in special]
+    # Compare non-overlapping chunks: [A B] vs [C D], not [A B] vs [B C].
+    grams = [tuple(tokens[i:i + n]) for i in range(0, len(tokens) - n + 1, n)]
     return 0.0 if not grams else 1.0 - len(set(grams)) / len(grams)
 
 
@@ -77,9 +80,9 @@ def main() -> None:
                 texts.append(final)
                 print(f"  sample {len(texts)}/{len(prompts) * int(config.get('repetitions', 5))} | prompt={prompt}\n  output={final}\n", flush=True)
         ppl = _perplexity(session, texts)
-        unigram = sum(_repetition(t, 1) for t in texts) / max(len(texts), 1)
-        bigram = sum(_repetition(t, 2) for t in texts) / max(len(texts), 1)
-        trigram = sum(_repetition(t, 3) for t in texts) / max(len(texts), 1)
+        unigram = sum(_repetition(t, 1, session.tokenizer) for t in texts) / max(len(texts), 1)
+        bigram = sum(_repetition(t, 2, session.tokenizer) for t in texts) / max(len(texts), 1)
+        trigram = sum(_repetition(t, 3, session.tokenizer) for t in texts) / max(len(texts), 1)
         repetition = (unigram + bigram + trigram) / 3.0
         score = ppl + float(config.get("repetition_weight", 10.0)) * repetition
         results.append({"parameters": candidate, "perplexity": ppl, "unigram_repetition": unigram, "bigram_repetition": bigram, "trigram_repetition": trigram, "ngram_repetition": repetition, "score": score})

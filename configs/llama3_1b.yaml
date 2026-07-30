@@ -25,6 +25,8 @@ epochs: 1
 precision: bf16
 gradient_checkpointing: true
 train_normalization_layers: true
+
+# Perplexity evaluation during training
 generation_perplexity:
   enabled: true
   num_prompts: 5
@@ -46,3 +48,10 @@ checkpoint_steps: 20
 checkpoint_mode: only_best_model
 # resume_from_adapter: outputs/llama-3.2-1b-structured/best
 num_workers: 4
+
+# Quantization
+quantization: 4bit
+optimizer: adamw8bit
+gradient_checkpointing: true
+batch_size: 1
+gradient_accumulation_steps: 8

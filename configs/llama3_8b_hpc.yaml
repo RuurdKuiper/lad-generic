@@ -1,31 +1,53 @@
+# Base model
 model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+
+# Dataset
 dataset_name: Ruurd/LAD-training
+splits: {train: train, validation: validation, test: test}
+
+# File paths
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
-splits: {train: train, validation: validation, test: test}
 validation_samples: 200
+
+# Corruption and loss behavior
 corruption_mode: structured  # Llama-compatible stored IDs only
 structured_loss_behavior: all_tokens
 output_dir: outputs/llama-3.1-8b-structured-hpc
 seed: 42
-max_sequence_length: 512
-t_min: 0.1
+t_min: 0.0
 include_answer_eos: true
-lora_r: 1024
-lora_alpha: 1024
+
+# Include multi-turn
+multi_turn_prob: 0.1
+max_history_turns: 2
+
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
 scheduler: linear
 warmup_steps: 100
+num_workers: 4
+epochs: 1
+
+# Training parameters influencing memory usage
+max_sequence_length: 512
+lora_r: 1024
+lora_alpha: 1024
+train_normalization_layers: true
 batch_size: 8
 eval_batch_size: 1
 gradient_accumulation_steps: 1
-epochs: 1
-precision: bf16
 gradient_checkpointing: true
-train_normalization_layers: true
+
+# Logging and checkpointing
+logging_steps: 10
+validation_steps: 100
+checkpoint_steps: 200
+checkpoint_mode: only_best_model
+
+# Perplexity evaluation during training
 generation_perplexity:
   enabled: true
   num_prompts: 5
@@ -41,8 +63,12 @@ generation_perplexity:
     - "Why is the sky blue?"
     - "Explain how plants grow."
     - "What makes a good friend?"
-logging_steps: 10
-validation_steps: 100
-checkpoint_steps: 200
-checkpoint_mode: only_best_model
-num_workers: 4
+
+
+# Quantization
+precision: bf16
+quantization: 4bit
+optimizer: adamw8bit
+gradient_checkpointing: true
+batch_size: 1
+gradient_accumulation_steps: 8

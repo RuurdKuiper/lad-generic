@@ -57,7 +57,7 @@ generation_perplexity:
   num_prompts: 5
   num_steps: 32
   max_new_tokens: 128
-  noise_level: 0.5
+  noise_level: 1.0
   temperature: 0.7
   top_k: 3
   seed: 1234

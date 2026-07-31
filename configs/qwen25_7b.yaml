@@ -14,7 +14,7 @@ include_answer_eos: true
 lora_r: 1024
 lora_alpha: 1024
 lora_dropout: 0.05
-lora_targets: [q_proj, v_proj, o_proj]
+lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
 scheduler: linear
 warmup_steps: 100

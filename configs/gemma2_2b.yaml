@@ -47,8 +47,8 @@ gradient_checkpointing: true
 
 # Logging and checkpointing
 logging_steps: 10
-validation_steps: 100
-checkpoint_steps: 200
+validation_steps: 10
+checkpoint_steps: 20
 checkpoint_mode: only_best_model
 
 # Perplexity evaluation during training

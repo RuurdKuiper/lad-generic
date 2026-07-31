@@ -1,6 +1,6 @@
 # Base model
-model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
-tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
+tokenizer_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
 
 # Dataset
 dataset_name: Ruurd/LAD-training
@@ -9,12 +9,11 @@ splits: {train: train, validation: validation, test: test}
 # File paths
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
-validation_samples: 200
+output_dir: outputs/qwen25-0-5b-mask-only
 
 # Corruption and loss behavior
-corruption_mode: structured  # Llama-compatible stored IDs only
+corruption_mode: mask_only  # Llama-compatible stored IDs only
 structured_loss_behavior: all_tokens
-output_dir: outputs/llama-3.1-8b-structured
 seed: 42
 t_min: 0.1
 include_answer_eos: true
@@ -37,8 +36,8 @@ max_updates: 10000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
-lora_r: 1024
-lora_alpha: 1024
+lora_r: 128
+lora_alpha: 128
 train_normalization_layers: true
 batch_size: 8
 eval_batch_size: 8
@@ -47,14 +46,15 @@ gradient_checkpointing: true
 
 # Logging and checkpointing
 logging_steps: 10
-validation_steps: 100
-checkpoint_steps: 200
+validation_steps: 10
+validation_samples: 200
+checkpoint_steps: 20
 checkpoint_mode: only_best_model
 
 # Perplexity evaluation during training
 generation_perplexity:
   enabled: true
-  num_prompts: 1
+  num_prompts: 5
   num_steps: 32
   max_new_tokens: 128
   noise_level: 0.5
@@ -71,6 +71,7 @@ generation_perplexity:
 
 # Quantization
 precision: bf16
-quantization: 4bit
-optimizer: adamw8bit
+# quantization: 4bit
+# optimizer: adamw8bit
 gradient_checkpointing: true
+

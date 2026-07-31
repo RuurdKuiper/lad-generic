@@ -238,7 +238,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             return raw[spec]
         # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
         return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
-    def bounded_structured_filter(dataset, predicate, limit: int | None):
+    def bounded_filter(dataset, predicate, limit: int | None):
         """Filter only as many source rows as needed for a capped run."""
         if limit is None or len(dataset) <= limit:
             return dataset.filter(predicate)
@@ -269,13 +269,16 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             prepared_cache_loaded = True
         else:
             train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
-    if config["corruption_mode"] != "structured" and train_sample_limit is not None and len(train_data) > train_sample_limit:
-        # Shuffle indices before selecting so a capped run is not biased toward
-        # the dataset's first records; tokenization still happens only for the
-        # selected examples.
+    if config["corruption_mode"] == "structured" and prepared_cache_loaded and train_sample_limit is not None and len(train_data) > train_sample_limit:
         train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
-    elif config["corruption_mode"] == "structured" and prepared_cache_loaded and train_sample_limit is not None and len(train_data) > train_sample_limit:
-        train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
+    if config["corruption_mode"] != "structured":
+        # The published dataset contains a small number of rows with missing
+        # or empty outputs. Remove them before collation, otherwise a worker
+        # would fail mid-epoch instead of skipping malformed examples.
+        has_output = lambda row: bool((row.get("output") or "").strip())
+        train_data = bounded_filter(train_data.shuffle(seed=int(config.get("seed", 42))), has_output, train_sample_limit)
+        val_data = val_data.filter(has_output)
+        test_data = test_data.filter(has_output)
     marker_dropped = {}
     if config["corruption_mode"] == "structured" and not prepared_cache_loaded:
         model_name = token_name.lower()
@@ -288,7 +291,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
                 before = len(dataset)
                 limit = train_sample_limit if key == "train" else None
-                dataset = bounded_structured_filter(dataset, lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))), limit)
+                dataset = bounded_filter(dataset, lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))), limit)
                 marker_dropped[key] = before - len(dataset)
                 if key == "train": train_data = dataset
                 elif key == "validation": val_data = dataset

@@ -171,6 +171,15 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             if value and not Path(value).is_absolute():
                 config[key] = str(Path(storage_root) / value)
     output = Path(config["output_dir"]); output.mkdir(parents=True, exist_ok=True)
+    configured_updates_hint = config.get("max_updates")
+    if configured_updates_hint is None:
+        configured_updates_hint = config.get("max_steps")
+    train_sample_limit = None
+    if configured_updates_hint is not None:
+        configured_updates_hint = int(configured_updates_hint)
+        if configured_updates_hint < 1:
+            raise ValueError("max_updates must be a positive number of gradient updates")
+        train_sample_limit = configured_updates_hint * int(config.get("gradient_accumulation_steps", 1)) * int(config.get("batch_size", 1))
     accelerator = Accelerator(gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)), mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"])
     # Ensure NCCL process groups are released when a worker is interrupted
     # (for example with Ctrl-C or a scheduler pre-emption signal).
@@ -205,7 +214,28 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             return raw[spec]
         # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
         return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
-    prep_key = hashlib.sha256(json.dumps({"dataset": config["dataset_name"], "config": config.get("dataset_config"), "tokenizer": token_name, "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True))}, sort_keys=True).encode()).hexdigest()[:16]
+    def bounded_structured_filter(dataset, predicate, limit: int | None):
+        """Filter only as many source rows as needed for a capped run."""
+        if limit is None or len(dataset) <= limit:
+            return dataset.filter(predicate)
+        from datasets import concatenate_datasets
+        chunks = []
+        kept = 0
+        chunk_size = 2048
+        for start in range(0, len(dataset), chunk_size):
+            chunk = dataset.select(range(start, min(start + chunk_size, len(dataset))))
+            filtered = chunk.filter(predicate)
+            if len(filtered):
+                chunks.append(filtered)
+                kept += len(filtered)
+            if kept >= limit:
+                break
+        if not chunks:
+            return dataset.select([])
+        result = concatenate_datasets(chunks)
+        return result.select(range(min(limit, len(result))))
+
+    prep_key = hashlib.sha256(json.dumps({"dataset": config["dataset_name"], "config": config.get("dataset_config"), "tokenizer": token_name, "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True)), "train_sample_limit": train_sample_limit}, sort_keys=True).encode()).hexdigest()[:16]
     prep_root = Path(config.get("prepared_data_cache_dir", "data/prepared")) / prep_key
     prepared_cache_loaded = False
     with accelerator.main_process_first():
@@ -215,6 +245,13 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             prepared_cache_loaded = True
         else:
             train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
+    if config["corruption_mode"] != "structured" and train_sample_limit is not None and len(train_data) > train_sample_limit:
+        # Shuffle indices before selecting so a capped run is not biased toward
+        # the dataset's first records; tokenization still happens only for the
+        # selected examples.
+        train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
+    elif config["corruption_mode"] == "structured" and prepared_cache_loaded and train_sample_limit is not None and len(train_data) > train_sample_limit:
+        train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
     marker_dropped = {}
     if config["corruption_mode"] == "structured" and not prepared_cache_loaded:
         model_name = token_name.lower()
@@ -222,9 +259,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             raise ValueError("structured mode is supported only for Llama-tokenized data; use mask_only for Qwen/Gemma")
         marker_dropped = {}
         with accelerator.main_process_first():
+            if train_sample_limit is not None and len(train_data) > train_sample_limit:
+                train_data = train_data.shuffle(seed=int(config.get("seed", 42)))
             for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
                 before = len(dataset)
-                dataset = dataset.filter(lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))))
+                limit = train_sample_limit if key == "train" else None
+                dataset = bounded_structured_filter(dataset, lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))), limit)
                 marker_dropped[key] = before - len(dataset)
                 if key == "train": train_data = dataset
                 elif key == "validation": val_data = dataset
@@ -247,7 +287,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
     model, audit = load_denoising_model(config)
     initial_norms = _normalization_state(model)
-    resolved = dict(config); resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}
+    resolved = dict(config); resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
     trainable_parameters = (p for p in model.parameters() if p.requires_grad)
     optimizer_name = str(config.get("optimizer", "adamw")).lower()

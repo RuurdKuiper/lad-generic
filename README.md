@@ -85,6 +85,10 @@ is unset.
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final
 evaluation/output handling and the Slurm job exits, releasing its allocation.
+When set, training preparation bounds the train split to approximately
+`max_updates × gradient_accumulation_steps × batch_size` examples; structured
+preprocessing stops once that many usable examples are available. Validation
+and test splits are not reduced by this optimization.
 
 Gated Llama/Gemma access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that literal `MASK` is exactly one ordinary vocabulary token and records the token ID/decoding in `mask_token.json`.
 

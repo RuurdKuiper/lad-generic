@@ -5,6 +5,9 @@ env/
 .env
 .env.*
 !.env.example
+hpc/slurm.env
+hpc/train.slurm
+hpc/run.sh
 
 # macOS metadata
 .DS_Store
@@ -32,6 +35,7 @@ htmlcov/
 *.egg-info/
 build/
 dist/
+*.arrow
 
 # IDE/editor files
 .idea/
@@ -41,8 +45,10 @@ dist/
 
 # Downloaded models, datasets, checkpoints, and run outputs
 data/huggingface/
+data/prepared/
 base_models/
 outputs/
+results/
 checkpoints/
 wandb/
 *.log

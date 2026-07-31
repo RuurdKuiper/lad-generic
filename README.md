@@ -52,6 +52,40 @@ On an Ubuntu multi-GPU cluster:
 accelerate launch --num_processes 8 train.py --config configs/qwen25_7b.yaml
 ```
 
+## One-command HPC training
+
+After filling in the valid account, partition, time, and resource values in
+`hpc/slurm.env`, submit and follow the 8B run from any local directory with:
+
+```bash
+./hpc/run.sh configs/llama3_8b_hpc.yaml
+```
+
+The launcher requires a working `ssh umcu-hpc`, local `rsync`, the remote
+Micromamba executable at `/home/julius_bs/rkuiper2/.local/bin/micromamba`, and
+the remote-only Hugging Face token file at `$HOME/.hf_token`. It validates the
+YAML, synchronizes uncommitted source changes without copying caches, outputs,
+or secrets, submits with `sbatch --parsable`, then follows status and logs.
+It stages job-local outputs periodically under `/hpc/tmp/rkuiper2/<job-id>/`
+and downloads them, including partial checkpoints and Slurm logs, to
+`results/<job-id>/` when the job ends.
+
+`hpc/slurm.env` is the sole location for Slurm account and resource settings;
+there were no existing repository settings to reuse, so its blank values must
+be set to values approved for this cluster. If the local terminal closes, run
+`squeue -j <job-id>` and inspect `/hpc/tmp/rkuiper2/<job-id>/` after reconnecting;
+you can copy the staged directory with `rsync`. Cancel only when intended with
+`ssh umcu-hpc scancel <job-id>`. Ctrl-C in the launcher asks whether to cancel
+the remote job and otherwise leaves it running.
+
+When `LAD_STORAGE` is set, training resolves relative `output_dir`, cache, and
+resume paths below that directory. Normal local execution is unchanged when it
+is unset.
+
+Set `max_updates` in a training YAML to a positive integer to stop after that
+many optimizer (gradient-update) steps. Training then performs its normal final
+evaluation/output handling and the Slurm job exits, releasing its allocation.
+
 Gated Llama/Gemma access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that literal `MASK` is exactly one ordinary vocabulary token and records the token ID/decoding in `mask_token.json`.
 
 ## Outputs

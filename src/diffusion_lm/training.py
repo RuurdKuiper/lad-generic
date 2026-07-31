@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import atexit
 import hashlib
+import os
 from pathlib import Path
 from typing import Any
 
@@ -156,6 +157,19 @@ def evaluate(model, loader, accelerator, mode: str) -> dict[str, float]:
 
 def run_training(config: dict[str, Any]) -> dict[str, Any]:
     """Execute model setup, training, validation, selection, and final testing."""
+    storage_root = os.getenv("LAD_STORAGE")
+    if storage_root:
+        # Relative configured paths become node-local; absolute paths preserve
+        # their existing local-execution meaning.
+        for key, default in {
+            "output_dir": "outputs", "cache_dir": "data/huggingface",
+            "base_model_cache_dir": "base_models",
+            "prepared_data_cache_dir": "data/prepared",
+            "resume_from_checkpoint": None, "resume_from_adapter": None,
+        }.items():
+            value = config.get(key, default)
+            if value and not Path(value).is_absolute():
+                config[key] = str(Path(storage_root) / value)
     output = Path(config["output_dir"]); output.mkdir(parents=True, exist_ok=True)
     accelerator = Accelerator(gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)), mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"])
     # Ensure NCCL process groups are released when a worker is interrupted
@@ -169,7 +183,6 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
     if checkpoint_mode not in {"only_best_model", "every_checkpoint"}:
         raise ValueError("checkpoint_mode must be 'only_best_model' or 'every_checkpoint'")
-    import os
     from datasets import load_dataset
     cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
     hf_token = os.getenv("HF_TOKEN")
@@ -249,8 +262,15 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     else:
         raise ValueError(f"Unknown optimizer={optimizer_name}; expected adamw or adamw8bit")
     grad_accumulation = int(config.get("gradient_accumulation_steps", 1))
-    configured_steps = config.get("max_steps")
-    max_updates = int(configured_steps) if configured_steps else (len(train_loader) * int(config.get("epochs", 1)) + grad_accumulation - 1) // grad_accumulation
+    # `max_updates` is deliberately expressed in optimizer/gradient updates,
+    # rather than dataloader batches. Keep max_steps as a backwards-compatible
+    # alias for existing configurations.
+    configured_updates = config.get("max_updates")
+    if configured_updates is None:
+        configured_updates = config.get("max_steps")
+    if configured_updates is not None and int(configured_updates) < 1:
+        raise ValueError("max_updates must be a positive number of gradient updates")
+    max_updates = int(configured_updates) if configured_updates is not None else (len(train_loader) * int(config.get("epochs", 1)) + grad_accumulation - 1) // grad_accumulation
     max_steps = max_updates * grad_accumulation
     scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_updates)
     model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)

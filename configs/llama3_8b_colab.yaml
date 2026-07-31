@@ -28,7 +28,7 @@ lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
 scheduler: linear
 warmup_steps: 100
-num_workers: 4
+num_workers: 8
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
@@ -36,9 +36,9 @@ epochs: 1
 max_updates: 10000
 
 # Training parameters influencing memory usage
-max_sequence_length: 128
-lora_r: 128
-lora_alpha: 128
+max_sequence_length: 512
+lora_r: 1024
+lora_alpha: 1024
 train_normalization_layers: true
 batch_size: 8
 eval_batch_size: 8
@@ -71,6 +71,6 @@ generation_perplexity:
 
 # Quantization
 precision: bf16
-# quantization: 4bit
-# optimizer: adamw8bit
+quantization: 4bit
+optimizer: adamw8bit
 gradient_checkpointing: true

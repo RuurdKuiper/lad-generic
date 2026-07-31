@@ -30,6 +30,10 @@ scheduler: linear
 warmup_steps: 100
 num_workers: 4
 epochs: 1
+# Optional cap expressed in optimizer/gradient updates, not micro-batches.
+# Set a positive integer (for example 1000) to end cleanly after that many
+# updates and release the Slurm allocation; leave null to use the full epoch.
+max_updates: 10000
 
 # Training parameters influencing memory usage
 max_sequence_length: 512
@@ -37,7 +41,7 @@ lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: true
 batch_size: 8
-eval_batch_size: 1
+eval_batch_size: 16
 gradient_accumulation_steps: 1
 gradient_checkpointing: true
 
@@ -55,7 +59,7 @@ generation_perplexity:
   max_new_tokens: 128
   noise_level: 0.5
   temperature: 0.7
-  top_k: 20
+  top_k: 3
   seed: 1234
   prompts:
     - "What do you know about Amsterdam?"
@@ -70,5 +74,3 @@ precision: bf16
 quantization: 4bit
 optimizer: adamw8bit
 gradient_checkpointing: true
-batch_size: 1
-gradient_accumulation_steps: 8

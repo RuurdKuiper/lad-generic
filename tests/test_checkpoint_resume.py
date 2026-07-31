@@ -8,7 +8,10 @@ def test_tiny_model_can_train_save_and_resume(tmp_path):
     model = torch.nn.Linear(2, 2)
     optimizer = AdamW(model.parameters(), lr=.1)
     model, optimizer = accelerator.prepare(model, optimizer)
-    x, y = torch.tensor([[1., 0.]]), torch.tensor([1])
+    # Accelerator moves the prepared model to CUDA when available, so inputs
+    # must follow it rather than assuming the CPU-only test environment.
+    x = torch.tensor([[1., 0.]], device=accelerator.device)
+    y = torch.tensor([1], device=accelerator.device)
     optimizer.zero_grad(); loss = torch.nn.functional.cross_entropy(model(x), y); accelerator.backward(loss); optimizer.step()
     validation_loss = torch.nn.functional.cross_entropy(model(x), y).detach().cpu()
     assert torch.isfinite(validation_loss)

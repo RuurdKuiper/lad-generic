@@ -71,6 +71,6 @@ generation_perplexity:
 
 # Quantization
 precision: bf16
-# quantization: 4bit
-# optimizer: adamw8bit
+quantization: 4bit
+optimizer: adamw8bit
 gradient_checkpointing: true

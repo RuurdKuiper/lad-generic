@@ -121,6 +121,12 @@ Checkpoint policy is controlled by `checkpoint_mode`:
 
 For an exact interruption resume, set `checkpoint_mode: every_checkpoint` and use `resume_from_checkpoint: outputs/<run>/checkpoint-N`; this restores optimizer, scheduler, and RNG state. With `only_best_model`, continue from the saved adapter by adding `resume_from_adapter: outputs/<run>/best`; this warm-starts the weights with a fresh optimizer and step counter.
 
+Starting again with the same `output_dir` replaces the project-managed
+checkpoints, adapters, metrics, and metadata, including stale checkpoint
+numbers from an earlier run. Runs with `resume_from_checkpoint` or
+`resume_from_adapter` preserve the existing artifacts so the resume source is
+not deleted.
+
 ## Interactive inference
 
 Generation parameters can be tuned with open-ended prompts using:

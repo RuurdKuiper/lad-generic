@@ -4,6 +4,7 @@ import json
 import atexit
 import hashlib
 import os
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -175,7 +176,25 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         output_path = Path(config["output_dir"])
         if not output_path.is_absolute():
             config["output_dir"] = str(Path(output_root) / output_path)
-    output = Path(config["output_dir"]); output.mkdir(parents=True, exist_ok=True)
+    output = Path(config["output_dir"])
+    output.mkdir(parents=True, exist_ok=True)
+    # A new run owns its configured output directory. Remove only artifacts
+    # produced by this project, leaving unrelated user files untouched. An
+    # explicit resume opts out so its source checkpoint/adapter is preserved.
+    if not config.get("resume_from_checkpoint") and not config.get("resume_from_adapter"):
+        for artifact in (
+            "best", "final", "metrics.jsonl", "generation_metrics.jsonl",
+            "resolved_config.json", "parameter_audit.json", "mask_token.json",
+            "test_metrics.json",
+        ):
+            target = output / artifact
+            if target.is_dir():
+                shutil.rmtree(target)
+            elif target.exists():
+                target.unlink()
+        for target in output.glob("checkpoint-*"):
+            if target.is_dir():
+                shutil.rmtree(target)
     configured_updates_hint = config.get("max_updates")
     if configured_updates_hint is None:
         configured_updates_hint = config.get("max_steps")

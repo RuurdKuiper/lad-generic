@@ -13,12 +13,16 @@ from transformers import AutoModelForCausalLM
 def bidirectional_attention_mask(padding_mask: torch.Tensor, dtype: torch.dtype) -> torch.Tensor:
     """A 4-D additive full-attention mask accepted unchanged by Transformers >=5.
 
-    `padding_mask` is True for padding. Both padded keys and padded queries are
-    blocked. Valid positions can attend to every valid position, including future
-    positions and themselves.
+    `padding_mask` is retained for loss/padding bookkeeping, but padding is
+    intentionally visible to attention. Repeated EOS padding is part of the
+    configured context-width signal: real and padded queries can attend to all
+    positions, allowing the model to learn concise answers under wide contexts.
     """
-    valid = ~padding_mask
-    allowed = valid[:, None, :, None] & valid[:, None, None, :]
+    allowed = torch.ones(
+        (padding_mask.shape[0], 1, padding_mask.shape[1], padding_mask.shape[1]),
+        device=padding_mask.device,
+        dtype=torch.bool,
+    )
     mask = torch.zeros(allowed.shape, device=padding_mask.device, dtype=dtype)
     return mask.masked_fill(~allowed, torch.finfo(dtype).min)
 

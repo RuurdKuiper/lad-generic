@@ -8,6 +8,7 @@ import torch
 
 
 LLAMA_ASSISTANT_HEADER = "<|start_header_id|>assistant<|end_header_id|>"
+DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant."
 
 
 @dataclass
@@ -54,13 +55,28 @@ def source_to_tokens(example: dict[str, Any], tokenizer: Any) -> tuple[list[int]
     if not output:
         raise ValueError("empty output")
     user = instruction if not user_input else f"{instruction}\n\n{user_input}"
-    messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": user},
-    ]
     if not getattr(tokenizer, "chat_template", None):
         raise ValueError(f"Tokenizer {tokenizer.name_or_path} has no chat_template for source retokenization")
-    prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+    messages = [
+        {"role": "system", "content": DEFAULT_SYSTEM_PROMPT},
+        {"role": "user", "content": user},
+    ]
+    supports_system_role = getattr(tokenizer, "_lad_supports_system_role", None)
+    if supports_system_role is False:
+        messages = [{"role": "user", "content": f"{DEFAULT_SYSTEM_PROMPT}\n\n{user}"}]
+        prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+    else:
+        try:
+            prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+            setattr(tokenizer, "_lad_supports_system_role", True)
+        except Exception as exc:
+            # Gemma's official template rejects a separate system role. Preserve
+            # the instruction by folding it into the first user message instead.
+            if exc.__class__.__name__ != "TemplateError" or "System role not supported" not in str(exc):
+                raise
+            setattr(tokenizer, "_lad_supports_system_role", False)
+            messages = [{"role": "user", "content": f"{DEFAULT_SYSTEM_PROMPT}\n\n{user}"}]
+            prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
     if isinstance(prefix, str):
         prefix = tokenizer.encode(prefix, add_special_tokens=False)
     elif hasattr(prefix, "input_ids"):

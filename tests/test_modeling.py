@@ -4,12 +4,12 @@ from peft import LoraConfig, get_peft_model
 from diffusion_lm.modeling import bidirectional_attention_mask, parameter_audit
 
 
-def test_4d_mask_is_noncausal_and_blocks_padding():
+def test_4d_mask_is_noncausal_and_padding_is_visible():
     mask = bidirectional_attention_mask(torch.tensor([[False, False, True]]), torch.float32)
     assert mask.shape == (1, 1, 3, 3)
     assert mask[0, 0, 0, 1] == 0  # earlier query sees later key
-    assert mask[0, 0, 0, 2] < -1e20
-    assert mask[0, 0, 2, 0] < -1e20
+    assert mask[0, 0, 0, 2] == 0  # real queries can read padded EOS keys
+    assert mask[0, 0, 2, 0] == 0  # padded EOS queries can read real context
 
 
 def test_tiny_llama_earlier_logits_depend_on_later_visible_token():

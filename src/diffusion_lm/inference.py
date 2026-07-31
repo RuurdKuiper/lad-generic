@@ -110,10 +110,20 @@ def _prompt_ids(tokenizer: Any, question: str, system_prompt: str) -> list[int]:
         raise ValueError("Enter a question or prompt.")
     if not getattr(tokenizer, "chat_template", None):
         raise ValueError(f"{tokenizer.name_or_path} has no chat template; inference needs one to identify the answer boundary.")
-    rendered = tokenizer.apply_chat_template([
+    messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": question},
-    ], tokenize=True, add_generation_prompt=True)
+    ]
+    try:
+        rendered = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+    except Exception as exc:
+        # Gemma's official template rejects a separate system role; preserve
+        # the prompt by folding it into the user message, as training does.
+        if exc.__class__.__name__ != "TemplateError" or "System role not supported" not in str(exc):
+            raise
+        rendered = tokenizer.apply_chat_template([
+            {"role": "user", "content": f"{system_prompt}\n\n{question}"},
+        ], tokenize=True, add_generation_prompt=True)
     if isinstance(rendered, str):
         rendered = tokenizer.encode(rendered, add_special_tokens=False)
     elif hasattr(rendered, "input_ids"):

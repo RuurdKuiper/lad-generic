@@ -126,13 +126,13 @@ def _ngram_repetition(text: str, tokenizer: Any, n: int = 3) -> float:
 
 
 @torch.no_grad()
-def evaluate(model, loader, accelerator, mode: str) -> dict[str, float]:
+def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False) -> dict[str, float]:
     """Evaluate deterministic denoising loss and aggregate metrics across ranks."""
     model.eval()
     totals = {"weighted_loss_sum": 0.0, "unweighted_ce_sum": 0.0, "valid_examples": 0, "supervised_tokens": 0, "eligible_answer_tokens": 0, "masked_tokens": 0, "t_sum": 0.0, "t_count": 0}
     for batch in loader:
         logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
-        t = batch["sampled_t"] if mode == "mask_only" else None
+        t = batch["sampled_t"] if mode == "mask_only" and not all_tokens else None
         loss, m = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], t)
         valid = int(m["valid_examples"])
         tokens = int(m["supervised_tokens"])
@@ -290,7 +290,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         if step > max_steps: break
         with accelerator.accumulate(model):
             logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
-            loss, info = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], batch["sampled_t"] if config["corruption_mode"] == "mask_only" else None)
+            use_t_weighting = config["corruption_mode"] == "mask_only" and config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
+            loss, info = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], batch["sampled_t"] if use_t_weighting else None)
             accelerator.backward(loss); optimizer.step(); scheduler.step(); optimizer.zero_grad()
         loss_value = float(loss.detach().cpu())
         batch_examples = int(info["valid_examples"])
@@ -305,7 +306,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
             _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": int(info["supervised_tokens"])})
         if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
-            metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"])
+            metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens")
             if accelerator.is_main_process:
                 generation_settings = config.get("generation_perplexity", {})
                 if generation_settings.get("enabled", False):
@@ -331,7 +332,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     if accelerator.is_main_process and checkpoint_mode == "every_checkpoint":
         unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
     # Test is deliberately after best-model selection/finalization.
-    test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"])
+    test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens")
     if accelerator.is_main_process: _write_json(output / "test_metrics.json", test_metrics)
     accelerator.end_training()
     return test_metrics

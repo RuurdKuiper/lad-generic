@@ -1,5 +1,5 @@
 import torch
-from diffusion_lm.data import DenoisingCollator
+from diffusion_lm.data import DEFAULT_SYSTEM_PROMPT, DenoisingCollator, source_to_tokens
 from diffusion_lm.loss import masked_denoising_loss
 
 
@@ -45,12 +45,48 @@ def test_mask_only_starts_clean_and_never_changes_prompt_or_padding():
     assert changed[0, 2:].all()
 
 
+def test_mask_only_all_tokens_supervises_prompt_answer_and_padding():
+    b = DenoisingCollator(ToyTokenizer(), "mask_only", 32, structured_loss_behavior="all_tokens", seed=4, deterministic=True, t_min=1.0)([row()])
+    assert b["loss_mask"].all()
+    assert b["loss_mask"].shape == b["labels"].shape
+
+
 def test_deterministic_eval_and_training_resampling():
     c = DenoisingCollator(ToyTokenizer(), "mask_only", 32, seed=9, deterministic=True, t_min=.2)
     assert torch.equal(c([row(5)])["input_ids"], c([row(5)])["input_ids"])
     train = DenoisingCollator(ToyTokenizer(), "mask_only", 32, seed=9, deterministic=False, t_min=.2)
     seen = {tuple(train([row(5)])["input_ids"].flatten().tolist()) for _ in range(8)}
     assert len(seen) > 1
+
+
+def test_source_retokenization_falls_back_for_systemless_chat_template():
+    class SystemlessTokenizer:
+        chat_template = "gemma-like"
+        name_or_path = "test/gemma-like"
+        eos_token_id = 99
+
+        def __init__(self):
+            self.calls = []
+
+        def apply_chat_template(self, messages, **_):
+            self.calls.append(messages)
+            if any(message["role"] == "system" for message in messages):
+                class TemplateError(Exception):
+                    pass
+                raise TemplateError("System role not supported")
+            return [10, 11]
+
+        def encode(self, text, **_):
+            return [len(text)]
+
+    tokenizer = SystemlessTokenizer()
+    labels, answer_start = source_to_tokens(
+        {"instruction": "Answer clearly", "input": "about birds", "output": "They fly."}, tokenizer
+    )
+    assert tokenizer.calls[0][0]["role"] == "system"
+    assert tokenizer.calls[1] == [{"role": "user", "content": f"{DEFAULT_SYSTEM_PROMPT}\n\nAnswer clearly\n\nabout birds"}]
+    assert labels == [10, 11, len("They fly."), 99]
+    assert answer_start == 2
 
 
 def test_every_usable_example_has_a_mask_and_multitoken_mask_is_rejected():

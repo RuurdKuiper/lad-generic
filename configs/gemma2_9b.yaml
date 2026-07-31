@@ -12,11 +12,11 @@ base_model_cache_dir: base_models
 validation_samples: 200
 
 # Corruption and loss behavior
-corruption_mode: structured  # Llama-compatible stored IDs only
+corruption_mode: mask_only  # Llama-compatible stored IDs only
 structured_loss_behavior: all_tokens
 output_dir: outputs/gemma2-9b-structured
 seed: 42
-t_min: 0.0
+t_min: 0.1
 include_answer_eos: true
 
 # Include multi-turn
@@ -36,9 +36,9 @@ epochs: 1
 max_updates: 10000
 
 # Training parameters influencing memory usage
-max_sequence_length: 512
-lora_r: 1024
-lora_alpha: 1024
+max_sequence_length: 256
+lora_r: 128
+lora_alpha: 128
 train_normalization_layers: true
 batch_size: 8
 eval_batch_size: 8

@@ -4,7 +4,7 @@ import torch
 
 
 def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, t_min, seed, deterministic):
-    """Apply configured structured or online mask-only corruption to a batch."""
+    """Apply configured corruption and choose the positions used for loss."""
     answer = batch["answer_mask"] & ~batch["padding_mask"]
     if mode == "structured":
         if structured_loss_behavior == "all_answer_tokens":
@@ -38,6 +38,16 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, t_min
         ts.append(t)
     noised[selected] = mask_token_id
     batch["input_ids"] = noised
-    batch["loss_mask"] = selected & answer
+    if structured_loss_behavior == "all_tokens":
+        # Keep mask-only's stochastic inputs, but train against every target
+        # position just like the legacy full-sequence objective. In this mode
+        # training.py also disables inverse-t weighting.
+        batch["loss_mask"] = torch.ones_like(answer, dtype=torch.bool)
+    elif structured_loss_behavior in {"all_answer_tokens", "corrupted_answer_tokens"}:
+        # mask_only's historical objective supervises the positions actually
+        # corrupted in the input; both names retain that behavior here.
+        batch["loss_mask"] = selected & answer
+    else:
+        raise ValueError(f"Unknown structured_loss_behavior={structured_loss_behavior}; expected all_answer_tokens, corrupted_answer_tokens, or all_tokens")
     batch["sampled_t"] = torch.tensor(ts, dtype=torch.float32)
     return batch

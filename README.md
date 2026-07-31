@@ -82,6 +82,21 @@ When `LAD_STORAGE` is set, training resolves relative `output_dir`, cache, and
 resume paths below that directory. Normal local execution is unchanged when it
 is unset.
 
+For Colab, mount Google Drive and set `LAD_OUTPUT_ROOT` before launching runs:
+
+```python
+from google.colab import drive
+import os
+
+drive.mount("/content/drive")
+os.environ["LAD_OUTPUT_ROOT"] = "/content/drive/MyDrive/lad-generic-results"
+```
+
+This persists outputs, checkpoints, metrics, and resolved configurations on
+Drive while leaving model/dataset caches on the faster temporary Colab disk.
+Set this variable only in Colab; local and HPC runs are unaffected. The output
+subdirectory from each YAML is preserved below the chosen Drive root.
+
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final
 evaluation/output handling and the Slurm job exits, releasing its allocation.
@@ -101,6 +116,7 @@ During training, the terminal displays a live progress bar with completed batche
 Checkpoint policy is controlled by `checkpoint_mode`:
 
 - `only_best_model`: overwrite `best/` whenever validation improves; no regular checkpoint snapshots or `final/` copy are written.
+- `every_model`: save inference-ready adapter/tokenizer/normalization snapshots at each `checkpoint_steps` interval as `checkpoint-N/`, plus `final/`; optimizer, scheduler, and RNG state are not stored.
 - `every_checkpoint`: retain resumable `checkpoint-N/` snapshots and write `final/` at the end.
 
 For an exact interruption resume, set `checkpoint_mode: every_checkpoint` and use `resume_from_checkpoint: outputs/<run>/checkpoint-N`; this restores optimizer, scheduler, and RNG state. With `only_best_model`, continue from the saved adapter by adding `resume_from_adapter: outputs/<run>/best`; this warm-starts the weights with a fresh optimizer and step counter.

@@ -170,6 +170,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             value = config.get(key, default)
             if value and not Path(value).is_absolute():
                 config[key] = str(Path(storage_root) / value)
+    output_root = os.getenv("LAD_OUTPUT_ROOT")
+    if output_root and config.get("output_dir"):
+        output_path = Path(config["output_dir"])
+        if not output_path.is_absolute():
+            config["output_dir"] = str(Path(output_root) / output_path)
     output = Path(config["output_dir"]); output.mkdir(parents=True, exist_ok=True)
     configured_updates_hint = config.get("max_updates")
     if configured_updates_hint is None:
@@ -190,8 +195,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             dist.destroy_process_group()
     atexit.register(_cleanup_process_group)
     checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
-    if checkpoint_mode not in {"only_best_model", "every_checkpoint"}:
-        raise ValueError("checkpoint_mode must be 'only_best_model' or 'every_checkpoint'")
+    if checkpoint_mode not in {"only_best_model", "every_checkpoint", "every_model"}:
+        raise ValueError("checkpoint_mode must be 'only_best_model', 'every_model', or 'every_checkpoint'")
     from datasets import load_dataset
     cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
     hf_token = os.getenv("HF_TOKEN")
@@ -364,12 +369,21 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
             accelerator.wait_for_everyone()
             model.train()
-        if checkpoint_mode == "every_checkpoint" and (update_step % int(config.get("checkpoint_steps", 500)) == 0 or update_step == max_updates):
-            checkpoint = output / f"checkpoint-{update_step}"; accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
-            if accelerator.is_main_process: _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
+        if checkpoint_mode in {"every_checkpoint", "every_model"} and (update_step % int(config.get("checkpoint_steps", 500)) == 0 or update_step == max_updates):
+            checkpoint = output / f"checkpoint-{update_step}"
+            if checkpoint_mode == "every_checkpoint":
+                accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
+                if accelerator.is_main_process:
+                    _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
+            elif accelerator.is_main_process:
+                # Inference-ready snapshot without optimizer/scheduler/RNG
+                # state; it can also warm-start through resume_from_adapter.
+                _save_adapter(accelerator.unwrap_model(model), tokenizer, checkpoint, initial_norms)
     progress.close()
     accelerator.wait_for_everyone()
     if accelerator.is_main_process and checkpoint_mode == "every_checkpoint":
+        unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
+    elif accelerator.is_main_process and checkpoint_mode == "every_model":
         unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
     # Test is deliberately after best-model selection/finalization.
     test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens")

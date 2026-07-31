@@ -84,6 +84,12 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
         raise ValueError("quantization must be 'none' or '4bit'")
     model = AutoModelForCausalLM.from_pretrained(checkpoint, **load_kwargs)
     model.config.use_cache = False
+    # PEFT's CAUSAL_LM task type only describes adapter integration; it does
+    # not control attention direction. Make the base-model intent explicit as
+    # well as supplying the prepared 4-D mask in forward_bidirectional().
+    model.config.is_causal = False
+    if hasattr(model.config, "use_bidirectional_attention"):
+        model.config.use_bidirectional_attention = True
     if quantization in {"4bit", "4-bit", "qlora"}:
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=bool(config.get("gradient_checkpointing", False)))
     for parameter in model.parameters():

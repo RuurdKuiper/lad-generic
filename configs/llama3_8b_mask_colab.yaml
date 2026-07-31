@@ -1,0 +1,76 @@
+# Base model
+model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+
+# Dataset
+dataset_name: Ruurd/LAD-training
+splits: {train: train, validation: validation, test: test}
+
+# File paths
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+validation_samples: 200
+
+# Corruption and loss behavior
+corruption_mode: mask_only  # Options: mask_only, structured 
+structured_loss_behavior: all_tokens
+output_dir: outputs/llama-3.1-8b-mask
+seed: 42
+t_min: 0.1
+include_answer_eos: true
+
+# Include multi-turn
+multi_turn_prob: 0.1
+max_history_turns: 2
+
+lora_dropout: 0.0
+lora_targets: [q_proj, v_proj]
+learning_rate: 1.0e-5
+scheduler: linear
+warmup_steps: 100
+num_workers: 8
+epochs: 1
+# Optional cap expressed in optimizer/gradient updates, not micro-batches.
+# Set a positive integer (for example 1000) to end cleanly after that many
+# updates and release the Slurm allocation; leave null to use the full epoch.
+max_updates: 10000
+
+# Training parameters influencing memory usage
+max_sequence_length: 256
+lora_r: 1024
+lora_alpha: 1024
+train_normalization_layers: true
+batch_size: 8
+eval_batch_size: 8
+gradient_accumulation_steps: 1
+gradient_checkpointing: true
+
+# Logging and checkpointing
+logging_steps: 10
+validation_steps: 250
+checkpoint_steps: 1000
+checkpoint_mode: every_model # Options: only_best_model, every_model or all_checkpoints
+
+# Perplexity evaluation during training
+generation_perplexity:
+  enabled: true
+  num_prompts: 5
+  num_steps: 32
+  max_new_tokens: 128
+  noise_level: 0.5
+  temperature: 0.7
+  top_k: 3
+  seed: 1234
+  prompts:
+    - "What do you know about Amsterdam?"
+    - "Tell me a story about a little dwarf."
+    - "Why is the sky blue?"
+    - "Explain how plants grow."
+    - "What makes a good friend?"
+
+
+# Quantization
+precision: bf16
+quantization: 4bit
+optimizer: adamw8bit
+gradient_checkpointing: true

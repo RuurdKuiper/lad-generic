@@ -21,14 +21,22 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, t_min
         batch["sampled_t"] = torch.full((answer.shape[0],), float("nan"))
         return batch
     noised = batch["labels"].clone()
-    selected = torch.zeros_like(answer)
+    # With the full-sequence objective, EOS padding is a real denoising target:
+    # it must sometimes be replaced by MASK so the same-position loss teaches
+    # the model to *produce* EOS rather than merely copy a visible one.  Other
+    # mask-only objectives do not supervise padding and therefore leave it
+    # untouched.
+    eligible_mask_only = answer
+    if structured_loss_behavior == "all_tokens":
+        eligible_mask_only = answer | batch["padding_mask"]
+    selected = torch.zeros_like(eligible_mask_only)
     ts = []
     for row, index in enumerate(batch["example_index"].tolist()):
         generator = None
         if deterministic:
             generator = torch.Generator(device="cpu").manual_seed(seed + index)
         t = torch.empty((), dtype=torch.float32).uniform_(t_min, 1.0, generator=generator).item()
-        eligible = torch.where(answer[row])[0]
+        eligible = torch.where(eligible_mask_only[row])[0]
         if len(eligible):
             draw = torch.rand(len(eligible), generator=generator) < t
             if not draw.any():

@@ -46,9 +46,19 @@ def test_mask_only_starts_clean_and_never_changes_prompt_or_padding():
 
 
 def test_mask_only_all_tokens_supervises_prompt_answer_and_padding():
-    b = DenoisingCollator(ToyTokenizer(), "mask_only", 32, structured_loss_behavior="all_tokens", seed=4, deterministic=True, t_min=1.0)([row()])
+    # A longer peer forces EOS padding onto the short example.  At t=1,
+    # all-token mask-only corruption must mask that padding too, so EOS is
+    # learned as a denoising target rather than copied from the input.
+    longer = {**row(1), "output": "abcdef"}
+    b = DenoisingCollator(ToyTokenizer(), "mask_only", 32, structured_loss_behavior="all_tokens", seed=4, deterministic=True, t_min=1.0)([row(), longer])
     assert b["loss_mask"].all()
     assert b["loss_mask"].shape == b["labels"].shape
+    changed = b["input_ids"] != b["labels"]
+    assert not changed[:, :2].any()  # prompt remains clean
+    assert changed.all(dim=1).tolist() == [False, False]
+    assert changed[:, 2:].all()
+    assert b["padding_mask"][0].any()
+    assert changed[0][b["padding_mask"][0]].all()
 
 
 def test_deterministic_eval_and_training_resampling():

@@ -38,7 +38,7 @@ def load_model(selection, device, quantization):
         return "No saved adapter found. Train until at least one validation step saves `outputs/<run>/best/`."
     release_session(SESSION)
     SESSION = load_session(selection, OUTPUTS_DIR, device, quantization)
-    return f"Loaded `{selection}` on `{SESSION.device}` using `{SESSION.quantization}` inference from base model `{SESSION.model.peft_config['default'].base_model_name_or_path}`."
+    return f"Loaded `{selection}` on `{SESSION.device}` using `{SESSION.quantization}` inference with `{SESSION.compute_dtype}` compute from base model `{SESSION.model.peft_config['default'].base_model_name_or_path}`."
 
 
 def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask):

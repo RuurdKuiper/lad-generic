@@ -139,7 +139,9 @@ who has the URL, so do not enter secrets into the interface.
 setting; use `quantization="4bit"` to force memory-efficient CUDA inference,
 including for a run trained without quantization. It requires the CUDA extra
 (`pip install -e '.[cuda]'`) and an NVIDIA GPU. The Gradio interface has the
-same `Inference quantization` selector.
+same `Inference quantization` selector. On CUDA GPUs without native BF16
+support (including T4), inference automatically uses FP16 compute even when
+the saved training configuration requested BF16.
 
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final

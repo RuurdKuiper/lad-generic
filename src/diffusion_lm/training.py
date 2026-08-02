@@ -92,7 +92,7 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
     """Generate fixed prompts step-by-step, save trajectories, and calculate base perplexity."""
     settings = config.get("generation_perplexity", {})
     prompts = settings.get("prompts", ["What do you know about Amsterdam?", "Tell me a story about a little dwarf.", "Why is the sky blue?", "Explain how plants grow.", "What makes a good friend?"])
-    session = InferenceSession(model, tokenizer, device, output, config, mask_token_id)
+    session = InferenceSession(model, tokenizer, device, output, config, mask_token_id, str(config.get("quantization", "none")))
     trajectories = []
     finals = []
     model.eval()

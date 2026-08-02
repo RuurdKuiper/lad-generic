@@ -1,8 +1,9 @@
 import json
 
 import pytest
+import torch
 
-from diffusion_lm.inference import _prompt_ids, _safe_adapter_path, find_adapters
+from diffusion_lm.inference import _precision_dtype, _prompt_ids, _safe_adapter_path, find_adapters
 
 
 def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
@@ -36,3 +37,8 @@ def test_prompt_ids_falls_back_for_systemless_chat_template():
     tokenizer = SystemlessTokenizer()
     assert _prompt_ids(tokenizer, "What?", "Be brief.") == [3, 4]
     assert tokenizer.calls[1] == [{"role": "user", "content": "Be brief.\n\nWhat?"}]
+
+
+def test_bf16_inference_falls_back_to_fp16_on_non_bf16_cuda(monkeypatch):
+    monkeypatch.setattr(torch.cuda, "is_bf16_supported", lambda: False)
+    assert _precision_dtype("bf16", torch.device("cuda")) == torch.float16

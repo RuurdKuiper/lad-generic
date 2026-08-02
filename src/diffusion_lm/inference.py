@@ -41,7 +41,14 @@ def _precision_dtype(precision: str, device: torch.device) -> torch.dtype:
     requested = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}.get(precision, torch.float32)
     # CPU inference with low-precision weights is not generally supported; MPS
     # has better float32 compatibility for interactive single-request inference.
-    return torch.float32 if device.type == "cpu" else requested
+    if device.type == "cpu":
+        return torch.float32
+    # T4-class CUDA GPUs have no native BF16 Tensor Core support.  BF16
+    # quantized compute there is substantially slower than FP16, so retain the
+    # saved run's preference only where the hardware can execute it natively.
+    if device.type == "cuda" and requested == torch.bfloat16 and not torch.cuda.is_bf16_supported():
+        return torch.float16
+    return requested
 
 
 def select_device(requested: str = "auto") -> torch.device:
@@ -63,7 +70,8 @@ class InferenceSession:
     adapter_path: Path
     config: dict[str, Any]
     mask_token_id: int
-    quantization: str
+    quantization: str = "none"
+    compute_dtype: str = "unknown"
 
 
 def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
@@ -82,6 +90,7 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     if resolved_quantization not in {"none", "off", "false", "4bit"}:
         raise ValueError("Inference quantization must be 'auto', 'none', or '4bit'.")
     use_4bit = resolved_quantization == "4bit"
+    compute_dtype = dtype
     cache_dir = run_config.get("base_model_cache_dir", "base_models")
     token = os.getenv("HF_TOKEN")
     tokenizer_name = run_config.get("tokenizer_name_or_path", base_model)
@@ -119,7 +128,7 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
         model.to(device)
     model.eval()
     mask_info = validate_mask_token(tokenizer)
-    return InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none")
+    return InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
 
 
 def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: torch.Generator | None) -> tuple[torch.Tensor, torch.Tensor]:

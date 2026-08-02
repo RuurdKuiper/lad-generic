@@ -169,8 +169,8 @@ python plot_losses.py outputs/llama-3.1-8b-mask outputs/llama-3.1-8b-structured 
 
 For Drive-backed Colab runs, pass their Drive output directories and an output
 path on Drive. Use `--smooth 1` for the raw training curve or `--log-y` when
-early losses dominate the graph. The command needs `matplotlib` (normally
-present in Colab; otherwise run `python -m pip install matplotlib`).
+early losses dominate the graph. Matplotlib is included in the normal project
+installation.
 
 Checkpoint policy is controlled by `checkpoint_mode`:
 

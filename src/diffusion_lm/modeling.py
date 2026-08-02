@@ -125,4 +125,8 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
 
 def forward_bidirectional(model: torch.nn.Module, input_ids: torch.Tensor, padding_mask: torch.Tensor):
     """Run a CausalLM with the project’s explicit bidirectional padding mask."""
-    return model(input_ids=input_ids, attention_mask=bidirectional_attention_mask(padding_mask, next(model.parameters()).dtype), use_cache=False).logits
+    # 4-bit bitsandbytes weights are stored as uint8, which cannot represent
+    # the floating additive attention mask.  Use the first floating parameter
+    # (normally a LoRA or normalization parameter) as the compute dtype.
+    dtype = next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)
+    return model(input_ids=input_ids, attention_mask=bidirectional_attention_mask(padding_mask, dtype), use_cache=False).logits

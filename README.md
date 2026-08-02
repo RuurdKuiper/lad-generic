@@ -109,7 +109,7 @@ from diffusion_lm.inference import find_adapters, load_session, denoise
 drive_outputs = "/content/drive/MyDrive/lad-generic-results/outputs"
 print("\\n".join(find_adapters(drive_outputs)))  # for example: llama-3.1-8b-mask/best
 
-session = load_session("llama-3.1-8b-mask/best", drive_outputs, device_name="cuda")
+session = load_session("llama-3.1-8b-mask/best", drive_outputs, device_name="cuda", quantization="4bit")
 answer, status = denoise(
     session,
     question="What do you know about Amsterdam?",
@@ -130,7 +130,16 @@ or a saved `checkpoint-N` model. The base model is loaded normally (and may
 need `HF_TOKEN` for gated models), while only the small LoRA adapter and its
 normalization state are read from Drive. To use the interactive interface
 instead, set `DIFFUSION_LM_OUTPUTS_DIR` to `drive_outputs` and run
-`python app.py` in a Colab cell.
+`python app.py` in a Colab cell. The app automatically requests a temporary
+Gradio share link in Colab. If needed, force it with
+`DIFFUSION_LM_GRADIO_SHARE=1 python app.py`; share links are public to anyone
+who has the URL, so do not enter secrets into the interface.
+
+`quantization="auto"` (the default) follows the saved run's `quantization`
+setting; use `quantization="4bit"` to force memory-efficient CUDA inference,
+including for a run trained without quantization. It requires the CUDA extra
+(`pip install -e '.[cuda]'`) and an NVIDIA GPU. The Gradio interface has the
+same `Inference quantization` selector.
 
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final

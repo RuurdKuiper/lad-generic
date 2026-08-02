@@ -1,4 +1,5 @@
 import torch
+from types import SimpleNamespace
 from transformers import LlamaConfig, LlamaForCausalLM
 from peft import LoraConfig, get_peft_model
 from diffusion_lm.modeling import bidirectional_attention_mask, parameter_audit
@@ -21,6 +22,23 @@ def test_tiny_llama_earlier_logits_depend_on_later_visible_token():
     b = torch.tensor([[3, 4, 6]])
     padding = torch.zeros_like(a, dtype=torch.bool)
     assert not torch.allclose(forward_bidirectional(model, a, padding)[:, 0], forward_bidirectional(model, b, padding)[:, 0])
+
+
+def test_quantized_like_model_uses_a_floating_attention_mask_dtype():
+    class QuantizedLikeModel(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.quantized_weight = torch.nn.Parameter(torch.zeros(1, dtype=torch.uint8), requires_grad=False)
+            self.compute_weight = torch.nn.Parameter(torch.zeros(1, dtype=torch.float16), requires_grad=False)
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.mask_dtype = attention_mask.dtype
+            return SimpleNamespace(logits=torch.zeros((*input_ids.shape, 4)))
+
+    from diffusion_lm.modeling import forward_bidirectional
+    model = QuantizedLikeModel()
+    forward_bidirectional(model, torch.tensor([[1, 2]]), torch.tensor([[False, False]]))
+    assert model.mask_dtype == torch.float16
 
 
 def test_only_lora_and_norms_are_trainable():

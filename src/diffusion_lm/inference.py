@@ -63,9 +63,10 @@ class InferenceSession:
     adapter_path: Path
     config: dict[str, Any]
     mask_token_id: int
+    quantization: str
 
 
-def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto") -> InferenceSession:
+def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
     """Load a base model, saved LoRA adapter, tokenizer, and norm state."""
     adapter_path = _safe_adapter_path(outputs_dir, adapter_selection)
     run_config_path = adapter_path.parent / "resolved_config.json"
@@ -74,21 +75,51 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     base_model = adapter_config["base_model_name_or_path"]
     device = select_device(device_name)
     dtype = _precision_dtype(run_config.get("precision", "fp32"), device)
+    requested_quantization = str(quantization or "auto").lower()
+    resolved_quantization = str(run_config.get("quantization", "none") if requested_quantization == "auto" else requested_quantization).lower()
+    if resolved_quantization in {"4-bit", "qlora"}:
+        resolved_quantization = "4bit"
+    if resolved_quantization not in {"none", "off", "false", "4bit"}:
+        raise ValueError("Inference quantization must be 'auto', 'none', or '4bit'.")
+    use_4bit = resolved_quantization == "4bit"
     cache_dir = run_config.get("base_model_cache_dir", "base_models")
     token = os.getenv("HF_TOKEN")
     tokenizer_name = run_config.get("tokenizer_name_or_path", base_model)
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, use_fast=True, token=token, cache_dir=cache_dir, clean_up_tokenization_spaces=False)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    base = AutoModelForCausalLM.from_pretrained(base_model, dtype=dtype, token=token, cache_dir=cache_dir, trust_remote_code=False)
+    load_kwargs: dict[str, Any] = dict(dtype=dtype, token=token, cache_dir=cache_dir, trust_remote_code=False)
+    if use_4bit:
+        if device.type != "cuda":
+            raise RuntimeError("4-bit inference requires an NVIDIA CUDA device.")
+        try:
+            from transformers import BitsAndBytesConfig
+            import bitsandbytes  # noqa: F401
+        except ImportError as exc:
+            raise ImportError("4-bit inference requires bitsandbytes; install with `pip install -e '.[cuda]'`.") from exc
+        compute_dtype = _precision_dtype(run_config.get("compute_dtype", run_config.get("precision", "bf16")), device)
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type=str(run_config.get("quantization_type", "nf4")),
+            bnb_4bit_compute_dtype=compute_dtype,
+            bnb_4bit_use_double_quant=bool(run_config.get("double_quant", True)),
+        )
+        # Quantized modules cannot subsequently be moved with model.to().
+        load_kwargs["device_map"] = {"": device.index if device.index is not None else 0}
+    base = AutoModelForCausalLM.from_pretrained(base_model, **load_kwargs)
     base.config.use_cache = False
+    base.config.is_causal = False
+    if hasattr(base.config, "use_bidirectional_attention"):
+        base.config.use_bidirectional_attention = True
     model = PeftModel.from_pretrained(base, adapter_path, is_trainable=False)
     norm_path = adapter_path / "normalization_state.pt"
     if norm_path.is_file():
         model.load_state_dict(torch.load(norm_path, map_location="cpu", weights_only=True), strict=False)
-    model.to(device).eval()
+    if not use_4bit:
+        model.to(device)
+    model.eval()
     mask_info = validate_mask_token(tokenizer)
-    return InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"])
+    return InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none")
 
 
 def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: torch.Generator | None) -> tuple[torch.Tensor, torch.Tensor]:

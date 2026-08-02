@@ -15,20 +15,30 @@ OUTPUTS_DIR = os.getenv("DIFFUSION_LM_OUTPUTS_DIR", "outputs")
 SESSION = None
 
 
+def _gradio_share_enabled() -> bool:
+    """Use a reachable Gradio URL in Colab, with an explicit env override."""
+    configured = os.getenv("DIFFUSION_LM_GRADIO_SHARE")
+    if configured is not None:
+        return configured.strip().lower() in {"1", "true", "yes", "on"}
+    # These variables are inherited by `!python app.py` subprocesses in
+    # Google Colab.  Ordinary local launches remain private by default.
+    return bool(os.getenv("COLAB_RELEASE_TAG") or os.getenv("COLAB_GPU"))
+
+
 def refresh_models():
     """Refresh the dropdown with loadable adapter directories under outputs/."""
     choices = find_adapters(OUTPUTS_DIR)
     return gr.Dropdown(choices=choices, value=choices[0] if choices else None)
 
 
-def load_model(selection, device):
+def load_model(selection, device, quantization):
     """Release any previous model and load the user-selected inference adapter."""
     global SESSION
     if not selection:
         return "No saved adapter found. Train until at least one validation step saves `outputs/<run>/best/`."
     release_session(SESSION)
-    SESSION = load_session(selection, OUTPUTS_DIR, device)
-    return f"Loaded `{selection}` on `{SESSION.device}` from base model `{SESSION.model.peft_config['default'].base_model_name_or_path}`."
+    SESSION = load_session(selection, OUTPUTS_DIR, device, quantization)
+    return f"Loaded `{selection}` on `{SESSION.device}` using `{SESSION.quantization}` inference from base model `{SESSION.model.peft_config['default'].base_model_name_or_path}`."
 
 
 def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask):
@@ -48,6 +58,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     with gr.Row():
         adapter = gr.Dropdown(choices=choices, value=choices[0] if choices else None, label="Saved adapter")
         device = gr.Dropdown(["auto", "mps", "cuda", "cpu"], value="auto", label="Device")
+        quantization = gr.Dropdown(["auto", "4bit", "none"], value="auto", label="Inference quantization")
         refresh = gr.Button("Refresh models")
         load = gr.Button("Load model", variant="primary")
     status = gr.Markdown("Choose a saved adapter and click **Load model**.")
@@ -68,9 +79,9 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     detail = gr.Markdown()
     intermediate = gr.HTML(label="Intermediate denoising states")
     refresh.click(refresh_models, outputs=adapter)
-    load.click(load_model, inputs=[adapter, device], outputs=status)
+    load.click(load_model, inputs=[adapter, device, quantization], outputs=status)
     generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask], outputs=[detail, intermediate])
 
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(share=_gradio_share_enabled())

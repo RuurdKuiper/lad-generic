@@ -13,7 +13,8 @@ validation_samples: 200
 
 # Corruption and loss behavior
 corruption_mode: mask_only  # Options: mask_only, structured 
-structured_loss_behavior: all_tokens
+structured_loss_behavior: all_tokens # Options: all_tokens, all_answer_tokens, corrupted_answer_tokens
+eos_padding_loss: true
 output_dir: outputs/llama-3.1-8b-mask
 seed: 42
 t_min: 0.1

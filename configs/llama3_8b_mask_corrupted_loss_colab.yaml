@@ -1,6 +1,6 @@
 # Base model
-model_name_or_path: google/gemma-2-9b-it
-tokenizer_name_or_path: google/gemma-2-9b-it
+model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
 dataset_name: Ruurd/LAD-training
@@ -13,9 +13,9 @@ validation_samples: 200
 
 # Corruption and loss behavior
 corruption_mode: mask_only  # Options: mask_only, structured 
-structured_loss_behavior: all_tokens # Options: all_tokens, all_answer_tokens, corrupted_answer_tokens
+structured_loss_behavior: corrupted_answer_tokens # Options: all_tokens, all_answer_tokens, corrupted_answer_tokens
 eos_padding_loss: true
-output_dir: outputs/gemma-2-9b-mask
+output_dir: outputs/llama-3.1-8b-mask-corrupted-loss
 seed: 42
 t_min: 0.1
 include_answer_eos: true

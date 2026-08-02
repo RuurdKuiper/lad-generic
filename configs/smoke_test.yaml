@@ -6,7 +6,9 @@ cache_dir: data/huggingface
 base_model_cache_dir: base_models
 splits: {train: 'train[:8]', validation: 'validation[:4]', test: 'test[:4]'}
 validation_samples: 4
-corruption_mode: structured
+corruption_mode: structured  # Options: structured, mask_only
+structured_loss_behavior: all_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+eos_padding_loss: false  # Options: true, false
 output_dir: outputs/smoke
 seed: 7
 max_sequence_length: 128
@@ -16,12 +18,12 @@ lora_alpha: 4
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj, o_proj]
 learning_rate: 1.0e-3
-scheduler: constant
+scheduler: constant  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 0
 batch_size: 2
 gradient_accumulation_steps: 1
 max_steps: 2
-precision: fp32
+precision: fp32  # Options: fp16, bf16, fp32
 gradient_checkpointing: false
 train_normalization_layers: true
 generation_perplexity:
@@ -36,5 +38,5 @@ generation_perplexity:
 logging_steps: 1
 validation_steps: 1
 checkpoint_steps: 1
-checkpoint_mode: only_best_model
+checkpoint_mode: only_best_model  # Options: only_best_model, every_checkpoint, every_model
 num_workers: 0

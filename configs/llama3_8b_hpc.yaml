@@ -12,8 +12,9 @@ base_model_cache_dir: base_models
 validation_samples: 200
 
 # Corruption and loss behavior
-corruption_mode: structured  # Llama-compatible stored IDs only
-structured_loss_behavior: all_tokens
+corruption_mode: structured  # Options: structured, mask_only
+structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+eos_padding_loss: true  # Options: true, false
 output_dir: outputs/llama-3.1-8b-structured-hpc
 seed: 42
 t_min: 0.1
@@ -26,7 +27,7 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
-scheduler: linear
+scheduler: linear  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 4
 epochs: 1
@@ -49,7 +50,7 @@ gradient_checkpointing: true
 logging_steps: 10
 validation_steps: 100
 checkpoint_steps: 200
-checkpoint_mode: only_best_model
+checkpoint_mode: only_best_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training
 generation_perplexity:
@@ -70,7 +71,7 @@ generation_perplexity:
 
 
 # Quantization
-precision: bf16
-quantization: 4bit
-optimizer: adamw8bit
+precision: bf16  # Options: fp16, bf16, fp32
+quantization: 4bit  # Options: none, 4bit
+optimizer: adamw8bit  # Options: adamw, adamw8bit
 gradient_checkpointing: true

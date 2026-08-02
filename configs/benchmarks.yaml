@@ -1,13 +1,13 @@
 outputs_dir: outputs
 models: []  # Empty means discover every outputs/**/best adapter.
 # tasks: [mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp]
-tasks: [arc_c]
+tasks: [arc_c]  # Options: mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp
 split: test
 limit: 10
-device: auto
+device: auto  # Options: auto, cuda, mps, cpu
 cache_dir: data/huggingface
 results_path: outputs/benchmark_results.jsonl
-include_autoregressive: true
+include_autoregressive: true  # Options: true, false
 generation:
   max_new_tokens: 256
   num_steps: 256
@@ -15,7 +15,7 @@ generation:
   temperature: 0.7
   top_k: 3
   seed: 1234
-  proportional_unmask: true
+  proportional_unmask: true  # Options: true, false
 task_generation:
   mmlu: {max_new_tokens: 3, num_steps: 3}
   mmlu_pro: {max_new_tokens: 256, num_steps: 256}

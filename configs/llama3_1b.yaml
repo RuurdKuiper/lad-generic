@@ -4,8 +4,9 @@ dataset_name: Ruurd/LAD-training
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
 splits: {train: train, validation: validation, test: test}
-corruption_mode: structured  # Llama-compatible stored IDs only
-structured_loss_behavior: all_tokens
+corruption_mode: structured  # Options: structured, mask_only
+structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+eos_padding_loss: true  # Options: true, false
 output_dir: outputs/llama-3.2-1b-structured
 seed: 42
 max_sequence_length: 256
@@ -16,13 +17,13 @@ lora_alpha: 64
 lora_dropout: 0.05
 lora_targets: [q_proj, v_proj, o_proj]
 learning_rate: 1.0e-5
-scheduler: linear
+scheduler: linear  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 batch_size: 8
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 epochs: 1
-precision: bf16
+precision: bf16  # Options: fp16, bf16, fp32
 gradient_checkpointing: true
 train_normalization_layers: true
 
@@ -45,13 +46,13 @@ generation_perplexity:
 logging_steps: 10
 validation_steps: 20
 checkpoint_steps: 20
-checkpoint_mode: only_best_model
+checkpoint_mode: only_best_model  # Options: only_best_model, every_checkpoint, every_model
 # resume_from_adapter: outputs/llama-3.2-1b-structured/best
 num_workers: 4
 
 # Quantization
-quantization: 4bit
-optimizer: adamw8bit
+quantization: 4bit  # Options: none, 4bit
+optimizer: adamw8bit  # Options: adamw, adamw8bit
 gradient_checkpointing: true
 batch_size: 1
 gradient_accumulation_steps: 8

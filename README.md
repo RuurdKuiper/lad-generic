@@ -159,6 +159,19 @@ Each run writes `resolved_config.json`, `parameter_audit.json`, `mask_token.json
 
 During training, the terminal displays a live progress bar with completed batches and the current training loss. At each validation interval it prints both training and deterministic validation loss; the same values are recorded in `metrics.jsonl`. Configurations use a deterministic 200-example validation subset by default (`validation_samples: 200`) so runs are directly comparable. The test split remains separate and is evaluated only after model selection.
 
+Plot one or more runs with `plot_losses.py`. It smooths the logged training
+loss by ten points by default and overlays validation points:
+
+```bash
+python plot_losses.py outputs/llama-3.1-8b-mask outputs/llama-3.1-8b-structured \
+  --labels mask_only structured --output outputs/loss-comparison.png
+```
+
+For Drive-backed Colab runs, pass their Drive output directories and an output
+path on Drive. Use `--smooth 1` for the raw training curve or `--log-y` when
+early losses dominate the graph. The command needs `matplotlib` (normally
+present in Colab; otherwise run `python -m pip install matplotlib`).
+
 Checkpoint policy is controlled by `checkpoint_mode`:
 
 - `only_best_model`: overwrite `best/` whenever validation improves; no regular checkpoint snapshots or `final/` copy are written.

@@ -5,7 +5,9 @@ cache_dir: data/huggingface
 base_model_cache_dir: base_models
 splits: {train: train, validation: validation, test: test}
 validation_samples: 200
-corruption_mode: mask_only
+corruption_mode: mask_only  # Options: structured, mask_only
+structured_loss_behavior: all_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+eos_padding_loss: false  # Options: true, false
 output_dir: outputs/qwen25-7b-mask-only
 seed: 42
 max_sequence_length: 512
@@ -16,13 +18,13 @@ lora_alpha: 1024
 lora_dropout: 0.05
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
-scheduler: linear
+scheduler: linear  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 batch_size: 1
 eval_batch_size: 1
 gradient_accumulation_steps: 16
 epochs: 1
-precision: bf16
+precision: bf16  # Options: fp16, bf16, fp32
 gradient_checkpointing: true
 train_normalization_layers: true
 generation_perplexity:
@@ -37,5 +39,5 @@ generation_perplexity:
 logging_steps: 10
 validation_steps: 50
 checkpoint_steps: 250
-checkpoint_mode: only_best_model
+checkpoint_mode: only_best_model  # Options: only_best_model, every_checkpoint, every_model
 num_workers: 4

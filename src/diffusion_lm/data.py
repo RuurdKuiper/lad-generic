@@ -145,6 +145,7 @@ class DenoisingCollator:
     include_answer_eos: bool = True
     pad_to_multiple_of: int | None = None
     structured_loss_behavior: str = "all_answer_tokens"
+    eos_padding_loss: bool | None = None
     seed: int = 0
     deterministic: bool = False
     t_min: float = 0.1
@@ -157,6 +158,11 @@ class DenoisingCollator:
         self.stats = DataStats()
         if self.corruption_mode not in {"structured", "mask_only"}:
             raise ValueError(f"Unknown corruption mode: {self.corruption_mode}")
+        # Preserve the established behavior for existing configs: all_tokens
+        # includes EOS padding, while the answer-only objectives do not.  A
+        # config can now explicitly override this independently.
+        if self.eos_padding_loss is None:
+            self.eos_padding_loss = self.structured_loss_behavior == "all_tokens"
 
     def _prepare(self, feature: dict[str, Any]) -> dict[str, Any] | None:
         """Construct clean/noised IDs and masks for one unpadded dataset row."""
@@ -238,4 +244,4 @@ class DenoisingCollator:
             "example_index": torch.tensor(batch["example_index"], dtype=torch.long),
         }
         from .corruption import apply_corruption
-        return apply_corruption(result, self.mask_info["mask_token_id"], self.corruption_mode, self.structured_loss_behavior, self.t_min, self.seed, self.deterministic)
+        return apply_corruption(result, self.mask_info["mask_token_id"], self.corruption_mode, self.structured_loss_behavior, bool(self.eos_padding_loss), self.t_min, self.seed, self.deterministic)

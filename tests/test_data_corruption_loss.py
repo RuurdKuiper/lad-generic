@@ -61,6 +61,26 @@ def test_mask_only_all_tokens_supervises_prompt_answer_and_padding():
     assert changed[0][b["padding_mask"][0]].all()
 
 
+def test_eos_padding_loss_switch_applies_to_each_loss_behavior():
+    longer = {**row(1), "output": "abcdef"}
+    enabled = DenoisingCollator(
+        ToyTokenizer(), "mask_only", 32, structured_loss_behavior="corrupted_answer_tokens",
+        eos_padding_loss=True, seed=4, deterministic=True, t_min=1.0,
+    )([row(), longer])
+    changed = enabled["input_ids"] != enabled["labels"]
+    padding = enabled["padding_mask"]
+    assert changed[0][padding[0]].all()
+    assert enabled["loss_mask"][0][padding[0]].all()
+
+    disabled = DenoisingCollator(
+        ToyTokenizer(), "mask_only", 32, structured_loss_behavior="all_tokens",
+        eos_padding_loss=False, seed=4, deterministic=True, t_min=1.0,
+    )([row(), longer])
+    padding = disabled["padding_mask"]
+    assert not (disabled["input_ids"] != disabled["labels"])[0][padding[0]].any()
+    assert not disabled["loss_mask"][0][padding[0]].any()
+
+
 def test_deterministic_eval_and_training_resampling():
     c = DenoisingCollator(ToyTokenizer(), "mask_only", 32, seed=9, deterministic=True, t_min=.2)
     assert torch.equal(c([row(5)])["input_ids"], c([row(5)])["input_ids"])

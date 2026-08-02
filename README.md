@@ -97,6 +97,41 @@ Drive while leaving model/dataset caches on the faster temporary Colab disk.
 Set this variable only in Colab; local and HPC runs are unaffected. The output
 subdirectory from each YAML is preserved below the chosen Drive root.
 
+### Colab inference from Google Drive
+
+Saved adapters can be used directly from Drive; do not copy them back to
+`/content`. After mounting Drive and installing this repository, point the
+inference loader at the `outputs` directory below the same `LAD_OUTPUT_ROOT`:
+
+```python
+from diffusion_lm.inference import find_adapters, load_session, denoise
+
+drive_outputs = "/content/drive/MyDrive/lad-generic-results/outputs"
+print("\\n".join(find_adapters(drive_outputs)))  # for example: llama-3.1-8b-mask/best
+
+session = load_session("llama-3.1-8b-mask/best", drive_outputs, device_name="cuda")
+answer, status = denoise(
+    session,
+    question="What do you know about Amsterdam?",
+    system_prompt="You are a helpful assistant.",
+    max_new_tokens=128,
+    num_steps=32,
+    noise_level=1.0,
+    temperature=.7,
+    top_k=20,
+    seed=42,
+)
+print(status)
+print(answer)
+```
+
+Use an adapter name printed by `find_adapters`; this can be `best`, `final`,
+or a saved `checkpoint-N` model. The base model is loaded normally (and may
+need `HF_TOKEN` for gated models), while only the small LoRA adapter and its
+normalization state are read from Drive. To use the interactive interface
+instead, set `DIFFUSION_LM_OUTPUTS_DIR` to `drive_outputs` and run
+`python app.py` in a Colab cell.
+
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final
 evaluation/output handling and the Slurm job exits, releasing its allocation.
@@ -158,6 +193,6 @@ python evaluate_benchmarks.py --config configs/benchmarks.yaml
 
 Set `limit` for a smoke evaluation before running full benchmark splits. Per-example predictions are appended to `outputs/benchmark_results.jsonl`; aggregate scores are written to `outputs/benchmark_results_summary.json`. Code tasks are executed with a local timeout, so evaluate generated code only in a trusted environment. The task protocol follows the official LLaDA evaluation distinction between conditional generation and likelihood evaluation, while this project intentionally uses pure diffusion generation for the requested comparison: [LLaDA EVAL.md](https://github.com/ML-GSAI/LLaDA/blob/main/EVAL.md).
 
-For structured loss, `all_answer_tokens` is the default safe objective; `corrupted_answer_tokens` restricts loss to changed answer positions; and `all_tokens` explicitly reproduces the full-sequence objective, including prompt, assistant formatting, and EOS padding. Validation can optionally run fixed-prompt generation and base-model perplexity. Enable `generation_perplexity.enabled` in a YAML to save each prompt’s full denoising trajectory in `generation_metrics.jsonl` and add `generation_perplexity`, `generation_mean_nll`, and `generation_tokens` to validation metrics. The evaluator temporarily disables LoRA and restores the original pre-training normalization weights, so trained norms do not contaminate the base-model score. `train_normalization_layers` independently controls whether norms are trainable.
+For structured loss, `all_answer_tokens` is the default safe objective; `corrupted_answer_tokens` restricts loss to changed answer positions; and `all_tokens` supervises prompt, assistant formatting, and answer positions. Set `eos_padding_loss: true` to include trailing EOS padding in any of these objectives, or `false` to exclude it. When omitted, the legacy behavior is retained: enabled for `all_tokens`, disabled for answer-only objectives. Validation can optionally run fixed-prompt generation and base-model perplexity. Enable `generation_perplexity.enabled` in a YAML to save each prompt’s full denoising trajectory in `generation_metrics.jsonl` and add `generation_perplexity`, `generation_mean_nll`, and `generation_tokens` to validation metrics. The evaluator temporarily disables LoRA and restores the original pre-training normalization weights, so trained norms do not contaminate the base-model score. `train_normalization_layers` independently controls whether norms are trainable.
 
-`structured_loss_behavior: all_tokens` also works with `corruption_mode: mask_only`: the loss covers every prompt, answer, and EOS-padding position without inverse-corruption-strength weighting. EOS padding joins the stochastic corruption candidates in this mode, so the model learns to denoise EOS rather than simply copy visible padding. EOS padding is visible to attention in both directions, making the configured context width an explicit signal during concise-answer training.
+With `corruption_mode: mask_only`, enabled `eos_padding_loss` also places EOS padding in the stochastic corruption candidates. Thus it is learned as a denoising target rather than simply copied from the input; this applies to all three loss behaviors. EOS padding is visible to attention in both directions, making the configured context width an explicit signal during concise-answer training.

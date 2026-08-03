@@ -147,10 +147,13 @@ For an inference-only comparison with the earlier hosted full-model checkpoint,
 the app has a separate `Hugging Face legacy checkpoint` loader row. Enter the
 trusted repository, `.pth` filename, and the tokenizer/base-model name used by
 that checkpoint (the legacy defaults are prefilled). This runs the hosted
-checkpoint through the current chat-template, sampling, and remasking
-implementation. The legacy wrapper retains its own full bidirectional attention
-forward because passing a second attention mask to it is invalid. Full `.pth`
-checkpoints use Python pickle; load only repositories you trust.
+checkpoint through the current sampling and remasking implementation. The
+historical base tokenizer has no native chat template, so
+that loader automatically uses the legacy Llama prompt layout; the current
+sampling and remasking implementation remains in use. The legacy wrapper
+retains its own full bidirectional attention forward because passing a second
+attention mask to it is invalid. Full `.pth` checkpoints use Python pickle;
+load only repositories you trust.
 
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final

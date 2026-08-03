@@ -74,6 +74,7 @@ class InferenceSession:
     quantization: str = "none"
     compute_dtype: str = "unknown"
     legacy_wrapper: bool = False
+    prompt_format: str = "chat_template"
 
 
 def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
@@ -177,6 +178,7 @@ def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_pa
         quantization="none",
         compute_dtype=str(next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)).removeprefix("torch."),
         legacy_wrapper=True,
+        prompt_format="legacy_llama",
     )
 
 
@@ -203,10 +205,25 @@ def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, paddin
     return forward_bidirectional(session.model, input_ids, padding_mask)
 
 
-def _prompt_ids(tokenizer: Any, question: str, system_prompt: str) -> list[int]:
+def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format: str = "chat_template") -> list[int]:
     """Render system/user messages through a tokenizer’s native chat template."""
     if not question.strip():
         raise ValueError("Enter a question or prompt.")
+    if prompt_format == "legacy_llama":
+        # The hosted historical checkpoint used a base Llama tokenizer with no
+        # chat_template. Match the prompt layout from its original app while
+        # still running the current project's denoising/sampling loop.
+        prompt = (
+            "<|begin_of_text|>\n"
+            "<|start_header_id|>system<|end_header_id|>\n"
+            f"{system_prompt}\n"
+            "<|start_header_id|>user<|end_header_id|>\n"
+            f"{question.strip()}\n"
+            "<|start_header_id|>assistant<|end_header_id|>\n"
+        )
+        return list(tokenizer.encode(prompt, add_special_tokens=False))
+    if prompt_format != "chat_template":
+        raise ValueError(f"Unknown prompt format: {prompt_format}")
     if not getattr(tokenizer, "chat_template", None):
         raise ValueError(f"{tokenizer.name_or_path} has no chat template; inference needs one to identify the answer boundary.")
     messages = [
@@ -262,7 +279,7 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
 
 def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True):
     """Yield intermediate text, status, and colored HTML for every denoising step."""
-    prefix = _prompt_ids(session.tokenizer, question, system_prompt)
+    prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
     if max_new_tokens < 1 or num_steps < 1:
         raise ValueError("max_new_tokens and num_steps must both be at least 1.")

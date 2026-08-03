@@ -41,6 +41,21 @@ def test_prompt_ids_falls_back_for_systemless_chat_template():
     assert tokenizer.calls[1] == [{"role": "user", "content": "Be brief.\n\nWhat?"}]
 
 
+def test_legacy_prompt_ids_do_not_require_a_chat_template():
+    class BaseLlamaTokenizer:
+        name_or_path = "base-llama"
+        chat_template = None
+
+        def encode(self, text, **_):
+            self.prompt = text
+            return [1, 2]
+
+    tokenizer = BaseLlamaTokenizer()
+    assert _prompt_ids(tokenizer, "What?", "Be brief.", "legacy_llama") == [1, 2]
+    assert "<|start_header_id|>assistant<|end_header_id|>" in tokenizer.prompt
+    assert "<|start_header_id|>system<|end_header_id|>\nBe brief.\n<|start_header_id|>user" in tokenizer.prompt
+
+
 def test_bf16_inference_falls_back_to_fp16_on_non_bf16_cuda(monkeypatch):
     monkeypatch.setattr(torch.cuda, "is_bf16_supported", lambda: False)
     assert _precision_dtype("bf16", torch.device("cuda")) == torch.float16

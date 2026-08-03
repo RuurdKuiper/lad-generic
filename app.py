@@ -71,11 +71,11 @@ def load_legacy_checkpoint(repo_id, checkpoint_filename, tokenizer_name, device)
 
 
 def load_llada_model(repo_id, device):
-    """Load the official LLaDA Instruct model with its native sampler."""
+    """Load LLaDA Instruct for this app's standard denoising controls."""
     global SESSION
     release_session(SESSION)
     SESSION = load_llada_session(repo_id, device)
-    return f"Loaded LLaDA `{repo_id}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. Generation uses LLaDA's native low-confidence token-transfer schedule."
+    return f"Loaded LLaDA `{repo_id}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. Generation uses this app's standard denoising loop and controls."
 
 
 def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping):
@@ -109,10 +109,10 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         legacy_device = gr.Dropdown(["auto", "mps", "cuda", "cpu"], value="auto", label="Device")
         load_legacy = gr.Button("Load legacy checkpoint", variant="primary")
     with gr.Row():
-        gr.Markdown("### Official LLaDA Instruct (CUDA required)")
+        gr.Markdown("### Official LLaDA Instruct (CUDA preferred; MPS experimental; app denoising loop)")
     with gr.Row():
         llada_repo = gr.Textbox(value=DEFAULT_LLADA_REPOSITORY, label="LLaDA Hugging Face repository")
-        llada_device = gr.Dropdown(["auto", "cuda"], value="auto", label="Device")
+        llada_device = gr.Dropdown(["auto", "cuda", "mps"], value="auto", label="Device")
         load_llada = gr.Button("Load LLaDA", variant="primary")
     status = gr.Markdown("Choose a saved adapter and click **Load model**.")
     question = gr.Textbox(label="Question", lines=4, value="What do you know about Amsterdam?")
@@ -121,7 +121,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         max_new_tokens = gr.Slider(1, 512, value=128, step=1, label="Answer tokens")
         num_steps = gr.Slider(1, 128, value=32, step=1, label="Denoising steps")
         noise_level = gr.Slider(0, 1, value=.5, step=.05, label="Initial re-mask probability")
-        temperature = gr.Slider(0, 2, value=.7, step=.05, label="Temperature (LLaDA: 0 recommended)")
+        temperature = gr.Slider(0, 2, value=.7, step=.05, label="Temperature")
         top_k = gr.Slider(1, 100, value=20, step=1, label="Top-k")
         seed = gr.Number(value=42, precision=0, label="Seed")
     with gr.Row():

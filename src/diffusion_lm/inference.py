@@ -209,13 +209,15 @@ def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_pa
 
 
 def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: str = "auto") -> InferenceSession:
-    """Load the official LLaDA Instruct model for its native diffusion sampler."""
+    """Load LLaDA Instruct as a mask predictor for this app's denoising loop."""
     if not repo_id.strip():
         raise ValueError("LLaDA loading requires a Hugging Face repository ID.")
     device = select_device(device_name)
-    if device.type != "cuda":
-        raise ValueError("LLaDA-8B-Instruct requires CUDA inference; select a CUDA-capable runtime.")
-    dtype = _precision_dtype("bf16", device)
+    if device.type not in {"cuda", "mps"}:
+        raise ValueError("LLaDA-8B-Instruct requires CUDA or MPS inference; select a GPU-capable runtime.")
+    # Apple MPS does not reliably support BF16 inference for this remote model.
+    # FP16 is the practical MPS format; CUDA retains BF16 where available.
+    dtype = torch.float16 if device.type == "mps" else _precision_dtype("bf16", device)
     token = os.getenv("HF_TOKEN")
     cache_dir = "base_models"
     try:
@@ -384,9 +386,6 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
 
 def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False):
     """Yield intermediate denoising states, optionally stopping after three identical predictions."""
-    if session.llada:
-        yield from _llada_denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, temperature, seed)
-        return
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
     if max_new_tokens < 1 or num_steps < 1:
@@ -479,47 +478,6 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     text = session.tokenizer.decode(answer, skip_special_tokens=True).strip()
     suffix = f" · permanently retained {len(frozen)} tokens" if permanent_unmask else ""
     return
-
-
-def _llada_denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, temperature: float, seed: int):
-    """Yield official LLaDA-style low-confidence token-transfer steps."""
-    prefix = _prompt_ids(session.tokenizer, question, system_prompt, "llada")
-    max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
-    if max_new_tokens < 1 or num_steps < 1:
-        raise ValueError("max_new_tokens and num_steps must both be at least 1.")
-    torch.manual_seed(int(seed))
-    torch.cuda.manual_seed_all(int(seed))
-    ids = prefix + [session.mask_token_id] * max_new_tokens
-    answer_start = len(prefix)
-    transfers = [max_new_tokens // num_steps + (step < max_new_tokens % num_steps) for step in range(num_steps)]
-    padding = torch.zeros((1, len(ids)), device=session.device, dtype=torch.bool)
-    for step, transfer_count in enumerate(transfers):
-        tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
-        logits = forward_denoising(session, tokens, padding)[0]
-        mask_positions = tokens[0] == session.mask_token_id
-        if not mask_positions.any():
-            break
-        if float(temperature) == 0.0:
-            predictions = logits.argmax(dim=-1)
-        else:
-            noise = torch.rand_like(logits, dtype=torch.float64)
-            noisy_scores = logits.to(torch.float64).exp() / ((-torch.log(noise)) ** float(temperature))
-            predictions = noisy_scores.argmax(dim=-1)
-        probabilities = F.softmax(logits.float(), dim=-1)
-        confidence = probabilities.gather(-1, predictions.unsqueeze(-1)).squeeze(-1)
-        candidate_positions = torch.where(mask_positions)[0]
-        if transfer_count:
-            selected = candidate_positions[torch.topk(confidence[candidate_positions], k=min(transfer_count, len(candidate_positions))).indices]
-            tokens[0, selected] = predictions[selected]
-        ids = tokens[0].tolist()
-        answer = ids[answer_start:]
-        if session.tokenizer.eos_token_id in answer:
-            answer = answer[:answer.index(session.tokenizer.eos_token_id)]
-        text = session.tokenizer.decode(answer, skip_special_tokens=True).strip()
-        rendered_confidence = confidence[answer_start:].tolist()
-        status = f"LLaDA denoising step {step + 1}/{num_steps} · transferred {min(transfer_count, len(candidate_positions))} tokens"
-        html = render_denoising_step(ids, rendered_confidence, answer_start, session.tokenizer, session.mask_token_id, step + 1, num_steps)
-        yield text, status, html
 
 
 def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None) -> tuple[str, str]:

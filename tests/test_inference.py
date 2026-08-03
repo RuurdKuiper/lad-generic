@@ -163,7 +163,7 @@ def test_early_stopping_requires_three_identical_complete_predictions():
     assert "2 output tokens" in states[-1][1]
 
 
-def test_llada_session_uses_native_low_confidence_transfer_steps():
+def test_llada_session_uses_the_app_denoising_loop():
     class Tokenizer:
         eos_token_id = 2
         name_or_path = "toy-llada"
@@ -193,6 +193,6 @@ def test_llada_session_uses_native_low_confidence_transfer_steps():
 
     assert len(states) == 2
     assert states[-1][0] == "3 3 3"
-    assert "transferred 2 tokens" in states[0][1]
+    assert "Denoising step 1/2" in states[0][1]
     assert tokenizer.messages == [{"role": "user", "content": "System\n\nQuestion"}]
     assert model.attention_mask.dtype == torch.long

@@ -162,11 +162,12 @@ forward-pass preflight before reporting success, so incompatible checkpoints
 fail at load time rather than after starting a generation.
 
 The app can also load the official `GSAI-ML/LLaDA-8B-Instruct` model from
-Hugging Face. This loader requires CUDA and uses LLaDA's native low-confidence
-token-transfer sampler rather than this project's random re-masking loop. It
-downloads and executes the model's trusted remote Hugging Face code. Use a
-temperature of `0`, the official greedy-generation setting. The project pins
-Transformers to the LLaDA-compatible 4.x range.
+Hugging Face. This loader runs on CUDA or, experimentally, Apple MPS; CUDA is
+preferred for speed and memory headroom. MPS loads the 8B model in FP16 and may
+need substantial unified memory. LLaDA runs through this project's denoising
+loop, so the ordinary re-masking and retention controls remain available. It
+downloads and executes the model's trusted remote Hugging Face code. The
+project pins Transformers to the LLaDA-compatible 4.x range.
 
 The optional app setting `Early stop after 3 identical predictions` ends a
 denoising request after the complete sampled answer-token sequence is unchanged

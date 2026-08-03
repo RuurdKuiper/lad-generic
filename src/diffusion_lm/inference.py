@@ -12,7 +12,7 @@ from typing import Any, Callable
 import torch
 import torch.nn.functional as F
 from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 
 from .data import validate_mask_token
 from .legacy_compat import install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
@@ -75,6 +75,7 @@ class InferenceSession:
     compute_dtype: str = "unknown"
     legacy_wrapper: bool = False
     prompt_format: str = "chat_template"
+    llada: bool = False
 
 
 def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
@@ -100,7 +101,7 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, use_fast=True, token=token, cache_dir=cache_dir, clean_up_tokenization_spaces=False)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    load_kwargs: dict[str, Any] = dict(dtype=dtype, token=token, cache_dir=cache_dir, trust_remote_code=False)
+    load_kwargs: dict[str, Any] = dict(torch_dtype=dtype, token=token, cache_dir=cache_dir, trust_remote_code=False)
     if use_4bit:
         if device.type != "cuda":
             raise RuntimeError("4-bit inference requires an NVIDIA CUDA device.")
@@ -207,6 +208,48 @@ def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_pa
     )
 
 
+def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: str = "auto") -> InferenceSession:
+    """Load the official LLaDA Instruct model for its native diffusion sampler."""
+    if not repo_id.strip():
+        raise ValueError("LLaDA loading requires a Hugging Face repository ID.")
+    device = select_device(device_name)
+    if device.type != "cuda":
+        raise ValueError("LLaDA-8B-Instruct requires CUDA inference; select a CUDA-capable runtime.")
+    dtype = _precision_dtype("bf16", device)
+    token = os.getenv("HF_TOKEN")
+    cache_dir = "base_models"
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(
+            repo_id.strip(), trust_remote_code=True, token=token, cache_dir=cache_dir,
+        )
+        model = AutoModel.from_pretrained(
+            repo_id.strip(), trust_remote_code=True, torch_dtype=dtype, token=token, cache_dir=cache_dir,
+        )
+    except Exception as exc:
+        raise RuntimeError(
+            "Could not load LLaDA. Its official implementation requires the remote model code "
+            "and is tested with transformers==4.38.2."
+        ) from exc
+    if tokenizer.pad_token_id == 126336:
+        raise ValueError("LLaDA's pad token must differ from its fixed mask token (126336).")
+    tokenizer.padding_side = "left"
+    model.to(device).eval()
+    session = InferenceSession(
+        model=model,
+        tokenizer=tokenizer,
+        device=device,
+        adapter_path=Path(repo_id.strip()),
+        config={"model_source": "huggingface_llada", "repo_id": repo_id.strip()},
+        mask_token_id=126336,
+        quantization="none",
+        compute_dtype=str(dtype).removeprefix("torch."),
+        prompt_format="llada",
+        llada=True,
+    )
+    preflight_session(session)
+    return session
+
+
 def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: torch.Generator | None) -> tuple[torch.Tensor, torch.Tensor]:
     """Top-k sample token IDs and return their normalized sampling confidence."""
     logits = logits / max(temperature, 1e-5)
@@ -222,6 +265,9 @@ def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: tor
 
 def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
     """Return denoising logits for either the current or legacy model wrapper."""
+    if session.llada:
+        outputs = session.model(input_ids, attention_mask=(~padding_mask).to(dtype=torch.long))
+        return outputs.logits
     if session.legacy_wrapper:
         # The archived CustomTransformerModel builds its own full-attention
         # 4-D mask and passes use_cache=False to its inner Peft model. Passing
@@ -240,7 +286,7 @@ def preflight_session(session: InferenceSession) -> tuple[int, int]:
     try:
         logits = forward_denoising(session, input_ids, padding)
     except Exception as exc:
-        source = "legacy hosted checkpoint" if session.legacy_wrapper else "saved adapter"
+        source = "LLaDA" if session.llada else "legacy hosted checkpoint" if session.legacy_wrapper else "saved adapter"
         raise RuntimeError(f"Inference preflight failed for {source}; the model was not loaded for generation: {exc}") from exc
     if logits.ndim != 3 or logits.shape[:2] != input_ids.shape:
         raise RuntimeError(f"Inference preflight returned invalid logits shape {tuple(logits.shape)} for input shape {tuple(input_ids.shape)}")
@@ -266,6 +312,19 @@ def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format
             "<|start_header_id|>assistant<|end_header_id|>\n"
         )
         return list(tokenizer.encode(prompt, add_special_tokens=False))
+    if prompt_format == "llada":
+        rendered = tokenizer.apply_chat_template(
+            [{"role": "user", "content": f"{system_prompt}\n\n{question.strip()}"}],
+            tokenize=True,
+            add_generation_prompt=True,
+        )
+        if isinstance(rendered, str):
+            rendered = tokenizer.encode(rendered, add_special_tokens=False)
+        elif hasattr(rendered, "input_ids"):
+            rendered = rendered.input_ids
+        if rendered and isinstance(rendered[0], list):
+            rendered = rendered[0]
+        return list(rendered)
     if prompt_format != "chat_template":
         raise ValueError(f"Unknown prompt format: {prompt_format}")
     if not getattr(tokenizer, "chat_template", None):
@@ -325,6 +384,9 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
 
 def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False):
     """Yield intermediate denoising states, optionally stopping after three identical predictions."""
+    if session.llada:
+        yield from _llada_denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, temperature, seed)
+        return
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
     if max_new_tokens < 1 or num_steps < 1:
@@ -417,6 +479,47 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     text = session.tokenizer.decode(answer, skip_special_tokens=True).strip()
     suffix = f" · permanently retained {len(frozen)} tokens" if permanent_unmask else ""
     return
+
+
+def _llada_denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, temperature: float, seed: int):
+    """Yield official LLaDA-style low-confidence token-transfer steps."""
+    prefix = _prompt_ids(session.tokenizer, question, system_prompt, "llada")
+    max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
+    if max_new_tokens < 1 or num_steps < 1:
+        raise ValueError("max_new_tokens and num_steps must both be at least 1.")
+    torch.manual_seed(int(seed))
+    torch.cuda.manual_seed_all(int(seed))
+    ids = prefix + [session.mask_token_id] * max_new_tokens
+    answer_start = len(prefix)
+    transfers = [max_new_tokens // num_steps + (step < max_new_tokens % num_steps) for step in range(num_steps)]
+    padding = torch.zeros((1, len(ids)), device=session.device, dtype=torch.bool)
+    for step, transfer_count in enumerate(transfers):
+        tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
+        logits = forward_denoising(session, tokens, padding)[0]
+        mask_positions = tokens[0] == session.mask_token_id
+        if not mask_positions.any():
+            break
+        if float(temperature) == 0.0:
+            predictions = logits.argmax(dim=-1)
+        else:
+            noise = torch.rand_like(logits, dtype=torch.float64)
+            noisy_scores = logits.to(torch.float64).exp() / ((-torch.log(noise)) ** float(temperature))
+            predictions = noisy_scores.argmax(dim=-1)
+        probabilities = F.softmax(logits.float(), dim=-1)
+        confidence = probabilities.gather(-1, predictions.unsqueeze(-1)).squeeze(-1)
+        candidate_positions = torch.where(mask_positions)[0]
+        if transfer_count:
+            selected = candidate_positions[torch.topk(confidence[candidate_positions], k=min(transfer_count, len(candidate_positions))).indices]
+            tokens[0, selected] = predictions[selected]
+        ids = tokens[0].tolist()
+        answer = ids[answer_start:]
+        if session.tokenizer.eos_token_id in answer:
+            answer = answer[:answer.index(session.tokenizer.eos_token_id)]
+        text = session.tokenizer.decode(answer, skip_special_tokens=True).strip()
+        rendered_confidence = confidence[answer_start:].tolist()
+        status = f"LLaDA denoising step {step + 1}/{num_steps} · transferred {min(transfer_count, len(candidate_positions))} tokens"
+        html = render_denoising_step(ids, rendered_confidence, answer_start, session.tokenizer, session.mask_token_id, step + 1, num_steps)
+        yield text, status, html
 
 
 def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None) -> tuple[str, str]:

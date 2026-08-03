@@ -8,7 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import gradio as gr
 
-from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_local_legacy_session, load_session, release_session
+from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 OUTPUTS_DIR = os.getenv("DIFFUSION_LM_OUTPUTS_DIR", "outputs")
@@ -17,6 +17,7 @@ DEFAULT_LOCAL_LEGACY_CHECKPOINT = os.getenv(
     str(Path(__file__).resolve().parent / "legacy/inference/diffusion-model-8B.pth"),
 )
 DEFAULT_LEGACY_CHECKPOINT_FILENAME = "diffusion-model-3B.pth"
+DEFAULT_LLADA_REPOSITORY = "GSAI-ML/LLaDA-8B-Instruct"
 SESSION = None
 
 
@@ -69,6 +70,14 @@ def load_legacy_checkpoint(repo_id, checkpoint_filename, tokenizer_name, device)
     return f"Loaded legacy checkpoint from {source} on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. It is using the current denoising loop."
 
 
+def load_llada_model(repo_id, device):
+    """Load the official LLaDA Instruct model with its native sampler."""
+    global SESSION
+    release_session(SESSION)
+    SESSION = load_llada_session(repo_id, device)
+    return f"Loaded LLaDA `{repo_id}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. Generation uses LLaDA's native low-confidence token-transfer schedule."
+
+
 def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping):
     """Stream colored intermediate denoising states and the final answer to Gradio."""
     if SESSION is None:
@@ -82,7 +91,7 @@ def run(question, system_prompt, max_new_tokens, num_steps, noise_level, tempera
 
 choices = find_adapters(OUTPUTS_DIR)
 with gr.Blocks(title="Diffusion LM inference") as demo:
-    gr.Markdown("# Diffusion LM inference\nLoad a saved adapter or legacy checkpoint, then iteratively denoise an answer. The legacy loader prefers its local checkpoint and falls back to Hugging Face.")
+    gr.Markdown("# Diffusion LM inference\nLoad a saved adapter, LLaDA, or a legacy checkpoint, then iteratively denoise an answer. The legacy loader prefers its local checkpoint and falls back to Hugging Face.")
     with gr.Row():
         gr.Markdown("### Saved adapter")
     with gr.Row():
@@ -99,6 +108,12 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         legacy_tokenizer = gr.Textbox(value="meta-llama/Llama-3.2-3B", label="Legacy tokenizer/base model")
         legacy_device = gr.Dropdown(["auto", "mps", "cuda", "cpu"], value="auto", label="Device")
         load_legacy = gr.Button("Load legacy checkpoint", variant="primary")
+    with gr.Row():
+        gr.Markdown("### Official LLaDA Instruct (CUDA required)")
+    with gr.Row():
+        llada_repo = gr.Textbox(value=DEFAULT_LLADA_REPOSITORY, label="LLaDA Hugging Face repository")
+        llada_device = gr.Dropdown(["auto", "cuda"], value="auto", label="Device")
+        load_llada = gr.Button("Load LLaDA", variant="primary")
     status = gr.Markdown("Choose a saved adapter and click **Load model**.")
     question = gr.Textbox(label="Question", lines=4, value="What do you know about Amsterdam?")
     system_prompt = gr.Textbox(label="System prompt", value="You are a helpful assistant.")
@@ -106,7 +121,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         max_new_tokens = gr.Slider(1, 512, value=128, step=1, label="Answer tokens")
         num_steps = gr.Slider(1, 128, value=32, step=1, label="Denoising steps")
         noise_level = gr.Slider(0, 1, value=.5, step=.05, label="Initial re-mask probability")
-        temperature = gr.Slider(.1, 2, value=.7, step=.05, label="Temperature")
+        temperature = gr.Slider(0, 2, value=.7, step=.05, label="Temperature (LLaDA: 0 recommended)")
         top_k = gr.Slider(1, 100, value=20, step=1, label="Top-k")
         seed = gr.Number(value=42, precision=0, label="Seed")
     with gr.Row():
@@ -120,6 +135,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     refresh.click(refresh_models, outputs=adapter)
     load_adapter.click(load_saved_adapter, inputs=[adapter, adapter_device, adapter_quantization], outputs=status)
     load_legacy.click(load_legacy_checkpoint, inputs=[legacy_repo, legacy_filename, legacy_tokenizer, legacy_device], outputs=status)
+    load_llada.click(load_llada_model, inputs=[llada_repo, llada_device], outputs=status)
     generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping], outputs=[detail, intermediate])
 
 

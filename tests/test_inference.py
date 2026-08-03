@@ -161,3 +161,38 @@ def test_early_stopping_requires_three_identical_complete_predictions():
     assert len(states) == 3
     assert "stopped early" in states[-1][1]
     assert "2 output tokens" in states[-1][1]
+
+
+def test_llada_session_uses_native_low_confidence_transfer_steps():
+    class Tokenizer:
+        eos_token_id = 2
+        name_or_path = "toy-llada"
+
+        def apply_chat_template(self, messages, **_kwargs):
+            self.messages = messages
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def forward(self, input_ids, attention_mask):
+            self.attention_mask = attention_mask
+            logits = torch.full((*input_ids.shape, 10), -100.0)
+            logits[..., 3] = 100.0
+            return type("Output", (), {"logits": logits})()
+
+    tokenizer = Tokenizer()
+    model = Model()
+    session = InferenceSession(model, tokenizer, torch.device("cpu"), Path("."), {}, 9, llada=True, prompt_format="llada")
+    states = list(denoise_stream(session, "Question", "System", 3, 2, .5, 0., 20, 1234))
+
+    assert len(states) == 2
+    assert states[-1][0] == "3 3 3"
+    assert "transferred 2 tokens" in states[0][1]
+    assert tokenizer.messages == [{"role": "user", "content": "System\n\nQuestion"}]
+    assert model.attention_mask.dtype == torch.long

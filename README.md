@@ -161,6 +161,13 @@ load only sources you trust. Every loader performs a one-step real
 forward-pass preflight before reporting success, so incompatible checkpoints
 fail at load time rather than after starting a generation.
 
+The app can also load the official `GSAI-ML/LLaDA-8B-Instruct` model from
+Hugging Face. This loader requires CUDA and uses LLaDA's native low-confidence
+token-transfer sampler rather than this project's random re-masking loop. It
+downloads and executes the model's trusted remote Hugging Face code. Use a
+temperature of `0`, the official greedy-generation setting. The project pins
+Transformers to the LLaDA-compatible 4.x range.
+
 The optional app setting `Early stop after 3 identical predictions` ends a
 denoising request after the complete sampled answer-token sequence is unchanged
 for three consecutive iterations, matching the legacy app. It is disabled by

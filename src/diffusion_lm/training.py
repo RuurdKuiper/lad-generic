@@ -4,7 +4,6 @@ import json
 import atexit
 import hashlib
 import os
-import shutil
 from pathlib import Path
 from typing import Any
 
@@ -99,6 +98,18 @@ def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
     return settings
 
 
+def _available_output_dir(path: Path) -> Path:
+    """Return path or the next unused suffixed sibling without modifying it."""
+    if not path.exists():
+        return path
+    suffix = 1
+    while True:
+        candidate = path.parent / f"{path.name}_{suffix}"
+        if not candidate.exists():
+            return candidate
+        suffix += 1
+
+
 def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int) -> dict[str, float]:
     """Generate fixed prompts step-by-step, save trajectories, and calculate base perplexity."""
     settings = _generation_inference_settings(config)
@@ -188,24 +199,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         if not output_path.is_absolute():
             config["output_dir"] = str(Path(output_root) / output_path)
     output = Path(config["output_dir"])
-    output.mkdir(parents=True, exist_ok=True)
-    # A new run owns its configured output directory. Remove only artifacts
-    # produced by this project, leaving unrelated user files untouched. An
-    # explicit resume opts out so its source checkpoint/adapter is preserved.
     if not config.get("resume_from_checkpoint") and not config.get("resume_from_adapter"):
-        for artifact in (
-            "best", "final", "metrics.jsonl", "generation_metrics.jsonl",
-            "resolved_config.json", "parameter_audit.json", "mask_token.json",
-            "test_metrics.json",
-        ):
-            target = output / artifact
-            if target.is_dir():
-                shutil.rmtree(target)
-            elif target.exists():
-                target.unlink()
-        for target in output.glob("checkpoint-*"):
-            if target.is_dir():
-                shutil.rmtree(target)
+        output = _available_output_dir(output)
+        config["output_dir"] = str(output)
+    output.mkdir(parents=True, exist_ok=True)
     configured_updates_hint = config.get("max_updates")
     if configured_updates_hint is None:
         configured_updates_hint = config.get("max_steps")

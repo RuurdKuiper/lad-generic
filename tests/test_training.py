@@ -1,4 +1,19 @@
-from diffusion_lm.training import _generation_inference_settings
+from diffusion_lm.training import _available_output_dir, _generation_inference_settings
+
+
+def test_available_output_dir_adds_incrementing_suffixes(tmp_path):
+    base = tmp_path / "run"
+    base.mkdir()
+    (tmp_path / "run_1").mkdir()
+    (tmp_path / "run_3").mkdir()
+
+    assert _available_output_dir(base) == tmp_path / "run_2"
+
+
+def test_available_output_dir_keeps_unused_path(tmp_path):
+    path = tmp_path / "new-run"
+
+    assert _available_output_dir(path) == path
 
 
 def test_mask_only_generation_uses_full_remasking_and_permanent_retention():

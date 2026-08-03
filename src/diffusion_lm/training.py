@@ -88,9 +88,20 @@ def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], i
     return {"generation_perplexity": float(torch.exp(torch.tensor(mean_nll))), "generation_mean_nll": mean_nll, "generation_tokens": total_tokens}
 
 
+def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
+    """Resolve generation settings, including corruption-mode-specific inference."""
+    settings = dict(config.get("generation_perplexity", {}))
+    if config.get("corruption_mode") == "mask_only":
+        # Mask-only training learns to reconstruct fully masked answers. Keep
+        # already recovered tokens fixed during validation generation and start
+        # each answer from a fully remasked state for a matching evaluation.
+        settings.update(permanent_unmask=True, noise_level=1.0)
+    return settings
+
+
 def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int) -> dict[str, float]:
     """Generate fixed prompts step-by-step, save trajectories, and calculate base perplexity."""
-    settings = config.get("generation_perplexity", {})
+    settings = _generation_inference_settings(config)
     prompts = settings.get("prompts", ["What do you know about Amsterdam?", "Tell me a story about a little dwarf.", "Why is the sky blue?", "Explain how plants grow.", "What makes a good friend?"])
     session = InferenceSession(model, tokenizer, device, output, config, mask_token_id, str(config.get("quantization", "none")))
     trajectories = []

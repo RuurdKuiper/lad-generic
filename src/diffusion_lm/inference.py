@@ -268,7 +268,11 @@ def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: tor
 def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
     """Return denoising logits for either the current or legacy model wrapper."""
     if session.llada:
-        outputs = session.model(input_ids, attention_mask=(~padding_mask).to(dtype=torch.long))
+        # LLaDA caches rotary embeddings during preflight. Its remote model code
+        # requires all later uses of those cached inference tensors to remain in
+        # inference mode as well.
+        with torch.inference_mode():
+            outputs = session.model(input_ids, attention_mask=(~padding_mask).to(dtype=torch.long))
         return outputs.logits
     if session.legacy_wrapper:
         # The archived CustomTransformerModel builds its own full-attention

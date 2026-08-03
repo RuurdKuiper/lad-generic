@@ -182,6 +182,7 @@ def test_llada_session_uses_the_app_denoising_loop():
 
         def forward(self, input_ids, attention_mask):
             self.attention_mask = attention_mask
+            self.inference_mode = torch.is_inference_mode_enabled()
             logits = torch.full((*input_ids.shape, 10), -100.0)
             logits[..., 3] = 100.0
             return type("Output", (), {"logits": logits})()
@@ -196,3 +197,4 @@ def test_llada_session_uses_the_app_denoising_loop():
     assert "Denoising step 1/2" in states[0][1]
     assert tokenizer.messages == [{"role": "user", "content": "System\n\nQuestion"}]
     assert model.attention_mask.dtype == torch.long
+    assert model.inference_mode is True

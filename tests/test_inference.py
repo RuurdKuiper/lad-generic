@@ -5,6 +5,7 @@ import pytest
 import torch
 
 from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _safe_adapter_path, find_adapters, forward_denoising
+from diffusion_lm.legacy_compat import install_legacy_pickle_modules, restore_legacy_pickle_modules
 
 
 def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
@@ -56,3 +57,13 @@ def test_legacy_wrapper_uses_its_own_forward_without_an_attention_mask():
     logits = forward_denoising(session, torch.tensor([[1, 2]]), torch.zeros((1, 2), dtype=torch.bool))
     assert logits.shape == (1, 2, 3)
     assert model.called[1] is False
+
+
+def test_legacy_pickle_compatibility_registers_main_module_aliases():
+    import __main__
+    previous = install_legacy_pickle_modules()
+    try:
+        assert hasattr(__main__, "CustomTransformerModel")
+        assert hasattr(__main__, "CustomTransformerConfig")
+    finally:
+        restore_legacy_pickle_modules(previous)

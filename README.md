@@ -144,10 +144,10 @@ support (including T4), inference automatically uses FP16 compute even when
 the saved training configuration requested BF16.
 
 For an inference-only comparison with the earlier hosted full-model checkpoint,
-the app's `Model source` selector also offers `Hugging Face legacy checkpoint`.
-Enter the trusted repository, `.pth` filename, and the tokenizer/base-model
-name used by that checkpoint (the legacy defaults are prefilled). This runs the
-hosted checkpoint through the current chat-template, sampling, and remasking
+the app has a separate `Hugging Face legacy checkpoint` loader row. Enter the
+trusted repository, `.pth` filename, and the tokenizer/base-model name used by
+that checkpoint (the legacy defaults are prefilled). This runs the hosted
+checkpoint through the current chat-template, sampling, and remasking
 implementation. The legacy wrapper retains its own full bidirectional attention
 forward because passing a second attention mask to it is invalid. Full `.pth`
 checkpoints use Python pickle; load only repositories you trust.

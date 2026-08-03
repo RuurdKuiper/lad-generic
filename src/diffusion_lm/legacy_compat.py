@@ -53,22 +53,42 @@ class LegacyCustomTransformerModel(PreTrainedModel):
         return {"loss": loss, "logits": logits}
 
 
-def install_legacy_pickle_modules() -> dict[str, types.ModuleType | None]:
-    """Temporarily register the historical module names expected by torch.load."""
-    previous = {name: sys.modules.get(name) for name in ("model_config", "models")}
+_MISSING = object()
+
+
+def install_legacy_pickle_modules() -> dict[str, object]:
+    """Temporarily register the historical class locations expected by torch.load."""
+    previous: dict[str, object] = {name: sys.modules.get(name) for name in ("model_config", "models")}
     config_module = types.ModuleType("model_config")
     config_module.CustomTransformerConfig = LegacyCustomTransformerConfig
     model_module = types.ModuleType("models")
     model_module.CustomTransformerModel = LegacyCustomTransformerModel
     sys.modules["model_config"] = config_module
     sys.modules["models"] = model_module
+    # Some notebook-created full checkpoints pickle these classes under
+    # ``__main__`` rather than their original source modules.
+    main_module = sys.modules["__main__"]
+    for name, value in {
+        "CustomTransformerConfig": LegacyCustomTransformerConfig,
+        "CustomTransformerModel": LegacyCustomTransformerModel,
+    }.items():
+        previous[f"__main__.{name}"] = getattr(main_module, name, _MISSING)
+        setattr(main_module, name, value)
     return previous
 
 
-def restore_legacy_pickle_modules(previous: dict[str, types.ModuleType | None]) -> None:
+def restore_legacy_pickle_modules(previous: dict[str, object]) -> None:
     """Restore module registrations changed for one trusted checkpoint load."""
-    for name, module in previous.items():
+    for name in ("model_config", "models"):
+        module = previous[name]
         if module is None:
             sys.modules.pop(name, None)
         else:
-            sys.modules[name] = module
+            sys.modules[name] = module  # type: ignore[assignment]
+    main_module = sys.modules["__main__"]
+    for name in ("CustomTransformerConfig", "CustomTransformerModel"):
+        previous_value = previous[f"__main__.{name}"]
+        if previous_value is _MISSING:
+            delattr(main_module, name)
+        else:
+            setattr(main_module, name, previous_value)

@@ -13,14 +13,14 @@ validation_samples: 200
 # Stored legacy structured examples: use their precomputed corruption and
 # supervise the complete fixed-width sequence, including EOS padding.
 corruption_mode: mask_only  # Options: structured, mask_only
-structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
 include_answer_eos: true
 max_sequence_length: 256
 multi_turn_prob: 0.0
 t_min: 0.001
 
-output_dir: outputs/llama-3.1-8b-mask-legacysettings
+output_dir: outputs/llama-3.1-8b-mask-legacysettings-corrupted-loss
 seed: 42
 
 # The inspected legacy 8B checkpoint trained q/v LoRA only: no norms, no

@@ -67,16 +67,24 @@ def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():
             self.called = {"input_ids": input_ids, "attention_mask": attention_mask, "output_hidden_states": output_hidden_states, "use_cache": use_cache}
             return type("Output", (), {"logits": torch.zeros((*input_ids.shape, 3))})()
 
+    class LegacyPeftOuter(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.base_model = InnerModel()
+
+        def forward(self, *_args, **_kwargs):
+            raise AssertionError("version-sensitive PeftModel.forward should be bypassed")
+
     class LegacyModel(LegacyCustomTransformerModel):
         def __init__(self):
             super().__init__(LegacyCustomTransformerConfig(vocab_size=3))
-            self.llama = InnerModel()
+            self.llama = LegacyPeftOuter()
 
     model = LegacyModel()
     session = InferenceSession(model, None, torch.device("cpu"), Path("."), {}, 0, legacy_wrapper=True)
     logits = forward_denoising(session, torch.tensor([[1, 2]]), torch.zeros((1, 2), dtype=torch.bool))
     assert logits.shape == (1, 2, 3)
-    assert model.llama.called["use_cache"] is False
+    assert model.llama.base_model.called["use_cache"] is False
 
 
 def test_legacy_pickle_compatibility_registers_main_module_aliases():

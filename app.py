@@ -16,6 +16,7 @@ DEFAULT_LOCAL_LEGACY_CHECKPOINT = os.getenv(
     "DIFFUSION_LM_LEGACY_CHECKPOINT",
     str(Path(__file__).resolve().parent / "legacy/inference/diffusion-model-8B.pth"),
 )
+DEFAULT_LEGACY_CHECKPOINT_FILENAME = "diffusion-model-3B.pth"
 SESSION = None
 
 
@@ -47,10 +48,18 @@ def load_saved_adapter(selection, device, quantization):
 
 
 def load_legacy_checkpoint(repo_id, checkpoint_filename, tokenizer_name, device):
-    """Prefer the local legacy checkpoint, falling back to the trusted hosted copy."""
+    """Prefer the requested local legacy checkpoint, then use the trusted hosted copy."""
     global SESSION
     release_session(SESSION)
-    local_checkpoint = Path(DEFAULT_LOCAL_LEGACY_CHECKPOINT).expanduser()
+    configured_local_checkpoint = os.getenv("DIFFUSION_LM_LEGACY_CHECKPOINT")
+    if configured_local_checkpoint:
+        # An explicit environment setting is a full-path override.
+        local_checkpoint = Path(configured_local_checkpoint).expanduser()
+    else:
+        # Otherwise, use the filename selected in the UI in the same directory
+        # as the existing local 8B checkpoint.
+        filename = (checkpoint_filename or DEFAULT_LEGACY_CHECKPOINT_FILENAME).strip()
+        local_checkpoint = Path(DEFAULT_LOCAL_LEGACY_CHECKPOINT).expanduser().parent / filename
     if local_checkpoint.is_file():
         SESSION = load_local_legacy_session(local_checkpoint, tokenizer_name, device)
         source = f"local file `{SESSION.adapter_path}` (no checkpoint download)"
@@ -86,7 +95,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         gr.Markdown("### Legacy checkpoint (local preferred, Hugging Face fallback)")
     with gr.Row():
         legacy_repo = gr.Textbox(value="ruurd/tini_model", label="Fallback Hugging Face repository")
-        legacy_filename = gr.Textbox(value="diffusion-model-8B.pth", label="Fallback checkpoint filename")
+        legacy_filename = gr.Textbox(value=DEFAULT_LEGACY_CHECKPOINT_FILENAME, label="Local/Hugging Face checkpoint filename")
         legacy_tokenizer = gr.Textbox(value="meta-llama/Llama-3.2-3B", label="Legacy tokenizer/base model")
         legacy_device = gr.Dropdown(["auto", "mps", "cuda", "cpu"], value="auto", label="Device")
         load_legacy = gr.Button("Load legacy checkpoint", variant="primary")

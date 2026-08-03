@@ -145,10 +145,11 @@ the saved training configuration requested BF16.
 
 For an inference-only comparison with the earlier full-model checkpoint, the
 app has one `Legacy checkpoint` loader row. It automatically uses
-`legacy/inference/diffusion-model-8B.pth` when that local file exists, without
+`legacy/inference/diffusion-model-3B.pth` when that local file exists, without
 downloading the checkpoint from Hugging Face; otherwise it uses the configured
-Hugging Face repository and filename as a fallback. Override the local path
-with `DIFFUSION_LM_LEGACY_CHECKPOINT=/path/to/model.pth`. The tokenizer may
+Hugging Face repository and filename as a fallback. The selected checkpoint
+filename is looked up in the same local directory as the 8B checkpoint. Override
+the local path with `DIFFUSION_LM_LEGACY_CHECKPOINT=/path/to/model.pth`. The tokenizer may
 still be loaded from its Hugging Face cache (or downloaded once if it is not
 cached). This runs the checkpoint through the current sampling and remasking implementation. The
 historical base tokenizer has no native chat template, so

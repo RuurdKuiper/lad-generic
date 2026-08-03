@@ -1,0 +1,73 @@
+# Controlled structured-training comparison with the legacy implementation.
+# This intentionally keeps the current 8B model and 10,000-update test budget,
+# while matching the legacy optimisation and trainable-parameter behavior.
+model_name_or_path: meta-llama/Llama-3.2-3B-Instruct
+tokenizer_name_or_path: meta-llama/Llama-3.2-3B-Instruct
+
+dataset_name: Ruurd/LAD-training
+splits: {train: train, validation: validation, test: test}
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+validation_samples: 200
+
+# Stored legacy structured examples: use their precomputed corruption and
+# supervise the complete fixed-width sequence, including EOS padding.
+corruption_mode: structured  # Options: structured, mask_only
+structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+eos_padding_loss: true  # Options: true, false
+include_answer_eos: true
+max_sequence_length: 256
+multi_turn_prob: 0.0
+
+output_dir: outputs/llama-3.2-3b-structured-legacysettings
+seed: 42
+
+# The inspected legacy 8B checkpoint trained q/v LoRA only: no norms, no
+# LoRA dropout, rank/alpha 1024.
+lora_r: 1024
+lora_alpha: 1024
+lora_dropout: 0.0
+lora_targets: [q_proj, v_proj]
+train_normalization_layers: false
+
+# Legacy Trainer-equivalent optimizer settings.
+learning_rate: 1.0e-5
+optimizer: adamw  # Options: adamw, adamw8bit
+weight_decay: 0.01
+max_grad_norm: 0.5
+scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
+warmup_steps: 100
+
+batch_size: 8
+eval_batch_size: 8
+gradient_accumulation_steps: 1
+num_workers: 4
+epochs: 1
+max_updates: 10000
+
+# Legacy used an unquantized FP16 model. This needs substantially more GPU
+# memory than the regular QLoRA Colab configuration.
+precision: fp16  # Options: fp16, bf16, fp32
+quantization: none  # Options: none, 4bit
+gradient_checkpointing: false
+
+logging_steps: 10
+validation_steps: 250
+checkpoint_steps: 1000
+checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
+
+generation_perplexity:
+  enabled: true
+  num_prompts: 5
+  num_steps: 32
+  max_new_tokens: 128
+  noise_level: 0.5
+  temperature: 0.7
+  top_k: 3
+  seed: 1234
+  prompts:
+    - "What do you know about Amsterdam?"
+    - "Tell me a story about a little dwarf."
+    - "Why is the sky blue?"
+    - "Explain how plants grow."
+    - "What makes a good friend?"

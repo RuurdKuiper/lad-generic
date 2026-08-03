@@ -1,0 +1,9 @@
+torch>=2.0.0
+transformers>=4.38.0
+datasets>=2.16.0
+peft==0.15.1
+accelerate>=0.24.1
+gradio>=4.10.0
+numpy
+load_dotenv
+ipython

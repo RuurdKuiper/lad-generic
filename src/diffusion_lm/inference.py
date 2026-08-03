@@ -15,6 +15,7 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .data import validate_mask_token
+from .legacy_compat import install_legacy_pickle_modules, restore_legacy_pickle_modules
 from .modeling import forward_bidirectional
 
 
@@ -72,6 +73,7 @@ class InferenceSession:
     mask_token_id: int
     quantization: str = "none"
     compute_dtype: str = "unknown"
+    legacy_wrapper: bool = False
 
 
 def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
@@ -131,6 +133,53 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     return InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
 
 
+def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_path: str, device_name: str = "auto") -> InferenceSession:
+    """Load the trusted legacy full-model checkpoint hosted on Hugging Face.
+
+    This exists for controlled comparisons: the checkpoint uses its original
+    wrapper to construct full bidirectional attention, while decoding uses the
+    current project's prompt and denoising loop.  Pickled checkpoints are only
+    safe to load from a repository you trust.
+    """
+    if not repo_id.strip() or not filename.strip() or not tokenizer_name_or_path.strip():
+        raise ValueError("Hosted legacy loading requires a repository ID, checkpoint filename, and tokenizer name.")
+    try:
+        from huggingface_hub import hf_hub_download
+    except ImportError as exc:
+        raise ImportError("Hosted model loading requires huggingface_hub, installed with transformers.") from exc
+
+    token = os.getenv("HF_TOKEN")
+    checkpoint = hf_hub_download(repo_id=repo_id.strip(), filename=filename.strip(), token=token)
+    # Full-object torch checkpoints retain the original module names
+    # (models.CustomTransformerModel and model_config.CustomTransformerConfig).
+    # Register tracked compatibility classes only while unpickling.
+    previous_modules = install_legacy_pickle_modules()
+    try:
+        model = torch.load(checkpoint, map_location="cpu", weights_only=False)
+    finally:
+        restore_legacy_pickle_modules(previous_modules)
+    if not isinstance(model, torch.nn.Module):
+        raise ValueError(f"{repo_id}/{filename} is not a full torch.nn.Module checkpoint.")
+
+    device = select_device(device_name)
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name_or_path.strip(), use_fast=True, token=token, clean_up_tokenization_spaces=False)
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    model.to(device).eval()
+    mask_info = validate_mask_token(tokenizer)
+    return InferenceSession(
+        model=model,
+        tokenizer=tokenizer,
+        device=device,
+        adapter_path=Path(checkpoint),
+        config={"model_source": "huggingface_legacy", "repo_id": repo_id.strip(), "filename": filename.strip(), "tokenizer_name_or_path": tokenizer_name_or_path.strip()},
+        mask_token_id=mask_info["mask_token_id"],
+        quantization="none",
+        compute_dtype=str(next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)).removeprefix("torch."),
+        legacy_wrapper=True,
+    )
+
+
 def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: torch.Generator | None) -> tuple[torch.Tensor, torch.Tensor]:
     """Top-k sample token IDs and return their normalized sampling confidence."""
     logits = logits / max(temperature, 1e-5)
@@ -142,6 +191,16 @@ def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: tor
     picked = indices.gather(-1, picked_local).squeeze(-1)
     confidence = probabilities.gather(-1, picked_local).squeeze(-1)
     return picked, confidence
+
+
+def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
+    """Return denoising logits for either the current or legacy model wrapper."""
+    if session.legacy_wrapper:
+        # The archived CustomTransformerModel builds its own full-attention
+        # 4-D mask. Passing the current mask would duplicate attention_mask.
+        outputs = session.model(input_ids=input_ids, use_cache=False)
+        return outputs["logits"] if isinstance(outputs, dict) else outputs.logits
+    return forward_bidirectional(session.model, input_ids, padding_mask)
 
 
 def _prompt_ids(tokenizer: Any, question: str, system_prompt: str) -> list[int]:
@@ -220,7 +279,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     for step in range(num_steps):
         tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
         with torch.inference_mode():
-            logits = forward_bidirectional(session.model, tokens, padding)[0, answer_start:]
+            logits = forward_denoising(session, tokens, padding)[0, answer_start:]
             sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
         ids[answer_start:] = sampled.tolist()
         for offset, token in frozen.items():

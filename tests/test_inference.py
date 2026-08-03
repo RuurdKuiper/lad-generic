@@ -1,9 +1,10 @@
 import json
+from pathlib import Path
 
 import pytest
 import torch
 
-from diffusion_lm.inference import _precision_dtype, _prompt_ids, _safe_adapter_path, find_adapters
+from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _safe_adapter_path, find_adapters, forward_denoising
 
 
 def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
@@ -42,3 +43,16 @@ def test_prompt_ids_falls_back_for_systemless_chat_template():
 def test_bf16_inference_falls_back_to_fp16_on_non_bf16_cuda(monkeypatch):
     monkeypatch.setattr(torch.cuda, "is_bf16_supported", lambda: False)
     assert _precision_dtype("bf16", torch.device("cuda")) == torch.float16
+
+
+def test_legacy_wrapper_uses_its_own_forward_without_an_attention_mask():
+    class LegacyModel(torch.nn.Module):
+        def forward(self, input_ids, use_cache):
+            self.called = (input_ids, use_cache)
+            return {"logits": torch.zeros((*input_ids.shape, 3))}
+
+    model = LegacyModel()
+    session = InferenceSession(model, None, torch.device("cpu"), Path("."), {}, 0, legacy_wrapper=True)
+    logits = forward_denoising(session, torch.tensor([[1, 2]]), torch.zeros((1, 2), dtype=torch.bool))
+    assert logits.shape == (1, 2, 3)
+    assert model.called[1] is False

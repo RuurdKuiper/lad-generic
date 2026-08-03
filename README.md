@@ -143,6 +143,15 @@ same `Inference quantization` selector. On CUDA GPUs without native BF16
 support (including T4), inference automatically uses FP16 compute even when
 the saved training configuration requested BF16.
 
+For an inference-only comparison with the earlier hosted full-model checkpoint,
+the app's `Model source` selector also offers `Hugging Face legacy checkpoint`.
+Enter the trusted repository, `.pth` filename, and the tokenizer/base-model
+name used by that checkpoint (the legacy defaults are prefilled). This runs the
+hosted checkpoint through the current chat-template, sampling, and remasking
+implementation. The legacy wrapper retains its own full bidirectional attention
+forward because passing a second attention mask to it is invalid. Full `.pth`
+checkpoints use Python pickle; load only repositories you trust.
+
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final
 evaluation/output handling and the Slurm job exits, releasing its allocation.

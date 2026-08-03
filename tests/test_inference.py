@@ -5,7 +5,7 @@ import pytest
 import torch
 
 from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _safe_adapter_path, find_adapters, forward_denoising
-from diffusion_lm.legacy_compat import install_legacy_pickle_modules, restore_legacy_pickle_modules
+from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, restore_legacy_pickle_modules
 
 
 def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
@@ -61,17 +61,22 @@ def test_bf16_inference_falls_back_to_fp16_on_non_bf16_cuda(monkeypatch):
     assert _precision_dtype("bf16", torch.device("cuda")) == torch.float16
 
 
-def test_legacy_wrapper_uses_its_own_forward_without_an_attention_mask():
-    class LegacyModel(torch.nn.Module):
-        def forward(self, input_ids, use_cache):
-            self.called = (input_ids, use_cache)
-            return {"logits": torch.zeros((*input_ids.shape, 3))}
+def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():
+    class InnerModel(torch.nn.Module):
+        def forward(self, input_ids, attention_mask, output_hidden_states, use_cache):
+            self.called = {"input_ids": input_ids, "attention_mask": attention_mask, "output_hidden_states": output_hidden_states, "use_cache": use_cache}
+            return type("Output", (), {"logits": torch.zeros((*input_ids.shape, 3))})()
+
+    class LegacyModel(LegacyCustomTransformerModel):
+        def __init__(self):
+            super().__init__(LegacyCustomTransformerConfig(vocab_size=3))
+            self.llama = InnerModel()
 
     model = LegacyModel()
     session = InferenceSession(model, None, torch.device("cpu"), Path("."), {}, 0, legacy_wrapper=True)
     logits = forward_denoising(session, torch.tensor([[1, 2]]), torch.zeros((1, 2), dtype=torch.bool))
     assert logits.shape == (1, 2, 3)
-    assert model.called[1] is False
+    assert model.llama.called["use_cache"] is False
 
 
 def test_legacy_pickle_compatibility_registers_main_module_aliases():

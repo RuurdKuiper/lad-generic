@@ -199,8 +199,9 @@ def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, paddin
     """Return denoising logits for either the current or legacy model wrapper."""
     if session.legacy_wrapper:
         # The archived CustomTransformerModel builds its own full-attention
-        # 4-D mask. Passing the current mask would duplicate attention_mask.
-        outputs = session.model(input_ids=input_ids, use_cache=False)
+        # 4-D mask and passes use_cache=False to its inner Peft model. Passing
+        # either argument here would duplicate the wrapper's keyword.
+        outputs = session.model(input_ids=input_ids)
         return outputs["logits"] if isinstance(outputs, dict) else outputs.logits
     return forward_bidirectional(session.model, input_ids, padding_mask)
 

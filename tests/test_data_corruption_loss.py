@@ -138,11 +138,28 @@ def test_per_example_inverse_t_weighting_same_position():
     logits = torch.tensor([[[0., 0.]], [[0., -2.]]])
     labels = torch.tensor([[1], [1]])
     mask = torch.tensor([[True], [True]])
-    loss, metrics = masked_denoising_loss(logits, labels, mask, torch.tensor([.5, 1.]))
+    normalization = torch.tensor([[True], [True]])
+    loss, metrics = masked_denoising_loss(logits, labels, mask, torch.tensor([.5, 1.]), normalization)
     ce0 = torch.logsumexp(torch.tensor([0., 0.]), 0)
     ce1 = -torch.tensor(-2.) + torch.logsumexp(torch.tensor([0., -2.]), 0)
     assert torch.allclose(loss, ((ce0 / .5) + ce1) / 2)
     assert torch.allclose(metrics["unweighted_masked_token_ce"], (ce0 + ce1) / 2)
+
+
+def test_inverse_t_weighting_uses_full_response_length_not_masked_count():
+    logits = torch.tensor([[[0., 0.]], [[0., -2.]]])
+    labels = torch.tensor([[1], [1]])
+    loss_mask = torch.tensor([[True], [True]])
+    normalization = torch.tensor([
+        [True, True, True, True],
+        [True, True, False, False],
+    ])
+    sampled_t = torch.tensor([.5, 1.])
+    loss, _ = masked_denoising_loss(logits, labels, loss_mask, sampled_t, normalization)
+    ce0 = torch.logsumexp(torch.tensor([0., 0.]), 0)
+    ce1 = -torch.tensor(-2.) + torch.logsumexp(torch.tensor([0., -2.]), 0)
+    expected = ((ce0 / .5 / 4) + (ce1 / 1. / 2)) / 2
+    assert torch.allclose(loss, expected)
 
 
 def test_same_position_logits_not_shifted():

@@ -11,7 +11,7 @@ eos_padding_loss: false  # Options: true, false
 output_dir: outputs/qwen25-7b-mask-only
 seed: 42
 max_sequence_length: 512
-t_min: 0.1
+t_min: 0.001
 include_answer_eos: true
 lora_r: 1024
 lora_alpha: 1024

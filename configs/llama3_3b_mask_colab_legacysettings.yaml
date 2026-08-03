@@ -13,6 +13,7 @@ validation_samples: 200
 # Stored legacy structured examples: use their precomputed corruption and
 # supervise the complete fixed-width sequence, including EOS padding.
 corruption_mode: mask_only  # Options: structured, mask_only
+t_min: 0.001
 structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
 include_answer_eos: true

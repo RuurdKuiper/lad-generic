@@ -17,7 +17,7 @@ structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_an
 eos_padding_loss: true  # Options: true, false
 output_dir: outputs/qwen-2.5-7b-mask
 seed: 42
-t_min: 0.1
+t_min: 0.001
 include_answer_eos: true
 
 # Include multi-turn

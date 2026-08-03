@@ -16,7 +16,7 @@ corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
 seed: 42
-t_min: 0.1
+t_min: 0.001
 include_answer_eos: true
 
 # Include multi-turn

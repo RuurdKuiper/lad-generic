@@ -148,7 +148,7 @@ class DenoisingCollator:
     eos_padding_loss: bool | None = None
     seed: int = 0
     deterministic: bool = False
-    t_min: float = 0.1
+    t_min: float = 1e-3
     multi_turn_prob: float = 0.0
     max_history_turns: int = 2
 

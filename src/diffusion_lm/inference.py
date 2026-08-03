@@ -15,7 +15,7 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from .data import validate_mask_token
-from .legacy_compat import install_legacy_pickle_modules, restore_legacy_pickle_modules
+from .legacy_compat import install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 from .modeling import forward_bidirectional
 
 
@@ -131,7 +131,55 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
         model.to(device)
     model.eval()
     mask_info = validate_mask_token(tokenizer)
-    return InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
+    session = InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
+    preflight_session(session)
+    return session
+
+
+def _load_legacy_checkpoint_session(checkpoint: str | Path, tokenizer_name_or_path: str, device_name: str = "auto", source_config: dict[str, Any] | None = None) -> InferenceSession:
+    """Load one trusted legacy full-object checkpoint from a local path."""
+    checkpoint = Path(checkpoint).expanduser().resolve()
+    if not checkpoint.is_file():
+        raise ValueError(f"Legacy checkpoint does not exist: {checkpoint}")
+    if not tokenizer_name_or_path.strip():
+        raise ValueError("Legacy loading requires a tokenizer name or local tokenizer path.")
+    # A full-object checkpoint can execute pickle code.  This loader is for
+    # checkpoints the user trusts, including their locally archived model.
+    previous_modules = install_legacy_pickle_modules()
+    try:
+        model = torch.load(checkpoint, map_location="cpu", weights_only=False)
+    finally:
+        restore_legacy_pickle_modules(previous_modules)
+    if not isinstance(model, torch.nn.Module):
+        raise ValueError(f"{checkpoint} is not a full torch.nn.Module checkpoint.")
+    patch_legacy_lora_modules(model)
+
+    token = os.getenv("HF_TOKEN")
+    device = select_device(device_name)
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name_or_path.strip(), use_fast=True, token=token, clean_up_tokenization_spaces=False)
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    model.to(device).eval()
+    mask_info = validate_mask_token(tokenizer)
+    session = InferenceSession(
+        model=model,
+        tokenizer=tokenizer,
+        device=device,
+        adapter_path=checkpoint,
+        config=source_config or {"model_source": "local_legacy", "checkpoint": str(checkpoint), "tokenizer_name_or_path": tokenizer_name_or_path.strip()},
+        mask_token_id=mask_info["mask_token_id"],
+        quantization="none",
+        compute_dtype=str(next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)).removeprefix("torch."),
+        legacy_wrapper=True,
+        prompt_format="legacy_llama",
+    )
+    preflight_session(session)
+    return session
+
+
+def load_local_legacy_session(checkpoint_path: str | Path, tokenizer_name_or_path: str, device_name: str = "auto") -> InferenceSession:
+    """Load and preflight a trusted local legacy full-model checkpoint."""
+    return _load_legacy_checkpoint_session(checkpoint_path, tokenizer_name_or_path, device_name)
 
 
 def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_path: str, device_name: str = "auto") -> InferenceSession:
@@ -151,34 +199,11 @@ def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_pa
 
     token = os.getenv("HF_TOKEN")
     checkpoint = hf_hub_download(repo_id=repo_id.strip(), filename=filename.strip(), token=token)
-    # Full-object torch checkpoints retain the original module names
-    # (models.CustomTransformerModel and model_config.CustomTransformerConfig).
-    # Register tracked compatibility classes only while unpickling.
-    previous_modules = install_legacy_pickle_modules()
-    try:
-        model = torch.load(checkpoint, map_location="cpu", weights_only=False)
-    finally:
-        restore_legacy_pickle_modules(previous_modules)
-    if not isinstance(model, torch.nn.Module):
-        raise ValueError(f"{repo_id}/{filename} is not a full torch.nn.Module checkpoint.")
-
-    device = select_device(device_name)
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name_or_path.strip(), use_fast=True, token=token, clean_up_tokenization_spaces=False)
-    if tokenizer.pad_token_id is None:
-        tokenizer.pad_token = tokenizer.eos_token
-    model.to(device).eval()
-    mask_info = validate_mask_token(tokenizer)
-    return InferenceSession(
-        model=model,
-        tokenizer=tokenizer,
-        device=device,
-        adapter_path=Path(checkpoint),
-        config={"model_source": "huggingface_legacy", "repo_id": repo_id.strip(), "filename": filename.strip(), "tokenizer_name_or_path": tokenizer_name_or_path.strip()},
-        mask_token_id=mask_info["mask_token_id"],
-        quantization="none",
-        compute_dtype=str(next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)).removeprefix("torch."),
-        legacy_wrapper=True,
-        prompt_format="legacy_llama",
+    return _load_legacy_checkpoint_session(
+        checkpoint,
+        tokenizer_name_or_path,
+        device_name,
+        {"model_source": "huggingface_legacy", "repo_id": repo_id.strip(), "filename": filename.strip(), "tokenizer_name_or_path": tokenizer_name_or_path.strip()},
     )
 
 
@@ -204,6 +229,24 @@ def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, paddin
         outputs = session.model(input_ids=input_ids)
         return outputs["logits"] if isinstance(outputs, dict) else outputs.logits
     return forward_bidirectional(session.model, input_ids, padding_mask)
+
+
+@torch.inference_mode()
+def preflight_session(session: InferenceSession) -> tuple[int, int]:
+    """Run one real forward pass and fail early if a loaded model is unusable."""
+    prefix = _prompt_ids(session.tokenizer, "Reply with OK.", "You are a helpful assistant.", session.prompt_format)
+    input_ids = torch.tensor([prefix + [session.mask_token_id]], device=session.device, dtype=torch.long)
+    padding = torch.zeros_like(input_ids, dtype=torch.bool)
+    try:
+        logits = forward_denoising(session, input_ids, padding)
+    except Exception as exc:
+        source = "legacy hosted checkpoint" if session.legacy_wrapper else "saved adapter"
+        raise RuntimeError(f"Inference preflight failed for {source}; the model was not loaded for generation: {exc}") from exc
+    if logits.ndim != 3 or logits.shape[:2] != input_ids.shape:
+        raise RuntimeError(f"Inference preflight returned invalid logits shape {tuple(logits.shape)} for input shape {tuple(input_ids.shape)}")
+    if not torch.isfinite(logits[:, -1]).all():
+        raise RuntimeError("Inference preflight produced non-finite final-token logits.")
+    return int(input_ids.shape[1]), int(logits.shape[-1])
 
 
 def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format: str = "chat_template") -> list[int]:
@@ -257,9 +300,11 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
     eos_id = tokenizer.eos_token_id
     pieces = []
     answer = tokens[answer_start:]
+    output_token_count = 0
     for offset, token in enumerate(answer):
         if token == eos_id:
             break
+        output_token_count += 1
         token_text = escape(tokenizer.decode([token], skip_special_tokens=False)).replace("\n", "↵ ")
         if token == mask_token_id:
             style, token_text = "background:#d1d5db;color:#111827;border-radius:3px;padding:1px 4px", "MASK"
@@ -272,14 +317,14 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
         pieces.append(f"<span style='{style}' title='position {offset}'>{token_text}</span>")
     pct = int(100 * step / max(total_steps, 1))
     return (f"<div style='font-family:system-ui;padding:14px;border:1px solid #d1d5db;border-radius:9px;background:#fafafa'>"
-            f"<div style='font-weight:700;color:#2563eb;margin-bottom:7px'>Denoising step {step}/{total_steps}</div>"
+            f"<div style='font-weight:700;color:#2563eb;margin-bottom:7px'>Denoising step {step}/{total_steps} · {output_token_count} output tokens</div>"
             f"<div style='background:#e5e7eb;border-radius:4px;height:7px;margin-bottom:10px'><div style='background:#2563eb;width:{pct}%;height:7px;border-radius:4px'></div></div>"
             f"<div style='line-height:2;font-size:15px;white-space:pre-wrap'>{''.join(pieces)}</div>"
             f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green/blue hues indicate confidence; gray tokens are MASK; blue tokens are permanently retained.</div></div>")
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True):
-    """Yield intermediate text, status, and colored HTML for every denoising step."""
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False):
+    """Yield intermediate denoising states, optionally stopping after three identical predictions."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
     if max_new_tokens < 1 or num_steps < 1:
@@ -294,6 +339,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     padding = torch.zeros((1, len(ids)), device=session.device, dtype=torch.bool)
     last_confidence = 0.0
     frozen: dict[int, int] = {}
+    last_predictions: list[tuple[int, ...]] = []
     for step in range(num_steps):
         tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
         with torch.inference_mode():
@@ -303,9 +349,17 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         for offset, token in frozen.items():
             ids[answer_start + offset] = token
         last_confidence = float(confidence.mean().cpu())
+        # Match the legacy application's criterion: compare complete sampled
+        # answer token sequences before the next iteration's re-masking.  This
+        # includes EOS/padding tokens, so a changing invisible tail does not
+        # count as convergence.
+        last_predictions.append(tuple(ids[answer_start:]))
+        if len(last_predictions) > 3:
+            last_predictions.pop(0)
+        stopped_early = early_stopping and len(last_predictions) == 3 and len(set(last_predictions)) == 1
         # Progressively reduce corruption. Re-mask independently, retaining the
         # legacy schedule's initial noise_level and ending with a clean sample.
-        if step + 1 < num_steps:
+        if step + 1 < num_steps and not stopped_early:
             mask_probability = max(0.0, min(1.0, float(noise_level) * (1.0 - (step + 1) / num_steps)))
             if permanent_unmask:
                 keep_count = min(max_new_tokens, max(0, round((1.0 - mask_probability) * max_new_tokens)))
@@ -350,9 +404,13 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if session.tokenizer.eos_token_id in current_answer:
             current_answer = current_answer[:current_answer.index(session.tokenizer.eos_token_id)]
         current_text = session.tokenizer.decode(current_answer, skip_special_tokens=True).strip()
-        status = f"Denoising step {step + 1}/{num_steps} · mean confidence {last_confidence:.3f}"
+        status = f"Denoising step {step + 1}/{num_steps} · {len(current_answer)} output tokens · mean confidence {last_confidence:.3f}"
+        if stopped_early:
+            status += " · stopped early (same prediction for 3 iterations)"
         html = render_denoising_step(ids, confidence.tolist(), answer_start, session.tokenizer, session.mask_token_id, step + 1, num_steps, frozen if permanent_unmask else None)
         yield current_text, status, html
+        if stopped_early:
+            break
     answer = ids[answer_start:]
     if session.tokenizer.eos_token_id in answer:
         answer = answer[:answer.index(session.tokenizer.eos_token_id)]
@@ -361,10 +419,10 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     return
 
 
-def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, progress: Callable[[float, str], None] | None = None) -> tuple[str, str]:
+def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None) -> tuple[str, str]:
     """Run denoising to completion and return only the final text and status."""
     result = ("", "")
-    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask), start=1):
+    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping), start=1):
         result = (text, status)
         if progress:
             progress(step / int(num_steps), status)

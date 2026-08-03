@@ -8,6 +8,7 @@ env/
 hpc/slurm.env
 hpc/train.slurm
 hpc/run.sh
+*.pth
 
 # macOS metadata
 .DS_Store

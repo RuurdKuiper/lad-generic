@@ -8,10 +8,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 import gradio as gr
 
-from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_session, release_session
+from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_local_legacy_session, load_session, release_session
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 OUTPUTS_DIR = os.getenv("DIFFUSION_LM_OUTPUTS_DIR", "outputs")
+DEFAULT_LOCAL_LEGACY_CHECKPOINT = os.getenv(
+    "DIFFUSION_LM_LEGACY_CHECKPOINT",
+    str(Path(__file__).resolve().parent / "legacy/inference/diffusion-model-8B.pth"),
+)
 SESSION = None
 
 
@@ -43,19 +47,25 @@ def load_saved_adapter(selection, device, quantization):
 
 
 def load_legacy_checkpoint(repo_id, checkpoint_filename, tokenizer_name, device):
-    """Release any previous model and load a trusted hosted legacy checkpoint."""
+    """Prefer the local legacy checkpoint, falling back to the trusted hosted copy."""
     global SESSION
     release_session(SESSION)
-    SESSION = load_hosted_legacy_session(repo_id, checkpoint_filename, tokenizer_name, device)
-    return f"Loaded trusted hosted legacy checkpoint `{repo_id}/{checkpoint_filename}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. It is using the current denoising loop."
+    local_checkpoint = Path(DEFAULT_LOCAL_LEGACY_CHECKPOINT).expanduser()
+    if local_checkpoint.is_file():
+        SESSION = load_local_legacy_session(local_checkpoint, tokenizer_name, device)
+        source = f"local file `{SESSION.adapter_path}` (no checkpoint download)"
+    else:
+        SESSION = load_hosted_legacy_session(repo_id, checkpoint_filename, tokenizer_name, device)
+        source = f"Hugging Face `{repo_id}/{checkpoint_filename}`"
+    return f"Loaded legacy checkpoint from {source} on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. It is using the current denoising loop."
 
 
-def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask):
+def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping):
     """Stream colored intermediate denoising states and the final answer to Gradio."""
     if SESSION is None:
         raise gr.Error("Choose and load a saved adapter first.")
     try:
-        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask), start=1):
+        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping), start=1):
             yield status, html
     except ValueError as error:
         raise gr.Error(str(error)) from error
@@ -63,7 +73,7 @@ def run(question, system_prompt, max_new_tokens, num_steps, noise_level, tempera
 
 choices = find_adapters(OUTPUTS_DIR)
 with gr.Blocks(title="Diffusion LM inference") as demo:
-    gr.Markdown("# Diffusion LM inference\nLoad a saved adapter or the legacy hosted checkpoint, then iteratively denoise an answer.")
+    gr.Markdown("# Diffusion LM inference\nLoad a saved adapter or legacy checkpoint, then iteratively denoise an answer. The legacy loader prefers its local checkpoint and falls back to Hugging Face.")
     with gr.Row():
         gr.Markdown("### Saved adapter")
     with gr.Row():
@@ -73,10 +83,10 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         refresh = gr.Button("Refresh models")
         load_adapter = gr.Button("Load saved adapter", variant="primary")
     with gr.Row():
-        gr.Markdown("### Hugging Face legacy checkpoint")
+        gr.Markdown("### Legacy checkpoint (local preferred, Hugging Face fallback)")
     with gr.Row():
-        legacy_repo = gr.Textbox(value="ruurd/tini_model", label="Legacy Hugging Face repository")
-        legacy_filename = gr.Textbox(value="diffusion-model-8B.pth", label="Legacy checkpoint filename")
+        legacy_repo = gr.Textbox(value="ruurd/tini_model", label="Fallback Hugging Face repository")
+        legacy_filename = gr.Textbox(value="diffusion-model-8B.pth", label="Fallback checkpoint filename")
         legacy_tokenizer = gr.Textbox(value="meta-llama/Llama-3.2-3B", label="Legacy tokenizer/base model")
         legacy_device = gr.Dropdown(["auto", "mps", "cuda", "cpu"], value="auto", label="Device")
         load_legacy = gr.Button("Load legacy checkpoint", variant="primary")
@@ -94,13 +104,14 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         permanent_unmask = gr.Checkbox(label="Permanently retain selected tokens", value=False)
         confidence_guided = gr.Checkbox(label="Use confidence-guided retention", value=False)
         proportional_unmask = gr.Checkbox(label="Proportional unmasking", value=True)
+        early_stopping = gr.Checkbox(label="Early stop after 3 identical predictions", value=False)
     generate = gr.Button("Denoise", variant="primary")
     detail = gr.Markdown()
     intermediate = gr.HTML(label="Intermediate denoising states")
     refresh.click(refresh_models, outputs=adapter)
     load_adapter.click(load_saved_adapter, inputs=[adapter, adapter_device, adapter_quantization], outputs=status)
     load_legacy.click(load_legacy_checkpoint, inputs=[legacy_repo, legacy_filename, legacy_tokenizer, legacy_device], outputs=status)
-    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask], outputs=[detail, intermediate])
+    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping], outputs=[detail, intermediate])
 
 
 if __name__ == "__main__":

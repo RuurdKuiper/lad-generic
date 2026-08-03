@@ -143,17 +143,38 @@ same `Inference quantization` selector. On CUDA GPUs without native BF16
 support (including T4), inference automatically uses FP16 compute even when
 the saved training configuration requested BF16.
 
-For an inference-only comparison with the earlier hosted full-model checkpoint,
-the app has a separate `Hugging Face legacy checkpoint` loader row. Enter the
-trusted repository, `.pth` filename, and the tokenizer/base-model name used by
-that checkpoint (the legacy defaults are prefilled). This runs the hosted
-checkpoint through the current sampling and remasking implementation. The
+For an inference-only comparison with the earlier full-model checkpoint, the
+app has one `Legacy checkpoint` loader row. It automatically uses
+`legacy/inference/diffusion-model-8B.pth` when that local file exists, without
+downloading the checkpoint from Hugging Face; otherwise it uses the configured
+Hugging Face repository and filename as a fallback. Override the local path
+with `DIFFUSION_LM_LEGACY_CHECKPOINT=/path/to/model.pth`. The tokenizer may
+still be loaded from its Hugging Face cache (or downloaded once if it is not
+cached). This runs the checkpoint through the current sampling and remasking implementation. The
 historical base tokenizer has no native chat template, so
 that loader automatically uses the legacy Llama prompt layout; the current
 sampling and remasking implementation remains in use. The legacy wrapper
 retains its own full bidirectional attention forward because passing a second
 attention mask to it is invalid. Full `.pth` checkpoints use Python pickle;
-load only repositories you trust.
+load only sources you trust. Every loader performs a one-step real
+forward-pass preflight before reporting success, so incompatible checkpoints
+fail at load time rather than after starting a generation.
+
+The optional app setting `Early stop after 3 identical predictions` ends a
+denoising request after the complete sampled answer-token sequence is unchanged
+for three consecutive iterations, matching the legacy app. It is disabled by
+default. For validation generation, set
+`generation_perplexity.early_stopping: true` in the YAML.
+
+Run the same check without starting Gradio:
+
+```bash
+python preflight_inference.py --legacy-repo ruurd/tini_model --device cuda
+```
+
+For a saved adapter, use `python preflight_inference.py --adapter RUN/best
+--outputs-dir outputs --device cuda`. A successful command has completed an
+actual denoising forward pass, not merely downloaded or deserialized the model.
 
 Set `max_updates` in a training YAML to a positive integer to stop after that
 many optimizer (gradient-update) steps. Training then performs its normal final
@@ -162,6 +183,10 @@ When set, training preparation bounds the train split to approximately
 `max_updates × gradient_accumulation_steps × batch_size` examples; structured
 preprocessing stops once that many usable examples are available. Validation
 and test splits are not reduced by this optimization.
+
+Set `max_grad_norm` to a positive value to clip the global gradient norm once
+per optimizer update, after all gradient-accumulation microbatches have
+contributed. Omit it for no clipping.
 
 Gated Llama/Gemma access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that literal `MASK` is exactly one ordinary vocabulary token and records the token ID/decoding in `mask_token.json`.
 

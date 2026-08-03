@@ -98,7 +98,7 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
     model.eval()
     for prompt_index, prompt in enumerate(prompts[: int(settings.get("num_prompts", 5))]):
         states = []
-        for generated_text, status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 128)), int(settings.get("num_steps", 32)), float(settings.get("noise_level", .5)), float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)) + prompt_index, bool(settings.get("permanent_unmask", False)), bool(settings.get("confidence_guided", False)), bool(settings.get("proportional_unmask", True))):
+        for generated_text, status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 128)), int(settings.get("num_steps", 32)), float(settings.get("noise_level", .5)), float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)) + prompt_index, bool(settings.get("permanent_unmask", False)), bool(settings.get("confidence_guided", False)), bool(settings.get("proportional_unmask", True)), bool(settings.get("early_stopping", False))):
             states.append(generated_text)
         finals.append(states[-1] if states else "")
         final_text = finals[-1]
@@ -329,6 +329,9 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     else:
         raise ValueError(f"Unknown optimizer={optimizer_name}; expected adamw or adamw8bit")
     grad_accumulation = int(config.get("gradient_accumulation_steps", 1))
+    max_grad_norm = config.get("max_grad_norm")
+    if max_grad_norm is not None and float(max_grad_norm) <= 0:
+        raise ValueError("max_grad_norm must be positive when set")
     # `max_updates` is deliberately expressed in optimizer/gradient updates,
     # rather than dataloader batches. Keep max_steps as a backwards-compatible
     # alias for existing configurations.
@@ -359,7 +362,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
             use_t_weighting = config["corruption_mode"] == "mask_only" and config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
             loss, info = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], batch["sampled_t"] if use_t_weighting else None)
-            accelerator.backward(loss); optimizer.step(); scheduler.step(); optimizer.zero_grad()
+            accelerator.backward(loss)
+            # Clip only after all gradient-accumulation microbatches have
+            # contributed, matching Trainer's max_grad_norm behavior.
+            if accelerator.sync_gradients and max_grad_norm is not None:
+                accelerator.clip_grad_norm_(model.parameters(), float(max_grad_norm))
+            optimizer.step(); scheduler.step(); optimizer.zero_grad()
         loss_value = float(loss.detach().cpu())
         batch_examples = int(info["valid_examples"])
         interval_loss_sum += loss_value * batch_examples

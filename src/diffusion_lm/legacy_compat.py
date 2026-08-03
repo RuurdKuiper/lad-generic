@@ -98,3 +98,18 @@ def restore_legacy_pickle_modules(previous: dict[str, object]) -> None:
             delattr(main_module, name)
         else:
             setattr(main_module, name, previous_value)
+
+
+def patch_legacy_lora_modules(model: nn.Module) -> int:
+    """Add fields expected by newer PEFT LoRA forwards to an old pickle.
+
+    The hosted checkpoint predates PEFT's adapter-variant mechanism.  Its
+    injected LoRA linears remain ordinary LoRA modules; an empty mapping makes
+    current PEFT take that unchanged vanilla-LoRA branch.
+    """
+    patched = 0
+    for module in model.modules():
+        if hasattr(module, "lora_A") and not hasattr(module, "lora_variant"):
+            module.lora_variant = {}
+            patched += 1
+    return patched

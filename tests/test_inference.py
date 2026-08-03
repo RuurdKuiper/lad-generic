@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _safe_adapter_path, find_adapters, forward_denoising
-from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, restore_legacy_pickle_modules
+from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, load_local_legacy_session, preflight_session
+from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
 def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
@@ -95,3 +95,69 @@ def test_legacy_pickle_compatibility_registers_main_module_aliases():
         assert hasattr(__main__, "CustomTransformerConfig")
     finally:
         restore_legacy_pickle_modules(previous)
+
+
+def test_legacy_lora_patch_enables_the_current_peft_vanilla_branch():
+    class OldLoraLinear(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.lora_A = torch.nn.ModuleDict()
+
+    model = torch.nn.Sequential(OldLoraLinear(), OldLoraLinear())
+    assert patch_legacy_lora_modules(model) == 2
+    assert all(module.lora_variant == {} for module in model)
+
+
+def test_local_legacy_loader_rejects_missing_checkpoint(tmp_path):
+    with pytest.raises(ValueError, match="does not exist"):
+        load_local_legacy_session(tmp_path / "missing.pth", "tokenizer", "cpu")
+
+
+def test_preflight_runs_a_real_forward_pass():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1, 2]
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            return type("Output", (), {"logits": torch.zeros((*input_ids.shape, 4))})()
+
+    session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 3)
+    assert preflight_session(session) == (3, 4)
+
+
+def test_early_stopping_requires_three_identical_complete_predictions():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1, 2]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            logits = torch.full((*input_ids.shape, 4), -100.0)
+            logits[..., 1] = 100.0
+            return type("Output", (), {"logits": logits})()
+
+    session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 3)
+    states = list(denoise_stream(session, "Test", "System", 2, 6, .5, 1., 1, 1234, early_stopping=True))
+    assert len(states) == 3
+    assert "stopped early" in states[-1][1]
+    assert "2 output tokens" in states[-1][1]

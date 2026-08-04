@@ -115,6 +115,12 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
         for name, parameter in model.named_parameters():
             if "norm" in name.lower():
                 parameter.requires_grad = True
+                # Accelerate's FP16 GradScaler cannot unscale FP16 gradients.
+                # Keep trainable normalization parameters in FP32 so their
+                # gradients are scaler-compatible; frozen base weights remain
+                # in the configured compute dtype.
+                if precision == "fp16" and parameter.dtype == torch.float16:
+                    parameter.data = parameter.data.float()
     if config.get("gradient_checkpointing", False):
         model.gradient_checkpointing_enable()
         model.enable_input_require_grads()

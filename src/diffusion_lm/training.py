@@ -61,12 +61,18 @@ def _load_normalization_state(model: torch.nn.Module, state: dict[str, torch.Ten
 
 
 @torch.no_grad()
-def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], initial_norms: dict[str, torch.Tensor], device: torch.device) -> dict[str, float]:
-    """Score generated answer text with the original base model, excluding LoRA and trained norms."""
+def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], initial_norms: dict[str, torch.Tensor], device: torch.device) -> dict[str, Any]:
+    """Score generated texts with the original base model, excluding LoRA and trained norms.
+
+    The aggregate metrics are token-weighted across all texts.  Individual
+    perplexities are also retained so callers can associate them with the
+    corresponding generated text.
+    """
     trained_norms = _normalization_state(model)
     model.eval()
     total_nll = 0.0
     total_tokens = 0
+    per_text_perplexities: list[float | None] = []
     try:
         _load_normalization_state(model, initial_norms)
         with model.disable_adapter():
@@ -74,17 +80,26 @@ def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], i
                 encoded = tokenizer(text, return_tensors="pt", add_special_tokens=True)
                 input_ids = encoded["input_ids"].to(device)
                 if input_ids.shape[1] < 2:
+                    per_text_perplexities.append(None)
                     continue
                 outputs = model(input_ids=input_ids, use_cache=False)
                 logits = outputs.logits[:, :-1].float()
                 labels = input_ids[:, 1:]
                 nll = torch.nn.functional.cross_entropy(logits.transpose(1, 2), labels, reduction="sum")
-                total_nll += float(nll.cpu())
-                total_tokens += int(labels.numel())
+                text_nll = float(nll.cpu())
+                text_tokens = int(labels.numel())
+                total_nll += text_nll
+                total_tokens += text_tokens
+                per_text_perplexities.append(float(torch.exp(torch.tensor(text_nll / text_tokens))))
     finally:
         _load_normalization_state(model, trained_norms)
     mean_nll = total_nll / max(total_tokens, 1)
-    return {"generation_perplexity": float(torch.exp(torch.tensor(mean_nll))), "generation_mean_nll": mean_nll, "generation_tokens": total_tokens}
+    return {
+        "generation_perplexity": float(torch.exp(torch.tensor(mean_nll))),
+        "generation_mean_nll": mean_nll,
+        "generation_tokens": total_tokens,
+        "_per_text_perplexities": per_text_perplexities,
+    }
 
 
 def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
@@ -134,9 +149,10 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
         final_text = finals[-1]
         trajectories.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text, "states": states})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
+    per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
     for trajectory in trajectories:
         # Rebuild the mapping to keep the JSONL field order stable/readable.
-        trajectory["generation_perplexity"] = generation_metrics["generation_perplexity"]
+        trajectory["generation_perplexity"] = per_text_perplexities[trajectory["prompt_index"]]
         ordered = {"step": trajectory["step"], "prompt_index": trajectory["prompt_index"], "unigram_repetition": trajectory["unigram_repetition"], "bigram_repetition": trajectory["bigram_repetition"], "trigram_repetition": trajectory["trigram_repetition"], "generation_perplexity": trajectory["generation_perplexity"], "prompt": trajectory["prompt"], "final": trajectory["final"], "states": trajectory["states"]}
         trajectory.clear(); trajectory.update(ordered)
     generation_path = output / "generation_metrics.jsonl"

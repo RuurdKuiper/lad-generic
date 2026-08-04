@@ -1,13 +1,14 @@
 outputs_dir: outputs
 models: []  # Empty means discover every outputs/**/best adapter.
-# tasks: [mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp]
-tasks: [arc_c]  # Options: mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp
+# tasks: [mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp, open_ended]
+tasks: [arc_c]  # Options: mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp, open_ended
 split: test
 limit: 10
 device: auto  # Options: auto, cuda, mps, cpu
 cache_dir: data/huggingface
 results_path: outputs/benchmark_results.jsonl
 include_autoregressive: true  # Options: true, false
+show_open_ended_answers: true  # Print each open-ended prompt and final answer as it completes.
 generation:
   max_new_tokens: 256
   num_steps: 256
@@ -17,6 +18,7 @@ generation:
   seed: 1234
   proportional_unmask: true  # Options: true, false
 task_generation:
+  open_ended: {max_new_tokens: 256, num_steps: 256}
   mmlu: {max_new_tokens: 3, num_steps: 3}
   mmlu_pro: {max_new_tokens: 256, num_steps: 256}
   hellaswag: {max_new_tokens: 3, num_steps: 3}

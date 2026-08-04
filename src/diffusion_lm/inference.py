@@ -265,6 +265,15 @@ def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: tor
     return picked, confidence
 
 
+def _remask_offsets(confidence: torch.Tensor, mask_probability: float, confidence_guided: bool) -> torch.Tensor:
+    """Choose answer offsets to re-mask, preferring uncertain tokens when guided."""
+    probability = max(0.0, min(1.0, float(mask_probability)))
+    if confidence_guided:
+        count = round(probability * len(confidence))
+        return torch.argsort(confidence)[:count]
+    return torch.where(torch.rand(len(confidence), device=confidence.device) < probability)[0]
+
+
 def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
     """Return denoising logits for either the current or legacy model wrapper."""
     if session.llada:
@@ -462,8 +471,10 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                     if offset not in frozen:
                         ids[answer_start + offset] = session.mask_token_id
             else:
-                remask = torch.rand(max_new_tokens, device=session.device) < mask_probability
-                for offset in torch.where(remask)[0].tolist():
+                # Confidence-guided refinement keeps every token revisable, but
+                # preferentially re-masks the least certain predictions. The
+                # unguided mode retains the original random re-masking policy.
+                for offset in _remask_offsets(confidence, mask_probability, confidence_guided).tolist():
                     ids[answer_start + offset] = session.mask_token_id
         current_answer = ids[answer_start:]
         if session.tokenizer.eos_token_id in current_answer:

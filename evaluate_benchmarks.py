@@ -11,7 +11,7 @@ import yaml
 from dotenv import load_dotenv
 from tqdm.auto import tqdm
 
-from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, save_result, score_prediction
+from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, save_result, score_open_ended_generations, score_prediction
 from diffusion_lm.inference import denoise_stream, find_adapters, load_session
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -70,6 +70,14 @@ def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
     return final
 
 
+def _show_open_ended_answer(progress, method: str, index: int, total: int, prompt: str, answer: str) -> None:
+    """Print one completed open-ended generation without disrupting tqdm."""
+    progress.write(
+        f"\n[{method} {index}/{total}] Prompt:\n{prompt}\n"
+        f"Final answer:\n{answer or '[empty response]'}\n"
+    )
+
+
 def main() -> None:
     """Load configured benchmark data and evaluate selected best adapters."""
     parser = argparse.ArgumentParser(); parser.add_argument("--config", required=True)
@@ -85,6 +93,7 @@ def main() -> None:
     token = os.getenv("HF_TOKEN")
     cache = config.get("cache_dir", "data/huggingface")
     result_path = Path(config.get("results_path", "outputs/benchmark_results.jsonl")); result_path.parent.mkdir(parents=True, exist_ok=True)
+    show_open_ended_answers = bool(config.get("show_open_ended_answers", True))
     summaries = []
     for selection in selections:
         selection = str(selection)
@@ -92,10 +101,70 @@ def main() -> None:
         run_config_path = adapter_path.parent / "resolved_config.json"
         run_config = json.loads(run_config_path.read_text())
         mode = run_config.get("corruption_mode", "mask_only")
-        session = load_session(selection, outputs, config.get("device", "auto"))
+        session = load_session(selection, outputs, config.get("device", "auto"), config.get("quantization"))
         for task in config["tasks"]:
             examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token)
             task_settings = dict(config.get("generation", {})); task_settings.update(config.get("task_generation", {}).get(task, {}))
+            if task == "open_ended":
+                print(f"\n[{selection}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
+                diffusion_texts = []
+                diffusion_progress = tqdm(examples, desc=f"{selection}/{task} diffusion", unit="sample")
+                for index, example in enumerate(diffusion_progress, start=1):
+                    text = _generate_diffusion(session, example.prompt, task_settings, mode)
+                    diffusion_texts.append(text)
+                    if show_open_ended_answers:
+                        _show_open_ended_answer(diffusion_progress, "diffusion", index, len(examples), example.prompt, text)
+                diffusion_scores = score_open_ended_generations(session, diffusion_texts)
+                for example, text, scores in zip(examples, diffusion_texts, diffusion_scores["per_text"]):
+                    save_result(result_path, {
+                        "model": selection, "corruption_mode": mode, "task": task,
+                        "example_id": example.example_id, "method": "diffusion",
+                        "prompt": example.prompt, "prediction": text,
+                        **scores,
+                    })
+                summary = {
+                    "model": selection, "corruption_mode": mode, "task": task,
+                    "method": "diffusion", "total": len(examples),
+                    "perplexity": diffusion_scores["perplexity"],
+                    "mean_nll": diffusion_scores["mean_nll"],
+                    "tokens": diffusion_scores["tokens"],
+                    "mean_unigram_repetition": sum(item["unigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
+                    "mean_bigram_repetition": sum(item["bigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
+                    "mean_trigram_repetition": sum(item["trigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
+                }
+                summaries.append(summary)
+                message = f"{selection} | {task} | diffusion perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}"
+                if config.get("include_autoregressive", False):
+                    print(f"[{selection}] {task}: {len(examples)} validation samples (autoregressive)", flush=True)
+                    ar_texts = []
+                    ar_progress = tqdm(examples, desc=f"{selection}/{task} autoregressive", unit="sample")
+                    for index, example in enumerate(ar_progress, start=1):
+                        text = _generate_ar(session, example.prompt, int(task_settings.get("max_new_tokens", 256)), original_base=True)
+                        ar_texts.append(text)
+                        if show_open_ended_answers:
+                            _show_open_ended_answer(ar_progress, "autoregressive", index, len(examples), example.prompt, text)
+                    ar_scores = score_open_ended_generations(session, ar_texts)
+                    for example, text, scores in zip(examples, ar_texts, ar_scores["per_text"]):
+                        save_result(result_path, {
+                            "model": selection, "corruption_mode": mode, "task": task,
+                            "example_id": example.example_id, "method": "autoregressive",
+                            "prompt": example.prompt, "prediction": text,
+                            **scores,
+                        })
+                    ar_summary = {
+                        "model": selection, "corruption_mode": mode, "task": task,
+                        "method": "autoregressive", "total": len(examples),
+                        "perplexity": ar_scores["perplexity"],
+                        "mean_nll": ar_scores["mean_nll"],
+                        "tokens": ar_scores["tokens"],
+                        "mean_unigram_repetition": sum(item["unigram_repetition"] for item in ar_scores["per_text"]) / max(len(examples), 1),
+                        "mean_bigram_repetition": sum(item["bigram_repetition"] for item in ar_scores["per_text"]) / max(len(examples), 1),
+                        "mean_trigram_repetition": sum(item["trigram_repetition"] for item in ar_scores["per_text"]) / max(len(examples), 1),
+                    }
+                    summaries.append(ar_summary)
+                    message += f" | autoregressive perplexity={ar_summary['perplexity']:.4f} | trigram repetition={ar_summary['mean_trigram_repetition']:.4f}"
+                print(message)
+                continue
             correct = 0; ar_correct = 0
             total = len(examples)
             print(f"\n[{selection}] {task}: {total} validation samples (diffusion)", flush=True)

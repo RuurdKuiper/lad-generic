@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -59,6 +59,11 @@ def test_legacy_prompt_ids_do_not_require_a_chat_template():
 def test_bf16_inference_falls_back_to_fp16_on_non_bf16_cuda(monkeypatch):
     monkeypatch.setattr(torch.cuda, "is_bf16_supported", lambda: False)
     assert _precision_dtype("bf16", torch.device("cuda")) == torch.float16
+
+
+def test_confidence_guided_remasking_targets_the_least_confident_tokens():
+    confidence = torch.tensor([.9, .2, .7, .1])
+    assert _remask_offsets(confidence, .5, True).tolist() == [3, 1]
 
 
 def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():

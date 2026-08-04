@@ -11,9 +11,49 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
+import torch
+
 
 MC_TASKS = {"mmlu", "mmlu_pro", "hellaswag", "arc_c", "gpqa"}
 ALL_TASKS = ["mmlu", "mmlu_pro", "hellaswag", "arc_c", "gsm8k", "math", "gpqa", "humaneval", "mbpp"]
+OPEN_ENDED_TASK = "open_ended"
+AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
+
+# Fixed prompts make comparisons between runs reproducible.  `limit` can be
+# used to evaluate a smaller prefix, while the default benchmark config uses
+# all 30 questions.
+OPEN_ENDED_PROMPTS = [
+    "What do you know about Amsterdam?",
+    "Why is the sky blue?",
+    "How do plants convert sunlight into energy?",
+    "What makes a good friend?",
+    "Explain how a refrigerator keeps food cold.",
+    "Why do we have different seasons on Earth?",
+    "How does vaccination help protect a population?",
+    "What is the difference between weather and climate?",
+    "Explain the basic idea behind supply and demand.",
+    "How does a search engine find relevant web pages?",
+    "What causes a rainbow?",
+    "How does the human heart circulate blood?",
+    "Why do objects fall toward the ground?",
+    "Explain what machine learning is in simple terms.",
+    "What are the main benefits of regular exercise?",
+    "How does the water cycle work?",
+    "Why is sleep important for people?",
+    "Explain the difference between renewable and nonrenewable energy.",
+    "How do trees communicate or share resources?",
+    "What is inflation and how does it affect households?",
+    "Why do leaves change color in autumn?",
+    "How does a bicycle stay balanced while moving?",
+    "What are practical ways to reduce household waste?",
+    "Explain how an electric battery stores and releases energy.",
+    "What is the purpose of the scientific method?",
+    "How do languages change over time?",
+    "Why are oceans important to the global climate?",
+    "What makes an explanation clear and persuasive?",
+    "How can someone evaluate whether an online claim is reliable?",
+    "Tell a short story about a traveler who learns an unexpected lesson.",
+]
 
 
 @dataclass
@@ -43,6 +83,9 @@ def _boxed(text: str) -> str:
 
 def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, token: str | None) -> list[BenchmarkExample]:
     """Download one configured benchmark split and normalize its records."""
+    if name == OPEN_ENDED_TASK:
+        prompts = OPEN_ENDED_PROMPTS if limit is None else OPEN_ENDED_PROMPTS[: min(int(limit), len(OPEN_ENDED_PROMPTS))]
+        return [BenchmarkExample(name, str(index), prompt, "", "open_ended", {}) for index, prompt in enumerate(prompts)]
     from datasets import load_dataset
     specs = {
         "mmlu": ("cais/mmlu", "all", split),
@@ -56,7 +99,7 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
         "mbpp": ("google-research-datasets/mbpp", "sanitized", split),
     }
     if name not in specs:
-        raise ValueError(f"Unknown benchmark {name}; available: {ALL_TASKS}")
+        raise ValueError(f"Unknown benchmark {name}; available: {AVAILABLE_TASKS}")
     path, config, actual_split = specs[name]
     dataset = load_dataset(path, config, split=actual_split, cache_dir=cache_dir, token=token)
     if limit is not None:
@@ -131,3 +174,71 @@ def save_result(path: Path, result: dict[str, Any]) -> None:
     """Append one per-example benchmark result as JSONL."""
     with path.open("a") as stream:
         stream.write(json.dumps(result, ensure_ascii=False, default=str) + "\n")
+
+
+def _ngram_repetition(text: str, tokenizer: Any, n: int) -> float:
+    """Return the fraction of non-overlapping n-gram occurrences repeated."""
+    special_ids = set(getattr(tokenizer, "all_special_ids", []))
+    tokens = [token for token in tokenizer.encode(text, add_special_tokens=False) if token not in special_ids]
+    grams = [tuple(tokens[index : index + n]) for index in range(0, len(tokens) - n + 1, n)]
+    return float(1.0 - len(set(grams)) / len(grams)) if grams else 0.0
+
+
+@torch.no_grad()
+def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, Any]:
+    """Score generated texts with base-model perplexity and repetition metrics.
+
+    Perplexity is measured with adapters disabled and the saved initial
+    normalization weights restored, matching training-time generation
+    perplexity.  The aggregate perplexity is token-weighted; each text also
+    receives its own perplexity in ``per_text``.
+    """
+    import torch.nn.functional as F
+
+    model = session.model
+    tokenizer = session.tokenizer
+    trained_norms = {name: parameter.detach().cpu().clone() for name, parameter in model.named_parameters() if "norm" in name.lower()}
+    initial_path = Path(session.adapter_path) / "normalization_initial_state.pt"
+    initial_norms = torch.load(initial_path, map_location="cpu", weights_only=True) if initial_path.is_file() else trained_norms
+    total_nll = 0.0
+    total_tokens = 0
+    per_text = []
+    try:
+        named = dict(model.named_parameters())
+        for name, value in initial_norms.items():
+            if name in named:
+                named[name].data.copy_(value.to(named[name].device, dtype=named[name].dtype))
+        with model.disable_adapter():
+            for text in texts:
+                encoded = tokenizer(text, return_tensors="pt", add_special_tokens=True)
+                input_ids = encoded["input_ids"].to(session.device)
+                if input_ids.shape[1] < 2:
+                    perplexity = None
+                else:
+                    outputs = model(input_ids=input_ids, use_cache=False)
+                    labels = input_ids[:, 1:]
+                    logits = outputs.logits[:, :-1].float()
+                    nll = F.cross_entropy(logits.transpose(1, 2), labels, reduction="sum")
+                    text_nll = float(nll.cpu())
+                    text_tokens = int(labels.numel())
+                    total_nll += text_nll
+                    total_tokens += text_tokens
+                    perplexity = float(torch.exp(torch.tensor(text_nll / text_tokens)))
+                per_text.append({
+                    "perplexity": perplexity,
+                    "unigram_repetition": _ngram_repetition(text, tokenizer, 1),
+                    "bigram_repetition": _ngram_repetition(text, tokenizer, 2),
+                    "trigram_repetition": _ngram_repetition(text, tokenizer, 3),
+                })
+    finally:
+        named = dict(model.named_parameters())
+        for name, value in trained_norms.items():
+            if name in named:
+                named[name].data.copy_(value.to(named[name].device, dtype=named[name].dtype))
+    mean_nll = total_nll / max(total_tokens, 1)
+    return {
+        "perplexity": float(torch.exp(torch.tensor(mean_nll))),
+        "mean_nll": mean_nll,
+        "tokens": total_tokens,
+        "per_text": per_text,
+    }

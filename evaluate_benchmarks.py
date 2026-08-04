@@ -11,8 +11,8 @@ import yaml
 from dotenv import load_dotenv
 from tqdm.auto import tqdm
 
-from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, save_result, score_open_ended_generations, score_prediction
-from diffusion_lm.inference import denoise_stream, find_adapters, load_session
+from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, resolve_generation_settings, save_result, score_open_ended_generations, score_prediction
+from diffusion_lm.inference import denoise_stream, find_adapters, load_llada_session, load_session
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
@@ -76,6 +76,7 @@ def _show_open_ended_answer(progress, method: str, index: int, total: int, promp
         f"\n[{method} {index}/{total}] Prompt:\n{prompt}\n"
         f"Final answer:\n{answer or '[empty response]'}\n"
     )
+    print(f"[{method} {index}/{total}] sample complete", flush=True)
 
 
 def main() -> None:
@@ -93,23 +94,35 @@ def main() -> None:
     token = os.getenv("HF_TOKEN")
     cache = config.get("cache_dir", "data/huggingface")
     result_path = Path(config.get("results_path", "outputs/benchmark_results.jsonl")); result_path.parent.mkdir(parents=True, exist_ok=True)
-    show_open_ended_answers = bool(config.get("show_open_ended_answers", True))
+    show_open_ended_answers = bool(config.get("show_open_ended_answers", False))
     summaries = []
     for selection in selections:
         selection = str(selection)
-        adapter_path = outputs / selection
-        run_config_path = adapter_path.parent / "resolved_config.json"
-        run_config = json.loads(run_config_path.read_text())
-        mode = run_config.get("corruption_mode", "mask_only")
-        session = load_session(selection, outputs, config.get("device", "auto"), config.get("quantization"))
+        if selection.startswith("llada:"):
+            model_name = selection.split(":", 1)[1].strip() or "GSAI-ML/LLaDA-8B-Instruct"
+            model_label = f"llada:{model_name}"
+            run_config = {"model_source": "llada", "repo_id": model_name}
+            mode = "mask_only"
+            session = load_llada_session(model_name, config.get("device", "auto"))
+            supports_autoregressive = False
+        else:
+            model_label = selection
+            adapter_path = outputs / selection
+            run_config_path = adapter_path.parent / "resolved_config.json"
+            run_config = json.loads(run_config_path.read_text())
+            mode = run_config.get("corruption_mode", "mask_only")
+            session = load_session(selection, outputs, config.get("device", "auto"), config.get("quantization"))
+            supports_autoregressive = True
         for task in config["tasks"]:
             examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token)
-            task_settings = dict(config.get("generation", {})); task_settings.update(config.get("task_generation", {}).get(task, {}))
+            task_settings = resolve_generation_settings(config, task, mode)
             if task == "open_ended":
-                print(f"\n[{selection}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
+                print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
                 diffusion_texts = []
-                diffusion_progress = tqdm(examples, desc=f"{selection}/{task} diffusion", unit="sample")
+                diffusion_progress = tqdm(examples, desc=f"{model_label}/{task} diffusion", unit="sample")
                 for index, example in enumerate(diffusion_progress, start=1):
+                    if show_open_ended_answers:
+                        print(f"\n[diffusion {index}/{len(examples)}] generating: {example.prompt}", flush=True)
                     text = _generate_diffusion(session, example.prompt, task_settings, mode)
                     diffusion_texts.append(text)
                     if show_open_ended_answers:
@@ -117,14 +130,16 @@ def main() -> None:
                 diffusion_scores = score_open_ended_generations(session, diffusion_texts)
                 for example, text, scores in zip(examples, diffusion_texts, diffusion_scores["per_text"]):
                     save_result(result_path, {
-                        "model": selection, "corruption_mode": mode, "task": task,
+                        "model": model_label, "corruption_mode": mode, "task": task,
                         "example_id": example.example_id, "method": "diffusion",
                         "prompt": example.prompt, "prediction": text,
+                        "inference_settings": task_settings,
                         **scores,
                     })
                 summary = {
-                    "model": selection, "corruption_mode": mode, "task": task,
+                    "model": model_label, "corruption_mode": mode, "task": task,
                     "method": "diffusion", "total": len(examples),
+                    "inference_settings": task_settings,
                     "perplexity": diffusion_scores["perplexity"],
                     "mean_nll": diffusion_scores["mean_nll"],
                     "tokens": diffusion_scores["tokens"],
@@ -133,12 +148,14 @@ def main() -> None:
                     "mean_trigram_repetition": sum(item["trigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
                 }
                 summaries.append(summary)
-                message = f"{selection} | {task} | diffusion perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}"
-                if config.get("include_autoregressive", False):
-                    print(f"[{selection}] {task}: {len(examples)} validation samples (autoregressive)", flush=True)
+                message = f"{model_label} | {task} | diffusion perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}"
+                if config.get("include_autoregressive", False) and supports_autoregressive:
+                    print(f"[{model_label}] {task}: {len(examples)} validation samples (autoregressive)", flush=True)
                     ar_texts = []
-                    ar_progress = tqdm(examples, desc=f"{selection}/{task} autoregressive", unit="sample")
+                    ar_progress = tqdm(examples, desc=f"{model_label}/{task} autoregressive", unit="sample")
                     for index, example in enumerate(ar_progress, start=1):
+                        if show_open_ended_answers:
+                            print(f"\n[autoregressive {index}/{len(examples)}] generating: {example.prompt}", flush=True)
                         text = _generate_ar(session, example.prompt, int(task_settings.get("max_new_tokens", 256)), original_base=True)
                         ar_texts.append(text)
                         if show_open_ended_answers:
@@ -146,14 +163,16 @@ def main() -> None:
                     ar_scores = score_open_ended_generations(session, ar_texts)
                     for example, text, scores in zip(examples, ar_texts, ar_scores["per_text"]):
                         save_result(result_path, {
-                            "model": selection, "corruption_mode": mode, "task": task,
+                            "model": model_label, "corruption_mode": mode, "task": task,
                             "example_id": example.example_id, "method": "autoregressive",
                             "prompt": example.prompt, "prediction": text,
+                            "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))},
                             **scores,
                         })
                     ar_summary = {
-                        "model": selection, "corruption_mode": mode, "task": task,
+                        "model": model_label, "corruption_mode": mode, "task": task,
                         "method": "autoregressive", "total": len(examples),
+                        "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))},
                         "perplexity": ar_scores["perplexity"],
                         "mean_nll": ar_scores["mean_nll"],
                         "tokens": ar_scores["tokens"],
@@ -163,33 +182,39 @@ def main() -> None:
                     }
                     summaries.append(ar_summary)
                     message += f" | autoregressive perplexity={ar_summary['perplexity']:.4f} | trigram repetition={ar_summary['mean_trigram_repetition']:.4f}"
+                if config.get("include_autoregressive", False) and not supports_autoregressive:
+                    message += " | autoregressive comparison skipped"
                 print(message)
                 continue
             correct = 0; ar_correct = 0
             total = len(examples)
-            print(f"\n[{selection}] {task}: {total} validation samples (diffusion)", flush=True)
+            print(f"\n[{model_label}] {task}: {total} validation samples (diffusion)", flush=True)
             # Complete the diffusion pass before switching to the optional
             # autoregressive baseline, avoiding per-example model switching.
-            diffusion_progress = tqdm(examples, desc=f"{selection}/{task} diffusion", unit="sample")
+            diffusion_progress = tqdm(examples, desc=f"{model_label}/{task} diffusion", unit="sample")
             for index, example in enumerate(diffusion_progress, start=1):
                 diffusion_text = _generate_diffusion(session, example.prompt, task_settings, mode)
                 diffusion_ok = score_prediction(example, diffusion_text)
-                record = {"model": selection, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "diffusion", "prompt": example.prompt, "prediction": diffusion_text, "target": example.answer, "correct": diffusion_ok}
+                record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "diffusion", "prompt": example.prompt, "prediction": diffusion_text, "target": example.answer, "correct": diffusion_ok, "inference_settings": task_settings}
                 save_result(result_path, record); correct += int(diffusion_ok)
                 diffusion_progress.set_postfix(correct=f"{correct}/{index}", accuracy=f"{correct / index:.3f}")
-            if config.get("include_autoregressive", False):
-                print(f"[{selection}] {task}: {total} validation samples (autoregressive)", flush=True)
-                ar_progress = tqdm(examples, desc=f"{selection}/{task} autoregressive", unit="sample")
+            if config.get("include_autoregressive", False) and supports_autoregressive:
+                print(f"[{model_label}] {task}: {total} validation samples (autoregressive)", flush=True)
+                ar_progress = tqdm(examples, desc=f"{model_label}/{task} autoregressive", unit="sample")
                 for index, example in enumerate(ar_progress, start=1):
                     ar_text = _generate_ar(session, example.prompt, int(task_settings.get("max_new_tokens", 256)), original_base=True)
                     ar_ok = score_prediction(example, ar_text); ar_correct += int(ar_ok)
-                    save_result(result_path, {"model": selection, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok})
+                    save_result(result_path, {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}})
                     ar_progress.set_postfix(correct=f"{ar_correct}/{index}", accuracy=f"{ar_correct / index:.3f}")
-            summary = {"model": selection, "corruption_mode": mode, "task": task, "method": "diffusion", "accuracy": correct / max(len(examples), 1), "correct": correct, "total": len(examples)}
+            summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "inference_settings": task_settings, "accuracy": correct / max(len(examples), 1), "correct": correct, "total": len(examples)}
             summaries.append(summary)
-            message = f"{selection} | {task} | diffusion accuracy={summary['accuracy']:.4f} ({correct}/{len(examples)})"
+            message = f"{model_label} | {task} | diffusion accuracy={summary['accuracy']:.4f} ({correct}/{len(examples)})"
             if config.get("include_autoregressive", False):
-                ar_summary = {"model": selection, "corruption_mode": mode, "task": task, "method": "autoregressive", "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
+                if not supports_autoregressive:
+                    message += " | autoregressive comparison skipped"
+                    print(message)
+                    continue
+                ar_summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
                 summaries.append(ar_summary)
                 message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
             print(message)

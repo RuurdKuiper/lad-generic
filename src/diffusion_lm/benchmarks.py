@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -18,6 +19,19 @@ MC_TASKS = {"mmlu", "mmlu_pro", "hellaswag", "arc_c", "gpqa"}
 ALL_TASKS = ["mmlu", "mmlu_pro", "hellaswag", "arc_c", "gsm8k", "math", "gpqa", "humaneval", "mbpp"]
 OPEN_ENDED_TASK = "open_ended"
 AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
+
+
+def resolve_generation_settings(config: dict[str, Any], task: str, mode: str) -> dict[str, Any]:
+    """Resolve generation settings for a task and corruption mode."""
+    settings = dict(config.get("generation", {}))
+    settings.update(config.get("generation_by_corruption", {}).get(mode, {}))
+    settings.update(config.get("task_generation", {}).get(task, {}))
+    settings.update(config.get("task_generation_by_corruption", {}).get(mode, {}).get(task, {}))
+    if mode == "mask_only":
+        # Mask-only training is evaluated with the full-remasking setup used
+        # by the training-time generation validation.
+        settings.update(noise_level=1.0, permanent_unmask=True, confidence_guided=True)
+    return settings
 
 # Fixed prompts make comparisons between runs reproducible.  `limit` can be
 # used to evaluate a smaller prefix, while the default benchmark config uses
@@ -208,14 +222,15 @@ def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, An
         for name, value in initial_norms.items():
             if name in named:
                 named[name].data.copy_(value.to(named[name].device, dtype=named[name].dtype))
-        with model.disable_adapter():
+        adapter_context = model.disable_adapter() if hasattr(model, "disable_adapter") else nullcontext()
+        with adapter_context:
             for text in texts:
                 encoded = tokenizer(text, return_tensors="pt", add_special_tokens=True)
                 input_ids = encoded["input_ids"].to(session.device)
                 if input_ids.shape[1] < 2:
                     perplexity = None
                 else:
-                    outputs = model(input_ids=input_ids, use_cache=False)
+                    outputs = model(input_ids=input_ids) if getattr(session, "llada", False) else model(input_ids=input_ids, use_cache=False)
                     labels = input_ids[:, 1:]
                     logits = outputs.logits[:, :-1].float()
                     nll = F.cross_entropy(logits.transpose(1, 2), labels, reduction="sum")

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import gc
 import json
 import os
 from pathlib import Path
@@ -11,8 +12,8 @@ import yaml
 from dotenv import load_dotenv
 from tqdm.auto import tqdm
 
-from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, resolve_generation_settings, save_result, score_open_ended_generations, score_prediction
-from diffusion_lm.inference import denoise_stream, find_adapters, load_llada_session, load_session
+from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, resolve_generation_settings, save_result, score_prediction, score_texts_with_model
+from diffusion_lm.inference import denoise_stream, find_adapters, load_llada_session, load_session, select_device
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
@@ -79,6 +80,41 @@ def _show_open_ended_answer(progress, method: str, index: int, total: int, promp
     print(f"[{method} {index}/{total}] sample complete", flush=True)
 
 
+def _load_perplexity_reference(config: dict):
+    """Load the single model used for all benchmark perplexity scores."""
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    settings = dict(config.get("perplexity", {}))
+    model_name = settings.get("model_name_or_path", "meta-llama/Llama-3.1-8B-Instruct")
+    tokenizer_name = settings.get("tokenizer_name_or_path", model_name)
+    device = select_device(settings.get("device", config.get("device", "auto")))
+    cache_dir = settings.get("cache_dir", "base_models")
+    token = os.getenv("HF_TOKEN")
+    precision = str(settings.get("precision", "fp16" if device.type == "cuda" else "fp32")).lower()
+    dtype = torch.bfloat16 if precision == "bf16" else torch.float16 if precision == "fp16" and device.type != "cpu" else torch.float32
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, token=token, cache_dir=cache_dir, use_fast=True)
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    load_kwargs = {"torch_dtype": dtype, "token": token, "cache_dir": cache_dir}
+    if str(settings.get("quantization", "none")).lower() in {"4bit", "4-bit", "qlora"}:
+        if device.type != "cuda":
+            raise RuntimeError("Perplexity 4-bit quantization requires CUDA.")
+        from transformers import BitsAndBytesConfig
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type=str(settings.get("quantization_type", "nf4")),
+            bnb_4bit_compute_dtype=dtype,
+            bnb_4bit_use_double_quant=True,
+        )
+        load_kwargs["device_map"] = {"": device.index if device.index is not None else 0}
+    model = AutoModelForCausalLM.from_pretrained(model_name, **load_kwargs)
+    if "device_map" not in load_kwargs:
+        model.to(device)
+    model.eval()
+    return model, tokenizer, device, {"model_name_or_path": model_name, "tokenizer_name_or_path": tokenizer_name, "device": str(device), "quantization": str(settings.get("quantization", "none")), "precision": precision}
+
+
 def main() -> None:
     """Load configured benchmark data and evaluate selected best adapters."""
     parser = argparse.ArgumentParser(); parser.add_argument("--config", required=True)
@@ -96,6 +132,7 @@ def main() -> None:
     result_path = Path(config.get("results_path", "outputs/benchmark_results.jsonl")); result_path.parent.mkdir(parents=True, exist_ok=True)
     show_open_ended_answers = bool(config.get("show_open_ended_answers", False))
     summaries = []
+    open_ended_pending = []
     for selection in selections:
         selection = str(selection)
         if selection.startswith("llada:"):
@@ -127,28 +164,8 @@ def main() -> None:
                     diffusion_texts.append(text)
                     if show_open_ended_answers:
                         _show_open_ended_answer(diffusion_progress, "diffusion", index, len(examples), example.prompt, text)
-                diffusion_scores = score_open_ended_generations(session, diffusion_texts)
-                for example, text, scores in zip(examples, diffusion_texts, diffusion_scores["per_text"]):
-                    save_result(result_path, {
-                        "model": model_label, "corruption_mode": mode, "task": task,
-                        "example_id": example.example_id, "method": "diffusion",
-                        "prompt": example.prompt, "prediction": text,
-                        "inference_settings": task_settings,
-                        **scores,
-                    })
-                summary = {
-                    "model": model_label, "corruption_mode": mode, "task": task,
-                    "method": "diffusion", "total": len(examples),
-                    "inference_settings": task_settings,
-                    "perplexity": diffusion_scores["perplexity"],
-                    "mean_nll": diffusion_scores["mean_nll"],
-                    "tokens": diffusion_scores["tokens"],
-                    "mean_unigram_repetition": sum(item["unigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
-                    "mean_bigram_repetition": sum(item["bigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
-                    "mean_trigram_repetition": sum(item["trigram_repetition"] for item in diffusion_scores["per_text"]) / max(len(examples), 1),
-                }
-                summaries.append(summary)
-                message = f"{model_label} | {task} | diffusion perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}"
+                open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "examples": examples, "texts": diffusion_texts, "inference_settings": task_settings})
+                message = f"{model_label} | {task} | diffusion generation complete; perplexity will be scored with the shared reference model at the end"
                 if config.get("include_autoregressive", False) and supports_autoregressive:
                     print(f"[{model_label}] {task}: {len(examples)} validation samples (autoregressive)", flush=True)
                     ar_texts = []
@@ -160,28 +177,8 @@ def main() -> None:
                         ar_texts.append(text)
                         if show_open_ended_answers:
                             _show_open_ended_answer(ar_progress, "autoregressive", index, len(examples), example.prompt, text)
-                    ar_scores = score_open_ended_generations(session, ar_texts)
-                    for example, text, scores in zip(examples, ar_texts, ar_scores["per_text"]):
-                        save_result(result_path, {
-                            "model": model_label, "corruption_mode": mode, "task": task,
-                            "example_id": example.example_id, "method": "autoregressive",
-                            "prompt": example.prompt, "prediction": text,
-                            "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))},
-                            **scores,
-                        })
-                    ar_summary = {
-                        "model": model_label, "corruption_mode": mode, "task": task,
-                        "method": "autoregressive", "total": len(examples),
-                        "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))},
-                        "perplexity": ar_scores["perplexity"],
-                        "mean_nll": ar_scores["mean_nll"],
-                        "tokens": ar_scores["tokens"],
-                        "mean_unigram_repetition": sum(item["unigram_repetition"] for item in ar_scores["per_text"]) / max(len(examples), 1),
-                        "mean_bigram_repetition": sum(item["bigram_repetition"] for item in ar_scores["per_text"]) / max(len(examples), 1),
-                        "mean_trigram_repetition": sum(item["trigram_repetition"] for item in ar_scores["per_text"]) / max(len(examples), 1),
-                    }
-                    summaries.append(ar_summary)
-                    message += f" | autoregressive perplexity={ar_summary['perplexity']:.4f} | trigram repetition={ar_summary['mean_trigram_repetition']:.4f}"
+                    open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}})
+                    message += " | autoregressive generation complete"
                 if config.get("include_autoregressive", False) and not supports_autoregressive:
                     message += " | autoregressive comparison skipped"
                 print(message)
@@ -218,6 +215,52 @@ def main() -> None:
                 summaries.append(ar_summary)
                 message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
             print(message)
+    # Generation models are no longer needed; release the last session before
+    # loading the shared reference model to keep peak GPU memory manageable.
+    if selections:
+        del session
+        gc.collect()
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except ImportError:
+            pass
+    if open_ended_pending:
+        print("\nLoading shared perplexity reference model...", flush=True)
+        reference_model, reference_tokenizer, reference_device, reference_info = _load_perplexity_reference(config)
+        print(f"Scoring {len(open_ended_pending)} open-ended result groups with {reference_info['model_name_or_path']}...", flush=True)
+        for group in open_ended_pending:
+            scores = score_texts_with_model(reference_model, reference_tokenizer, reference_device, group["texts"])
+            for example, text, per_text in zip(group["examples"], group["texts"], scores["per_text"]):
+                save_result(result_path, {
+                    "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
+                    "example_id": example.example_id, "method": group["method"],
+                    "prompt": example.prompt, "prediction": text,
+                    "inference_settings": group["inference_settings"],
+                    "perplexity_reference": reference_info,
+                    **per_text,
+                })
+            summary = {
+                "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
+                "method": group["method"], "total": len(group["examples"]),
+                "inference_settings": group["inference_settings"],
+                "perplexity_reference": reference_info,
+                "perplexity": scores["perplexity"], "mean_nll": scores["mean_nll"], "tokens": scores["tokens"],
+                "mean_unigram_repetition": sum(item["unigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
+                "mean_bigram_repetition": sum(item["bigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
+                "mean_trigram_repetition": sum(item["trigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
+            }
+            summaries.append(summary)
+            print(f"{group['model']} | {group['method']} | perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}", flush=True)
+        del reference_model
+        gc.collect()
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except ImportError:
+            pass
     (result_path.parent / (result_path.stem + "_summary.json")).write_text(json.dumps(summaries, indent=2))
 
 

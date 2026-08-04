@@ -199,6 +199,44 @@ def _ngram_repetition(text: str, tokenizer: Any, n: int) -> float:
 
 
 @torch.no_grad()
+def score_texts_with_model(model: Any, tokenizer: Any, device: torch.device, texts: list[str]) -> dict[str, Any]:
+    """Score texts with one fixed causal reference model.
+
+    This deliberately does not disable adapters or restore normalization
+    parameters: the supplied model is the shared perplexity reference model.
+    """
+    import torch.nn.functional as F
+
+    total_nll = 0.0
+    total_tokens = 0
+    per_text = []
+    model.eval()
+    for text in texts:
+        encoded = tokenizer(text, return_tensors="pt", add_special_tokens=True)
+        input_ids = encoded["input_ids"].to(device)
+        if input_ids.shape[1] < 2:
+            perplexity = None
+        else:
+            outputs = model(input_ids=input_ids, use_cache=False)
+            labels = input_ids[:, 1:]
+            logits = outputs.logits[:, :-1].float()
+            nll = F.cross_entropy(logits.transpose(1, 2), labels, reduction="sum")
+            text_nll = float(nll.cpu())
+            text_tokens = int(labels.numel())
+            total_nll += text_nll
+            total_tokens += text_tokens
+            perplexity = float(torch.exp(torch.tensor(text_nll / text_tokens)))
+        per_text.append({
+            "perplexity": perplexity,
+            "unigram_repetition": _ngram_repetition(text, tokenizer, 1),
+            "bigram_repetition": _ngram_repetition(text, tokenizer, 2),
+            "trigram_repetition": _ngram_repetition(text, tokenizer, 3),
+        })
+    mean_nll = total_nll / max(total_tokens, 1)
+    return {"perplexity": float(torch.exp(torch.tensor(mean_nll))), "mean_nll": mean_nll, "tokens": total_tokens, "per_text": per_text}
+
+
+@torch.no_grad()
 def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, Any]:
     """Score generated texts with base-model perplexity and repetition metrics.
 

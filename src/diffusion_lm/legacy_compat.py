@@ -44,13 +44,20 @@ class LegacyCustomTransformerModel(PreTrainedModel):
             base_mask = torch.tril(torch.ones(seq_len, seq_len, dtype=torch.bool, device=input_ids.device))
         else:
             raise ValueError(f"Unknown masking type: {masking_type}")
-        attention_mask = base_mask.unsqueeze(0).unsqueeze(1).expand(batch_size, 1, seq_len, seq_len).to(dtype=torch.float32)
+        llama = getattr(self.llama, "base_model", self.llama)
+        compute_dtype = next(
+            (parameter.dtype for parameter in llama.parameters() if parameter.is_floating_point()),
+            torch.float32,
+        )
+        # The legacy checkpoint is commonly loaded in FP16 on Colab. SDPA
+        # requires an additive attention bias to have the same dtype as the
+        # query, so avoid the old unconditional float32 mask here.
+        attention_mask = base_mask.unsqueeze(0).unsqueeze(1).expand(batch_size, 1, seq_len, seq_len).to(dtype=compute_dtype)
         # The hosted full checkpoint was serialized with peft==0.15.1.  Newer
         # PEFT's outer PeftModel.forward expects attributes absent from that
         # old pickled object.  Its base_model is the already-injected LoraModel
         # (and therefore retains the trained LoRA layers), so call it directly
         # when present rather than relying on version-sensitive PEFT hooks.
-        llama = getattr(self.llama, "base_model", self.llama)
         outputs = llama(input_ids, attention_mask=attention_mask, output_hidden_states=True, use_cache=False, **kwargs)
         logits = outputs.logits[:, :, :self.config.vocab_size].view(batch_size, seq_len, self.config.vocab_size)
         if labels is None:

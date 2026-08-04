@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from tqdm.auto import tqdm
 
 from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, resolve_generation_settings, save_result, score_prediction, score_texts_with_model
-from diffusion_lm.inference import denoise_stream, find_adapters, load_llada_session, load_local_legacy_session, load_session, select_device
+from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
@@ -152,6 +152,18 @@ def main() -> None:
             mode = "legacy"
             session = load_local_legacy_session(checkpoint, tokenizer_name, config.get("device", "auto"))
             supports_autoregressive = False
+        elif selection.startswith("legacy-hf:"):
+            descriptor = selection.split(":", 1)[1].strip()
+            try:
+                repo_id, filename = [part.strip() for part in descriptor.split("|", 1)]
+            except ValueError as exc:
+                raise ValueError("Hosted legacy entries must use legacy-hf:repo_id|filename.pth") from exc
+            tokenizer_name = config.get("legacy_tokenizer_name_or_path", "meta-llama/Llama-3.2-3B")
+            model_label = f"legacy-hf:{repo_id}/{filename}"
+            run_config = {"model_source": "huggingface_legacy", "repo_id": repo_id, "filename": filename, "tokenizer_name_or_path": tokenizer_name}
+            mode = "legacy"
+            session = load_hosted_legacy_session(repo_id, filename, tokenizer_name, config.get("device", "auto"))
+            supports_autoregressive = False
         else:
             model_label = selection
             adapter_path = outputs / selection
@@ -225,17 +237,11 @@ def main() -> None:
                 summaries.append(ar_summary)
                 message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
             print(message)
+        print(f"Released generation model for {model_label}; clearing GPU memory before the next model.", flush=True)
+        release_session(session)
+        del session
     # Generation models are no longer needed; release the last session before
     # loading the shared reference model to keep peak GPU memory manageable.
-    if selections:
-        del session
-        gc.collect()
-        try:
-            import torch
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-        except ImportError:
-            pass
     if open_ended_pending:
         print("\nLoading shared perplexity reference model...", flush=True)
         reference_model, reference_tokenizer, reference_device, reference_info = _load_perplexity_reference(config)

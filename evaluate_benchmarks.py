@@ -149,7 +149,7 @@ def main() -> None:
             tokenizer_name = config.get("legacy_tokenizer_name_or_path", "meta-llama/Llama-3.2-3B")
             model_label = f"legacy:{checkpoint}"
             run_config = {"model_source": "local_legacy", "checkpoint": checkpoint, "tokenizer_name_or_path": tokenizer_name}
-            mode = "legacy"
+            mode = "structured"
             session = load_local_legacy_session(checkpoint, tokenizer_name, config.get("device", "auto"))
             supports_autoregressive = False
         elif selection.startswith("legacy-hf:"):
@@ -161,7 +161,7 @@ def main() -> None:
             tokenizer_name = config.get("legacy_tokenizer_name_or_path", "meta-llama/Llama-3.2-3B")
             model_label = f"legacy-hf:{repo_id}/{filename}"
             run_config = {"model_source": "huggingface_legacy", "repo_id": repo_id, "filename": filename, "tokenizer_name_or_path": tokenizer_name}
-            mode = "legacy"
+            mode = "structured"
             session = load_hosted_legacy_session(repo_id, filename, tokenizer_name, config.get("device", "auto"))
             supports_autoregressive = False
         else:

@@ -15,7 +15,7 @@ validation_samples: 200
 corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask
+output_dir: outputs/llama-3.1-8b-mask-normalization
 seed: 42
 t_min: 0.001
 include_answer_eos: true

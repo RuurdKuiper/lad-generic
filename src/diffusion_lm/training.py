@@ -223,6 +223,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         output_path = Path(config["output_dir"])
         if not output_path.is_absolute():
             config["output_dir"] = str(Path(output_root) / output_path)
+        for key in ("resume_from_checkpoint", "resume_from_adapter"):
+            value = config.get(key)
+            if value and not Path(value).is_absolute():
+                config[key] = str(Path(output_root) / value)
     output = Path(config["output_dir"])
     if not config.get("resume_from_checkpoint") and not config.get("resume_from_adapter"):
         output = _available_output_dir(output)

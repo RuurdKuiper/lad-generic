@@ -24,7 +24,10 @@ AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
 def resolve_generation_settings(config: dict[str, Any], task: str, mode: str) -> dict[str, Any]:
     """Resolve generation settings for a task and corruption mode."""
     settings = dict(config.get("generation", {}))
-    settings.update(config.get("generation_by_corruption", {}).get(mode, {}))
+    mode_settings = config.get("generation_by_corruption", {}).get(mode, {})
+    if mode == "legacy" and not mode_settings:
+        mode_settings = config.get("generation_by_corruption", {}).get("structured", {})
+    settings.update(mode_settings)
     settings.update(config.get("task_generation", {}).get(task, {}))
     settings.update(config.get("task_generation_by_corruption", {}).get(mode, {}).get(task, {}))
     if mode == "mask_only":

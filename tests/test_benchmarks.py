@@ -33,3 +33,11 @@ def test_generation_settings_use_corruption_specific_overrides():
     assert masked["noise_level"] == 1.0
     assert masked["permanent_unmask"] is True
     assert masked["confidence_guided"] is True
+
+
+def test_legacy_generation_settings_fall_back_to_structured_settings():
+    config = {"generation": {"temperature": 0.7}, "generation_by_corruption": {"structured": {"temperature": 0.9}}}
+
+    settings = resolve_generation_settings(config, "open_ended", "legacy")
+
+    assert settings["temperature"] == 0.9

@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from tqdm.auto import tqdm
 
 from diffusion_lm.benchmarks import ALL_TASKS, load_benchmark, resolve_generation_settings, save_result, score_prediction, score_texts_with_model
-from diffusion_lm.inference import denoise_stream, find_adapters, load_llada_session, load_session, select_device
+from diffusion_lm.inference import denoise_stream, find_adapters, load_llada_session, load_local_legacy_session, load_session, select_device
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
@@ -61,7 +61,7 @@ class _null_context:
 
 def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
     """Generate one pure-diffusion answer using the run's corruption strategy."""
-    structured = mode == "structured"
+    structured = mode in {"structured", "legacy"}
     # Mask-only (LLaDA-style) evaluation always begins with the answer fully
     # masked; configured noise levels remain applicable to structured runs.
     noise_level = 1.0 if mode == "mask_only" else float(settings.get("noise_level", .5))
@@ -141,6 +141,16 @@ def main() -> None:
             run_config = {"model_source": "llada", "repo_id": model_name}
             mode = "mask_only"
             session = load_llada_session(model_name, config.get("device", "auto"))
+            supports_autoregressive = False
+        elif selection.startswith("legacy:"):
+            checkpoint = selection.split(":", 1)[1].strip()
+            if not checkpoint:
+                raise ValueError("Legacy model entries must use legacy:/path/to/checkpoint.pth")
+            tokenizer_name = config.get("legacy_tokenizer_name_or_path", "meta-llama/Llama-3.2-3B")
+            model_label = f"legacy:{checkpoint}"
+            run_config = {"model_source": "local_legacy", "checkpoint": checkpoint, "tokenizer_name_or_path": tokenizer_name}
+            mode = "legacy"
+            session = load_local_legacy_session(checkpoint, tokenizer_name, config.get("device", "auto"))
             supports_autoregressive = False
         else:
             model_label = selection

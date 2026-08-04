@@ -1,5 +1,6 @@
 outputs_dir: outputs
-models: []  # Empty means discover every outputs/**/best adapter. Add e.g. "llada:GSAI-ML/LLaDA-8B-Instruct" explicitly.
+models: []  # Empty means discover every outputs/**/best adapter. Add "llada:..." or "legacy:/path/to/checkpoint.pth" explicitly.
+legacy_tokenizer_name_or_path: meta-llama/Llama-3.2-3B
 # tasks: [mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp, open_ended]
 tasks: [arc_c]  # Options: mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp, open_ended
 split: test

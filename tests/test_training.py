@@ -22,13 +22,21 @@ def test_mask_only_generation_uses_full_remasking_and_permanent_retention():
         "generation_perplexity": {
             "noise_level": 0.35,
             "permanent_unmask": False,
+            "confidence_guided": False,
+            "max_new_tokens": 128,
+            "temperature": 0.7,
+            "top_k": 20,
             "num_steps": 12,
         },
     })
 
     assert settings["noise_level"] == 1.0
     assert settings["permanent_unmask"] is True
-    assert settings["num_steps"] == 12
+    assert settings["confidence_guided"] is True
+    assert settings["max_new_tokens"] == 64
+    assert settings["num_steps"] == 32
+    assert settings["temperature"] == 1.0
+    assert settings["top_k"] == 100
 
 
 def test_structured_generation_keeps_configured_inference_settings():

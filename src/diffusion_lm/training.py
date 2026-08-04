@@ -91,10 +91,18 @@ def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
     """Resolve generation settings, including corruption-mode-specific inference."""
     settings = dict(config.get("generation_perplexity", {}))
     if config.get("corruption_mode") == "mask_only":
-        # Mask-only training learns to reconstruct fully masked answers. Keep
-        # already recovered tokens fixed during validation generation and start
-        # each answer from a fully remasked state for a matching evaluation.
-        settings.update(permanent_unmask=True, noise_level=1.0)
+        # Mask-only training learns to reconstruct fully masked answers. Use a
+        # fixed LLaDA-style evaluation setup: begin fully masked and retain the
+        # most confident recovered tokens between refinement steps.
+        settings.update(
+            max_new_tokens=64,
+            num_steps=32,
+            noise_level=1.0,
+            temperature=1.0,
+            top_k=100,
+            permanent_unmask=True,
+            confidence_guided=True,
+        )
     return settings
 
 

@@ -20,7 +20,7 @@ max_sequence_length: 256
 multi_turn_prob: 0.0
 t_min: 0.001
 
-output_dir: outputs/llama-3.1-8b-mask-legacysettings-corrupted-loss
+output_dir: outputs/llama-3.1-8b-mask-corrupted-loss
 seed: 42
 
 # The inspected legacy 8B checkpoint trained q/v LoRA only: no norms, no
@@ -61,10 +61,12 @@ generation_perplexity:
   enabled: true
   num_prompts: 5
   num_steps: 32
-  max_new_tokens: 128
-  noise_level: 0.5
-  temperature: 0.7
-  top_k: 3
+  max_new_tokens: 64
+  noise_level: 1.0
+  temperature: 1.0
+  top_k: 100
+  permanent_unmask: true
+  confidence_guided: true
   seed: 1234
   prompts:
     - "What do you know about Amsterdam?"

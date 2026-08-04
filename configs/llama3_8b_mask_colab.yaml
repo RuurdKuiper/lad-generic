@@ -1,6 +1,7 @@
 # Base model
 model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+resume_from_adapter: outputs/llama-3.1-8b-mask/checkpoint-10000
 
 # Dataset
 dataset_name: Ruurd/LAD-training
@@ -15,7 +16,7 @@ validation_samples: 200
 corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask
+output_dir: outputs/llama-3.1-8b-mask-continued
 seed: 42
 t_min: 0.001
 include_answer_eos: true
@@ -34,7 +35,7 @@ epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 10000
+max_updates: 100000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
@@ -49,7 +50,7 @@ gradient_checkpointing: false
 # Logging and checkpointing
 logging_steps: 10
 validation_steps: 250
-checkpoint_steps: 1000
+checkpoint_steps: 10000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training

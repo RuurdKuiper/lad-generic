@@ -266,3 +266,18 @@ Set `models` to adapter paths relative to `outputs/`, or add a hosted LLaDA mode
 For structured loss, `all_answer_tokens` is the default safe objective; `corrupted_answer_tokens` restricts loss to changed answer positions; and `all_tokens` supervises prompt, assistant formatting, and answer positions. Set `eos_padding_loss: true` to include trailing EOS padding in any of these objectives, or `false` to exclude it. When omitted, the legacy behavior is retained: enabled for `all_tokens`, disabled for answer-only objectives. Validation can optionally run fixed-prompt generation and base-model perplexity. Enable `generation_perplexity.enabled` in a YAML to save each prompt’s full denoising trajectory in `generation_metrics.jsonl` and add the corresponding per-prompt `generation_perplexity` plus aggregate `generation_perplexity`, `generation_mean_nll`, and `generation_tokens` to validation metrics. The evaluator temporarily disables LoRA and restores the original pre-training normalization weights, so trained norms do not contaminate the base-model score. `train_normalization_layers` independently controls whether norms are trainable.
 
 With `corruption_mode: mask_only`, enabled `eos_padding_loss` also places EOS padding in the stochastic corruption candidates. Thus it is learned as a denoising target rather than simply copied from the input; this applies to all three loss behaviors. EOS padding is visible to attention in both directions, making the configured context width an explicit signal during concise-answer training.
+
+For an adapter warm-start where the original run did not save full
+Accelerate checkpoints, set `resume_data_updates` to the number of updates
+already consumed. This excludes the corresponding prefix of the deterministically
+prepared training examples before constructing the new dataloader, while
+retaining fresh on-the-fly mask sampling:
+
+```yaml
+resume_from_adapter: outputs/llama-3.1-8b-mask/checkpoint-10000
+resume_data_updates: 10000
+max_updates: 90000
+```
+
+Keep the seed, batch size, gradient accumulation, and dataset configuration
+unchanged for this data offset to correspond to the original run.

@@ -236,11 +236,16 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     if configured_updates_hint is None:
         configured_updates_hint = config.get("max_steps")
     train_sample_limit = None
+    resume_data_updates = int(config.get("resume_data_updates", 0) or 0)
+    if resume_data_updates < 0:
+        raise ValueError("resume_data_updates must be non-negative")
+    if resume_data_updates and not config.get("resume_from_adapter"):
+        raise ValueError("resume_data_updates is only supported with resume_from_adapter")
     if configured_updates_hint is not None:
         configured_updates_hint = int(configured_updates_hint)
         if configured_updates_hint < 1:
             raise ValueError("max_updates must be a positive number of gradient updates")
-        train_sample_limit = configured_updates_hint * int(config.get("gradient_accumulation_steps", 1)) * int(config.get("batch_size", 1))
+        train_sample_limit = (configured_updates_hint + resume_data_updates) * int(config.get("gradient_accumulation_steps", 1)) * int(config.get("batch_size", 1))
     accelerator = Accelerator(gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)), mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"])
     # Ensure NCCL process groups are released when a worker is interrupted
     # (for example with Ctrl-C or a scheduler pre-emption signal).
@@ -346,6 +351,18 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     # Keep validation single-turn by default; multi-turn can be enabled
     # explicitly when comparing models on conversational context.
     eval_collator = DenoisingCollator(**common, deterministic=True)
+    if resume_data_updates:
+        already_seen_examples = resume_data_updates * int(config.get("gradient_accumulation_steps", 1)) * int(config.get("batch_size", 1))
+        if len(train_data) <= already_seen_examples:
+            raise ValueError(
+                "resume_data_updates removes the entire prepared training set; "
+                "increase the training sample limit or reduce resume_data_updates"
+            )
+        # The preparation pipeline uses a stable seed-based shuffle before
+        # applying train_sample_limit. Remove the prefix consumed by the
+        # original run before constructing the new dataloader; the dataloader
+        # may reshuffle the remaining examples freely without reusing them.
+        train_data = train_data.select(range(already_seen_examples, len(train_data)))
     train_loader = _loader(train_data.shuffle(seed=seed), train_collator, int(config["batch_size"]), True, seed, int(config.get("num_workers", 0)))
     val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
     test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))

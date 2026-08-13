@@ -34,6 +34,33 @@ HF_TOKEN=hf_your_token_here
 
 Dataset artifacts are cached in `data/huggingface/` and base model/tokenizer snapshots in `base_models/` by default. Override these with `cache_dir` and `base_model_cache_dir` in a configuration if you prefer other locations. Both directories are excluded from version control.
 
+### Build and publish the training mixture
+
+Create the 500k-row, 45% general / 18% reasoning / 18% math / 19% code
+mixture and upload it in one command:
+
+```bash
+python build_training_dataset.py --repo-id YOUR_HF_USER/LAD-training-v2
+```
+
+`HF_TOKEN` is read from `.env`; it needs write access for uploads. Pass
+`--private` for a private dataset or `--no-upload` to only save under
+`data/lad-training-v2`. The builder uses only upstream training splits and
+removes exact normalized prompt matches from the represented benchmarks'
+validation/test splits. It keeps complete examples whose prompt is at most 256
+tokens and whose full chat sequence is at most 512 tokens—accepted answers are
+never silently truncated.
+
+Each row retains `instruction`, `input`, and `output` for tokenizer-independent
+`mask_only` training. It also stores identical clean `input_ids` and `labels`
+tokenized with Llama 3.1 for `structured` compatibility. Arrays are variable
+length; the existing collator pads each batch dynamically. To build a smaller
+trial before the full upload:
+
+```bash
+python build_training_dataset.py --total-examples 1000 --no-upload
+```
+
 On macOS CPU/MPS, use a tiny configuration after setting a reachable tiny dataset/model:
 
 ```bash

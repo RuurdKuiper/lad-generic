@@ -1,8 +1,6 @@
 # Base model
 model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
-resume_from_adapter: outputs/llama-3.1-8b-mask-continued/checkpoint-15000
-resume_data_updates: 25000
 
 # Dataset
 dataset_name: Ruurd/LAD-training
@@ -36,12 +34,12 @@ epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 75000
+max_updates: 100000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
-lora_r: 2048
-lora_alpha: 2048
+lora_r: 1024
+lora_alpha: 1024
 train_normalization_layers: false
 batch_size: 8
 eval_batch_size: 8
@@ -51,7 +49,7 @@ gradient_checkpointing: false
 # Logging and checkpointing
 logging_steps: 10
 validation_steps: 250
-checkpoint_steps: 5000
+checkpoint_steps: 10000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training

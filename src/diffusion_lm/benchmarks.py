@@ -10,6 +10,7 @@ import sys
 import tempfile
 from contextlib import nullcontext
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Callable
 
@@ -85,10 +86,17 @@ class BenchmarkExample:
     metadata: dict[str, Any]
 
 
-def _choice_prompt(question: str, choices: list[Any]) -> str:
-    """Format a multiple-choice question using stable A/B/C/... labels."""
+def _choice_prompt(name: str, question: str, choices: list[Any]) -> str:
+    """Match the multiple-choice instruction and input format used for training."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    return question.strip() + "\n\n" + "\n".join(f"{letters[i]}. {choice}" for i, choice in enumerate(choices)) + "\n\nAnswer with only the letter."
+    options = "\n".join(f"{letters[i]}: {choice}" for i, choice in enumerate(choices))
+    if name == "hellaswag":
+        instruction = "Choose the option that most plausibly continues the described event."
+        task_input = f"Beginning of the event:\n{question.strip()}\n\nWhat most plausibly happens next?\n{options}"
+    else:
+        instruction = "Answer the following multiple-choice question."
+        task_input = f"{question.strip()}\n\n{options}"
+    return f"{instruction}\n\n{task_input}"
 
 
 def _multiple_choice_fields(name: str, row: dict[str, Any], index: int) -> tuple[str, list[Any], str]:
@@ -133,6 +141,47 @@ def _boxed(text: str) -> str:
     return (matches[-1][0] or matches[-1][1]).strip()
 
 
+def _last_number(text: str) -> str:
+    """Extract the final numeric candidate, following common GSM8K evaluation."""
+    candidates = re.findall(r"[-+]?(?:\d[\d,]*\.?\d*|\.\d+)(?:[eE][-+]?\d+)?", text or "")
+    return candidates[-1].replace(",", "").rstrip(".") if candidates else ""
+
+
+def _normalize_math_answer(text: str) -> str:
+    """Normalize a generated or reference final MATH answer for comparison."""
+    value = _boxed(text).strip()
+    answer_match = re.search(r"(?is)(?:final\s+answer|answer)\s*(?:is|:)\s*(.+)$", value)
+    if answer_match:
+        value = answer_match.group(1).strip()
+    value = re.sub(r"^\$|\$$", "", value.strip())
+    value = value.rstrip(".。;,!").strip()
+    value = value.replace("\\left", "").replace("\\right", "")
+    value = re.sub(r"\s+", "", value).replace(",", "")
+    return value
+
+
+def _numeric_answers_equal(left: str, right: str) -> bool:
+    """Compare normalized decimal answers exactly when both are numeric."""
+    try:
+        return Decimal(left) == Decimal(right)
+    except InvalidOperation:
+        return False
+
+
+def _math_answers_equal(prediction: str, target: str) -> bool:
+    """Use symbolic MATH verification when installed, with a strict fallback."""
+    normalized_prediction = _normalize_math_answer(prediction)
+    normalized_target = _normalize_math_answer(target)
+    if normalized_prediction == normalized_target or _numeric_answers_equal(normalized_prediction, normalized_target):
+        return True
+    try:
+        from math_verify import parse, verify
+
+        return bool(verify(parse(target), parse(prediction)))
+    except (ImportError, TypeError, ValueError):
+        return False
+
+
 def _sample_indices(size: int, limit: int | None = None, limit_fraction: float | None = None) -> list[int]:
     """Select a deterministic prefix or an evenly-spaced dataset fraction."""
     if limit is not None and limit_fraction is not None:
@@ -151,26 +200,35 @@ def _sample_indices(size: int, limit: int | None = None, limit_fraction: float |
     return list(range(size))
 
 
+def _benchmark_spec(name: str, split: str) -> tuple[str, str | None, str]:
+    """Resolve the dataset configuration and locally scoreable task split."""
+    specs = {
+        "mmlu": ("cais/mmlu", "all", split),
+        "mmlu_pro": ("TIGER-Lab/MMLU-Pro", None, split),
+        # HellaSwag's public test labels are withheld, so validation is the
+        # standard locally-scoreable evaluation split.
+        "hellaswag": ("Rowan/hellaswag", None, "validation" if split == "test" else split),
+        "arc_c": ("allenai/ai2_arc", "ARC-Challenge", "test" if split == "test" else split),
+        "gsm8k": ("openai/gsm8k", "main", split),
+        "math": ("HuggingFaceH4/MATH-500", None, "test" if split == "test" else split),
+        # The Hugging Face GPQA release exposes its 448 benchmark examples as
+        # `train`; they are the evaluation set, not model-training data here.
+        "gpqa": ("Idavidrein/gpqa", "gpqa_main", "train"),
+        "humaneval": ("openai/openai_humaneval", None, split),
+        "mbpp": ("google-research-datasets/mbpp", "sanitized", split),
+    }
+    if name not in specs:
+        raise ValueError(f"Unknown benchmark {name}; available: {AVAILABLE_TASKS}")
+    return specs[name]
+
+
 def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, token: str | None, limit_fraction: float | None = None) -> list[BenchmarkExample]:
     """Download one configured benchmark split and normalize its records."""
     if name == OPEN_ENDED_TASK:
         indices = _sample_indices(len(OPEN_ENDED_PROMPTS), limit, limit_fraction)
         return [BenchmarkExample(name, str(index), OPEN_ENDED_PROMPTS[index], "", "open_ended", {}) for index in indices]
     from datasets import load_dataset
-    specs = {
-        "mmlu": ("cais/mmlu", "all", split),
-        "mmlu_pro": ("TIGER-Lab/MMLU-Pro", None, split),
-        "hellaswag": ("Rowan/hellaswag", None, split),
-        "arc_c": ("allenai/ai2_arc", "ARC-Challenge", "test" if split == "test" else split),
-        "gsm8k": ("openai/gsm8k", "main", split),
-        "math": ("HuggingFaceH4/MATH-500", None, "test" if split == "test" else split),
-        "gpqa": ("Idavidrein/gpqa", "gpqa_main", split),
-        "humaneval": ("openai/openai_humaneval", None, split),
-        "mbpp": ("google-research-datasets/mbpp", "sanitized", split),
-    }
-    if name not in specs:
-        raise ValueError(f"Unknown benchmark {name}; available: {AVAILABLE_TASKS}")
-    path, config, actual_split = specs[name]
+    path, config, actual_split = _benchmark_spec(name, split)
     dataset = load_dataset(path, config, split=actual_split, cache_dir=cache_dir, token=token)
     indices = _sample_indices(len(dataset), limit, limit_fraction)
     if len(indices) != len(dataset):
@@ -179,12 +237,17 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
     for index, row in enumerate(dataset):
         if name in MC_TASKS:
             question, choices, answer = _multiple_choice_fields(name, row, index)
-            items.append(BenchmarkExample(name, str(index), _choice_prompt(question, choices), answer, "multiple_choice", row))
+            answer_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".index(answer)
+            target = f"{answer}: {choices[answer_index]}"
+            items.append(BenchmarkExample(name, str(index), _choice_prompt(name, question, choices), target, "multiple_choice", row))
         elif name == "gsm8k":
-            items.append(BenchmarkExample(name, str(index), row["question"] + "\n\nSolve the problem and give the final answer.", _boxed(row["answer"]), "numeric", row))
+            prompt = "Solve the following math problem step by step.\n\n" + row["question"].strip()
+            items.append(BenchmarkExample(name, str(index), prompt, row["answer"].strip(), "gsm8k", row))
         elif name == "math":
             problem = row.get("problem", row.get("question", ""))
-            items.append(BenchmarkExample(name, str(index), problem + "\n\nSolve the problem and give the final answer.", _boxed(row.get("solution", row.get("answer", ""))), "numeric", row))
+            solution = row.get("solution", row.get("answer", ""))
+            prompt = "Solve the following math problem step by step.\n\n" + problem.strip()
+            items.append(BenchmarkExample(name, str(index), prompt, solution.strip(), "math", row))
         elif name == "humaneval":
             items.append(BenchmarkExample(name, str(index), row["prompt"], row.get("canonical_solution", ""), "code", row))
         elif name == "mbpp":
@@ -196,10 +259,14 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
 def extract_answer(text: str, kind: str) -> str:
     """Extract a comparable answer from free-form model output."""
     if kind == "multiple_choice":
-        match = re.search(r"(?<![A-Za-z])([A-Z])(?![A-Za-z])", text.upper())
+        # Training targets begin `A: ...`; score that leading label rather than
+        # an arbitrary later capital letter in an explanation.
+        match = re.match(r"\s*([A-Z])(?=\s*(?::|[.)-]|$))", text.upper())
         return match.group(1) if match else ""
-    if kind == "numeric":
-        return _boxed(text)
+    if kind == "gsm8k":
+        return _last_number(_boxed(text))
+    if kind == "math":
+        return _normalize_math_answer(text)
     return text.strip()
 
 
@@ -226,9 +293,13 @@ def _run_code(candidate: str, example: BenchmarkExample, timeout: float = 10.0) 
 def score_prediction(example: BenchmarkExample, generated: str) -> bool:
     """Score one normalized prediction with exact-match or benchmark tests."""
     if example.kind == "multiple_choice":
-        return extract_answer(generated, example.kind) == example.answer
-    if example.kind == "numeric":
-        return extract_answer(generated, example.kind).replace(" ", "") == example.answer.replace(" ", "")
+        return extract_answer(generated, example.kind) == extract_answer(example.answer, example.kind)
+    if example.kind == "gsm8k":
+        prediction = extract_answer(generated, example.kind)
+        target = extract_answer(example.answer, example.kind)
+        return prediction == target or _numeric_answers_equal(prediction, target)
+    if example.kind == "math":
+        return _math_answers_equal(generated, example.answer)
     return _run_code(generated, example)
 
 

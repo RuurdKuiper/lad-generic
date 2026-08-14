@@ -1,6 +1,6 @@
 import pytest
 
-from diffusion_lm.benchmarks import _multiple_choice_fields, _sample_indices, load_benchmark, resolve_generation_settings
+from diffusion_lm.benchmarks import BenchmarkExample, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, score_prediction
 
 
 def test_open_ended_benchmark_has_reproducible_thirty_prompt_suite():
@@ -56,6 +56,42 @@ def test_arc_maps_dataset_choice_labels_to_output_letters():
     assert question == "Which answer is correct?"
     assert choices == ["First", "Second", "Third", "Fourth"]
     assert answer == "C"
+
+
+def test_multiple_choice_prompt_and_target_match_training_contract():
+    prompt = _choice_prompt("mmlu", "Question?", ["First", "Second"])
+    example = BenchmarkExample("mmlu", "0", prompt, "B: Second", "multiple_choice", {})
+
+    assert prompt == "Answer the following multiple-choice question.\n\nQuestion?\n\nA: First\nB: Second"
+    assert score_prediction(example, "B: Second")
+    assert score_prediction(example, "B. Second")
+    assert not score_prediction(example, "The answer is B: Second")
+
+
+def test_hellaswag_uses_training_prompt_and_labelled_validation_split():
+    prompt = _choice_prompt("hellaswag", "A person opens a door.", ["They enter.", "They leave."])
+
+    assert prompt.startswith("Choose the option that most plausibly continues the described event.\n\nBeginning of the event:")
+    assert _benchmark_spec("hellaswag", "test")[2] == "validation"
+
+
+def test_gpqa_uses_its_published_train_named_evaluation_split():
+    assert _benchmark_spec("gpqa", "test")[2] == "train"
+
+
+def test_gsm8k_scores_the_last_numeric_answer_from_a_rationale():
+    example = BenchmarkExample("gsm8k", "0", "problem", "work shown\n#### 3", "gsm8k", {})
+
+    assert extract_answer(example.answer, "gsm8k") == "3"
+    assert score_prediction(example, "Two blue plus one white gives 3 bolts.")
+    assert not score_prediction(example, "A robe takes 2 bolts and then 1 bolt.")
+
+
+def test_math_ignores_terminal_punctuation_for_final_answer():
+    example = BenchmarkExample("math", "0", "problem", "Therefore, $\\boxed{27}$.", "math", {})
+
+    assert extract_answer(example.answer, "math") == "27"
+    assert score_prediction(example, "27.")
 
 
 def test_generation_settings_use_corruption_specific_overrides():

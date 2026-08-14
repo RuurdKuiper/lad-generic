@@ -6,6 +6,7 @@ dependencies = ["torch>=2.5", "transformers>=4.38.2,<5", "peft>=0.15", "accelera
 
 [project.optional-dependencies]
 cuda = ["bitsandbytes>=0.45"]
+evaluation = ["math-verify[antlr4_13_2]>=0.8"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

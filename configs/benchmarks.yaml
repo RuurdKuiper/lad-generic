@@ -46,10 +46,10 @@ generation_by_corruption:
     confidence_guided: true
 task_generation:
   open_ended: {max_new_tokens: 128, num_steps: 32}
-  mmlu: {max_new_tokens: 3, num_steps: 3}
+  mmlu: {max_new_tokens: 64, num_steps: 32}
   mmlu_pro: {max_new_tokens: 256, num_steps: 256}
-  hellaswag: {max_new_tokens: 3, num_steps: 3}
-  arc_c: {max_new_tokens: 32, num_steps: 32}
+  hellaswag: {max_new_tokens: 64, num_steps: 32}
+  arc_c: {max_new_tokens: 64, num_steps: 32}
   gsm8k: {max_new_tokens: 512, num_steps: 512}
   math: {max_new_tokens: 512, num_steps: 512}
   gpqa: {max_new_tokens: 64, num_steps: 64}

@@ -20,6 +20,25 @@ from .modeling import forward_bidirectional, load_denoising_model
 from .inference import InferenceSession, denoise_stream
 
 
+GENERATION_PROMPTS_PATH = Path(__file__).with_name("generation_prompts.txt")
+
+
+def _load_generation_prompts(path: str | Path = GENERATION_PROMPTS_PATH) -> tuple[str, ...]:
+    """Load the shared, ordered generation-validation prompt set."""
+    prompts = tuple(
+        line
+        for raw_line in Path(path).read_text().splitlines()
+        if (line := raw_line.strip()) and not line.startswith("#")
+    )
+    if not prompts:
+        raise ValueError(f"Generation prompt file is empty: {path}")
+    return prompts
+
+
+# Resolve once so every validation checkpoint in a run uses the exact same set.
+DEFAULT_GENERATION_PROMPTS = _load_generation_prompts()
+
+
 def _write_json(path: Path, value: Any) -> None:
     """Write one structured artifact with deterministic formatting."""
     path.write_text(json.dumps(value, indent=2, sort_keys=True, default=str) + "\n")
@@ -136,7 +155,7 @@ def _available_output_dir(path: Path) -> Path:
 def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int) -> dict[str, float]:
     """Generate fixed prompts step-by-step, save trajectories, and calculate base perplexity."""
     settings = _generation_inference_settings(config)
-    prompts = settings.get("prompts", ["What do you know about Amsterdam?", "Tell me a story about a little dwarf.", "Why is the sky blue?", "Explain how plants grow.", "What makes a good friend?"])
+    prompts = settings.get("prompts", DEFAULT_GENERATION_PROMPTS)
     session = InferenceSession(model, tokenizer, device, output, config, mask_token_id, str(config.get("quantization", "none")))
     trajectories = []
     finals = []

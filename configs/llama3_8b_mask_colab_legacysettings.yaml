@@ -68,9 +68,3 @@ generation_perplexity:
   permanent_unmask: true
   confidence_guided: true
   seed: 1234
-  prompts:
-    - "What do you know about Amsterdam?"
-    - "Tell me a story about a little dwarf."
-    - "Why is the sky blue?"
-    - "Explain how plants grow."
-    - "What makes a good friend?"

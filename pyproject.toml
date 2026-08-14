@@ -10,3 +10,6 @@ cuda = ["bitsandbytes>=0.45"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+diffusion_lm = ["generation_prompts.txt"]

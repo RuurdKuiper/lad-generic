@@ -62,12 +62,6 @@ generation_perplexity:
   temperature: 0.7
   top_k: 3
   seed: 1234
-  prompts:
-    - "What do you know about Amsterdam?"
-    - "Tell me a story about a little dwarf."
-    - "Why is the sky blue?"
-    - "Explain how plants grow."
-    - "What makes a good friend?"
 
 
 # Quantization

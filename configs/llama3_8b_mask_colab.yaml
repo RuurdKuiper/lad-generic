@@ -15,7 +15,7 @@ validation_samples: 200
 corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask-continued-from-25000
+output_dir: outputs/llama-3.1-8b-mask
 seed: 42
 t_min: 0.001
 include_answer_eos: true
@@ -48,14 +48,14 @@ gradient_checkpointing: false
 
 # Logging and checkpointing
 logging_steps: 10
-validation_steps: 250
+validation_steps: 1000
 checkpoint_steps: 10000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training
 generation_perplexity:
   enabled: true
-  num_prompts: 5
+  num_prompts: 20
   num_steps: 32
   max_new_tokens: 64
   noise_level: 1.0
@@ -64,12 +64,6 @@ generation_perplexity:
   permanent_unmask: true
   confidence_guided: true
   seed: 1234
-  prompts:
-    - "What do you know about Amsterdam?"
-    - "Tell me a story about a little dwarf."
-    - "Why is the sky blue?"
-    - "Explain how plants grow."
-    - "What makes a good friend?"
 
 
 # Quantization

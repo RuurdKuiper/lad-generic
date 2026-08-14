@@ -1,0 +1,21 @@
+# One prompt per line. The ordered prefix is selected with num_prompts.
+What do you know about Amsterdam?
+Tell me a story about a little dwarf.
+Why is the sky blue?
+Explain how plants grow.
+What makes a good friend?
+Explain how a refrigerator keeps food cold.
+Why do we have different seasons on Earth?
+How does vaccination help protect a population?
+What is the difference between weather and climate?
+Explain the basic idea behind supply and demand.
+How does a search engine find relevant web pages?
+What causes a rainbow?
+How does the human heart circulate blood?
+Why do objects fall toward the ground?
+Explain what machine learning is in simple terms.
+What are the main benefits of regular exercise?
+How does the water cycle work?
+Why is sleep important for people?
+Explain the difference between renewable and nonrenewable energy.
+Tell a short story about a traveler who learns an unexpected lesson.

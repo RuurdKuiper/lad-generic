@@ -92,10 +92,13 @@ def _targets(total: int, weights: dict[str, float]) -> dict[str, int]:
 
 def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], dict[str, str] | None], count: int,
           tokenizer: Any, config: BuildConfig, blocked: set[str], source: str,
-          seen: set[str] | None = None) -> list[dict[str, Any]]:
+          progress: Any | None = None) -> list[dict[str, Any]]:
     accepted = []
-    seen = seen if seen is not None else set()
+    scanned = 0
     for row in rows:
+        scanned += 1
+        if progress is not None and scanned % 2_000 == 0:
+            progress.set_postfix_str(f"{source}, scanned={scanned:,}", refresh=True)
         item = formatter(row)
         if not item or not item["output"].strip():
             continue
@@ -103,7 +106,7 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         key = prompt_hash(user)
         # Compare both the raw task text and its instruction-wrapped form: held-out
         # benchmark hashes contain the raw question, while general datasets vary.
-        if key in blocked or prompt_hash(item["input"]) in blocked or key in seen:
+        if key in blocked or prompt_hash(item["input"]) in blocked:
             continue
         # Avoid spending seconds tokenizing pathological upstream records (one
         # observed record expands to more than 1.5M tokens).  Fifty characters
@@ -112,23 +115,35 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         if len(user) > config.max_prompt_tokens * 50 or len(item["output"]) > config.max_sequence_tokens * 50:
             continue
         prompt_messages = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": user}]
-        full_messages = prompt_messages + [{"role": "assistant", "content": item["output"].strip()}]
-        # Tokenize to one token beyond each limit.  This proves that a row is
-        # oversized without creating enormous arrays or triggering the model's
-        # max-length warning; no accepted sequence is truncated.
+        # Tokenize to one token beyond the prompt limit. This proves that a row
+        # is oversized without creating enormous arrays or triggering the
+        # model's max-length warning.
         prompt_ids = tokenizer.apply_chat_template(
             prompt_messages, tokenize=True, add_generation_prompt=True,
             truncation=True, max_length=config.max_prompt_tokens + 1,
         )
-        full_ids = tokenizer.apply_chat_template(
-            full_messages, tokenize=True, add_generation_prompt=False,
-            truncation=True, max_length=config.max_sequence_tokens + 1,
-        )
-        if len(prompt_ids) > config.max_prompt_tokens or len(full_ids) > config.max_sequence_tokens:
+        if len(prompt_ids) > config.max_prompt_tokens:
             continue
+        # Do not render and tokenize the prompt a second time. The generation
+        # prefix already ends immediately before assistant content, so append
+        # answer IDs and the tokenizer's EOS/EOT marker directly. This matches
+        # the representation consumed by source_to_tokens in the trainer.
+        answer_limit = config.max_sequence_tokens - len(prompt_ids) - 1
+        if answer_limit < 1:
+            continue
+        answer_ids = tokenizer(
+            item["output"].strip(), add_special_tokens=False, truncation=True,
+            max_length=answer_limit + 1,
+        )["input_ids"]
+        if len(answer_ids) > answer_limit:
+            continue
+        if tokenizer.eos_token_id is None:
+            raise ValueError(f"Tokenizer {tokenizer.name_or_path} has no eos_token_id")
+        full_ids = list(prompt_ids) + list(answer_ids) + [tokenizer.eos_token_id]
         # The trainer expects clean labels; its collator creates corrupted input_ids online.
         accepted.append({**item, "input_ids": list(full_ids), "labels": list(full_ids), "category": source.split(":", 1)[0], "source": source})
-        seen.add(key)
+        if progress is not None:
+            progress.update(1)
         if len(accepted) >= count:
             break
     return accepted
@@ -174,11 +189,13 @@ def build_dataset(config: BuildConfig, token: str | None = None):
     """Download, normalize, balance, split, and return a DatasetDict."""
     from datasets import Dataset, DatasetDict, concatenate_datasets, load_dataset
     from transformers import AutoTokenizer
+    from tqdm.auto import tqdm
 
     cache = config.cache_dir
     load = lambda path, name=None, **kw: load_dataset(path, name, cache_dir=cache, token=token, **kw)
     tokenizer = AutoTokenizer.from_pretrained(config.tokenizer_name, token=token, cache_dir=cache)
     targets = _targets(config.total_examples, config.weights)
+    print(f"Building {config.total_examples:,} examples with category targets: {targets}")
     blocked = _evaluation_hashes(load)
     rng = random.Random(config.seed)
 
@@ -207,9 +224,9 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         ],
     }
     groups = []
-    seen: set[str] = set()
     for category, entries in sources.items():
         wanted = targets[category]
+        progress = tqdm(total=wanted, desc=f"Preparing {category}", unit="rows")
         allocations = [int(wanted * share) for *_, share in entries]
         allocations[0] += wanted - sum(allocations)
         rows = []
@@ -218,13 +235,13 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         # cannot meet its allocation, without rescanning or duplicating rows.
         prepared = [(source, data, formatter, iter(data)) for source, data, formatter, _ in entries]
         for (source, _, formatter, iterator), count in zip(prepared, allocations):
-            rows.extend(_take(iterator, formatter, count, tokenizer, config, blocked, source, seen))
+            rows.extend(_take(iterator, formatter, count, tokenizer, config, blocked, source, progress))
         if len(rows) < wanted:
             # Exhaust still-unused rows from the largest sources first. Dataset
             # size is only a priority heuristic; exact token filtering remains
             # authoritative.
             for source, data, formatter, iterator in sorted(prepared, key=lambda item: len(item[1]), reverse=True):
-                rows.extend(_take(iterator, formatter, wanted - len(rows), tokenizer, config, blocked, source, seen))
+                rows.extend(_take(iterator, formatter, wanted - len(rows), tokenizer, config, blocked, source, progress))
                 if len(rows) >= wanted:
                     break
         unique_count = len(rows)
@@ -237,6 +254,9 @@ def build_dataset(config: BuildConfig, token: str | None = None):
                 f"{category}: {unique_count:,} unique eligible rows; oversampling to {wanted:,} "
                 f"({wanted / unique_count:.2f}x exposure)"
             )
+            progress.update(wanted - unique_count)
+        progress.set_postfix_str(f"{unique_count:,} unique", refresh=True)
+        progress.close()
         groups.append(_repeat_dataset(group, wanted, config.seed, concatenate_datasets))
     combined = concatenate_datasets(groups).shuffle(seed=config.seed)
     heldout = config.validation_fraction + config.test_fraction

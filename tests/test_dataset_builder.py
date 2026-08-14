@@ -4,10 +4,17 @@ from diffusion_lm.dataset_builder import BuildConfig, _repeat_dataset, _take, _t
 
 
 class TinyTokenizer:
+    eos_token_id = 99
+    name_or_path = "tiny"
+
     def apply_chat_template(self, messages, tokenize, add_generation_prompt, truncation=False, max_length=None):
         size = sum(len(m["content"].split()) for m in messages)
         ids = list(range(size + int(add_generation_prompt)))
         return ids[:max_length] if truncation else ids
+
+    def __call__(self, text, add_special_tokens=False, truncation=False, max_length=None):
+        ids = list(range(20, 20 + len(text.split())))
+        return {"input_ids": ids[:max_length] if truncation else ids}
 
 
 def test_default_targets_are_exact_and_match_requested_mix():
@@ -27,11 +34,12 @@ def test_formatters_reject_bad_mc_and_keep_final_tulu_exchange():
 def test_take_filters_heldout_and_lengths_and_stores_clean_ids_twice():
     rows = [{"q": "held out", "a": "no"}, {"q": "one two three four", "a": "too long"}, {"q": "usable", "a": "answer"}]
     formatter = lambda x: {"instruction": "", "input": x["q"], "output": x["a"]}
-    config = BuildConfig(total_examples=1, max_prompt_tokens=8, max_sequence_tokens=8)
+    config = BuildConfig(total_examples=1, max_prompt_tokens=8, max_sequence_tokens=9)
     result = _take(rows, formatter, 1, TinyTokenizer(), config, {prompt_hash("held out")}, "general:test")
     assert len(result) == 1
     assert result[0]["input"] == "usable"
     assert result[0]["input_ids"] == result[0]["labels"]
+    assert result[0]["labels"][-1] == TinyTokenizer.eos_token_id
 
 
 def test_repeat_dataset_uses_every_unique_row_before_balanced_repeats():

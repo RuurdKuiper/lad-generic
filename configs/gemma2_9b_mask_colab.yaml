@@ -64,6 +64,7 @@ generation_perplexity:
   top_k: 100
   permanent_unmask: true
   confidence_guided: true
+  proportional_unmask: false
   seed: 1234
 
 

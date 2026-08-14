@@ -1,4 +1,6 @@
-from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _load_generation_prompts
+import pytest
+
+from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts
 
 
 def test_available_output_dir_adds_incrementing_suffixes(tmp_path):
@@ -26,6 +28,29 @@ def test_shared_generation_prompts_are_loaded_in_stable_order(tmp_path):
         "What do you know about Amsterdam?",
         "Tell me a story about a little dwarf.",
     )
+
+
+def test_generation_perplexity_interval_defaults_to_validation_interval():
+    assert _generation_perplexity_interval({"validation_steps": 500}) == 500
+
+
+def test_generation_perplexity_interval_can_run_less_often_than_validation():
+    config = {
+        "validation_steps": 500,
+        "generation_perplexity": {"interval_steps": 1000},
+    }
+
+    assert _generation_perplexity_interval(config) == 1000
+
+
+def test_generation_perplexity_interval_must_align_with_validation():
+    config = {
+        "validation_steps": 500,
+        "generation_perplexity": {"interval_steps": 750},
+    }
+
+    with pytest.raises(ValueError, match="must be a multiple"):
+        _generation_perplexity_interval(config)
 
 
 def test_mask_only_generation_uses_full_remasking_and_permanent_retention():

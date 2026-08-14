@@ -140,6 +140,19 @@ def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
     return settings
 
 
+def _generation_perplexity_interval(config: dict[str, Any]) -> int:
+    """Resolve an exact generation interval aligned with loss validation."""
+    validation_steps = int(config.get("validation_steps", 100))
+    interval = int(config.get("generation_perplexity", {}).get("interval_steps", validation_steps))
+    if validation_steps < 1:
+        raise ValueError("validation_steps must be positive")
+    if interval < 1:
+        raise ValueError("generation_perplexity.interval_steps must be positive")
+    if interval % validation_steps:
+        raise ValueError("generation_perplexity.interval_steps must be a multiple of validation_steps")
+    return interval
+
+
 def _available_output_dir(path: Path) -> Path:
     """Return path or the next unused suffixed sibling without modifying it."""
     if not path.exists():
@@ -277,6 +290,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
     if checkpoint_mode not in {"only_best_model", "every_checkpoint", "every_model"}:
         raise ValueError("checkpoint_mode must be 'only_best_model', 'every_model', or 'every_checkpoint'")
+    generation_settings = config.get("generation_perplexity", {})
+    generation_interval = _generation_perplexity_interval(config) if generation_settings.get("enabled", False) else None
     from datasets import load_dataset
     cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
     hf_token = os.getenv("HF_TOKEN")
@@ -457,10 +472,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
             metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)))
             if accelerator.is_main_process:
-                generation_settings = config.get("generation_perplexity", {})
-                if generation_settings.get("enabled", False):
+                generation_due = generation_interval is not None and (update_step % generation_interval == 0 or update_step == max_updates)
+                if generation_due:
                     unwrapped = accelerator.unwrap_model(model)
-                    metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, step))
+                    metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
                 metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
                 generation_note = f" | generation_ppl={metrics['generation_perplexity']:.4f}" if "generation_perplexity" in metrics else ""
                 train_avg = interval_loss_sum / max(interval_examples, 1)

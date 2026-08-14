@@ -47,14 +47,15 @@ gradient_accumulation_steps: 1
 gradient_checkpointing: false
 
 # Logging and checkpointing
-logging_steps: 10
-validation_steps: 1000
-checkpoint_steps: 10000
+logging_steps: 100
+validation_steps: 250
+checkpoint_steps: 1000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training
 generation_perplexity:
   enabled: true
+  interval_steps: 1000
   num_prompts: 20
   num_steps: 32
   max_new_tokens: 64

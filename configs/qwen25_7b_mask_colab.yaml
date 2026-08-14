@@ -37,9 +37,9 @@ epochs: 1
 max_updates: 10000
 
 # Training parameters influencing memory usage
-max_sequence_length: 512
-lora_r: 2048
-lora_alpha: 2048
+max_sequence_length: 256
+lora_r: 1024
+lora_alpha: 1024
 train_normalization_layers: false
 batch_size: 8
 eval_batch_size: 8
@@ -47,7 +47,7 @@ gradient_accumulation_steps: 1
 gradient_checkpointing: false
 
 # Logging and checkpointing
-logging_steps: 10
+logging_steps: 100
 validation_steps: 250
 checkpoint_steps: 1000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
@@ -55,7 +55,8 @@ checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, ever
 # Perplexity evaluation during training
 generation_perplexity:
   enabled: true
-  num_prompts: 5
+  interval_steps: 1000
+  num_prompts: 20
   num_steps: 32
   max_new_tokens: 64
   noise_level: 1.0

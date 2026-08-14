@@ -1,10 +1,13 @@
-from diffusion_lm.dataset_builder import BuildConfig, _take, _targets, format_mc, format_tulu, prompt_hash
+from datasets import Dataset, concatenate_datasets
+
+from diffusion_lm.dataset_builder import BuildConfig, _repeat_dataset, _take, _targets, format_mc, format_tulu, prompt_hash
 
 
 class TinyTokenizer:
-    def apply_chat_template(self, messages, tokenize, add_generation_prompt):
+    def apply_chat_template(self, messages, tokenize, add_generation_prompt, truncation=False, max_length=None):
         size = sum(len(m["content"].split()) for m in messages)
-        return list(range(size + int(add_generation_prompt)))
+        ids = list(range(size + int(add_generation_prompt)))
+        return ids[:max_length] if truncation else ids
 
 
 def test_default_targets_are_exact_and_match_requested_mix():
@@ -29,3 +32,12 @@ def test_take_filters_heldout_and_lengths_and_stores_clean_ids_twice():
     assert len(result) == 1
     assert result[0]["input"] == "usable"
     assert result[0]["input_ids"] == result[0]["labels"]
+
+
+def test_repeat_dataset_uses_every_unique_row_before_balanced_repeats():
+    source = Dataset.from_dict({"value": [0, 1, 2]})
+    repeated = _repeat_dataset(source, 8, 42, concatenate_datasets)
+    values = repeated["value"]
+    assert len(values) == 8
+    assert values[:6] == [0, 1, 2, 0, 1, 2]
+    assert max(values.count(x) for x in range(3)) - min(values.count(x) for x in range(3)) <= 1

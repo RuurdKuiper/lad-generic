@@ -51,6 +51,13 @@ validation/test splits. It keeps complete examples whose prompt is at most 256
 tokens and whose full chat sequence is at most 512 tokens—accepted answers are
 never silently truncated.
 
+Within each category, preferred source shares are filled first. If a smaller
+source runs out, unused unique examples from the larger sources fill the gap.
+Only when the entire category is exhausted does the builder cycle through its
+eligible rows again, distributing repeats evenly while preserving the requested
+45/18/18/19 category proportions. The console reports each oversampled category
+and its unique-row count.
+
 Each row retains `instruction`, `input`, and `output` for tokenizer-independent
 `mask_only` training. It also stores identical clean `input_ids` and `labels`
 tokenized with Llama 3.1 for `structured` compatibility. Arrays are variable

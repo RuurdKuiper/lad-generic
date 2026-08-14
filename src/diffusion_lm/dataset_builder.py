@@ -105,10 +105,25 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         # benchmark hashes contain the raw question, while general datasets vary.
         if key in blocked or prompt_hash(item["input"]) in blocked or key in seen:
             continue
+        # Avoid spending seconds tokenizing pathological upstream records (one
+        # observed record expands to more than 1.5M tokens).  Fifty characters
+        # per allowed token is deliberately generous, so normal prose and code
+        # still go through the exact token-based check below.
+        if len(user) > config.max_prompt_tokens * 50 or len(item["output"]) > config.max_sequence_tokens * 50:
+            continue
         prompt_messages = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": user}]
         full_messages = prompt_messages + [{"role": "assistant", "content": item["output"].strip()}]
-        prompt_ids = tokenizer.apply_chat_template(prompt_messages, tokenize=True, add_generation_prompt=True)
-        full_ids = tokenizer.apply_chat_template(full_messages, tokenize=True, add_generation_prompt=False)
+        # Tokenize to one token beyond each limit.  This proves that a row is
+        # oversized without creating enormous arrays or triggering the model's
+        # max-length warning; no accepted sequence is truncated.
+        prompt_ids = tokenizer.apply_chat_template(
+            prompt_messages, tokenize=True, add_generation_prompt=True,
+            truncation=True, max_length=config.max_prompt_tokens + 1,
+        )
+        full_ids = tokenizer.apply_chat_template(
+            full_messages, tokenize=True, add_generation_prompt=False,
+            truncation=True, max_length=config.max_sequence_tokens + 1,
+        )
         if len(prompt_ids) > config.max_prompt_tokens or len(full_ids) > config.max_sequence_tokens:
             continue
         # The trainer expects clean labels; its collator creates corrupted input_ids online.
@@ -135,6 +150,24 @@ def _evaluation_hashes(load: Callable[..., Any]) -> set[str]:
             for row in load(path, name, split=split):
                 blocked.add(prompt_hash(row.get(field_name, "")))
     return blocked
+
+
+def _repeat_dataset(dataset: Any, count: int, seed: int, concatenate: Callable) -> Any:
+    """Return exactly ``count`` rows, cycling the full unique pool before repeats.
+
+    Arrow datasets are concatenated without expanding repeated rows into a
+    giant Python list.  A shuffled partial cycle prevents always favoring the
+    beginning of the pool when the target is not an exact multiple.
+    """
+    if not len(dataset):
+        raise RuntimeError("cannot oversample an empty category")
+    if len(dataset) >= count:
+        return dataset.select(range(count))
+    cycles, remainder = divmod(count, len(dataset))
+    pieces = [dataset] * cycles
+    if remainder:
+        pieces.append(dataset.shuffle(seed=seed).select(range(remainder)))
+    return concatenate(pieces)
 
 
 def build_dataset(config: BuildConfig, token: str | None = None):
@@ -180,12 +213,31 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         allocations = [int(wanted * share) for *_, share in entries]
         allocations[0] += wanted - sum(allocations)
         rows = []
-        for (source, data, formatter, _), count in zip(entries, allocations):
-            rows.extend(_take(data, formatter, count, tokenizer, config, blocked, source, seen))
+        # Keep iterators alive after the preferred-share pass. This lets a
+        # larger source contribute additional unused rows when a smaller source
+        # cannot meet its allocation, without rescanning or duplicating rows.
+        prepared = [(source, data, formatter, iter(data)) for source, data, formatter, _ in entries]
+        for (source, _, formatter, iterator), count in zip(prepared, allocations):
+            rows.extend(_take(iterator, formatter, count, tokenizer, config, blocked, source, seen))
         if len(rows) < wanted:
-            raise RuntimeError(f"{category}: only {len(rows):,}/{wanted:,} rows survived filtering; lower total_examples or adjust source shares")
+            # Exhaust still-unused rows from the largest sources first. Dataset
+            # size is only a priority heuristic; exact token filtering remains
+            # authoritative.
+            for source, data, formatter, iterator in sorted(prepared, key=lambda item: len(item[1]), reverse=True):
+                rows.extend(_take(iterator, formatter, wanted - len(rows), tokenizer, config, blocked, source, seen))
+                if len(rows) >= wanted:
+                    break
+        unique_count = len(rows)
+        if not unique_count:
+            raise RuntimeError(f"{category}: no rows survived filtering")
         rng.shuffle(rows)
-        groups.append(Dataset.from_list(rows[:wanted]))
+        group = Dataset.from_list(rows)
+        if unique_count < wanted:
+            print(
+                f"{category}: {unique_count:,} unique eligible rows; oversampling to {wanted:,} "
+                f"({wanted / unique_count:.2f}x exposure)"
+            )
+        groups.append(_repeat_dataset(group, wanted, config.seed, concatenate_datasets))
     combined = concatenate_datasets(groups).shuffle(seed=config.seed)
     heldout = config.validation_fraction + config.test_fraction
     if not 0 < heldout < 1:

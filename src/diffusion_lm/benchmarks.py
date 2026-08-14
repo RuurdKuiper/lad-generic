@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import random
 import re
 import subprocess
@@ -90,6 +91,40 @@ def _choice_prompt(question: str, choices: list[Any]) -> str:
     return question.strip() + "\n\n" + "\n".join(f"{letters[i]}. {choice}" for i, choice in enumerate(choices)) + "\n\nAnswer with only the letter."
 
 
+def _multiple_choice_fields(name: str, row: dict[str, Any], index: int) -> tuple[str, list[Any], str]:
+    """Normalize task-specific question, choice, and answer schemas."""
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    if name == "hellaswag":
+        question = row.get("ctx", "")
+        choices = row.get("endings")
+        answer = row.get("label")
+    elif name == "arc_c":
+        question = row.get("question", "")
+        choice_group = row.get("choices") or {}
+        choices = choice_group.get("text") if isinstance(choice_group, dict) else choice_group
+        labels = [str(label) for label in choice_group.get("label", [])] if isinstance(choice_group, dict) else []
+        answer_key = str(row.get("answerKey", ""))
+        answer = letters[labels.index(answer_key)] if answer_key in labels else answer_key
+    elif name == "gpqa" and not row.get("choices") and not row.get("options"):
+        question = row.get("Question", row.get("question", ""))
+        choices = [row["Correct Answer"], row["Incorrect Answer 1"], row["Incorrect Answer 2"], row["Incorrect Answer 3"]]
+        correct = choices[0]
+        random.Random(index).shuffle(choices)
+        answer = letters[choices.index(correct)]
+    else:
+        question = row.get("question", row.get("Question", row.get("query", row.get("ctx", ""))))
+        choices = row.get("choices", row.get("options"))
+        answer = row.get("answer", row.get("answerKey", row.get("label", row.get("answer_index"))))
+    if not isinstance(choices, (list, tuple)) or not choices:
+        raise ValueError(f"{name} example {index} has no usable answer choices")
+    if isinstance(answer, int) or str(answer).isdigit():
+        answer_index = int(answer)
+        if not 0 <= answer_index < len(choices):
+            raise ValueError(f"{name} example {index} has out-of-range answer index {answer_index}")
+        answer = letters[answer_index]
+    return str(question), list(choices), str(answer).upper()
+
+
 def _boxed(text: str) -> str:
     """Extract a final boxed/math answer when present."""
     matches = re.findall(r"\\boxed\{([^{}]+)\}|####\s*([^\n]+)", text or "")
@@ -98,11 +133,29 @@ def _boxed(text: str) -> str:
     return (matches[-1][0] or matches[-1][1]).strip()
 
 
-def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, token: str | None) -> list[BenchmarkExample]:
+def _sample_indices(size: int, limit: int | None = None, limit_fraction: float | None = None) -> list[int]:
+    """Select a deterministic prefix or an evenly-spaced dataset fraction."""
+    if limit is not None and limit_fraction is not None:
+        raise ValueError("Set either limit or limit_fraction, not both")
+    if limit_fraction is not None:
+        fraction = float(limit_fraction)
+        if not 0.0 < fraction <= 1.0:
+            raise ValueError("limit_fraction must be greater than 0 and at most 1")
+        count = min(size, max(1, math.ceil(size * fraction))) if size else 0
+        return [(index * size) // count for index in range(count)]
+    if limit is not None:
+        count = int(limit)
+        if count < 1:
+            raise ValueError("limit must be positive")
+        return list(range(min(count, size)))
+    return list(range(size))
+
+
+def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, token: str | None, limit_fraction: float | None = None) -> list[BenchmarkExample]:
     """Download one configured benchmark split and normalize its records."""
     if name == OPEN_ENDED_TASK:
-        prompts = OPEN_ENDED_PROMPTS if limit is None else OPEN_ENDED_PROMPTS[: min(int(limit), len(OPEN_ENDED_PROMPTS))]
-        return [BenchmarkExample(name, str(index), prompt, "", "open_ended", {}) for index, prompt in enumerate(prompts)]
+        indices = _sample_indices(len(OPEN_ENDED_PROMPTS), limit, limit_fraction)
+        return [BenchmarkExample(name, str(index), OPEN_ENDED_PROMPTS[index], "", "open_ended", {}) for index in indices]
     from datasets import load_dataset
     specs = {
         "mmlu": ("cais/mmlu", "all", split),
@@ -119,22 +172,14 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
         raise ValueError(f"Unknown benchmark {name}; available: {AVAILABLE_TASKS}")
     path, config, actual_split = specs[name]
     dataset = load_dataset(path, config, split=actual_split, cache_dir=cache_dir, token=token)
-    if limit is not None:
-        dataset = dataset.select(range(min(int(limit), len(dataset))))
+    indices = _sample_indices(len(dataset), limit, limit_fraction)
+    if len(indices) != len(dataset):
+        dataset = dataset.select(indices)
     items = []
     for index, row in enumerate(dataset):
         if name in MC_TASKS:
-            question = row.get("question", row.get("Question", row.get("query", row.get("ctx", ""))))
-            choices = row.get("choices", row.get("options"))
-            answer = row.get("answer", row.get("answerKey", row.get("label", row.get("answer_index"))))
-            if name == "gpqa" and not choices:
-                choices = [row["Correct Answer"], row["Incorrect Answer 1"], row["Incorrect Answer 2"], row["Incorrect Answer 3"]]
-                correct = choices[0]
-                random.Random(index).shuffle(choices)
-                answer = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[choices.index(correct)]
-            if isinstance(answer, int) or str(answer).isdigit():
-                answer = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[int(answer)]
-            items.append(BenchmarkExample(name, str(index), _choice_prompt(question, choices), str(answer).upper(), "multiple_choice", row))
+            question, choices, answer = _multiple_choice_fields(name, row, index)
+            items.append(BenchmarkExample(name, str(index), _choice_prompt(question, choices), answer, "multiple_choice", row))
         elif name == "gsm8k":
             items.append(BenchmarkExample(name, str(index), row["question"] + "\n\nSolve the problem and give the final answer.", _boxed(row["answer"]), "numeric", row))
         elif name == "math":

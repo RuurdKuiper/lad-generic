@@ -174,7 +174,7 @@ def main() -> None:
             session = load_session(selection, outputs, config.get("device", "auto"), config.get("quantization"))
             supports_autoregressive = True
         for task in config["tasks"]:
-            examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token)
+            examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token, config.get("limit_fraction"))
             task_settings = resolve_generation_settings(config, task, mode)
             if task == "open_ended":
                 print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)

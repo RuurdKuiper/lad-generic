@@ -34,7 +34,7 @@ epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 100000
+max_updates: 10000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256

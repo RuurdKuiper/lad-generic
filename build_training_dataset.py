@@ -2,9 +2,15 @@
 """Build the LAD instruction mixture locally and optionally publish it."""
 import argparse
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
+
+# Prefer this checkout over a stale non-editable package in site-packages when
+# the script is run directly in Colab.
+PROJECT_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from diffusion_lm.dataset_builder import BuildConfig, build_dataset, write_manifest
 
@@ -21,7 +27,7 @@ def main() -> None:
     parser.add_argument("--private", action="store_true", help="Create/update a private Hub dataset")
     parser.add_argument("--no-upload", action="store_true", help="Build and save locally only")
     args = parser.parse_args()
-    load_dotenv(Path(__file__).resolve().parent / ".env")
+    load_dotenv(PROJECT_ROOT / ".env")
     token = os.getenv("HF_TOKEN")
     if not args.no_upload and not args.repo_id:
         parser.error("--repo-id is required unless --no-upload is used")

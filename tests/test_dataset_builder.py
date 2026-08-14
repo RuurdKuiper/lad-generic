@@ -17,6 +17,11 @@ class TinyTokenizer:
         return {"input_ids": ids[:max_length] if truncation else ids}
 
 
+class FailingTokenizer(TinyTokenizer):
+    def apply_chat_template(self, *args, **kwargs):
+        raise AssertionError("extreme text should be rejected before tokenization")
+
+
 def test_default_targets_are_exact_and_match_requested_mix():
     assert _targets(100, BuildConfig().weights) == {"general": 45, "reasoning": 18, "math": 18, "code": 19}
 
@@ -53,6 +58,13 @@ def test_take_filters_heldout_and_lengths_and_stores_clean_ids_twice():
     assert result[0]["input"] == "usable"
     assert result[0]["input_ids"] == result[0]["labels"]
     assert result[0]["labels"][-1] == TinyTokenizer.eos_token_id
+
+
+def test_take_rejects_pathological_text_before_normalization_and_tokenization():
+    config = BuildConfig(total_examples=1, max_prompt_tokens=2, max_sequence_tokens=4)
+    rows = [{"q": "x" * 101, "a": "answer"}]
+    formatter = lambda x: {"instruction": "", "input": x["q"], "output": x["a"]}
+    assert _take(rows, formatter, 1, FailingTokenizer(), config, set(), "general:test") == []
 
 
 def test_repeat_dataset_uses_every_unique_row_before_balanced_repeats():

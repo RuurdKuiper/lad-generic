@@ -154,22 +154,21 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
     scanned = 0
     for row in rows:
         scanned += 1
-        if progress is not None and scanned % 2_000 == 0:
+        if progress is not None and scanned % 500 == 0:
             progress.set_postfix_str(f"{source}, scanned={scanned:,}", refresh=True)
         item = formatter(row)
         if not item or not item["output"].strip():
             continue
         user = "\n\n".join(x for x in (item["instruction"].strip(), item["input"].strip()) if x)
+        # Reject pathological upstream records before regex normalization or
+        # hashing. One observed prompt contains more than a million tokens;
+        # running Unicode regexes over it can look like a hung process.
+        if len(user) > config.max_prompt_tokens * 50 or len(item["output"]) > config.max_sequence_tokens * 50:
+            continue
         key = prompt_hash(user)
         # Compare both the raw task text and its instruction-wrapped form: held-out
         # benchmark hashes contain the raw question, while general datasets vary.
         if key in blocked or prompt_hash(item["input"]) in blocked:
-            continue
-        # Avoid spending seconds tokenizing pathological upstream records (one
-        # observed record expands to more than 1.5M tokens).  Fifty characters
-        # per allowed token is deliberately generous, so normal prose and code
-        # still go through the exact token-based check below.
-        if len(user) > config.max_prompt_tokens * 50 or len(item["output"]) > config.max_sequence_tokens * 50:
             continue
         system = choose_system_prompt(item, source, key)
         if len(system) > config.max_prompt_tokens * 50:
@@ -267,12 +266,15 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         "input_ids": Sequence(Value("int32")), "labels": Sequence(Value("int32")),
         "category": Value("string"), "source": Value("string"),
     })
+    print("Loading held-out benchmark prompts for decontamination...", flush=True)
     blocked = _evaluation_hashes(load)
+    print(f"Loaded {len(blocked):,} held-out prompt hashes.", flush=True)
     rng = random.Random(config.seed)
 
     def shuffled(path: str, name: str | None = None, split: str = "train"):
         return load(path, name, split=split).shuffle(seed=config.seed)
 
+    print("Loading source datasets (cached sources should open without downloading)...", flush=True)
     sources: dict[str, list[tuple[str, Iterable[dict[str, Any]], Callable, float]]] = {
         "general": [
             ("general:clean-instruct", shuffled("crumb/Clean-Instruct-3M", split="train"), lambda x: {"instruction": x.get("instruction", ""), "input": x.get("input", ""), "output": x.get("output", "")}, .40),
@@ -294,6 +296,7 @@ def build_dataset(config: BuildConfig, token: str | None = None):
             ("code:mbpp", shuffled("google-research-datasets/mbpp", "sanitized"), lambda x: {"instruction": "Write Python code to solve the following task.", "input": x.get("prompt", ""), "output": x.get("code", "")}, .003),
         ],
     }
+    print("Source datasets loaded; formatting and tokenization are starting.", flush=True)
     groups = []
     for category, entries in sources.items():
         wanted = targets[category]

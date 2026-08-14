@@ -15,57 +15,62 @@ validation_samples: 200
 corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask-corrupted-loss
+output_dir: outputs/llama-3.1-8b-mask-long
 seed: 42
 t_min: 0.001
 include_answer_eos: true
 
 # Include multi-turn
-multi_turn_prob: 0.1
+multi_turn_prob: 0.0
 max_history_turns: 2
 
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
-scheduler: linear  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
+scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
-num_workers: 8
+num_workers: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 10000
+max_updates: 100000
 
 # Training parameters influencing memory usage
-max_sequence_length: 512
+max_sequence_length: 256
 lora_r: 1024
 lora_alpha: 1024
-train_normalization_layers: true
+train_normalization_layers: false
 batch_size: 8
 eval_batch_size: 8
 gradient_accumulation_steps: 1
-gradient_checkpointing: true
+gradient_checkpointing: false
 
 # Logging and checkpointing
-logging_steps: 10
+logging_steps: 100
 validation_steps: 250
-checkpoint_steps: 1000
+checkpoint_steps: 10000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training
 generation_perplexity:
   enabled: true
-  num_prompts: 5
+  interval_steps: 1000
+  num_prompts: 20
   num_steps: 32
-  max_new_tokens: 128
+  max_new_tokens: 64
   noise_level: 1.0
-  temperature: 0.7
-  top_k: 3
+  temperature: 1.0
+  top_k: 100
+  permanent_unmask: true
+  confidence_guided: true
+  proportional_unmask: false
   seed: 1234
 
 
 # Quantization
-precision: bf16  # Options: fp16, bf16, fp32
-quantization: 4bit  # Options: none, 4bit
-optimizer: adamw8bit  # Options: adamw, adamw8bit
-gradient_checkpointing: true
+precision: fp16  # Options: fp16, bf16, fp32
+quantization: none  # Options: none, 4bit
+optimizer: adamw  # Options: adamw, adamw8bit
+weight_decay: 0.01
+max_grad_norm: 0.5

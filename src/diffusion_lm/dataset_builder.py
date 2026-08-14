@@ -9,8 +9,30 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from .data import apply_neutral_chat_template
+
 
 DEFAULT_WEIGHTS = {"general": 0.45, "reasoning": 0.18, "math": 0.18, "code": 0.19}
+DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant."
+SYSTEM_PROMPTS = {
+    "general": [
+        "Respond helpfully, accurately, and clearly.",
+        "You are a knowledgeable assistant. Give a direct and useful response.",
+        "You are a thoughtful assistant. Follow the user's instructions carefully.",
+    ],
+    "reasoning": [
+        "You are a careful reasoning assistant. Answer accurately and follow the requested format.",
+        "Analyze the question carefully and select the best-supported answer.",
+    ],
+    "math": [
+        "You are a careful mathematics tutor. Explain the solution clearly.",
+        "Solve mathematical problems accurately and show the relevant reasoning.",
+    ],
+    "code": [
+        "You are an expert programming assistant. Produce correct and readable code.",
+        "Help with programming tasks using robust, clear solutions.",
+    ],
+}
 
 
 @dataclass
@@ -69,14 +91,49 @@ def format_tulu(row: dict[str, Any]) -> dict[str, str] | None:
     user = next((i for i in range(end - 1, -1, -1) if messages[i].get("role") == "user"), None)
     if user is None:
         return None
-    history = messages[:user]
+    native_system = next((m["content"].strip() for m in messages if m.get("role") == "system"), "")
+    history = [m for m in messages[:user] if m.get("role") != "system"]
     history_text = "\n\n".join(f"{m.get('role', 'user').title()}: {m['content'].strip()}" for m in history)
     question = messages[user]["content"].strip()
     return {
+        "system": native_system,
         "instruction": "Continue the conversation helpfully." if history_text else "",
         "input": f"Conversation so far:\n{history_text}\n\nUser: {question}" if history_text else question,
         "output": messages[end]["content"].strip(),
     }
+
+
+def format_hellaswag(row: dict[str, Any]) -> dict[str, str] | None:
+    """Make HellaSwag's sentence/event-completion task explicit."""
+    choices = row.get("endings", [])
+    formatted = format_mc(row.get("ctx", ""), choices, row.get("label"))
+    if formatted is None:
+        return None
+    options = "\n".join(f"{label}: {choice}" for label, choice in zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", choices))
+    return {
+        "instruction": "Choose the option that most plausibly continues the described event.",
+        "input": (
+            f"Beginning of the event:\n{row.get('ctx', '').strip()}\n\n"
+            f"What most plausibly happens next?\n{options}"
+        ),
+        "output": formatted["output"],
+    }
+
+
+def choose_system_prompt(item: dict[str, str], source: str, prompt_key: str) -> str:
+    """Preserve native systems; otherwise vary a compatible prompt deterministically."""
+    native = (item.get("system") or "").strip()
+    if native:
+        return native
+    category = source.split(":", 1)[0]
+    digest = int(prompt_key[:16], 16)
+    # Retain the established default for 70% of generated rows. The remaining
+    # rows use safe category-specific wording that does not conflict with the
+    # expected response style.
+    if digest % 10 < 7:
+        return DEFAULT_SYSTEM_PROMPT
+    variants = SYSTEM_PROMPTS[category]
+    return variants[(digest // 10) % len(variants)]
 
 
 def _targets(total: int, weights: dict[str, float]) -> dict[str, int]:
@@ -114,12 +171,15 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         # still go through the exact token-based check below.
         if len(user) > config.max_prompt_tokens * 50 or len(item["output"]) > config.max_sequence_tokens * 50:
             continue
-        prompt_messages = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": user}]
+        system = choose_system_prompt(item, source, key)
+        if len(system) > config.max_prompt_tokens * 50:
+            continue
+        prompt_messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         # Tokenize to one token beyond the prompt limit. This proves that a row
         # is oversized without creating enormous arrays or triggering the
         # model's max-length warning.
-        prompt_ids = tokenizer.apply_chat_template(
-            prompt_messages, tokenize=True, add_generation_prompt=True,
+        prompt_ids = apply_neutral_chat_template(
+            tokenizer, prompt_messages, tokenize=True, add_generation_prompt=True,
             truncation=True, max_length=config.max_prompt_tokens + 1,
         )
         if len(prompt_ids) > config.max_prompt_tokens:
@@ -140,8 +200,12 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         if tokenizer.eos_token_id is None:
             raise ValueError(f"Tokenizer {tokenizer.name_or_path} has no eos_token_id")
         full_ids = list(prompt_ids) + list(answer_ids) + [tokenizer.eos_token_id]
-        # The trainer expects clean labels; its collator creates corrupted input_ids online.
-        accepted.append({**item, "input_ids": list(full_ids), "labels": list(full_ids), "category": source.split(":", 1)[0], "source": source})
+        # Share one immutable-in-practice Python list while rows are buffered;
+        # Dataset.from_list materializes the two required Arrow columns later.
+        # Keeping two Python list copies here roughly doubles peak preparation
+        # memory and causes severe slowdown from memory pressure on Colab.
+        clean_ids = list(full_ids)
+        accepted.append({**item, "system": system, "input_ids": clean_ids, "labels": clean_ids, "category": source.split(":", 1)[0], "source": source})
         if progress is not None:
             progress.update(1)
         if len(accepted) >= count:
@@ -187,7 +251,7 @@ def _repeat_dataset(dataset: Any, count: int, seed: int, concatenate: Callable) 
 
 def build_dataset(config: BuildConfig, token: str | None = None):
     """Download, normalize, balance, split, and return a DatasetDict."""
-    from datasets import Dataset, DatasetDict, concatenate_datasets, load_dataset
+    from datasets import Dataset, DatasetDict, Features, Sequence, Value, concatenate_datasets, load_dataset
     from transformers import AutoTokenizer
     from tqdm.auto import tqdm
 
@@ -196,6 +260,13 @@ def build_dataset(config: BuildConfig, token: str | None = None):
     tokenizer = AutoTokenizer.from_pretrained(config.tokenizer_name, token=token, cache_dir=cache)
     targets = _targets(config.total_examples, config.weights)
     print(f"Building {config.total_examples:,} examples with category targets: {targets}")
+    output_features = Features({
+        "system": Value("string"), "instruction": Value("string"), "input": Value("string"), "output": Value("string"),
+        # All supported vocabularies fit int32. The collator converts these
+        # lists to torch.long, so training behavior is unchanged.
+        "input_ids": Sequence(Value("int32")), "labels": Sequence(Value("int32")),
+        "category": Value("string"), "source": Value("string"),
+    })
     blocked = _evaluation_hashes(load)
     rng = random.Random(config.seed)
 
@@ -211,7 +282,7 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         ],
         "reasoning": [
             ("reasoning:mmlu", shuffled("cais/mmlu", "all", "auxiliary_train"), lambda x: format_mc(x["question"], x["choices"], x["answer"]), .73),
-            ("reasoning:hellaswag", shuffled("Rowan/hellaswag"), lambda x: format_mc(x["ctx"], x["endings"], x["label"]), .25),
+            ("reasoning:hellaswag", shuffled("Rowan/hellaswag"), format_hellaswag, .25),
             ("reasoning:arc-easy", shuffled("allenai/ai2_arc", "ARC-Easy"), lambda x: format_mc(x["question"], x["choices"]["text"], x["choices"]["label"].index(x["answerKey"]) if x["answerKey"] in x["choices"]["label"] else -1), .02),
         ],
         "math": [
@@ -248,7 +319,7 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         if not unique_count:
             raise RuntimeError(f"{category}: no rows survived filtering")
         rng.shuffle(rows)
-        group = Dataset.from_list(rows)
+        group = Dataset.from_list(rows, features=output_features)
         if unique_count < wanted:
             print(
                 f"{category}: {unique_count:,} unique eligible rows; oversampling to {wanted:,} "

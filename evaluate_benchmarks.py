@@ -20,7 +20,8 @@ load_dotenv(Path(__file__).resolve().parent / ".env")
 
 def _generate_ar(session, prompt: str, max_new_tokens: int, original_base: bool = True) -> str:
     """Generate one autoregressive answer from a loaded adapter."""
-    prefix = session.tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=True, add_generation_prompt=True)
+    from diffusion_lm.data import apply_neutral_chat_template
+    prefix = apply_neutral_chat_template(session.tokenizer, [{"role": "user", "content": prompt}], tokenize=True, add_generation_prompt=True)
     if isinstance(prefix, str):
         prefix = session.tokenizer.encode(prefix, add_special_tokens=False)
     elif hasattr(prefix, "input_ids"):

@@ -11,6 +11,24 @@ LLAMA_ASSISTANT_HEADER = "<|start_header_id|>assistant<|end_header_id|>"
 DEFAULT_SYSTEM_PROMPT = "You are a helpful assistant."
 
 
+def knowledge_neutral_chat_template(tokenizer: Any) -> str | None:
+    """Remove Llama 3.1's stale hard-coded cutoff/current-date claims."""
+    template = getattr(tokenizer, "chat_template", None)
+    if not template:
+        return template
+    return template.replace('{{- "Cutting Knowledge Date: December 2023\\n" }}\n', "").replace(
+        '{{- "Today Date: " + date_string + "\\n\\n" }}\n', ""
+    )
+
+
+def apply_neutral_chat_template(tokenizer: Any, messages: list[dict[str, str]], **kwargs: Any) -> Any:
+    """Apply a native chat template without unsupported temporal metadata."""
+    template = knowledge_neutral_chat_template(tokenizer)
+    if template != getattr(tokenizer, "chat_template", None):
+        kwargs["chat_template"] = template
+    return tokenizer.apply_chat_template(messages, **kwargs)
+
+
 @dataclass
 class DataStats:
     malformed: int = 0
@@ -52,22 +70,23 @@ def source_to_tokens(example: dict[str, Any], tokenizer: Any) -> tuple[list[int]
     The dataset supplies instruction/input/output, so non-Llama models never consume Llama IDs.
     """
     instruction, user_input, output = (example.get(k) or "" for k in ("instruction", "input", "output"))
+    system_prompt = (example.get("system") or DEFAULT_SYSTEM_PROMPT).strip()
     if not output:
         raise ValueError("empty output")
     user = instruction if not user_input else f"{instruction}\n\n{user_input}"
     if not getattr(tokenizer, "chat_template", None):
         raise ValueError(f"Tokenizer {tokenizer.name_or_path} has no chat_template for source retokenization")
     messages = [
-        {"role": "system", "content": DEFAULT_SYSTEM_PROMPT},
+        {"role": "system", "content": system_prompt},
         {"role": "user", "content": user},
     ]
     supports_system_role = getattr(tokenizer, "_lad_supports_system_role", None)
     if supports_system_role is False:
-        messages = [{"role": "user", "content": f"{DEFAULT_SYSTEM_PROMPT}\n\n{user}"}]
-        prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+        messages = [{"role": "user", "content": f"{system_prompt}\n\n{user}"}]
+        prefix = apply_neutral_chat_template(tokenizer, messages, tokenize=True, add_generation_prompt=True)
     else:
         try:
-            prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+            prefix = apply_neutral_chat_template(tokenizer, messages, tokenize=True, add_generation_prompt=True)
             setattr(tokenizer, "_lad_supports_system_role", True)
         except Exception as exc:
             # Gemma's official template rejects a separate system role. Preserve
@@ -75,8 +94,8 @@ def source_to_tokens(example: dict[str, Any], tokenizer: Any) -> tuple[list[int]
             if exc.__class__.__name__ != "TemplateError" or "System role not supported" not in str(exc):
                 raise
             setattr(tokenizer, "_lad_supports_system_role", False)
-            messages = [{"role": "user", "content": f"{DEFAULT_SYSTEM_PROMPT}\n\n{user}"}]
-            prefix = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+            messages = [{"role": "user", "content": f"{system_prompt}\n\n{user}"}]
+            prefix = apply_neutral_chat_template(tokenizer, messages, tokenize=True, add_generation_prompt=True)
     if isinstance(prefix, str):
         prefix = tokenizer.encode(prefix, add_special_tokens=False)
     elif hasattr(prefix, "input_ids"):

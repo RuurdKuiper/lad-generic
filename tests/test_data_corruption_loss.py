@@ -1,5 +1,5 @@
 import torch
-from diffusion_lm.data import DEFAULT_SYSTEM_PROMPT, DenoisingCollator, source_to_tokens
+from diffusion_lm.data import DEFAULT_SYSTEM_PROMPT, DenoisingCollator, knowledge_neutral_chat_template, source_to_tokens
 from diffusion_lm.loss import masked_denoising_loss
 
 
@@ -12,6 +12,15 @@ class ToyTokenizer:
         return table.get(text, [3 + (ord(c) % 4) for c in text])
     def decode(self, ids): return "MASK" if ids == [9] else str(ids)
     def apply_chat_template(self, messages, tokenize=True, add_generation_prompt=True): return [1, 4]
+
+
+def test_knowledge_neutral_template_removes_dates_only():
+    tokenizer = ToyTokenizer()
+    tokenizer.chat_template = (
+        'before\n{{- "Cutting Knowledge Date: December 2023\\n" }}\n'
+        '{{- "Today Date: " + date_string + "\\n\\n" }}\nafter'
+    )
+    assert knowledge_neutral_chat_template(tokenizer) == "before\nafter"
 
 
 def row(index=0):
@@ -117,6 +126,23 @@ def test_source_retokenization_falls_back_for_systemless_chat_template():
     assert tokenizer.calls[1] == [{"role": "user", "content": f"{DEFAULT_SYSTEM_PROMPT}\n\nAnswer clearly\n\nabout birds"}]
     assert labels == [10, 11, len("They fly."), 99]
     assert answer_start == 2
+
+
+def test_source_retokenization_uses_per_example_system_prompt():
+    class RecordingTokenizer(ToyTokenizer):
+        def __init__(self):
+            self.calls = []
+
+        def apply_chat_template(self, messages, tokenize=True, add_generation_prompt=True):
+            self.calls.append(messages)
+            return super().apply_chat_template(messages, tokenize, add_generation_prompt)
+
+    tokenizer = RecordingTokenizer()
+    source_to_tokens(
+        {"system": "Be precise.", "instruction": "Answer", "input": "this", "output": "Okay"},
+        tokenizer,
+    )
+    assert tokenizer.calls[0][0] == {"role": "system", "content": "Be precise."}
 
 
 def test_every_usable_example_has_a_mask_and_multitoken_mask_is_rejected():

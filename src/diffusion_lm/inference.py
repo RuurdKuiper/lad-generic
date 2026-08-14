@@ -312,6 +312,7 @@ def preflight_session(session: InferenceSession) -> tuple[int, int]:
 
 def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format: str = "chat_template") -> list[int]:
     """Render system/user messages through a tokenizer’s native chat template."""
+    from .data import apply_neutral_chat_template
     if not question.strip():
         raise ValueError("Enter a question or prompt.")
     if prompt_format == "legacy_llama":
@@ -328,7 +329,8 @@ def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format
         )
         return list(tokenizer.encode(prompt, add_special_tokens=False))
     if prompt_format == "llada":
-        rendered = tokenizer.apply_chat_template(
+        rendered = apply_neutral_chat_template(
+            tokenizer,
             [{"role": "user", "content": f"{system_prompt}\n\n{question.strip()}"}],
             tokenize=True,
             add_generation_prompt=True,
@@ -349,13 +351,13 @@ def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format
         {"role": "user", "content": question},
     ]
     try:
-        rendered = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True)
+        rendered = apply_neutral_chat_template(tokenizer, messages, tokenize=True, add_generation_prompt=True)
     except Exception as exc:
         # Gemma's official template rejects a separate system role; preserve
         # the prompt by folding it into the user message, as training does.
         if exc.__class__.__name__ != "TemplateError" or "System role not supported" not in str(exc):
             raise
-        rendered = tokenizer.apply_chat_template([
+        rendered = apply_neutral_chat_template(tokenizer, [
             {"role": "user", "content": f"{system_prompt}\n\n{question}"},
         ], tokenize=True, add_generation_prompt=True)
     if isinstance(rendered, str):

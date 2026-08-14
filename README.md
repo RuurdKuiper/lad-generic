@@ -58,7 +58,7 @@ eligible rows again, distributing repeats evenly while preserving the requested
 45/18/18/19 category proportions. The console reports each oversampled category
 and its unique-row count.
 
-Each row retains `instruction`, `input`, and `output` for tokenizer-independent
+Each row retains `system`, `instruction`, `input`, and `output` for tokenizer-independent
 `mask_only` training. It also stores identical clean `input_ids` and `labels`
 tokenized with Llama 3.1 for `structured` compatibility. Arrays are variable
 length; the existing collator pads each batch dynamically. To build a smaller

@@ -1,6 +1,6 @@
 from datasets import Dataset, concatenate_datasets
 
-from diffusion_lm.dataset_builder import BuildConfig, _repeat_dataset, _take, _targets, format_mc, format_tulu, prompt_hash
+from diffusion_lm.dataset_builder import BuildConfig, _repeat_dataset, _take, _targets, choose_system_prompt, format_hellaswag, format_mc, format_tulu, prompt_hash
 
 
 class TinyTokenizer:
@@ -29,6 +29,19 @@ def test_formatters_reject_bad_mc_and_keep_final_tulu_exchange():
     result = format_tulu(row)
     assert result["output"] == "two"
     assert "first" in result["input"] and "second" in result["input"]
+
+
+def test_hellaswag_asks_an_explicit_continuation_question():
+    result = format_hellaswag({"ctx": "A person opens a door.", "endings": ["They enter.", "The moon explodes."], "label": "0"})
+    assert "What most plausibly happens next?" in result["input"]
+    assert result["output"] == "A: They enter."
+
+
+def test_native_system_is_preserved_and_generated_variation_is_deterministic():
+    assert choose_system_prompt({"system": "Be a pirate."}, "general:tulu-3", "0" * 64) == "Be a pirate."
+    first = choose_system_prompt({}, "math:orca", "7" * 64)
+    assert first == choose_system_prompt({}, "math:orca", "7" * 64)
+    assert first != "You are a helpful assistant."
 
 
 def test_take_filters_heldout_and_lengths_and_stores_clean_ids_twice():

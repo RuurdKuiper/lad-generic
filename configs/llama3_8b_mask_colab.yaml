@@ -37,7 +37,7 @@ epochs: 1
 max_updates: 100000
 
 # Training parameters influencing memory usage
-max_sequence_length: 512
+max_sequence_length: 256
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false

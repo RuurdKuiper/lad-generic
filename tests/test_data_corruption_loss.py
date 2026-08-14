@@ -38,6 +38,17 @@ def test_structured_uses_stored_inputs_and_excludes_delimiter_eos_padding():
     assert b["loss_mask"].equal(b["answer_mask"])
 
 
+def test_structured_online_corrupts_clean_stored_inputs_deterministically():
+    clean = row()
+    clean["input_ids"] = list(clean["labels"])
+    collator = DenoisingCollator(ToyTokenizer(), "structured", 32, seed=1, deterministic=True)
+    first = collator([clean])
+    second = collator([clean])
+    assert torch.equal(first["input_ids"], second["input_ids"])
+    assert torch.equal(first["input_ids"][:, :5], first["labels"][:, :5])
+    assert (first["input_ids"][:, 5:] != first["labels"][:, 5:]).any()
+
+
 def test_structured_all_tokens_can_include_prompt_and_padding():
     b = DenoisingCollator(ToyTokenizer(), "structured", 32, structured_loss_behavior="all_tokens")([row()])
     assert b["loss_mask"].all()

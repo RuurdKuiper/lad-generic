@@ -3,7 +3,7 @@ model_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
 tokenizer_name_or_path: Qwen/Qwen2.5-0.5B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training
+dataset_name: Ruurd/LAD-training-100k-256
 splits: {train: train, validation: validation, test: test}
 
 # File paths
@@ -36,7 +36,7 @@ epochs: 1
 max_updates: 10000
 
 # Training parameters influencing memory usage
-max_sequence_length: 256
+max_sequence_length: 512
 lora_r: 128
 lora_alpha: 128
 train_normalization_layers: true

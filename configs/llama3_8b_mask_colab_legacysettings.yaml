@@ -4,7 +4,7 @@
 model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
-dataset_name: Ruurd/LAD-training
+dataset_name: Ruurd/LAD-training-100k-256
 splits: {train: train, validation: validation, test: test}
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
@@ -16,7 +16,7 @@ corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
 include_answer_eos: true
-max_sequence_length: 256
+max_sequence_length: 512
 multi_turn_prob: 0.0
 t_min: 0.001
 

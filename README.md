@@ -4,7 +4,15 @@ This project adapts causal instruction models as same-position, bidirectional de
 
 `mask_only` retokenizes the dataset source fields (`instruction`, `input`, `output`) for the chosen tokenizer and corrupts only genuine answer tokens online. Training masks are resampled; validation and test masks are deterministic from the configured seed and example index.
 
-`structured` consumes the existing stored Llama-tokenized `input_ids`. It deliberately fails for Qwen and Gemma: the published structured corruption is token-ID-specific and its generator is not available. Use `mask_only`, or add tokenizer-specific structured preprocessing.
+`structured` uses Llama-tokenized stored rows. Legacy rows with pre-corrupted
+`input_ids` are consumed unchanged; clean rows (`input_ids == labels`) receive
+the historical LAD structural answer noise online. Training noise is resampled,
+while validation/test noise is deterministic from the seed and row index.
+
+The current configurations use `Ruurd/LAD-training-100k-256`. `mask_only`
+retokenize its `system`, `instruction`, `input`, and `output` fields with a
+512-token limit. Llama structured runs use the stored clean tokenization and
+apply structural corruption online.
 
 ## Commands
 

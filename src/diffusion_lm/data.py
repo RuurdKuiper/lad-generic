@@ -193,9 +193,11 @@ class DenoisingCollator:
                         "Use corruption_mode=mask_only or provide tokenizer-specific structured preprocessing."
                     )
                 inputs, labels, start = stored_to_tokens(feature, self.tokenizer)
+                structured_online = inputs == labels
             else:
                 labels, start = source_to_tokens(feature, self.tokenizer)
                 inputs = list(labels)
+                structured_online = False
             answer, padding, truncated = build_masks(labels, start, self.tokenizer.eos_token_id, self.include_answer_eos)
             if truncated:
                 self.stats.truncated += 1
@@ -210,7 +212,7 @@ class DenoisingCollator:
                 if not any(answer):
                     self.stats.dropped += 1
                     return None
-            return {"input_ids": inputs, "labels": labels, "answer_mask": answer, "padding_mask": padding, "example_index": int(feature.get("_index", 0))}
+            return {"input_ids": inputs, "labels": labels, "answer_mask": answer, "padding_mask": padding, "example_index": int(feature.get("_index", 0)), "structured_online": structured_online}
         except ValueError:
             self.stats.malformed += 1
             raise
@@ -247,7 +249,7 @@ class DenoisingCollator:
             m = self.pad_to_multiple_of
             max_len = (max_len + m - 1) // m * m
         pad = self.tokenizer.eos_token_id
-        batch: dict[str, list[list[int] | list[bool] | int]] = {k: [] for k in ("input_ids", "labels", "answer_mask", "padding_mask", "example_index")}
+        batch: dict[str, list[list[int] | list[bool] | int]] = {k: [] for k in ("input_ids", "labels", "answer_mask", "padding_mask", "example_index", "structured_online")}
         for x in prepared:
             extra = max_len - len(x["labels"])
             batch["input_ids"].append(x["input_ids"] + [pad] * extra)
@@ -255,12 +257,14 @@ class DenoisingCollator:
             batch["answer_mask"].append(x["answer_mask"] + [False] * extra)
             batch["padding_mask"].append(x["padding_mask"] + [True] * extra)
             batch["example_index"].append(x["example_index"])
+            batch["structured_online"].append(x["structured_online"])
         result = {
             "input_ids": torch.tensor(batch["input_ids"], dtype=torch.long),
             "labels": torch.tensor(batch["labels"], dtype=torch.long),
             "answer_mask": torch.tensor(batch["answer_mask"], dtype=torch.bool),
             "padding_mask": torch.tensor(batch["padding_mask"], dtype=torch.bool),
             "example_index": torch.tensor(batch["example_index"], dtype=torch.long),
+            "structured_online": torch.tensor(batch["structured_online"], dtype=torch.bool),
         }
         from .corruption import apply_corruption
         return apply_corruption(result, self.mask_info["mask_token_id"], self.corruption_mode, self.structured_loss_behavior, bool(self.eos_padding_loss), self.t_min, self.seed, self.deterministic)

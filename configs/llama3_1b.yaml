@@ -1,6 +1,6 @@
 model_name_or_path: meta-llama/Llama-3.2-1B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.2-1B-Instruct
-dataset_name: Ruurd/LAD-training
+dataset_name: Ruurd/LAD-training-100k-256
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
 splits: {train: train, validation: validation, test: test}

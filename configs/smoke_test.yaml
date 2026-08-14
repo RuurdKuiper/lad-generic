@@ -1,7 +1,7 @@
 # Uses the public tiny random Llama checkpoint; intended after replacing dataset_name with a tiny local dataset in tests.
 model_name_or_path: hf-internal-testing/tiny-random-LlamaForCausalLM
 tokenizer_name_or_path: hf-internal-testing/llama-tokenizer
-dataset_name: Ruurd/LAD-training
+dataset_name: Ruurd/LAD-training-100k-256
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
 splits: {train: 'train[:8]', validation: 'validation[:4]', test: 'test[:4]'}

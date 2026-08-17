@@ -10,6 +10,7 @@ import sys
 import tempfile
 from contextlib import nullcontext
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Callable
@@ -21,6 +22,80 @@ MC_TASKS = {"mmlu", "mmlu_pro", "hellaswag", "arc_c", "gpqa"}
 ALL_TASKS = ["mmlu", "mmlu_pro", "hellaswag", "arc_c", "gsm8k", "math", "gpqa", "humaneval", "mbpp"]
 OPEN_ENDED_TASK = "open_ended"
 AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
+
+
+def _path_slug(value: str) -> str:
+    """Turn a model/task label into a stable, filesystem-safe component."""
+    slug = re.sub(r"[^a-zA-Z0-9._-]+", "-", value.strip()).strip("-.").lower()
+    return slug or "unnamed"
+
+
+class BenchmarkRunReporter:
+    """Write one benchmark invocation into an isolated, structured directory."""
+
+    schema_version = 1
+
+    def __init__(self, results_dir: str | Path, config: dict[str, Any], run_name: str | None = None):
+        self.started_at = datetime.now(timezone.utc)
+        timestamp = self.started_at.strftime("%Y%m%dT%H%M%S.%fZ")
+        self.run_id = timestamp + (f"--{_path_slug(run_name)}" if run_name else "")
+        self.path = Path(results_dir) / self.run_id
+        self.path.mkdir(parents=True, exist_ok=False)
+        self.config = config
+        self.summaries: list[dict[str, Any]] = []
+        self._write_manifest("running")
+
+    def _write_json(self, path: Path, value: Any) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(value, indent=2, ensure_ascii=False, default=str) + "\n")
+
+    def _write_manifest(self, status: str, completed_at: str | None = None) -> None:
+        manifest = {
+            "schema_version": self.schema_version,
+            "run_id": self.run_id,
+            "status": status,
+            "started_at": self.started_at.isoformat(),
+            "completed_at": completed_at,
+            "config": self.config,
+        }
+        self._write_json(self.path / "run.json", manifest)
+
+    def group_path(self, model: str, task: str, method: str) -> Path:
+        """Return the directory for one model/task/method result group."""
+        return self.path / "models" / _path_slug(model) / _path_slug(task) / _path_slug(method)
+
+    def save_result(self, result: dict[str, Any]) -> None:
+        """Append one example only to its model/task/method result file."""
+        path = self.group_path(result["model"], result["task"], result["method"]) / "results.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        save_result(path, result)
+
+    def save_summary(self, summary: dict[str, Any]) -> None:
+        """Save a group summary and retain it for run/model rollups."""
+        self.summaries.append(summary)
+        path = self.group_path(summary["model"], summary["task"], summary["method"]) / "summary.json"
+        self._write_json(path, summary)
+
+    def complete(self) -> Path:
+        """Write model and run rollups, then mark the invocation complete."""
+        by_model: dict[str, list[dict[str, Any]]] = {}
+        for summary in self.summaries:
+            by_model.setdefault(str(summary["model"]), []).append(summary)
+        models = []
+        for model, summaries in by_model.items():
+            model_summary = {"model": model, "results": summaries}
+            models.append(model_summary)
+            self._write_json(self.path / "models" / _path_slug(model) / "summary.json", model_summary)
+        completed_at = datetime.now(timezone.utc).isoformat()
+        self._write_json(self.path / "summary.json", {
+            "schema_version": self.schema_version,
+            "run_id": self.run_id,
+            "started_at": self.started_at.isoformat(),
+            "completed_at": completed_at,
+            "models": models,
+        })
+        self._write_manifest("completed", completed_at)
+        return self.path
 
 
 def resolve_generation_settings(config: dict[str, Any], task: str, mode: str) -> dict[str, Any]:

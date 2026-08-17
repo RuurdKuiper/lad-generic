@@ -1,5 +1,7 @@
 outputs_dir: outputs
-models: []  # Empty means discover every outputs/**/best adapter. Add "llada:...", "legacy:/path/...", or "legacy-hf:repo|filename.pth" explicitly.
+models: []  # Empty means discover every outputs/**/best adapter.
+# To compare an adapter with official LLaDA, list both explicitly:
+# models: ["llama-3.1-8b-mask/best", "llada:GSAI-ML/LLaDA-8B-Instruct"]
 legacy_tokenizer_name_or_path: meta-llama/Llama-3.2-3B
 # tasks: [mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp, open_ended]
 tasks: [arc_c]  # Options: mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, humaneval, mbpp, open_ended
@@ -9,7 +11,8 @@ limit: 10
 # limit_fraction: 0.05
 device: auto  # Options: auto, cuda, mps, cpu
 cache_dir: data/huggingface
-results_path: outputs/benchmark_results.jsonl
+results_dir: outputs/benchmark_runs  # Each invocation creates its own timestamped directory here.
+# run_name: arc-smoke  # Optional readable suffix for the timestamped run ID.
 include_autoregressive: false  # Options: true, false
 show_open_ended_answers: true  # Set true to print each open-ended prompt and final answer as it completes.
 perplexity:

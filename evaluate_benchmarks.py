@@ -18,7 +18,7 @@ from tqdm.auto import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from diffusion_lm.benchmarks import ALL_TASKS, extract_answer, load_benchmark, resolve_generation_settings, save_result, score_prediction, score_texts_with_model
+from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, score_prediction, score_texts_with_model
 from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
 
 load_dotenv(PROJECT_ROOT / ".env")
@@ -136,9 +136,15 @@ def main() -> None:
         config["tasks"] = ALL_TASKS
     token = os.getenv("HF_TOKEN")
     cache = config.get("cache_dir", "data/huggingface")
-    result_path = Path(config.get("results_path", "outputs/benchmark_results.jsonl")); result_path.parent.mkdir(parents=True, exist_ok=True)
+    if "results_path" in config and "results_dir" not in config:
+        legacy_path = Path(config["results_path"])
+        results_dir = legacy_path.parent / "benchmark_runs"
+        print(f"results_path is deprecated; this run will be isolated under {results_dir}", flush=True)
+    else:
+        results_dir = Path(config.get("results_dir", "outputs/benchmark_runs"))
+    reporter = BenchmarkRunReporter(results_dir, config, config.get("run_name"))
+    print(f"Benchmark run: {reporter.run_id}\nResults: {reporter.path}", flush=True)
     show_open_ended_answers = bool(config.get("show_open_ended_answers", False))
-    summaries = []
     open_ended_pending = []
     for selection in selections:
         selection = str(selection)
@@ -224,7 +230,7 @@ def main() -> None:
                 record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "diffusion", "prompt": example.prompt, "prediction": diffusion_text, "target": example.answer, "correct": diffusion_ok, "inference_settings": task_settings}
                 if example.kind != "code":
                     record.update(extracted_prediction=extract_answer(diffusion_text, example.kind), extracted_target=extract_answer(example.answer, example.kind))
-                save_result(result_path, record); correct += int(diffusion_ok)
+                reporter.save_result(record); correct += int(diffusion_ok)
                 diffusion_progress.set_postfix(correct=f"{correct}/{index}", accuracy=f"{correct / index:.3f}")
             if config.get("include_autoregressive", False) and supports_autoregressive:
                 print(f"[{model_label}] {task}: {total} validation samples (autoregressive)", flush=True)
@@ -235,10 +241,10 @@ def main() -> None:
                     record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}}
                     if example.kind != "code":
                         record.update(extracted_prediction=extract_answer(ar_text, example.kind), extracted_target=extract_answer(example.answer, example.kind))
-                    save_result(result_path, record)
+                    reporter.save_result(record)
                     ar_progress.set_postfix(correct=f"{ar_correct}/{index}", accuracy=f"{ar_correct / index:.3f}")
             summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "inference_settings": task_settings, "accuracy": correct / max(len(examples), 1), "correct": correct, "total": len(examples)}
-            summaries.append(summary)
+            reporter.save_summary(summary)
             message = f"{model_label} | {task} | diffusion accuracy={summary['accuracy']:.4f} ({correct}/{len(examples)})"
             if config.get("include_autoregressive", False):
                 if not supports_autoregressive:
@@ -246,7 +252,7 @@ def main() -> None:
                     print(message)
                     continue
                 ar_summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
-                summaries.append(ar_summary)
+                reporter.save_summary(ar_summary)
                 message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
             print(message)
         print(f"Released generation model for {model_label}; clearing GPU memory before the next model.", flush=True)
@@ -261,7 +267,7 @@ def main() -> None:
         for group in open_ended_pending:
             scores = score_texts_with_model(reference_model, reference_tokenizer, reference_device, group["texts"])
             for example, text, per_text in zip(group["examples"], group["texts"], scores["per_text"]):
-                save_result(result_path, {
+                reporter.save_result({
                     "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
                     "example_id": example.example_id, "method": group["method"],
                     "prompt": example.prompt, "prediction": text,
@@ -279,7 +285,7 @@ def main() -> None:
                 "mean_bigram_repetition": sum(item["bigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_trigram_repetition": sum(item["trigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
             }
-            summaries.append(summary)
+            reporter.save_summary(summary)
             print(f"{group['model']} | {group['method']} | perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}", flush=True)
         del reference_model
         gc.collect()
@@ -289,7 +295,8 @@ def main() -> None:
                 torch.cuda.empty_cache()
         except ImportError:
             pass
-    (result_path.parent / (result_path.stem + "_summary.json")).write_text(json.dumps(summaries, indent=2))
+    run_path = reporter.complete()
+    print(f"\nStructured benchmark report written to {run_path}", flush=True)
 
 
 if __name__ == "__main__":

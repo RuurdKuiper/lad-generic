@@ -1,6 +1,26 @@
+import json
+
 import pytest
 
-from diffusion_lm.benchmarks import BenchmarkExample, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, score_prediction
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, score_prediction
+
+
+def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
+    reporter = BenchmarkRunReporter(tmp_path, {"tasks": ["arc_c"]}, "smoke run")
+    record = {"model": "llada:GSAI-ML/LLaDA-8B-Instruct", "task": "arc_c", "method": "diffusion", "prediction": "A"}
+    summary = {"model": record["model"], "task": "arc_c", "method": "diffusion", "accuracy": 1.0}
+
+    reporter.save_result(record)
+    reporter.save_summary(summary)
+    run_path = reporter.complete()
+
+    assert run_path.parent == tmp_path
+    assert run_path.name.endswith("--smoke-run")
+    assert json.loads((run_path / "run.json").read_text())["status"] == "completed"
+    assert json.loads((run_path / "summary.json").read_text())["models"][0]["results"] == [summary]
+    group = run_path / "models" / "llada-gsai-ml-llada-8b-instruct" / "arc_c" / "diffusion"
+    assert json.loads((group / "results.jsonl").read_text()) == record
+    assert json.loads((group / "summary.json").read_text()) == summary
 
 
 def test_open_ended_benchmark_has_reproducible_thirty_prompt_suite():

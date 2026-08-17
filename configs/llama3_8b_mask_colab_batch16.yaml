@@ -30,6 +30,7 @@ learning_rate: 1.0e-5
 # sqrt(16 / 8) resolves this reference rate to approximately 1.414e-5.
 learning_rate_scaling:
   enabled: true
+  mode: linear  # Options: sqrt, linear
   reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100

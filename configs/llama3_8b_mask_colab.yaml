@@ -30,6 +30,7 @@ learning_rate: 1.0e-5
 # Treat learning_rate as the rate for the reference effective batch size.
 learning_rate_scaling:
   enabled: false
+  mode: sqrt  # Options: sqrt, linear
   reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100

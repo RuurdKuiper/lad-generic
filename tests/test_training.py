@@ -78,6 +78,32 @@ def test_learning_rate_uses_sqrt_effective_batch_scaling():
     assert learning_rate == pytest.approx(1e-5 * scale)
 
 
+def test_learning_rate_uses_linear_effective_batch_scaling():
+    learning_rate, effective_batch_size, scale = _resolve_learning_rate({
+        "learning_rate": 1e-5,
+        "batch_size": 16,
+        "gradient_accumulation_steps": 2,
+        "learning_rate_scaling": {
+            "enabled": True,
+            "mode": "linear",
+            "reference_batch_size": 8,
+        },
+    }, num_processes=2)
+
+    assert effective_batch_size == 64
+    assert scale == 8.0
+    assert learning_rate == pytest.approx(8e-5)
+
+
+def test_learning_rate_scaling_rejects_unknown_mode():
+    with pytest.raises(ValueError, match="mode must be 'sqrt' or 'linear'"):
+        _resolve_learning_rate({
+            "learning_rate": 1e-5,
+            "batch_size": 8,
+            "learning_rate_scaling": {"enabled": True, "mode": "cubic"},
+        })
+
+
 @pytest.mark.parametrize("reference", [0, -1])
 def test_learning_rate_scaling_rejects_invalid_reference_batch_size(reference):
     with pytest.raises(ValueError, match="reference_batch_size must be positive"):

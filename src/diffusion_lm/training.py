@@ -155,7 +155,7 @@ def _generation_perplexity_interval(config: dict[str, Any]) -> int:
 
 
 def _resolve_learning_rate(config: dict[str, Any], num_processes: int = 1) -> tuple[float, int, float]:
-    """Resolve optional square-root scaling from a reference effective batch size."""
+    """Resolve optional square-root or linear scaling from a reference batch size."""
     base_learning_rate = float(config["learning_rate"])
     if base_learning_rate <= 0:
         raise ValueError("learning_rate must be positive")
@@ -171,11 +171,15 @@ def _resolve_learning_rate(config: dict[str, Any], num_processes: int = 1) -> tu
     enabled = settings.get("enabled", False)
     if not isinstance(enabled, bool):
         raise ValueError("learning_rate_scaling.enabled must be true or false")
+    mode = str(settings.get("mode", "sqrt")).lower()
+    if mode not in {"sqrt", "linear"}:
+        raise ValueError("learning_rate_scaling.mode must be 'sqrt' or 'linear'")
     reference_batch_size = int(settings.get("reference_batch_size", 8))
     if reference_batch_size < 1:
         raise ValueError("learning_rate_scaling.reference_batch_size must be positive")
 
-    scale = math.sqrt(effective_batch_size / reference_batch_size) if enabled else 1.0
+    batch_ratio = effective_batch_size / reference_batch_size
+    scale = (math.sqrt(batch_ratio) if mode == "sqrt" else batch_ratio) if enabled else 1.0
     return base_learning_rate * scale, effective_batch_size, scale
 
 

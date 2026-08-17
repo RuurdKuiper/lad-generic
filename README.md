@@ -239,21 +239,23 @@ Set `max_grad_norm` to a positive value to clip the global gradient norm once
 per optimizer update, after all gradient-accumulation microbatches have
 contributed. Omit it for no clipping.
 
-Optional square-root learning-rate scaling treats `learning_rate` as the rate
-for a reference effective batch size:
+Optional learning-rate scaling treats `learning_rate` as the rate for a
+reference effective batch size:
 
 ```yaml
 learning_rate: 1.0e-5
 learning_rate_scaling:
   enabled: true
+  mode: sqrt  # sqrt or linear
   reference_batch_size: 8
 ```
 
 The effective batch size is `batch_size × gradient_accumulation_steps × number
-of processes`. The resolved rate is `learning_rate × sqrt(effective batch /
-reference batch)`. Disable the block to use `learning_rate` unchanged. Each run
-records `effective_batch_size`, `learning_rate_scale`, and
-`resolved_learning_rate` in `resolved_config.json`.
+of processes`. With `mode: sqrt`, the multiplier is `sqrt(effective batch /
+reference batch)`; with `mode: linear`, it is `effective batch / reference
+batch`. Disable the block to use `learning_rate` unchanged. Each run records
+`effective_batch_size`, `learning_rate_scale`, and `resolved_learning_rate` in
+`resolved_config.json`.
 
 Gated Llama/Gemma access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that literal `MASK` is exactly one ordinary vocabulary token and records the token ID/decoding in `mask_token.json`.
 

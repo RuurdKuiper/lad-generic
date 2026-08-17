@@ -1,8 +1,9 @@
 import json
 
 import pytest
+import torch
 
-from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
 
 
 def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
@@ -43,6 +44,33 @@ def test_open_ended_benchmark_supports_fractional_smoke_suite():
 
     assert len(examples) == 2
     assert [example.example_id for example in examples] == ["0", "15"]
+
+
+def test_open_ended_scoring_reports_median_per_response_perplexity():
+    class Tokenizer:
+        all_special_ids = []
+
+        def __call__(self, text, **_kwargs):
+            token = 0 if text == "easy" else 1
+            length = 2 if text != "long-hard" else 8
+            return {"input_ids": torch.tensor([[token] * length])}
+
+        def encode(self, text, **_kwargs):
+            return [0 if text == "easy" else 1]
+
+    class Model(torch.nn.Module):
+        def forward(self, input_ids, use_cache=False):
+            logits = torch.zeros((*input_ids.shape, 2))
+            logits[..., 0] = 2.0
+            return type("Output", (), {"logits": logits})()
+
+    scores = score_texts_with_model(
+        Model(), Tokenizer(), torch.device("cpu"), ["easy", "hard", "long-hard"]
+    )
+    per_response = sorted(item["perplexity"] for item in scores["per_text"])
+
+    assert scores["median_perplexity"] == per_response[1]
+    assert scores["median_perplexity"] != pytest.approx(scores["perplexity"])
 
 
 def test_fractional_sampling_is_evenly_spaced_and_rounded_up():

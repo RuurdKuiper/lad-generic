@@ -7,6 +7,7 @@ import importlib.util
 import math
 import os
 from pathlib import Path
+from statistics import median
 from typing import Any
 
 import torch
@@ -290,6 +291,10 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
         records.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
+    valid_perplexities = [value for value in per_text_perplexities if value is not None]
+    generation_metrics["generation_median_perplexity"] = (
+        float(median(valid_perplexities)) if valid_perplexities else None
+    )
     for record in records:
         # Rebuild the mapping to keep the JSONL field order stable/readable.
         record["generation_perplexity"] = per_text_perplexities[record["prompt_index"]]
@@ -716,7 +721,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     unwrapped = accelerator.unwrap_model(model)
                     metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
                 metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
-                generation_note = f" | generation_ppl={metrics['generation_perplexity']:.4f}" if "generation_perplexity" in metrics else ""
+                generation_note = (
+                    f" | generation_median_ppl={metrics['generation_median_perplexity']:.4f}"
+                    if metrics.get("generation_median_perplexity") is not None else ""
+                )
                 train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
                 interval_example_count = interval_examples.item()
                 progress.write(f"step {update_step}/{max_updates} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")

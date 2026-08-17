@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+from statistics import median
 from typing import Any, Callable
 
 import torch
@@ -600,7 +601,14 @@ def score_texts_with_model(model: Any, tokenizer: Any, device: torch.device, tex
             "trigram_repetition": _ngram_repetition(text, tokenizer, 3),
         })
     mean_nll = total_nll / max(total_tokens, 1)
-    return {"perplexity": float(torch.exp(torch.tensor(mean_nll))), "mean_nll": mean_nll, "tokens": total_tokens, "per_text": per_text}
+    valid_perplexities = [item["perplexity"] for item in per_text if item["perplexity"] is not None]
+    return {
+        "perplexity": float(torch.exp(torch.tensor(mean_nll))),
+        "median_perplexity": float(median(valid_perplexities)) if valid_perplexities else None,
+        "mean_nll": mean_nll,
+        "tokens": total_tokens,
+        "per_text": per_text,
+    }
 
 
 @torch.no_grad()
@@ -656,8 +664,10 @@ def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, An
             if name in named:
                 named[name].data.copy_(value.to(named[name].device, dtype=named[name].dtype))
     mean_nll = total_nll / max(total_tokens, 1)
+    valid_perplexities = [item["perplexity"] for item in per_text if item["perplexity"] is not None]
     return {
         "perplexity": float(torch.exp(torch.tensor(mean_nll))),
+        "median_perplexity": float(median(valid_perplexities)) if valid_perplexities else None,
         "mean_nll": mean_nll,
         "tokens": total_tokens,
         "per_text": per_text,

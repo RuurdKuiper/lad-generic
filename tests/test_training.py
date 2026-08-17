@@ -248,3 +248,4 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
     assert record["final"] == "final answer"
     assert "states" not in record
     assert metrics["generation_perplexity"] == 2.0
+    assert metrics["generation_median_perplexity"] == 2.0

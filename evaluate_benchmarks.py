@@ -333,14 +333,14 @@ def main() -> None:
                 "method": group["method"], "total": len(group["examples"]),
                 "inference_settings": group["inference_settings"],
                 "perplexity_reference": reference_info,
-                "perplexity": scores["perplexity"], "mean_nll": scores["mean_nll"], "tokens": scores["tokens"],
+                "perplexity": scores["perplexity"], "median_perplexity": scores["median_perplexity"], "mean_nll": scores["mean_nll"], "tokens": scores["tokens"],
                 "mean_unigram_repetition": sum(item["unigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_bigram_repetition": sum(item["bigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_trigram_repetition": sum(item["trigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
             }
             reporter.save_summary(summary)
-            print(f"{group['model']} | {group['method']} | perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}", flush=True)
+            print(f"{group['model']} | {group['method']} | median perplexity={summary['median_perplexity']:.4f} | pooled perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}", flush=True)
         del reference_model
         gc.collect()
         try:

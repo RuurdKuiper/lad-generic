@@ -39,7 +39,20 @@ def _generate_ar(session, prompt: str, max_new_tokens: int, original_base: bool 
     import torch
     context = session.model.disable_adapter() if original_base else None
     trained = {name: parameter.detach().cpu().clone() for name, parameter in session.model.named_parameters() if "norm" in name.lower()}
+    config = session.model.config
+    original_config = {
+        name: getattr(config, name)
+        for name in ("use_cache", "is_causal", "use_bidirectional_attention")
+        if hasattr(config, name)
+    }
     try:
+        # load_session prepares this shared model instance for denoising. Put
+        # it back in causal generation mode for the untouched base baseline.
+        config.use_cache = True
+        if hasattr(config, "is_causal"):
+            config.is_causal = True
+        if hasattr(config, "use_bidirectional_attention"):
+            config.use_bidirectional_attention = False
         with torch.inference_mode(), (context if context is not None else _null_context()):
             if original_base:
                 initial_path = session.adapter_path / "normalization_initial_state.pt"
@@ -51,6 +64,8 @@ def _generate_ar(session, prompt: str, max_new_tokens: int, original_base: bool 
                             named[name].data.copy_(value.to(named[name].device, dtype=named[name].dtype))
             generated = session.model.generate(torch.tensor([prefix], device=session.device), max_new_tokens=max_new_tokens, do_sample=False, use_cache=True)
     finally:
+        for name, value in original_config.items():
+            setattr(config, name, value)
         named = dict(session.model.named_parameters())
         for name, value in trained.items():
             if name in named:
@@ -214,6 +229,7 @@ def main() -> None:
             mode = run_config.get("corruption_mode", "mask_only")
             session = load_session(selection, outputs, config.get("device", "auto"), config.get("quantization"))
             supports_autoregressive = True
+        ar_model_name = str(run_config.get("model_name_or_path", run_config.get("repo_id", model_label)))
         for task in config["tasks"]:
             examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token, config.get("limit_fraction"))
             if session.llada:
@@ -248,7 +264,7 @@ def main() -> None:
                         ar_texts.append(text)
                         if show_open_ended_answers:
                             _show_open_ended_answer(ar_progress, "autoregressive", index, len(examples), example.prompt, text)
-                    open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}})
+                    open_ended_pending.append({"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}})
                     message += " | autoregressive generation complete"
                 if config.get("include_autoregressive", False) and not supports_autoregressive:
                     message += " | autoregressive comparison skipped"
@@ -274,7 +290,7 @@ def main() -> None:
                 for index, example in enumerate(ar_progress, start=1):
                     ar_text = _generate_ar(session, example.prompt, int(task_settings.get("max_new_tokens", 256)), original_base=True)
                     ar_ok = score_prediction(example, ar_text); ar_correct += int(ar_ok)
-                    record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}}
+                    record = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}}
                     if example.kind != "code":
                         record.update(extracted_prediction=extract_answer(ar_text, example.kind), extracted_target=extract_answer(example.answer, example.kind))
                     reporter.save_result(record)
@@ -287,7 +303,7 @@ def main() -> None:
                     message += " | autoregressive comparison skipped"
                     print(message)
                     continue
-                ar_summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
+                ar_summary = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
                 reporter.save_summary(ar_summary)
                 message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
             print(message)
@@ -310,6 +326,7 @@ def main() -> None:
                     "inference_settings": group["inference_settings"],
                     "perplexity_reference": reference_info,
                     **per_text,
+                    **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
                 })
             summary = {
                 "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
@@ -320,6 +337,7 @@ def main() -> None:
                 "mean_unigram_repetition": sum(item["unigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_bigram_repetition": sum(item["bigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_trigram_repetition": sum(item["trigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
+                **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
             }
             reporter.save_summary(summary)
             print(f"{group['model']} | {group['method']} | perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}", flush=True)

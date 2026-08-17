@@ -8,7 +8,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Full dataset rather than the 100k subset
-dataset_name: Ruurd/LAD-training
+dataset_name: Ruurd/LAD-training-1m-256
 splits: {train: train, validation: validation, test: test}
 
 # File paths. Relative paths are rooted under LAD_OUTPUT_ROOT in Colab.

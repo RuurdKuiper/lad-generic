@@ -27,6 +27,10 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
+# Treat learning_rate as the rate for the reference effective batch size.
+learning_rate_scaling:
+  enabled: false
+  reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 4

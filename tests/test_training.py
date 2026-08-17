@@ -1,6 +1,6 @@
 import pytest
 
-from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts
+from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_learning_rate
 
 
 def test_available_output_dir_adds_incrementing_suffixes(tmp_path):
@@ -51,6 +51,44 @@ def test_generation_perplexity_interval_must_align_with_validation():
 
     with pytest.raises(ValueError, match="must be a multiple"):
         _generation_perplexity_interval(config)
+
+
+def test_learning_rate_scaling_is_off_by_default():
+    learning_rate, effective_batch_size, scale = _resolve_learning_rate({
+        "learning_rate": 1e-5,
+        "batch_size": 16,
+        "gradient_accumulation_steps": 1,
+    })
+
+    assert learning_rate == 1e-5
+    assert effective_batch_size == 16
+    assert scale == 1.0
+
+
+def test_learning_rate_uses_sqrt_effective_batch_scaling():
+    learning_rate, effective_batch_size, scale = _resolve_learning_rate({
+        "learning_rate": 1e-5,
+        "batch_size": 16,
+        "gradient_accumulation_steps": 2,
+        "learning_rate_scaling": {"enabled": True, "reference_batch_size": 8},
+    }, num_processes=2)
+
+    assert effective_batch_size == 64
+    assert scale == pytest.approx(64 ** 0.5 / 8 ** 0.5)
+    assert learning_rate == pytest.approx(1e-5 * scale)
+
+
+@pytest.mark.parametrize("reference", [0, -1])
+def test_learning_rate_scaling_rejects_invalid_reference_batch_size(reference):
+    with pytest.raises(ValueError, match="reference_batch_size must be positive"):
+        _resolve_learning_rate({
+            "learning_rate": 1e-5,
+            "batch_size": 8,
+            "learning_rate_scaling": {
+                "enabled": True,
+                "reference_batch_size": reference,
+            },
+        })
 
 
 def test_mask_only_generation_uses_full_remasking_and_permanent_retention():

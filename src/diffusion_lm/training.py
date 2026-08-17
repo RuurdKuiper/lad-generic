@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import atexit
 import hashlib
+import math
 import os
 from pathlib import Path
 from typing import Any
@@ -151,6 +152,31 @@ def _generation_perplexity_interval(config: dict[str, Any]) -> int:
     if interval % validation_steps:
         raise ValueError("generation_perplexity.interval_steps must be a multiple of validation_steps")
     return interval
+
+
+def _resolve_learning_rate(config: dict[str, Any], num_processes: int = 1) -> tuple[float, int, float]:
+    """Resolve optional square-root scaling from a reference effective batch size."""
+    base_learning_rate = float(config["learning_rate"])
+    if base_learning_rate <= 0:
+        raise ValueError("learning_rate must be positive")
+    batch_size = int(config["batch_size"])
+    gradient_accumulation = int(config.get("gradient_accumulation_steps", 1))
+    if batch_size < 1 or gradient_accumulation < 1 or num_processes < 1:
+        raise ValueError("batch_size, gradient_accumulation_steps, and num_processes must be positive")
+    effective_batch_size = batch_size * gradient_accumulation * num_processes
+
+    settings = config.get("learning_rate_scaling", {}) or {}
+    if not isinstance(settings, dict):
+        raise ValueError("learning_rate_scaling must be a mapping")
+    enabled = settings.get("enabled", False)
+    if not isinstance(enabled, bool):
+        raise ValueError("learning_rate_scaling.enabled must be true or false")
+    reference_batch_size = int(settings.get("reference_batch_size", 8))
+    if reference_batch_size < 1:
+        raise ValueError("learning_rate_scaling.reference_batch_size must be positive")
+
+    scale = math.sqrt(effective_batch_size / reference_batch_size) if enabled else 1.0
+    return base_learning_rate * scale, effective_batch_size, scale
 
 
 def _available_output_dir(path: Path) -> Path:
@@ -409,7 +435,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
     model, audit = load_denoising_model(config)
     initial_norms = _normalization_state(model)
-    resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}
+    resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
+    resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}; resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
     trainable_parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer_name = str(config.get("optimizer", "adamw")).lower()
@@ -418,10 +445,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             import bitsandbytes as bnb
         except ImportError as exc:
             raise ImportError("optimizer=adamw8bit requires bitsandbytes; install it on CUDA Linux with `pip install bitsandbytes`") from exc
-        optimizer = bnb.optim.AdamW8bit(trainable_parameters, lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
+        optimizer = bnb.optim.AdamW8bit(trainable_parameters, lr=resolved_learning_rate, weight_decay=float(config.get("weight_decay", 0.0)))
     elif optimizer_name == "adamw":
         optimizer_kwargs = {
-            "lr": float(config["learning_rate"]),
+            "lr": resolved_learning_rate,
             "weight_decay": float(config.get("weight_decay", 0.0)),
         }
         # PyTorch's fused implementation performs the same AdamW update with

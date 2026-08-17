@@ -27,6 +27,10 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
+# sqrt(16 / 8) resolves this reference rate to approximately 1.414e-5.
+learning_rate_scaling:
+  enabled: true
+  reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 8
@@ -41,7 +45,7 @@ max_sequence_length: 256
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false
-batch_size: 16
+batch_size: 32
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false

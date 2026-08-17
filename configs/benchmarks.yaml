@@ -41,12 +41,23 @@ generation_by_corruption:
     permanent_unmask: false
     confidence_guided: false
   mask_only:
+    # Mask-only adapters use the official LLaDA fixed-budget sampler below.
+    # These legacy-loop fields are retained only for older evaluator versions.
     noise_level: 1.0
     temperature: 0.5
     top_k: 100
     proportional_unmask: false
     permanent_unmask: true
     confidence_guided: true
+# Our mask-only adapters use the same fixed-budget low-confidence sampler and
+# automatic per-task profiles as hosted LLaDA. Their own chat template and
+# native EOS/end-of-turn token IDs are used.
+mask_only_generation:
+  temperature: 0.0
+  cfg_scale: 0.0
+  remasking: low_confidence
+# mask_only_task_generation:
+#   gsm8k: {max_new_tokens: 256, num_steps: 256, block_length: 8, confidence_eos_eot_inf: false}
 # Hosted LLaDA bypasses the generic mask-only loop and uses the official
 # fixed-budget low-confidence sampler. Published per-task lengths, steps, and
 # EOS settings are selected automatically; these fields are explicit overrides.

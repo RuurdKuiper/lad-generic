@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, score_prediction
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction
 
 
 def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
@@ -149,6 +149,21 @@ def test_llada_uses_published_task_specific_inference_settings():
     assert gsm8k["max_new_tokens"] == gsm8k["num_steps"] == gsm8k["block_length"] == 512
     assert gsm8k["temperature"] == 0.0
     assert gsm8k["confidence_eos_eot_inf"] is True
+    assert gsm8k["eot_token_id"] == 126348
     assert gsm8k["proportional_unmask"] is False
     assert humaneval["logits_eos_inf"] is True
     assert humaneval["confidence_eos_eot_inf"] is False
+
+
+def test_mask_only_adapters_use_the_same_official_task_sampler():
+    gsm8k = resolve_mask_only_generation_settings({}, "gsm8k")
+    overridden = resolve_mask_only_generation_settings(
+        {"mask_only_task_generation": {"gsm8k": {"block_length": 8}}}, "gsm8k"
+    )
+
+    assert gsm8k["sampler"] == "llada_official"
+    assert gsm8k["max_new_tokens"] == gsm8k["num_steps"] == gsm8k["block_length"] == 512
+    assert gsm8k["temperature"] == 0.0
+    assert gsm8k["confidence_eos_eot_inf"] is True
+    assert gsm8k["proportional_unmask"] is False
+    assert overridden["block_length"] == 8

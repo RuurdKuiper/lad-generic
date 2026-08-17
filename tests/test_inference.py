@@ -244,3 +244,38 @@ def test_official_llada_sampler_delays_eos_when_configured():
     assert model.inputs[1].tolist() == [[1, 5, 3]]
     assert text == "3"
     assert tokenizer.messages == [{"role": "user", "content": "Question"}]
+
+
+def test_official_llada_sampler_also_supports_native_adapter_prompts():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "toy"
+        name_or_path = "toy-adapter"
+
+        def apply_chat_template(self, messages, **_kwargs):
+            self.messages = messages
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def forward(self, input_ids, **_kwargs):
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[..., 3] = 10.0
+            return type("Output", (), {"logits": logits})()
+
+    tokenizer = Tokenizer()
+    session = InferenceSession(Model(), tokenizer, torch.device("cpu"), Path("."), {}, 5)
+
+    text = llada_generate(session, "Question", gen_length=2, steps=2, system_prompt="System")
+
+    assert text == "3 3"
+    assert tokenizer.messages == [
+        {"role": "system", "content": "System"},
+        {"role": "user", "content": "Question"},
+    ]

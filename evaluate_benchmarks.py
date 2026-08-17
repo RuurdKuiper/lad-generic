@@ -18,7 +18,7 @@ from tqdm.auto import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
 from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
 
 load_dotenv(PROJECT_ROOT / ".env")
@@ -68,7 +68,7 @@ class _null_context:
 
 def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
     """Generate one pure-diffusion answer using the run's corruption strategy."""
-    if session.llada:
+    if settings.get("sampler") == "llada_official":
         return llada_generate(
             session,
             prompt,
@@ -80,7 +80,8 @@ def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
             remasking=str(settings.get("remasking", "low_confidence")),
             logits_eos_inf=bool(settings.get("logits_eos_inf", False)),
             confidence_eos_eot_inf=bool(settings.get("confidence_eos_eot_inf", False)),
-            eot_token_id=int(settings.get("eot_token_id", 126348)),
+            eot_token_id=settings.get("eot_token_id"),
+            system_prompt=str(settings.get("system_prompt", "")),
             seed=int(settings.get("seed", 1234)),
         )
     structured = mode in {"structured", "legacy"}
@@ -91,6 +92,17 @@ def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
     for final, _status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 256)), int(settings.get("num_steps", settings.get("max_new_tokens", 256))), noise_level, float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)), bool(settings.get("permanent_unmask", structured)), bool(settings.get("confidence_guided", structured)), bool(settings.get("proportional_unmask", True))):
         pass
     return final
+
+
+def _native_eot_token_id(tokenizer) -> int | None:
+    """Find the model-native end-of-turn token used for delayed transfer."""
+    unknown = getattr(tokenizer, "unk_token_id", None)
+    vocabulary_size = len(tokenizer)
+    for token in ("<|eot_id|>", "<end_of_turn>", "<|end_of_turn|>"):
+        token_id = tokenizer.convert_tokens_to_ids(token)
+        if token_id is not None and token_id != unknown and 0 <= int(token_id) < vocabulary_size:
+            return int(token_id)
+    return None
 
 
 def _show_open_ended_answer(progress, method: str, index: int, total: int, prompt: str, answer: str) -> None:
@@ -202,7 +214,14 @@ def main() -> None:
             supports_autoregressive = True
         for task in config["tasks"]:
             examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token, config.get("limit_fraction"))
-            task_settings = resolve_llada_generation_settings(config, task) if session.llada else resolve_generation_settings(config, task, mode)
+            if session.llada:
+                task_settings = resolve_llada_generation_settings(config, task)
+            elif mode == "mask_only":
+                task_settings = resolve_mask_only_generation_settings(config, task)
+            else:
+                task_settings = resolve_generation_settings(config, task, mode)
+            if task_settings.get("sampler") == "llada_official" and "eot_token_id" not in task_settings:
+                task_settings["eot_token_id"] = _native_eot_token_id(session.tokenizer)
             if task == "open_ended":
                 print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
                 diffusion_texts = []

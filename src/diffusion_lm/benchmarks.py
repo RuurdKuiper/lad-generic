@@ -143,10 +143,33 @@ def resolve_llada_generation_settings(config: dict[str, Any], task: str) -> dict
         "remasking": "low_confidence",
         "logits_eos_inf": bool(profile.get("logits_eos_inf", False)),
         "confidence_eos_eot_inf": bool(profile.get("confidence_eos_eot_inf", False)),
+        "eot_token_id": 126348,
         "proportional_unmask": False,
     })
     settings.update(config.get("llada_generation", {}))
     settings.update(config.get("llada_task_generation", {}).get(task, {}))
+    settings["block_length"] = int(settings.get("block_length", settings.get("max_new_tokens", 128)))
+    return settings
+
+
+def resolve_mask_only_generation_settings(config: dict[str, Any], task: str) -> dict[str, Any]:
+    """Use LLaDA's official sampler and paper profile for a mask-only adapter."""
+    settings = resolve_generation_settings(config, task, "mask_only")
+    for unused in ("noise_level", "top_k", "permanent_unmask", "confidence_guided", "early_stopping"):
+        settings.pop(unused, None)
+    profile = LLADA_INSTRUCT_TASK_SETTINGS.get(task, {})
+    settings.update(profile)
+    settings.update({
+        "sampler": "llada_official",
+        "temperature": 0.0,
+        "cfg_scale": 0.0,
+        "remasking": "low_confidence",
+        "logits_eos_inf": bool(profile.get("logits_eos_inf", False)),
+        "confidence_eos_eot_inf": bool(profile.get("confidence_eos_eot_inf", False)),
+        "proportional_unmask": False,
+    })
+    settings.update(config.get("mask_only_generation", {}))
+    settings.update(config.get("mask_only_task_generation", {}).get(task, {}))
     settings["block_length"] = int(settings.get("block_length", settings.get("max_new_tokens", 128)))
     return settings
 

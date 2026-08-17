@@ -402,7 +402,8 @@ def llada_generate(
     remasking: str = "low_confidence",
     logits_eos_inf: bool = False,
     confidence_eos_eot_inf: bool = False,
-    eot_token_id: int = 126348,
+    eot_token_id: int | None = None,
+    system_prompt: str = "",
     seed: int = 1234,
 ) -> str:
     """Generate with the official LLaDA fixed-budget transfer algorithm.
@@ -410,10 +411,9 @@ def llada_generate(
     This intentionally bypasses ``denoise_stream``: official LLaDA predicts
     only still-masked positions, permanently transfers a fixed number per
     reverse step, and uses neither proportional unmasking nor a mask-ratio
-    heuristic.
+    heuristic. The sampler is model-agnostic, so mask-only LAD adapters can use
+    it with their native tokenizer and prompt format as well.
     """
-    if not session.llada:
-        raise ValueError("Official LLaDA generation requires a LLaDA inference session.")
     gen_length, steps = int(gen_length), int(steps)
     block_length = int(block_length or gen_length)
     if gen_length < 1 or steps < 1 or block_length < 1:
@@ -429,7 +429,7 @@ def llada_generate(
     torch.manual_seed(int(seed))
     if session.device.type == "cuda":
         torch.cuda.manual_seed_all(int(seed))
-    prefix = _prompt_ids(session.tokenizer, question, "", "llada")
+    prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     prompt_length = len(prefix)
     x = torch.full((1, prompt_length + gen_length), session.mask_token_id, dtype=torch.long, device=session.device)
     x[0, :prompt_length] = torch.tensor(prefix, dtype=torch.long, device=session.device)
@@ -465,7 +465,7 @@ def llada_generate(
                     # them the lowest transfer confidence; they remain valid
                     # predictions and can still transfer in later steps.
                     special_prediction = predictions == eos_token_id
-                    if 0 <= int(eot_token_id) < logits.shape[-1]:
+                    if eot_token_id is not None and 0 <= int(eot_token_id) < logits.shape[-1]:
                         special_prediction |= predictions == int(eot_token_id)
                     confidence = confidence.masked_fill(special_prediction, torch.finfo(confidence.dtype).min)
             else:

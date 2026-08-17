@@ -6,7 +6,10 @@ dependencies = ["torch>=2.5", "transformers>=4.38.2,<5", "peft>=0.15", "accelera
 
 [project.optional-dependencies]
 cuda = ["bitsandbytes>=0.45"]
-fp8 = ["transformer-engine[pytorch]>=2.16"]
+# Transformer Engine 2.14+ PyPI Torch bindings require the CUDA 13 core.
+# Colab currently ships CUDA 12; 2.13 is the latest CUDA-12 Torch build and
+# includes Blackwell/SM120 support.
+fp8 = ["transformer-engine[pytorch]==2.13.0"]
 evaluation = ["math-verify[antlr4_13_2]>=0.8"]
 
 [tool.pytest.ini_options]

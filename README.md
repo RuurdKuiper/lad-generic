@@ -40,6 +40,20 @@ Transformer Engine as well:
 python -m pip install -e '.[fp8]'
 ```
 
+The FP8 extra pins Transformer Engine 2.13 because its PyTorch extension uses
+the CUDA 12 core provided by current Colab runtimes. Transformer Engine 2.14+
+PyPI PyTorch packages require CUDA 13 and will fail there with a missing
+`libcublas.so.13` error.
+
+Current Colab images may also include TorchAO 0.10, while PEFT requires
+TorchAO 0.16 or newer whenever it detects that optional package. This project
+does not use TorchAO, so remove the incompatible preinstalled copy after
+installing the project:
+
+```bash
+python -m pip uninstall -y torchao
+```
+
 Enable it with an FP16 or BF16 master-weight precision. Unsupported GPUs such
 as A100 automatically fall back to BF16 and print a warning; an FP8-capable GPU
 without Transformer Engine installed fails with an installation instruction.

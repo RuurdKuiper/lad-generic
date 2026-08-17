@@ -205,3 +205,71 @@ def test_same_position_logits_not_shifted():
     mask = torch.tensor([[True, False]])
     loss, _ = masked_denoising_loss(logits, labels, mask)
     assert loss < .01
+
+
+def test_selected_position_loss_matches_dense_reference_and_gradients():
+    torch.manual_seed(4)
+    labels = torch.randint(0, 7, (3, 5))
+    mask = torch.tensor([
+        [True, False, True, False, False],
+        [False, False, False, False, False],
+        [False, True, True, True, False],
+    ])
+    normalization = torch.tensor([
+        [True, True, True, False, False],
+        [True, True, False, False, False],
+        [True, True, True, True, True],
+    ])
+    sampled_t = torch.tensor([0.5, 0.8, 1.0])
+    optimized_logits = torch.randn(3, 5, 7, requires_grad=True)
+    reference_logits = optimized_logits.detach().clone().requires_grad_(True)
+
+    optimized, _ = masked_denoising_loss(
+        optimized_logits, labels, mask, sampled_t, normalization
+    )
+    dense_ce = torch.nn.functional.cross_entropy(
+        reference_logits.transpose(1, 2), labels, reduction="none"
+    )
+    counts = mask.sum(dim=1)
+    valid = counts > 0
+    dense_weighted = (
+        (dense_ce * mask).sum(dim=1)
+        / sampled_t
+        / normalization.sum(dim=1).clamp_min(1)
+    )
+    reference = dense_weighted[valid].mean()
+
+    optimized.backward()
+    reference.backward()
+    assert torch.allclose(optimized, reference)
+    assert torch.allclose(optimized_logits.grad, reference_logits.grad)
+
+
+def test_empty_loss_mask_is_differentiable_and_training_metrics_are_optional():
+    logits = torch.randn(2, 3, 5, requires_grad=True)
+    labels = torch.zeros((2, 3), dtype=torch.long)
+    mask = torch.zeros((2, 3), dtype=torch.bool)
+    loss, metrics = masked_denoising_loss(
+        logits, labels, mask, compute_unweighted_metric=False
+    )
+    loss.backward()
+    assert loss == 0
+    assert logits.grad is not None
+    assert torch.count_nonzero(logits.grad) == 0
+    assert "unweighted_masked_token_ce" not in metrics
+
+
+def test_dense_all_token_fast_path_matches_selected_path():
+    torch.manual_seed(5)
+    labels = torch.randint(0, 6, (2, 4))
+    mask = torch.ones((2, 4), dtype=torch.bool)
+    logits = torch.randn(2, 4, 6)
+    selected, selected_metrics = masked_denoising_loss(logits, labels, mask)
+    dense, dense_metrics = masked_denoising_loss(
+        logits, labels, mask, sparse_positions=False
+    )
+    assert torch.allclose(selected, dense)
+    assert torch.allclose(
+        selected_metrics["unweighted_masked_token_ce"],
+        dense_metrics["unweighted_masked_token_ce"],
+    )

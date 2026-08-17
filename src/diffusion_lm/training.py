@@ -213,7 +213,14 @@ def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eo
         logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
         t = batch["sampled_t"] if mode == "mask_only" and not all_tokens else None
         normalization_mask = batch["answer_mask"] | batch["padding_mask"] if eos_padding_loss else batch["answer_mask"]
-        loss, m = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], t, normalization_mask)
+        loss, m = masked_denoising_loss(
+            logits,
+            batch["labels"],
+            batch["loss_mask"],
+            t,
+            normalization_mask,
+            sparse_positions=not all_tokens,
+        )
         valid = int(m["valid_examples"])
         tokens = int(m["supervised_tokens"])
         totals["weighted_loss_sum"] += float(loss) * valid
@@ -404,7 +411,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     initial_norms = _normalization_state(model)
     resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
-    trainable_parameters = (p for p in model.parameters() if p.requires_grad)
+    trainable_parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer_name = str(config.get("optimizer", "adamw")).lower()
     if optimizer_name in {"adamw8bit", "8bit_adamw", "paged_adamw8bit"}:
         try:
@@ -413,7 +420,16 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             raise ImportError("optimizer=adamw8bit requires bitsandbytes; install it on CUDA Linux with `pip install bitsandbytes`") from exc
         optimizer = bnb.optim.AdamW8bit(trainable_parameters, lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
     elif optimizer_name == "adamw":
-        optimizer = AdamW(trainable_parameters, lr=float(config["learning_rate"]), weight_decay=float(config.get("weight_decay", 0.0)))
+        optimizer_kwargs = {
+            "lr": float(config["learning_rate"]),
+            "weight_decay": float(config.get("weight_decay", 0.0)),
+        }
+        # PyTorch's fused implementation performs the same AdamW update with
+        # substantially fewer CUDA kernel launches. Optimizer state is created
+        # lazily after Accelerate moves the parameters to the CUDA device.
+        if torch.cuda.is_available():
+            optimizer_kwargs["fused"] = True
+        optimizer = AdamW(trainable_parameters, **optimizer_kwargs)
     else:
         raise ValueError(f"Unknown optimizer={optimizer_name}; expected adamw or adamw8bit")
     grad_accumulation = int(config.get("gradient_accumulation_steps", 1))
@@ -440,8 +456,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     best = float("inf"); metrics_path = output / "metrics.jsonl"
     model.train()
     progress = tqdm(total=max_updates, initial=start_step, desc="training", unit="update", disable=not accelerator.is_local_main_process)
-    interval_loss_sum = 0.0
-    interval_examples = 0
+    # Keep training aggregates on-device. Calling float()/int() on CUDA tensors
+    # in every iteration serializes the CPU and GPU; scalars are copied only
+    # when a log or validation record is actually emitted.
+    interval_loss_sum = torch.zeros((), device=accelerator.device, dtype=torch.float64)
+    interval_examples = torch.zeros((), device=accelerator.device, dtype=torch.int64)
     update_step = start_step
     for microstep, batch in enumerate(train_loader, start=start_step * grad_accumulation + 1):
         step = microstep
@@ -450,25 +469,37 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
             use_t_weighting = config["corruption_mode"] == "mask_only" and config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
             normalization_mask = batch["answer_mask"] | batch["padding_mask"] if bool(config.get("eos_padding_loss", False)) else batch["answer_mask"]
-            loss, info = masked_denoising_loss(logits, batch["labels"], batch["loss_mask"], batch["sampled_t"] if use_t_weighting else None, normalization_mask)
+            loss, info = masked_denoising_loss(
+                logits,
+                batch["labels"],
+                batch["loss_mask"],
+                batch["sampled_t"] if use_t_weighting else None,
+                normalization_mask,
+                compute_unweighted_metric=False,
+                sparse_positions=not (
+                    config["corruption_mode"] == "structured"
+                    and config.get("structured_loss_behavior") == "all_tokens"
+                ),
+            )
             accelerator.backward(loss)
             # Clip only after all gradient-accumulation microbatches have
             # contributed, matching Trainer's max_grad_norm behavior.
             if accelerator.sync_gradients and max_grad_norm is not None:
                 accelerator.clip_grad_norm_(model.parameters(), float(max_grad_norm))
             optimizer.step(); scheduler.step(); optimizer.zero_grad()
-        loss_value = float(loss.detach().cpu())
-        batch_examples = int(info["valid_examples"])
-        interval_loss_sum += loss_value * batch_examples
-        interval_examples += batch_examples
+        interval_loss_sum += loss.detach().to(torch.float64) * info["valid_examples"]
+        interval_examples += info["valid_examples"]
         if accelerator.sync_gradients:
             update_step += 1
             progress.update(1)
-            progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{interval_loss_sum / max(interval_examples, 1):.4f}")
         if not accelerator.sync_gradients:
             continue
         if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
-            _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": int(info["supervised_tokens"])})
+            loss_value = loss.detach().item()
+            supervised_tokens = info["supervised_tokens"].item()
+            train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
+            progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{train_avg:.4f}")
+            _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": supervised_tokens})
         if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
             metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)))
             if accelerator.is_main_process:
@@ -478,12 +509,13 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
                 metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
                 generation_note = f" | generation_ppl={metrics['generation_perplexity']:.4f}" if "generation_perplexity" in metrics else ""
-                train_avg = interval_loss_sum / max(interval_examples, 1)
+                train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
+                interval_example_count = interval_examples.item()
                 progress.write(f"step {update_step}/{max_updates} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
                 if accelerator.is_main_process:
-                    _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step, "weighted_loss": train_avg, "examples": interval_examples})
-                interval_loss_sum = 0.0
-                interval_examples = 0
+                    _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step, "weighted_loss": train_avg, "examples": interval_example_count})
+                interval_loss_sum.zero_()
+                interval_examples.zero_()
                 if metrics["weighted_loss"] < best:
                     best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
             accelerator.wait_for_everyone()

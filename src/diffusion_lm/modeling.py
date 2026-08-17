@@ -18,13 +18,14 @@ def bidirectional_attention_mask(padding_mask: torch.Tensor, dtype: torch.dtype)
     configured context-width signal: real and padded queries can attend to all
     positions, allowing the model to learn concise answers under wide contexts.
     """
-    allowed = torch.ones(
+    # Every position is deliberately visible, so the additive mask is exactly
+    # zero. Construct it directly instead of allocating a same-sized boolean
+    # tensor and running a masked_fill whose condition is always false.
+    return torch.zeros(
         (padding_mask.shape[0], 1, padding_mask.shape[1], padding_mask.shape[1]),
         device=padding_mask.device,
-        dtype=torch.bool,
+        dtype=dtype,
     )
-    mask = torch.zeros(allowed.shape, device=padding_mask.device, dtype=dtype)
-    return mask.masked_fill(~allowed, torch.finfo(dtype).min)
 
 
 def _target_modules(model: torch.nn.Module, requested: list[str]) -> list[str]:

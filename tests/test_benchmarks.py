@@ -70,6 +70,7 @@ def test_open_ended_scoring_reports_median_per_response_perplexity():
     per_response = sorted(item["perplexity"] for item in scores["per_text"])
 
     assert scores["median_perplexity"] == per_response[1]
+    assert scores["mean_perplexity"] == pytest.approx(sum(per_response) / len(per_response))
     assert scores["median_perplexity"] != pytest.approx(scores["perplexity"])
 
 

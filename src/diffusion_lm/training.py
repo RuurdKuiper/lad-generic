@@ -292,6 +292,9 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
     valid_perplexities = [value for value in per_text_perplexities if value is not None]
+    generation_metrics["generation_mean_perplexity"] = (
+        float(sum(valid_perplexities) / len(valid_perplexities)) if valid_perplexities else None
+    )
     generation_metrics["generation_median_perplexity"] = (
         float(median(valid_perplexities)) if valid_perplexities else None
     )

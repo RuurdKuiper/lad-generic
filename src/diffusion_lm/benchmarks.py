@@ -604,6 +604,7 @@ def score_texts_with_model(model: Any, tokenizer: Any, device: torch.device, tex
     valid_perplexities = [item["perplexity"] for item in per_text if item["perplexity"] is not None]
     return {
         "perplexity": float(torch.exp(torch.tensor(mean_nll))),
+        "mean_perplexity": float(sum(valid_perplexities) / len(valid_perplexities)) if valid_perplexities else None,
         "median_perplexity": float(median(valid_perplexities)) if valid_perplexities else None,
         "mean_nll": mean_nll,
         "tokens": total_tokens,
@@ -667,6 +668,7 @@ def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, An
     valid_perplexities = [item["perplexity"] for item in per_text if item["perplexity"] is not None]
     return {
         "perplexity": float(torch.exp(torch.tensor(mean_nll))),
+        "mean_perplexity": float(sum(valid_perplexities) / len(valid_perplexities)) if valid_perplexities else None,
         "median_perplexity": float(median(valid_perplexities)) if valid_perplexities else None,
         "mean_nll": mean_nll,
         "tokens": total_tokens,

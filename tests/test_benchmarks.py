@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction
 
 
 def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
@@ -91,6 +91,20 @@ def test_multiple_choice_prompt_and_target_match_training_contract():
     assert not score_prediction(example, "I considered A and B, but the latter seems stronger.")
 
 
+def test_reasoning_multiple_choice_tasks_request_answer_on_final_line():
+    for task in ("mmlu_pro", "gpqa"):
+        prompt = _choice_prompt(task, "Question?", ["First", "Second"])
+
+        assert "Think through the problem concisely" in prompt
+        assert "`ANSWER: A`" in prompt
+        assert "Start your response" not in prompt
+
+
+def test_multiple_choice_extraction_accepts_official_answer_line():
+    assert extract_answer("Reasoning here.\nANSWER: B", "multiple_choice") == "B"
+    assert extract_answer("Reasoning here.\nANSWER: **B**", "multiple_choice") == "B"
+
+
 def test_multiple_choice_extraction_ignores_unmarked_letters_in_explanations():
     assert extract_answer("After considering A and B, the latter is stronger.", "multiple_choice") == ""
     assert extract_answer("The correct answer is B: 12.", "multiple_choice") == "B"
@@ -107,6 +121,18 @@ def test_gpqa_uses_its_published_train_named_evaluation_split():
     assert _benchmark_spec("gpqa", "test")[2] == "train"
 
 
+def test_gpqa_option_shuffle_is_stable_across_evaluation_subsets():
+    row = {
+        "Question": "Which option is correct?",
+        "Correct Answer": "Correct",
+        "Incorrect Answer 1": "Wrong 1",
+        "Incorrect Answer 2": "Wrong 2",
+        "Incorrect Answer 3": "Wrong 3",
+    }
+
+    assert _multiple_choice_fields("gpqa", row, 0) == _multiple_choice_fields("gpqa", row, 87)
+
+
 def test_gsm8k_scores_the_last_numeric_answer_from_a_rationale():
     example = BenchmarkExample("gsm8k", "0", "problem", "work shown\n#### 3", "gsm8k", {})
 
@@ -115,11 +141,90 @@ def test_gsm8k_scores_the_last_numeric_answer_from_a_rationale():
     assert not score_prediction(example, "A robe takes 2 bolts and then 1 bolt.")
 
 
+def test_gsm8k_prompt_requests_canonical_final_answer_marker():
+    prompt = _gsm8k_prompt("What is 20 + 22?")
+
+    assert "step by step" in prompt
+    assert "final line in the form `#### 42`" in prompt
+    assert prompt.endswith("What is 20 + 22?")
+
+
 def test_math_ignores_terminal_punctuation_for_final_answer():
     example = BenchmarkExample("math", "0", "problem", "Therefore, $\\boxed{27}$.", "math", {})
 
     assert extract_answer(example.answer, "math") == "27"
     assert score_prediction(example, "27.")
+
+
+def test_math_extracts_boxed_answers_with_nested_latex_braces():
+    answer = r"Therefore, the answer is $\boxed{\left(3, \frac{\pi}{2}\right)}$."
+
+    assert _boxed(answer) == r"\left(3, \frac{\pi}{2}\right)"
+    assert extract_answer(answer, "math") == r"(3\frac{\pi}{2})"
+
+
+def test_math_prompt_requests_a_boxed_answer_after_reasoning():
+    prompt = _math_prompt("What is 1 + 1?")
+
+    assert prompt.startswith("Solve the following math problem with a concise explanation.")
+    assert r"End your response with the final answer in \boxed{...}." in prompt
+    assert prompt.endswith("What is 1 + 1?")
+
+
+def _humaneval_add_example():
+    prompt = 'def add(a, b):\n    """Return the sum."""\n'
+    return BenchmarkExample("humaneval", "0", prompt, "    return a + b\n", "code", {
+        "prompt": prompt,
+        "entry_point": "add",
+        "test": "def check(candidate):\n    assert candidate(2, 3) == 5",
+    })
+
+
+def test_humaneval_executes_canonical_body_completions_with_the_prompt():
+    assert score_prediction(_humaneval_add_example(), "    return a + b")
+    assert score_prediction(_humaneval_add_example(), "return a + b")
+
+
+def test_humaneval_extracts_full_function_from_prose_and_fences():
+    prediction = "Here is the implementation:\n```python\ndef add(a, b):\n    return a + b\n```"
+
+    assert _extract_python_code(prediction, "add").startswith("def add")
+    assert score_prediction(_humaneval_add_example(), prediction)
+
+
+def test_humaneval_rejects_broken_full_functions():
+    prediction = "```python\ndef add(a, b):\n    return a - b\n```"
+
+    assert not score_prediction(_humaneval_add_example(), prediction)
+
+
+def test_mbpp_prompt_exposes_required_interface_through_tests():
+    prompt = _mbpp_prompt({
+        "prompt": "Write a function that sorts a matrix by row sum.",
+        "test_imports": ["from copy import deepcopy"],
+        "test_list": ["assert sort_matrix([[2], [1]]) == [[1], [2]]"],
+    })
+
+    assert "from copy import deepcopy" in prompt
+    assert "assert sort_matrix(" in prompt
+    assert prompt.endswith("without explanation or Markdown fences.")
+
+
+def test_mbpp_executes_fenced_code_with_official_test_imports():
+    example = BenchmarkExample(
+        "mbpp",
+        "0",
+        "prompt",
+        "",
+        "code",
+        {
+            "test_imports": ["from math import sqrt"],
+            "test_list": ["assert root(9) == 3"],
+        },
+    )
+    prediction = "Here is the implementation:\n```python\ndef root(value):\n    return sqrt(value)\n```"
+
+    assert score_prediction(example, prediction)
 
 
 def test_generation_settings_use_corruption_specific_overrides():

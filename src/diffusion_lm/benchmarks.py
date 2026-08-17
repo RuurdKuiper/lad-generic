@@ -225,7 +225,13 @@ def _choice_prompt(name: str, question: str, choices: list[Any]) -> str:
     """Format multiple choice and explicitly request an extractable answer label."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     options = "\n".join(f"{letters[i]}: {choice}" for i, choice in enumerate(choices))
-    answer_format = "Start your response with the correct option label followed by a colon, for example `A:`."
+    if name in {"mmlu_pro", "gpqa"}:
+        answer_format = (
+            "Think through the problem concisely, then end your response with a final line "
+            "in the form `ANSWER: A`, using the correct option label."
+        )
+    else:
+        answer_format = "Start your response with the correct option label followed by a colon, for example `A:`."
     if name == "hellaswag":
         instruction = f"Choose the option that most plausibly continues the described event. {answer_format}"
         task_input = f"Beginning of the event:\n{question.strip()}\n\nWhat most plausibly happens next?\n{options}"
@@ -253,7 +259,9 @@ def _multiple_choice_fields(name: str, row: dict[str, Any], index: int) -> tuple
         question = row.get("Question", row.get("question", ""))
         choices = [row["Correct Answer"], row["Incorrect Answer 1"], row["Incorrect Answer 2"], row["Incorrect Answer 3"]]
         correct = choices[0]
-        random.Random(index).shuffle(choices)
+        # Make option order stable for a question even when evaluating a
+        # different subset, whose local enumeration indices may change.
+        random.Random(f"gpqa:{question}").shuffle(choices)
         answer = letters[choices.index(correct)]
     else:
         question = row.get("question", row.get("Question", row.get("query", row.get("ctx", ""))))
@@ -270,11 +278,21 @@ def _multiple_choice_fields(name: str, row: dict[str, Any], index: int) -> tuple
 
 
 def _boxed(text: str) -> str:
-    """Extract a final boxed/math answer when present."""
-    matches = re.findall(r"\\boxed\{([^{}]+)\}|####\s*([^\n]+)", text or "")
-    if not matches:
-        return (text or "").strip()
-    return (matches[-1][0] or matches[-1][1]).strip()
+    """Extract the last boxed/math answer, including nested LaTeX braces."""
+    text = text or ""
+    openings = list(re.finditer(r"\\(?:boxed|fbox)\s*\{", text))
+    for opening in reversed(openings):
+        start = opening.end()
+        depth = 1
+        for index in range(start, len(text)):
+            if text[index] == "{":
+                depth += 1
+            elif text[index] == "}":
+                depth -= 1
+                if depth == 0:
+                    return text[start:index].strip()
+    hashes = re.findall(r"####\s*([^\n]+)", text)
+    return hashes[-1].strip() if hashes else text.strip()
 
 
 def _last_number(text: str) -> str:
@@ -358,6 +376,39 @@ def _benchmark_spec(name: str, split: str) -> tuple[str, str | None, str]:
     return specs[name]
 
 
+def _mbpp_prompt(row: dict[str, Any]) -> str:
+    """Build the standard test-informed MBPP coding prompt."""
+    description = str(row.get("text") or row.get("prompt") or "").strip()
+    test_imports = [str(statement) for statement in (row.get("test_imports") or [])]
+    tests = [str(test) for test in (row.get("test_list") or [])]
+    sections = [description]
+    if test_imports or tests:
+        test_block = "\n".join(test_imports + tests)
+        sections.append(
+            "Your function must use the name and interface demonstrated by these tests:\n"
+            f"```python\n{test_block}\n```"
+        )
+    sections.append("Write only the Python function implementation, without explanation or Markdown fences.")
+    return "\n\n".join(section for section in sections if section)
+
+
+def _math_prompt(problem: str) -> str:
+    """Request concise reasoning followed by a readily scoreable final answer."""
+    return (
+        "Solve the following math problem with a concise explanation. End your "
+        "response with the final answer in \\boxed{...}.\n\n" + problem.strip()
+    )
+
+
+def _gsm8k_prompt(question: str) -> str:
+    """Request GSM8K reasoning followed by its canonical numeric answer marker."""
+    return (
+        "Solve the following math problem step by step. End your response with a "
+        "final line in the form `#### 42`, containing only the final numeric answer "
+        "after `####`.\n\n" + question.strip()
+    )
+
+
 def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, token: str | None, limit_fraction: float | None = None) -> list[BenchmarkExample]:
     """Download one configured benchmark split and normalize its records."""
     if name == OPEN_ENDED_TASK:
@@ -377,18 +428,17 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
             target = f"{answer}: {choices[answer_index]}"
             items.append(BenchmarkExample(name, str(index), _choice_prompt(name, question, choices), target, "multiple_choice", row))
         elif name == "gsm8k":
-            prompt = "Solve the following math problem step by step.\n\n" + row["question"].strip()
+            prompt = _gsm8k_prompt(row["question"])
             items.append(BenchmarkExample(name, str(index), prompt, row["answer"].strip(), "gsm8k", row))
         elif name == "math":
             problem = row.get("problem", row.get("question", ""))
             solution = row.get("solution", row.get("answer", ""))
-            prompt = "Solve the following math problem step by step.\n\n" + problem.strip()
+            prompt = _math_prompt(problem)
             items.append(BenchmarkExample(name, str(index), prompt, solution.strip(), "math", row))
         elif name == "humaneval":
             items.append(BenchmarkExample(name, str(index), row["prompt"], row.get("canonical_solution", ""), "code", row))
         elif name == "mbpp":
-            prompt = row.get("text", row.get("prompt", ""))
-            items.append(BenchmarkExample(name, str(index), prompt + "\n\nWrite only the Python function implementation.", row.get("code", ""), "code", row))
+            items.append(BenchmarkExample(name, str(index), _mbpp_prompt(row), row.get("code", ""), "code", row))
     return items
 
 
@@ -401,6 +451,9 @@ def extract_answer(text: str, kind: str) -> str:
         match = re.match(r"\s*([A-Z])(?=\s*(?::|[.)-]|$))", text.upper())
         if match:
             return match.group(1)
+        answer_line = re.search(r"(?im)^\s*ANSWER\s*:\s*[*_`(\[]*([A-Z])(?=\s*(?:[.)\]`*_]|$))", text)
+        if answer_line:
+            return answer_line.group(1).upper()
         declared = re.search(
             r"\b(?:THE\s+)?(?:CORRECT\s+)?ANSWER\s+(?:IS|WOULD\s+BE)\s+"
             r"(?:OPTION\s+)?[*_`(\[]*([A-Z])(?=\s*(?::|[.)\]-]|$))",
@@ -421,15 +474,59 @@ def extract_answer(text: str, kind: str) -> str:
     return text.strip()
 
 
+def _extract_python_code(candidate: str, entry_point: str | None = None) -> str:
+    """Extract a Python block while preserving body-completion indentation."""
+    fenced = re.findall(r"```(?:python|py)?\s*\n?(.*?)```", candidate, flags=re.IGNORECASE | re.DOTALL)
+    if fenced:
+        if entry_point:
+            definition = re.compile(rf"(?m)^\s*(?:async\s+)?def\s+{re.escape(entry_point)}\s*\(")
+            matching = next((block for block in fenced if definition.search(block)), None)
+            candidate = matching if matching is not None else fenced[0]
+        else:
+            candidate = fenced[0]
+    else:
+        # Also handle an unterminated Markdown fence, which is common when a
+        # fixed generation budget cuts off just after otherwise valid code.
+        opening = re.search(r"```(?:python|py)?\s*\n?", candidate, flags=re.IGNORECASE)
+        if opening:
+            candidate = candidate[opening.end():]
+        elif entry_point:
+            # If prose precedes a complete function, discard only that prose.
+            definition = re.search(rf"(?m)^\s*(?:async\s+)?def\s+{re.escape(entry_point)}\s*\(", candidate)
+            if definition:
+                candidate = candidate[definition.start():]
+    return candidate.strip("\n")
+
+
 def _run_code(candidate: str, example: BenchmarkExample, timeout: float = 10.0) -> bool:
     """Execute one generated code answer with its benchmark tests in a timeout."""
     metadata = example.metadata
-    candidate = re.sub(r"^```(?:python)?\s*|\s*```$", "", candidate.strip(), flags=re.IGNORECASE | re.DOTALL)
     if example.task == "humaneval":
-        program = candidate + "\n\n" + metadata["test"] + f"\ncheck({metadata['entry_point']})\n"
+        entry_point = str(metadata["entry_point"])
+        candidate = _extract_python_code(candidate, entry_point)
+        full_function = re.search(
+            rf"(?m)^\s*(?:async\s+)?def\s+{re.escape(entry_point)}\s*\(", candidate
+        )
+        if full_function:
+            solution = candidate
+        else:
+            # HumanEval's canonical answer is a function-body completion. Join
+            # it to the benchmark prompt exactly as the reference harness does.
+            completion = candidate
+            first_line = next((line for line in completion.splitlines() if line.strip()), "")
+            if first_line and not first_line[:1].isspace():
+                completion = "\n".join(f"    {line}" if line else line for line in completion.splitlines())
+            prompt = str(metadata["prompt"])
+            solution = prompt + ("" if prompt.endswith("\n") else "\n") + completion.lstrip("\n")
+        program = solution + "\n\n" + metadata["test"] + f"\ncheck({entry_point})\n"
     else:
+        candidate = _extract_python_code(candidate)
         tests = metadata.get("test_list", [])
-        setup = metadata.get("test_setup_code", "")
+        setup_parts = metadata.get("test_imports", []) or []
+        legacy_setup = metadata.get("test_setup_code", "")
+        if legacy_setup:
+            setup_parts = [*setup_parts, legacy_setup]
+        setup = "\n".join(str(statement) for statement in setup_parts)
         program = setup + "\n" + candidate + "\n" + "\n".join(tests)
     with tempfile.TemporaryDirectory(prefix="diffusion-lm-eval-") as directory:
         path = Path(directory) / "candidate.py"

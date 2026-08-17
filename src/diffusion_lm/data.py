@@ -156,6 +156,35 @@ def build_masks(labels: list[int], answer_start: int, eos_id: int, include_answe
     return answer, padding, truncated
 
 
+def prepare_mask_only_cache_record(
+    example: dict[str, Any],
+    tokenizer: Any,
+    max_sequence_length: int,
+    include_answer_eos: bool = True,
+) -> dict[str, Any]:
+    """Tokenize and build deterministic masks once for online mask corruption."""
+    labels, start = source_to_tokens(example, tokenizer)
+    answer, padding, truncated = build_masks(
+        labels, start, tokenizer.eos_token_id, include_answer_eos
+    )
+    empty_answer = not any(answer)
+    if len(labels) > max_sequence_length:
+        truncated = True
+        labels = labels[:max_sequence_length]
+        answer = answer[:max_sequence_length]
+        padding = padding[:max_sequence_length]
+    usable = bool(any(answer))
+    return {
+        "_lad_clean_ids": labels,
+        "_lad_answer_mask": answer,
+        "_lad_padding_mask": padding,
+        "_lad_usable": usable,
+        "_lad_empty_answer": empty_answer,
+        "_lad_truncated": truncated,
+        "_index": int(example.get("_index", 0)),
+    }
+
+
 @dataclass
 class DenoisingCollator:
     tokenizer: Any
@@ -194,6 +223,26 @@ class DenoisingCollator:
                     )
                 inputs, labels, start = stored_to_tokens(feature, self.tokenizer)
                 structured_online = inputs == labels
+            elif "_lad_clean_ids" in feature:
+                if bool(feature.get("_lad_truncated", False)):
+                    self.stats.truncated += 1
+                if not bool(feature.get("_lad_usable", True)):
+                    if bool(feature.get("_lad_empty_answer", False)):
+                        self.stats.empty_answer += 1
+                    self.stats.dropped += 1
+                    return None
+                labels = list(feature["_lad_clean_ids"])
+                inputs = list(labels)
+                answer = list(feature["_lad_answer_mask"])
+                padding = list(feature["_lad_padding_mask"])
+                return {
+                    "input_ids": inputs,
+                    "labels": labels,
+                    "answer_mask": answer,
+                    "padding_mask": padding,
+                    "example_index": int(feature.get("_index", 0)),
+                    "structured_online": False,
+                }
             else:
                 labels, start = source_to_tokens(feature, self.tokenizer)
                 inputs = list(labels)

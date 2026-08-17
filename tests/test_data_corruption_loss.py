@@ -1,6 +1,6 @@
 import torch
-from diffusion_lm.data import DEFAULT_SYSTEM_PROMPT, DenoisingCollator, knowledge_neutral_chat_template, source_to_tokens
-from diffusion_lm.loss import masked_denoising_loss
+from diffusion_lm.data import DEFAULT_SYSTEM_PROMPT, DenoisingCollator, knowledge_neutral_chat_template, prepare_mask_only_cache_record, source_to_tokens
+from diffusion_lm.loss import masked_denoising_loss, selected_denoising_loss
 
 
 class ToyTokenizer:
@@ -63,6 +63,22 @@ def test_mask_only_starts_clean_and_never_changes_prompt_or_padding():
     assert torch.equal(changed, b["loss_mask"])
     assert not changed[0, :2].any()
     assert changed[0, 2:].all()
+
+
+def test_cached_mask_only_preparation_matches_online_tokenization_exactly():
+    tokenizer = ToyTokenizer()
+    features = [row(2), {**row(7), "output": "abcdef"}]
+    cached = [prepare_mask_only_cache_record(feature, tokenizer, 32) for feature in features]
+    online_batch = DenoisingCollator(
+        tokenizer, "mask_only", 32, seed=11, deterministic=True, t_min=0.2
+    )(features)
+    cached_batch = DenoisingCollator(
+        tokenizer, "mask_only", 32, seed=11, deterministic=True, t_min=0.2
+    )(cached)
+
+    assert online_batch.keys() == cached_batch.keys()
+    for key in online_batch:
+        assert torch.equal(online_batch[key], cached_batch[key]), key
 
 
 def test_mask_only_all_tokens_supervises_prompt_answer_and_padding():
@@ -243,6 +259,38 @@ def test_selected_position_loss_matches_dense_reference_and_gradients():
     reference.backward()
     assert torch.allclose(optimized, reference)
     assert torch.allclose(optimized_logits.grad, reference_logits.grad)
+
+
+def test_preselected_logit_loss_matches_masked_logit_loss():
+    torch.manual_seed(8)
+    logits = torch.randn(3, 4, 9)
+    labels = torch.randint(0, 9, (3, 4))
+    mask = torch.tensor([
+        [True, False, True, False],
+        [False, True, False, False],
+        [True, True, True, False],
+    ])
+    normalization = torch.tensor([
+        [True, True, True, False],
+        [True, True, False, False],
+        [True, True, True, True],
+    ])
+    sampled_t = torch.tensor([0.4, 0.7, 1.0])
+    expected, expected_metrics = masked_denoising_loss(
+        logits, labels, mask, sampled_t, normalization
+    )
+    example_ids, token_ids = mask.nonzero(as_tuple=True)
+    actual, actual_metrics = selected_denoising_loss(
+        logits[example_ids, token_ids],
+        labels[example_ids, token_ids],
+        example_ids,
+        mask.sum(dim=1),
+        sampled_t,
+        normalization,
+    )
+    assert torch.allclose(actual, expected)
+    for key in expected_metrics:
+        assert torch.allclose(actual_metrics[key], expected_metrics[key]), key
 
 
 def test_empty_loss_mask_is_differentiable_and_training_metrics_are_optional():

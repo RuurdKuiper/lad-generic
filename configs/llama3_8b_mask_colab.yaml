@@ -35,6 +35,7 @@ learning_rate_scaling:
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 4
+prefetch_factor: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
@@ -50,6 +51,7 @@ batch_size: 8
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false
+selected_logit_optimization: true
 
 # Logging and checkpointing
 logging_steps: 100

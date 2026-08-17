@@ -257,6 +257,15 @@ batch`. Disable the block to use `learning_rate` unchanged. Each run records
 `effective_batch_size`, `learning_rate_scale`, and `resolved_learning_rate` in
 `resolved_config.json`.
 
+Mask-only runs tokenize and truncate each clean example once, then reuse the
+prepared Arrow cache from `prepared_data_cache_dir`; stochastic corruption
+still happens online for every training batch. CUDA runs also use pinned,
+non-blocking batch transfers. `prefetch_factor` controls the number of batches
+prepared ahead by each DataLoader worker (default `4`). For sparse objectives,
+`selected_logit_optimization: true` applies the frozen language-model head only
+to supervised positions rather than constructing unused vocabulary logits for
+the rest of the sequence.
+
 Gated Llama/Gemma access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that literal `MASK` is exactly one ordinary vocabulary token and records the token ID/decoding in `mask_token.json`.
 
 ## Outputs

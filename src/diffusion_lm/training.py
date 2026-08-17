@@ -10,14 +10,14 @@ from typing import Any
 
 import torch
 from tqdm.auto import tqdm
-from accelerate import Accelerator
+from accelerate import Accelerator, DataLoaderConfiguration
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, get_scheduler
 
-from .data import DenoisingCollator, llama_stored_ids_compatible, stored_example_usable
-from .loss import masked_denoising_loss
-from .modeling import forward_bidirectional, load_denoising_model
+from .data import DenoisingCollator, llama_stored_ids_compatible, prepare_mask_only_cache_record, stored_example_usable
+from .loss import masked_denoising_loss, selected_denoising_loss
+from .modeling import forward_bidirectional, forward_bidirectional_selected, load_denoising_model
 from .inference import InferenceSession, denoise_stream
 
 
@@ -61,10 +61,15 @@ def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.T
     tokenizer.save_pretrained(path)
 
 
-def _loader(dataset, collator, batch_size, shuffle, seed, workers):
+def _loader(dataset, collator, batch_size, shuffle, seed, workers, prefetch_factor=4):
     """Build a reproducibly shuffled DataLoader using the supplied collator."""
     generator = torch.Generator().manual_seed(seed)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collator, num_workers=workers, generator=generator, pin_memory=torch.cuda.is_available())
+    kwargs = {}
+    if workers:
+        if int(prefetch_factor) < 1:
+            raise ValueError("prefetch_factor must be positive")
+        kwargs["prefetch_factor"] = int(prefetch_factor)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collator, num_workers=workers, generator=generator, pin_memory=torch.cuda.is_available(), **kwargs)
 
 
 def _normalization_state(model: torch.nn.Module) -> dict[str, torch.Tensor]:
@@ -315,7 +320,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         if configured_updates_hint < 1:
             raise ValueError("max_updates must be a positive number of gradient updates")
         train_sample_limit = (configured_updates_hint + resume_data_updates) * int(config.get("gradient_accumulation_steps", 1)) * int(config.get("batch_size", 1))
-    accelerator = Accelerator(gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)), mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"])
+    accelerator = Accelerator(
+        gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)),
+        mixed_precision=None if config.get("precision", "fp32") == "fp32" else config["precision"],
+        dataloader_config=DataLoaderConfiguration(non_blocking=torch.cuda.is_available()),
+    )
     # Ensure NCCL process groups are released when a worker is interrupted
     # (for example with Ctrl-C or a scheduler pre-emption signal).
     def _cleanup_process_group() -> None:
@@ -372,11 +381,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         result = concatenate_datasets(chunks)
         return result.select(range(min(limit, len(result))))
 
-    prep_key = hashlib.sha256(json.dumps({"dataset": config["dataset_name"], "config": config.get("dataset_config"), "tokenizer": token_name, "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True)), "train_sample_limit": train_sample_limit}, sort_keys=True).encode()).hexdigest()[:16]
+    prep_key = hashlib.sha256(json.dumps({"format": 2, "dataset": config["dataset_name"], "config": config.get("dataset_config"), "splits": split_names, "tokenizer": token_name, "chat_template": getattr(tokenizer, "chat_template", None), "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True)), "train_sample_limit": train_sample_limit, "seed": seed}, sort_keys=True).encode()).hexdigest()[:16]
     prep_root = Path(config.get("prepared_data_cache_dir", "data/prepared")) / prep_key
     prepared_cache_loaded = False
     with accelerator.main_process_first():
-        if config["corruption_mode"] == "structured" and all((prep_root / split).is_dir() for split in ("train", "validation", "test")):
+        if all((prep_root / split).is_dir() for split in ("train", "validation", "test")):
             from datasets import load_from_disk
             train_data, val_data, test_data = (load_from_disk(str(prep_root / split)) for split in ("train", "validation", "test"))
             prepared_cache_loaded = True
@@ -384,7 +393,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
     if config["corruption_mode"] == "structured" and prepared_cache_loaded and train_sample_limit is not None and len(train_data) > train_sample_limit:
         train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
-    if config["corruption_mode"] != "structured":
+    if config["corruption_mode"] != "structured" and not prepared_cache_loaded:
         # The published dataset contains a small number of rows with missing
         # or empty outputs. Remove them before collation, otherwise a worker
         # would fail mid-epoch instead of skipping malformed examples.
@@ -392,6 +401,30 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         train_data = bounded_filter(train_data.shuffle(seed=int(config.get("seed", 42))), has_output, train_sample_limit)
         val_data = val_data.filter(has_output)
         test_data = test_data.filter(has_output)
+        preprocessing_workers = int(config.get("preprocessing_num_workers", config.get("num_workers", 1)))
+        if preprocessing_workers < 1:
+            raise ValueError("preprocessing_num_workers must be positive")
+        with accelerator.main_process_first():
+            for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
+                original_columns = dataset.column_names
+                dataset = dataset.map(
+                    lambda row: prepare_mask_only_cache_record(
+                        row,
+                        tokenizer,
+                        int(config["max_sequence_length"]),
+                        bool(config.get("include_answer_eos", True)),
+                    ),
+                    remove_columns=original_columns,
+                    num_proc=preprocessing_workers if preprocessing_workers > 1 else None,
+                    desc=f"Tokenizing {key} split",
+                )
+                if key == "train": train_data = dataset
+                elif key == "validation": val_data = dataset
+                else: test_data = dataset
+            prep_root.mkdir(parents=True, exist_ok=True)
+            train_data.save_to_disk(str(prep_root / "train"))
+            val_data.save_to_disk(str(prep_root / "validation"))
+            test_data.save_to_disk(str(prep_root / "test"))
     marker_dropped = {}
     if config["corruption_mode"] == "structured" and not prepared_cache_loaded:
         model_name = token_name.lower()
@@ -434,9 +467,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         # original run before constructing the new dataloader; the dataloader
         # may reshuffle the remaining examples freely without reusing them.
         train_data = train_data.select(range(already_seen_examples, len(train_data)))
-    train_loader = _loader(train_data.shuffle(seed=seed), train_collator, int(config["batch_size"]), True, seed, int(config.get("num_workers", 0)))
-    val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
-    test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)))
+    prefetch_factor = int(config.get("prefetch_factor", 4))
+    train_loader = _loader(train_data.shuffle(seed=seed), train_collator, int(config["batch_size"]), True, seed, int(config.get("num_workers", 0)), prefetch_factor)
+    val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)), prefetch_factor)
+    test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)), prefetch_factor)
     model, audit = load_denoising_model(config)
     initial_norms = _normalization_state(model)
     resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
@@ -497,21 +531,43 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         step = microstep
         if step > max_steps: break
         with accelerator.accumulate(model):
-            logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
             use_t_weighting = config["corruption_mode"] == "mask_only" and config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
             normalization_mask = batch["answer_mask"] | batch["padding_mask"] if bool(config.get("eos_padding_loss", False)) else batch["answer_mask"]
-            loss, info = masked_denoising_loss(
-                logits,
-                batch["labels"],
-                batch["loss_mask"],
-                batch["sampled_t"] if use_t_weighting else None,
-                normalization_mask,
-                compute_unweighted_metric=False,
-                sparse_positions=not (
-                    config["corruption_mode"] == "structured"
-                    and config.get("structured_loss_behavior") == "all_tokens"
-                ),
+            sparse_positions = config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
+            use_selected_logits = (
+                sparse_positions
+                and accelerator.num_processes == 1
+                and bool(config.get("selected_logit_optimization", False))
             )
+            if use_selected_logits:
+                # Calling the transformer backbone directly bypasses
+                # Accelerate's model.forward wrapper, so reproduce its autocast
+                # context and FP32 output conversion explicitly.
+                with accelerator.autocast():
+                    selected_logits, example_ids, token_ids = forward_bidirectional_selected(
+                        model, batch["input_ids"], batch["padding_mask"], batch["loss_mask"]
+                    )
+                selected_logits = selected_logits.float()
+                loss, info = selected_denoising_loss(
+                    selected_logits,
+                    batch["labels"][example_ids, token_ids],
+                    example_ids,
+                    batch["loss_mask"].sum(dim=1),
+                    batch["sampled_t"] if use_t_weighting else None,
+                    normalization_mask,
+                    compute_unweighted_metric=False,
+                )
+            else:
+                logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
+                loss, info = masked_denoising_loss(
+                    logits,
+                    batch["labels"],
+                    batch["loss_mask"],
+                    batch["sampled_t"] if use_t_weighting else None,
+                    normalization_mask,
+                    compute_unweighted_metric=False,
+                    sparse_positions=sparse_positions,
+                )
             accelerator.backward(loss)
             # Clip only after all gradient-accumulation microbatches have
             # contributed, matching Trainer's max_grad_norm behavior.

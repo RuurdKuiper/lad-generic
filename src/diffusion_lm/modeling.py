@@ -1,6 +1,6 @@
 """Causal-LM loading adapted for bidirectional denoising."""
 from __future__ import annotations
-from collections import Counter
+from collections import Counter, OrderedDict
 from typing import Any
 
 import torch
@@ -8,6 +8,10 @@ import os
 from pathlib import Path
 from peft import LoraConfig, PeftModel, TaskType, get_peft_model, prepare_model_for_kbit_training
 from transformers import AutoModelForCausalLM
+
+
+_ATTENTION_MASK_CACHE: OrderedDict[tuple[Any, ...], torch.Tensor] = OrderedDict()
+_ATTENTION_MASK_CACHE_SIZE = 4
 
 
 def bidirectional_attention_mask(padding_mask: torch.Tensor, dtype: torch.dtype) -> torch.Tensor:
@@ -19,13 +23,27 @@ def bidirectional_attention_mask(padding_mask: torch.Tensor, dtype: torch.dtype)
     positions, allowing the model to learn concise answers under wide contexts.
     """
     # Every position is deliberately visible, so the additive mask is exactly
-    # zero. Construct it directly instead of allocating a same-sized boolean
-    # tensor and running a masked_fill whose condition is always false.
-    return torch.zeros(
-        (padding_mask.shape[0], 1, padding_mask.shape[1], padding_mask.shape[1]),
-        device=padding_mask.device,
-        dtype=dtype,
+    # zero. Reuse the most recent shapes instead of allocating and clearing the
+    # same dense tensor on every forward pass.
+    shape = (padding_mask.shape[0], 1, padding_mask.shape[1], padding_mask.shape[1])
+    # Inference tensors cannot later be saved by autograd, so training and
+    # inference-mode allocations must occupy separate cache entries.
+    key = (
+        padding_mask.device.type,
+        padding_mask.device.index,
+        dtype,
+        torch.is_inference_mode_enabled(),
+        *shape,
     )
+    mask = _ATTENTION_MASK_CACHE.get(key)
+    if mask is None:
+        mask = torch.zeros(shape, device=padding_mask.device, dtype=dtype)
+        _ATTENTION_MASK_CACHE[key] = mask
+        if len(_ATTENTION_MASK_CACHE) > _ATTENTION_MASK_CACHE_SIZE:
+            _ATTENTION_MASK_CACHE.popitem(last=False)
+    else:
+        _ATTENTION_MASK_CACHE.move_to_end(key)
+    return mask
 
 
 def _target_modules(model: torch.nn.Module, requested: list[str]) -> list[str]:
@@ -135,5 +153,37 @@ def forward_bidirectional(model: torch.nn.Module, input_ids: torch.Tensor, paddi
     # 4-bit bitsandbytes weights are stored as uint8, which cannot represent
     # the floating additive attention mask.  Use the first floating parameter
     # (normally a LoRA or normalization parameter) as the compute dtype.
-    dtype = next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)
+    dtype = getattr(model, "_lad_attention_mask_dtype", None)
+    if dtype is None:
+        dtype = next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)
+        model._lad_attention_mask_dtype = dtype
     return model(input_ids=input_ids, attention_mask=bidirectional_attention_mask(padding_mask, dtype), use_cache=False).logits
+
+
+def forward_bidirectional_selected(
+    model: torch.nn.Module,
+    input_ids: torch.Tensor,
+    padding_mask: torch.Tensor,
+    selection_mask: torch.Tensor,
+):
+    """Run the frozen LM head only at positions participating in the objective."""
+    dtype = getattr(model, "_lad_attention_mask_dtype", None)
+    if dtype is None:
+        dtype = next((parameter.dtype for parameter in model.parameters() if parameter.is_floating_point()), torch.float32)
+        model._lad_attention_mask_dtype = dtype
+
+    unwrapped = model.module if hasattr(model, "module") else model
+    causal_lm = unwrapped.get_base_model() if hasattr(unwrapped, "get_base_model") else unwrapped
+    backbone = getattr(causal_lm, "model", None)
+    output_head = causal_lm.get_output_embeddings() if hasattr(causal_lm, "get_output_embeddings") else None
+    if backbone is None or output_head is None:
+        raise TypeError(f"Selected-logit optimization is unsupported for {type(causal_lm).__name__}")
+
+    outputs = backbone(
+        input_ids=input_ids,
+        attention_mask=bidirectional_attention_mask(padding_mask, dtype),
+        use_cache=False,
+    )
+    example_ids, token_ids = selection_mask.nonzero(as_tuple=True)
+    selected_logits = output_head(outputs.last_hidden_state[example_ids, token_ids])
+    return selected_logits, example_ids, token_ids

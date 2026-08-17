@@ -1,0 +1,96 @@
+# Warm-continue the batch-16 mask-only run from its 6,000-update adapter.
+# checkpoint-6000 was written with checkpoint_mode: every_model, so this
+# restores learned weights and normalization state, then starts a fresh
+# optimizer/scheduler because their states were not saved.
+
+# Base model
+model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+
+# Full dataset rather than the 100k subset
+dataset_name: Ruurd/LAD-training
+splits: {train: train, validation: validation, test: test}
+
+# File paths. Relative paths are rooted under LAD_OUTPUT_ROOT in Colab.
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+validation_samples: 200
+resume_from_adapter: outputs/llama-3.1-8b-mask-batch16/checkpoint-6000
+# The original run consumed 6,000 updates × 16 examples. This assumes the
+# 100k subset is an order-preserving prefix of the full dataset.
+resume_data_updates: 6000
+# Use a new directory so the source run and its checkpoints remain untouched.
+output_dir: outputs/llama-3.1-8b-mask-batch16-1m-continued
+
+# Corruption and loss behavior
+corruption_mode: mask_only
+structured_loss_behavior: corrupted_answer_tokens
+eos_padding_loss: true
+seed: 42
+t_min: 0.001
+include_answer_eos: true
+
+# Include multi-turn
+multi_turn_prob: 0.0
+max_history_turns: 2
+
+lora_dropout: 0.0
+lora_targets: [q_proj, v_proj]
+learning_rate: 1.0e-5
+learning_rate_scaling:
+  enabled: true
+  mode: linear
+  reference_batch_size: 8
+scheduler: cosine
+warmup_steps: 100
+num_workers: 8
+prefetch_factor: 4
+epochs: 1
+# Run one complete pass over the full dataset. The current trainer does not
+# cycle its dataloader, so setting 100000 would only misstate the progress total.
+max_updates: null
+
+# Training parameters influencing memory usage
+max_sequence_length: 256
+lora_r: 1024
+lora_alpha: 1024
+train_normalization_layers: false
+batch_size: 16
+eval_batch_size: 8
+gradient_accumulation_steps: 1
+gradient_checkpointing: false
+selected_logit_optimization: true
+
+# Logging and checkpointing
+logging_steps: 100
+validation_steps: 250
+checkpoint_steps: 1000
+# Adapter-only checkpoints control Drive usage, but future resumes from these
+# will likewise restart optimizer/scheduler state.
+checkpoint_mode: every_model
+
+# Perplexity evaluation during training
+generation_perplexity:
+  enabled: true
+  interval_steps: 1000
+  num_prompts: 20
+  num_steps: 32
+  max_new_tokens: 64
+  noise_level: 1.0
+  temperature: 1.0
+  top_k: 100
+  permanent_unmask: true
+  confidence_guided: true
+  proportional_unmask: false
+  seed: 1234
+
+# Quantization
+precision: bf16
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
+quantization: none
+optimizer: adamw
+weight_decay: 0.01
+max_grad_norm: 0.5

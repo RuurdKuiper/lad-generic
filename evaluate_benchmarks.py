@@ -18,8 +18,8 @@ from tqdm.auto import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, score_prediction, score_texts_with_model
-from diffusion_lm.inference import denoise_stream, find_adapters, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
+from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
 
 load_dotenv(PROJECT_ROOT / ".env")
 
@@ -68,6 +68,21 @@ class _null_context:
 
 def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
     """Generate one pure-diffusion answer using the run's corruption strategy."""
+    if session.llada:
+        return llada_generate(
+            session,
+            prompt,
+            gen_length=int(settings.get("max_new_tokens", 128)),
+            steps=int(settings.get("num_steps", settings.get("max_new_tokens", 128))),
+            block_length=int(settings.get("block_length", settings.get("max_new_tokens", 128))),
+            temperature=float(settings.get("temperature", 0.0)),
+            cfg_scale=float(settings.get("cfg_scale", 0.0)),
+            remasking=str(settings.get("remasking", "low_confidence")),
+            logits_eos_inf=bool(settings.get("logits_eos_inf", False)),
+            confidence_eos_eot_inf=bool(settings.get("confidence_eos_eot_inf", False)),
+            eot_token_id=int(settings.get("eot_token_id", 126348)),
+            seed=int(settings.get("seed", 1234)),
+        )
     structured = mode in {"structured", "legacy"}
     # Mask-only (LLaDA-style) evaluation always begins with the answer fully
     # masked; configured noise levels remain applicable to structured runs.
@@ -187,7 +202,7 @@ def main() -> None:
             supports_autoregressive = True
         for task in config["tasks"]:
             examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token, config.get("limit_fraction"))
-            task_settings = resolve_generation_settings(config, task, mode)
+            task_settings = resolve_llada_generation_settings(config, task) if session.llada else resolve_generation_settings(config, task, mode)
             if task == "open_ended":
                 print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
                 diffusion_texts = []

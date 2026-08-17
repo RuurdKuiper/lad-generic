@@ -265,6 +265,23 @@ def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: tor
     return picked, confidence
 
 
+def _llada_gumbel_noise(logits: torch.Tensor, temperature: float) -> torch.Tensor:
+    """Apply the float64 Gumbel-max transform used by official LLaDA decoding."""
+    if float(temperature) == 0.0:
+        return logits
+    logits = logits.to(torch.float64)
+    noise = torch.rand_like(logits, dtype=torch.float64)
+    return logits.exp() / (-torch.log(noise)).pow(float(temperature))
+
+
+def _llada_transfer_schedule(mask_count: int, steps: int) -> list[int]:
+    """Distribute a linear-noise transfer budget uniformly across steps."""
+    if mask_count < 0 or steps < 1:
+        raise ValueError("mask_count must be non-negative and steps must be positive")
+    base, remainder = divmod(mask_count, steps)
+    return [base + int(index < remainder) for index in range(steps)]
+
+
 def _remask_offsets(confidence: torch.Tensor, mask_probability: float, confidence_guided: bool) -> torch.Tensor:
     """Choose answer offsets to re-mask, preferring uncertain tokens when guided."""
     probability = max(0.0, min(1.0, float(mask_probability)))
@@ -329,9 +346,10 @@ def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format
         )
         return list(tokenizer.encode(prompt, add_special_tokens=False))
     if prompt_format == "llada":
+        content = f"{system_prompt}\n\n{question.strip()}" if system_prompt.strip() else question.strip()
         rendered = apply_neutral_chat_template(
             tokenizer,
-            [{"role": "user", "content": f"{system_prompt}\n\n{question.strip()}"}],
+            [{"role": "user", "content": content}],
             tokenize=True,
             add_generation_prompt=True,
         )
@@ -369,6 +387,99 @@ def _prompt_ids(tokenizer: Any, question: str, system_prompt: str, prompt_format
     if not all(isinstance(token, int) for token in rendered):
         raise ValueError(f"Tokenizer returned a non-integer chat-template encoding: {type(rendered).__name__}")
     return list(rendered)
+
+
+@torch.inference_mode()
+def llada_generate(
+    session: InferenceSession,
+    question: str,
+    *,
+    gen_length: int,
+    steps: int,
+    block_length: int | None = None,
+    temperature: float = 0.0,
+    cfg_scale: float = 0.0,
+    remasking: str = "low_confidence",
+    logits_eos_inf: bool = False,
+    confidence_eos_eot_inf: bool = False,
+    eot_token_id: int = 126348,
+    seed: int = 1234,
+) -> str:
+    """Generate with the official LLaDA fixed-budget transfer algorithm.
+
+    This intentionally bypasses ``denoise_stream``: official LLaDA predicts
+    only still-masked positions, permanently transfers a fixed number per
+    reverse step, and uses neither proportional unmasking nor a mask-ratio
+    heuristic.
+    """
+    if not session.llada:
+        raise ValueError("Official LLaDA generation requires a LLaDA inference session.")
+    gen_length, steps = int(gen_length), int(steps)
+    block_length = int(block_length or gen_length)
+    if gen_length < 1 or steps < 1 or block_length < 1:
+        raise ValueError("gen_length, steps, and block_length must be positive")
+    if gen_length % block_length:
+        raise ValueError("LLaDA gen_length must be divisible by block_length")
+    num_blocks = gen_length // block_length
+    if steps % num_blocks:
+        raise ValueError("LLaDA steps must be divisible by the number of blocks")
+    if remasking not in {"low_confidence", "random"}:
+        raise ValueError("LLaDA remasking must be 'low_confidence' or 'random'")
+
+    torch.manual_seed(int(seed))
+    if session.device.type == "cuda":
+        torch.cuda.manual_seed_all(int(seed))
+    prefix = _prompt_ids(session.tokenizer, question, "", "llada")
+    prompt_length = len(prefix)
+    x = torch.full((1, prompt_length + gen_length), session.mask_token_id, dtype=torch.long, device=session.device)
+    x[0, :prompt_length] = torch.tensor(prefix, dtype=torch.long, device=session.device)
+    padding = torch.zeros_like(x, dtype=torch.bool)
+    prompt_index = x != session.mask_token_id
+    steps_per_block = steps // num_blocks
+    eos_token_id = int(session.tokenizer.eos_token_id)
+
+    for block in range(num_blocks):
+        block_start = prompt_length + block * block_length
+        block_end = block_start + block_length
+        transfer_schedule = _llada_transfer_schedule(int((x[:, block_start:block_end] == session.mask_token_id).sum()), steps_per_block)
+        for transfer_count in transfer_schedule:
+            mask_index = x == session.mask_token_id
+            if cfg_scale > 0.0:
+                unconditional = x.clone()
+                unconditional[prompt_index] = session.mask_token_id
+                model_input = torch.cat([x, unconditional], dim=0)
+                model_padding = torch.cat([padding, padding], dim=0)
+                conditional_logits, unconditional_logits = forward_denoising(session, model_input, model_padding).chunk(2, dim=0)
+                logits = unconditional_logits + (float(cfg_scale) + 1.0) * (conditional_logits - unconditional_logits)
+            else:
+                logits = forward_denoising(session, x, padding)
+            if logits_eos_inf:
+                logits = logits.clone()
+                logits[..., eos_token_id] = -torch.inf
+            predictions = torch.argmax(_llada_gumbel_noise(logits, temperature), dim=-1)
+            if remasking == "low_confidence":
+                probabilities = F.softmax(logits, dim=-1)
+                confidence = probabilities.gather(-1, predictions.unsqueeze(-1)).squeeze(-1)
+                if confidence_eos_eot_inf:
+                    # Appendix B.4 delays EOS/EoT predictions by assigning
+                    # them the lowest transfer confidence; they remain valid
+                    # predictions and can still transfer in later steps.
+                    special_prediction = predictions == eos_token_id
+                    if 0 <= int(eot_token_id) < logits.shape[-1]:
+                        special_prediction |= predictions == int(eot_token_id)
+                    confidence = confidence.masked_fill(special_prediction, torch.finfo(confidence.dtype).min)
+            else:
+                confidence = torch.rand(predictions.shape, device=session.device)
+            candidate = mask_index.clone()
+            candidate[:, :block_start] = False
+            candidate[:, block_end:] = False
+            confidence = confidence.masked_fill(~candidate, -torch.inf)
+            if transfer_count:
+                transfer = torch.topk(confidence[0], k=int(transfer_count)).indices
+                x[0, transfer] = predictions[0, transfer]
+
+    answer = x[0, prompt_length:].tolist()
+    return session.tokenizer.decode(answer, skip_special_tokens=True).strip()
 
 
 def render_denoising_step(tokens: list[int], confidences: list[float], answer_start: int, tokenizer: Any, mask_token_id: int, step: int, total_steps: int, frozen: dict[int, int] | None = None) -> str:

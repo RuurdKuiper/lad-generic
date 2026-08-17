@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -64,6 +64,10 @@ def test_bf16_inference_falls_back_to_fp16_on_non_bf16_cuda(monkeypatch):
 def test_confidence_guided_remasking_targets_the_least_confident_tokens():
     confidence = torch.tensor([.9, .2, .7, .1])
     assert _remask_offsets(confidence, .5, True).tolist() == [3, 1]
+
+
+def test_llada_linear_schedule_transfers_every_mask_once():
+    assert _llada_transfer_schedule(10, 4) == [3, 3, 2, 2]
 
 
 def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():
@@ -203,3 +207,40 @@ def test_llada_session_uses_the_app_denoising_loop():
     assert tokenizer.messages == [{"role": "user", "content": "System\n\nQuestion"}]
     assert model.attention_mask.dtype == torch.long
     assert model.inference_mode is True
+
+
+def test_official_llada_sampler_delays_eos_when_configured():
+    class Tokenizer:
+        eos_token_id = 2
+
+        def apply_chat_template(self, messages, **_kwargs):
+            self.messages = messages
+            return [1]
+
+        def decode(self, token_ids, skip_special_tokens=False):
+            if skip_special_tokens:
+                token_ids = [token for token in token_ids if token != self.eos_token_id]
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.inputs = []
+
+        def forward(self, input_ids, attention_mask):
+            self.inputs.append(input_ids.detach().clone())
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[:, 1, 2] = 10.0  # EOS is most confident at the first answer position.
+            logits[:, 2, 3] = 8.0
+            return type("Output", (), {"logits": logits})()
+
+    tokenizer = Tokenizer()
+    model = Model()
+    session = InferenceSession(model, tokenizer, torch.device("cpu"), Path("."), {}, 5, llada=True, prompt_format="llada")
+
+    text = llada_generate(session, "Question", gen_length=2, steps=2, confidence_eos_eot_inf=True, eot_token_id=4)
+
+    assert model.inputs[1].tolist() == [[1, 5, 3]]
+    assert text == "3"
+    assert tokenizer.messages == [{"role": "user", "content": "Question"}]

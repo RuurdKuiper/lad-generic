@@ -23,6 +23,21 @@ ALL_TASKS = ["mmlu", "mmlu_pro", "hellaswag", "arc_c", "gsm8k", "math", "gpqa", 
 OPEN_ENDED_TASK = "open_ended"
 AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
 
+# Published pure-diffusion settings for LLaDA-8B-Instruct (paper Appendix B.4
+# and the official OpenCompass reproduction configs).  The paper profiles use
+# one full generation block, so they contain no semi-autoregressive decoding.
+LLADA_INSTRUCT_TASK_SETTINGS: dict[str, dict[str, Any]] = {
+    "mmlu": {"max_new_tokens": 3, "num_steps": 3, "block_length": 3},
+    "mmlu_pro": {"max_new_tokens": 256, "num_steps": 256, "block_length": 256},
+    "hellaswag": {"max_new_tokens": 3, "num_steps": 3, "block_length": 3},
+    "arc_c": {"max_new_tokens": 512, "num_steps": 512, "block_length": 512},
+    "gsm8k": {"max_new_tokens": 512, "num_steps": 512, "block_length": 512, "confidence_eos_eot_inf": True},
+    "math": {"max_new_tokens": 512, "num_steps": 512, "block_length": 512, "confidence_eos_eot_inf": True},
+    "gpqa": {"max_new_tokens": 64, "num_steps": 64, "block_length": 64, "confidence_eos_eot_inf": True},
+    "humaneval": {"max_new_tokens": 512, "num_steps": 512, "block_length": 512, "logits_eos_inf": True},
+    "mbpp": {"max_new_tokens": 256, "num_steps": 256, "block_length": 256, "confidence_eos_eot_inf": True},
+}
+
 
 def _path_slug(value: str) -> str:
     """Turn a model/task label into a stable, filesystem-safe component."""
@@ -111,6 +126,28 @@ def resolve_generation_settings(config: dict[str, Any], task: str, mode: str) ->
         # Mask-only training is evaluated with the full-remasking setup used
         # by the training-time generation validation.
         settings.update(noise_level=1.0, permanent_unmask=True, confidence_guided=True)
+    return settings
+
+
+def resolve_llada_generation_settings(config: dict[str, Any], task: str) -> dict[str, Any]:
+    """Resolve official LLaDA-8B-Instruct decoding and per-task paper settings."""
+    settings = resolve_generation_settings(config, task, "mask_only")
+    for unused in ("noise_level", "top_k", "permanent_unmask", "confidence_guided", "early_stopping", "system_prompt"):
+        settings.pop(unused, None)
+    profile = LLADA_INSTRUCT_TASK_SETTINGS.get(task, {})
+    settings.update(profile)
+    settings.update({
+        "sampler": "llada_official",
+        "temperature": 0.0,
+        "cfg_scale": 0.0,
+        "remasking": "low_confidence",
+        "logits_eos_inf": bool(profile.get("logits_eos_inf", False)),
+        "confidence_eos_eot_inf": bool(profile.get("confidence_eos_eot_inf", False)),
+        "proportional_unmask": False,
+    })
+    settings.update(config.get("llada_generation", {}))
+    settings.update(config.get("llada_task_generation", {}).get(task, {}))
+    settings["block_length"] = int(settings.get("block_length", settings.get("max_new_tokens", 128)))
     return settings
 
 # Fixed prompts make comparisons between runs reproducible.  `limit` can be

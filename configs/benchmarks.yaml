@@ -47,6 +47,16 @@ generation_by_corruption:
     proportional_unmask: false
     permanent_unmask: true
     confidence_guided: true
+# Hosted LLaDA bypasses the generic mask-only loop and uses the official
+# fixed-budget low-confidence sampler. Published per-task lengths, steps, and
+# EOS settings are selected automatically; these fields are explicit overrides.
+llada_generation:
+  temperature: 0.0
+  cfg_scale: 0.0
+  remasking: low_confidence
+  eot_token_id: 126348
+# llada_task_generation:
+#   gsm8k: {max_new_tokens: 256, num_steps: 256, block_length: 8, confidence_eos_eot_inf: false}  # Official optional block-diffusion variant.
 task_generation:
   open_ended: {max_new_tokens: 128, num_steps: 32}
   mmlu: {max_new_tokens: 64, num_steps: 32}

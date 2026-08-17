@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, score_prediction
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _choice_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, score_prediction
 
 
 def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
@@ -139,3 +139,16 @@ def test_legacy_generation_settings_fall_back_to_structured_settings():
     settings = resolve_generation_settings(config, "open_ended", "legacy")
 
     assert settings["temperature"] == 0.9
+
+
+def test_llada_uses_published_task_specific_inference_settings():
+    gsm8k = resolve_llada_generation_settings({"generation": {"temperature": 0.7}}, "gsm8k")
+    humaneval = resolve_llada_generation_settings({}, "humaneval")
+
+    assert gsm8k["sampler"] == "llada_official"
+    assert gsm8k["max_new_tokens"] == gsm8k["num_steps"] == gsm8k["block_length"] == 512
+    assert gsm8k["temperature"] == 0.0
+    assert gsm8k["confidence_eos_eot_inf"] is True
+    assert gsm8k["proportional_unmask"] is False
+    assert humaneval["logits_eos_inf"] is True
+    assert humaneval["confidence_eos_eot_inf"] is False

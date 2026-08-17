@@ -52,6 +52,10 @@ max_updates: null
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
+# Transformer Engine FP8 requires the flattened token dimension to be divisible
+# by 8. Dynamic batches can contain fewer than 16 usable rows, so align the
+# sequence dimension independently of the actual batch size.
+pad_to_multiple_of: 8
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false

@@ -1,6 +1,6 @@
 import pytest
 
-from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_learning_rate
+from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_fp8, _resolve_learning_rate
 
 
 def test_available_output_dir_adds_incrementing_suffixes(tmp_path):
@@ -115,6 +115,59 @@ def test_learning_rate_scaling_rejects_invalid_reference_batch_size(reference):
                 "reference_batch_size": reference,
             },
         })
+
+
+@pytest.mark.parametrize("capability", [(8, 9), (9, 0), (10, 0), (12, 0)])
+def test_fp8_is_enabled_only_on_supported_native_hardware(capability):
+    resolved = _resolve_fp8(
+        {"precision": "bf16", "fp8": {"enabled": True}},
+        cuda_available=True,
+        capability=capability,
+        device_name="supported GPU",
+        transformer_engine_available=True,
+    )
+
+    assert resolved["active"] is True
+    assert resolved["mixed_precision"] == "fp8"
+    assert resolved["notice"] is None
+
+
+@pytest.mark.parametrize("capability", [(7, 5), (8, 0), (8, 6)])
+def test_fp8_unsupported_gpu_falls_back_to_bf16_with_notice(capability):
+    resolved = _resolve_fp8(
+        {"precision": "fp16", "fp8": {"enabled": True}},
+        cuda_available=True,
+        capability=capability,
+        device_name="unsupported GPU",
+        transformer_engine_available=False,
+    )
+
+    assert resolved["active"] is False
+    assert resolved["model_precision"] == "bf16"
+    assert resolved["mixed_precision"] == "bf16"
+    assert "falling back to BF16" in resolved["notice"]
+
+
+def test_fp8_without_cuda_falls_back_before_checking_backend():
+    resolved = _resolve_fp8(
+        {"precision": "fp16", "fp8": {"enabled": True}},
+        cuda_available=False,
+        transformer_engine_available=False,
+    )
+    assert resolved["active"] is False
+    assert resolved["mixed_precision"] == "bf16"
+    assert "no CUDA GPU" in resolved["notice"]
+
+
+def test_fp8_supported_gpu_requires_transformer_engine():
+    with pytest.raises(ImportError, match="Transformer Engine is not installed"):
+        _resolve_fp8(
+            {"precision": "bf16", "fp8": {"enabled": True}},
+            cuda_available=True,
+            capability=(12, 0),
+            device_name="G4",
+            transformer_engine_available=False,
+        )
 
 
 def test_mask_only_generation_uses_full_remasking_and_permanent_retention():

@@ -76,7 +76,11 @@ generation_perplexity:
 
 
 # Quantization
-precision: fp16  # Options: fp16, bf16, fp32
+precision: bf16  # Master weights and unsupported-GPU fallback precision.
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
 quantization: none  # Options: none, 4bit
 optimizer: adamw  # Options: adamw, adamw8bit
 weight_decay: 0.01

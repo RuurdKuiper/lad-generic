@@ -27,9 +27,15 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
+# Treat learning_rate as the rate for the reference effective batch size.
+learning_rate_scaling:
+  enabled: false
+  mode: sqrt  # Options: sqrt, linear
+  reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 4
+prefetch_factor: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
@@ -45,6 +51,7 @@ batch_size: 8
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false
+selected_logit_optimization: true
 
 # Logging and checkpointing
 logging_steps: 100
@@ -69,7 +76,11 @@ generation_perplexity:
 
 
 # Quantization
-precision: fp16  # Options: fp16, bf16, fp32
+precision: bf16  # Master weights and unsupported-GPU fallback precision.
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
 quantization: none  # Options: none, 4bit
 optimizer: adamw  # Options: adamw, adamw8bit
 weight_decay: 0.01

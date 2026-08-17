@@ -29,8 +29,33 @@ On NVIDIA CUDA/Linux, install the optional 8-bit optimizer support as well:
 python -m pip install -e '.[cuda]'
 ```
 
-This extra is intentionally optional because `bitsandbytes` is not generally
-supported on macOS/MPS. Select it with `optimizer: adamw8bit` in the config.
+The CUDA extra is intentionally optional because `bitsandbytes` is not
+generally supported on macOS/MPS. Select it with `optimizer: adamw8bit` in the
+config.
+
+For native FP8 training on Ada SM89, Hopper, or Blackwell GPUs, install NVIDIA
+Transformer Engine as well:
+
+```bash
+python -m pip install -e '.[fp8]'
+```
+
+Enable it with an FP16 or BF16 master-weight precision. Unsupported GPUs such
+as A100 automatically fall back to BF16 and print a warning; an FP8-capable GPU
+without Transformer Engine installed fails with an installation instruction.
+
+```yaml
+precision: bf16
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
+```
+
+FP8 is used only while the model is training. Validation and generation remain
+at the configured master-weight precision. Each run records `fp8_requested`,
+`fp8_active`, the GPU capability, and `resolved_training_precision` in
+`resolved_config.json`.
 
 For gated Hugging Face models, put your token in a local `.env` file (do not commit it):
 

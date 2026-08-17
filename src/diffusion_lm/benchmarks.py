@@ -222,14 +222,15 @@ class BenchmarkExample:
 
 
 def _choice_prompt(name: str, question: str, choices: list[Any]) -> str:
-    """Match the multiple-choice instruction and input format used for training."""
+    """Format multiple choice and explicitly request an extractable answer label."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     options = "\n".join(f"{letters[i]}: {choice}" for i, choice in enumerate(choices))
+    answer_format = "Start your response with the correct option label followed by a colon, for example `A:`."
     if name == "hellaswag":
-        instruction = "Choose the option that most plausibly continues the described event."
+        instruction = f"Choose the option that most plausibly continues the described event. {answer_format}"
         task_input = f"Beginning of the event:\n{question.strip()}\n\nWhat most plausibly happens next?\n{options}"
     else:
-        instruction = "Answer the following multiple-choice question."
+        instruction = f"Answer the following multiple-choice question. {answer_format}"
         task_input = f"{question.strip()}\n\n{options}"
     return f"{instruction}\n\n{task_input}"
 
@@ -394,10 +395,25 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
 def extract_answer(text: str, kind: str) -> str:
     """Extract a comparable answer from free-form model output."""
     if kind == "multiple_choice":
-        # Training targets begin `A: ...`; score that leading label rather than
-        # an arbitrary later capital letter in an explanation.
+        # Prefer the requested leading `A: ...` format. If a model ignores that
+        # instruction, accept only an explicit answer declaration rather than
+        # searching for an arbitrary capital letter later in its explanation.
         match = re.match(r"\s*([A-Z])(?=\s*(?::|[.)-]|$))", text.upper())
-        return match.group(1) if match else ""
+        if match:
+            return match.group(1)
+        declared = re.search(
+            r"\b(?:THE\s+)?(?:CORRECT\s+)?ANSWER\s+(?:IS|WOULD\s+BE)\s+"
+            r"(?:OPTION\s+)?[*_`(\[]*([A-Z])(?=\s*(?::|[.)\]-]|$))",
+            text.upper(),
+        )
+        if declared:
+            return declared.group(1)
+        option = re.search(
+            r"\b(?:CHOOSE|SELECT)\s+(?:OPTION\s+)?[*_`(\[]*([A-Z])"
+            r"(?=\s*(?::|[.)\]-]|$))",
+            text.upper(),
+        )
+        return option.group(1) if option else ""
     if kind == "gsm8k":
         return _last_number(_boxed(text))
     if kind == "math":

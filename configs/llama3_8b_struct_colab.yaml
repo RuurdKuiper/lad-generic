@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-100k-256
+dataset_name: Ruurd/LAD-training-1m-256
 splits: {train: train, validation: validation, test: test}
 
 # File paths
@@ -17,7 +17,7 @@ structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_an
 eos_padding_loss: true  # Options: true, false
 output_dir: outputs/llama-3.1-8b-structured
 seed: 42
-t_min: 0.1
+t_min: 0.001
 include_answer_eos: true
 
 # Include multi-turn
@@ -27,24 +27,32 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
+# Treat learning_rate as the rate for the reference effective batch size.
+learning_rate_scaling:
+  enabled: false
+  mode: sqrt  # Options: sqrt, linear
+  reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 4
+prefetch_factor: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 10000
+max_updates: 25000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
+pad_to_multiple_of: 8  # Required for Transformer Engine FP8 matrix dimensions.
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false
-batch_size: 8
+batch_size: 16
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false
+selected_logit_optimization: true
 
 # Logging and checkpointing
 logging_steps: 100
@@ -60,16 +68,20 @@ generation_perplexity:
   num_steps: 32
   max_new_tokens: 64
   noise_level: 0.5
-  temperature: 0.7
-  top_k: 100
-  permanent_unmask: false
-  confidence_guided: false
-  proportional_unmask: true
+  temperature: 0.5
+  top_k: 3
+  permanent_unmask: true
+  confidence_guided: true
+  proportional_unmask: false
   seed: 1234
 
 
 # Quantization
-precision: fp16  # Options: fp16, bf16, fp32
+precision: bf16  # Master weights and unsupported-GPU fallback precision.
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
 quantization: none  # Options: none, 4bit
 optimizer: adamw  # Options: adamw, adamw8bit
 weight_decay: 0.01

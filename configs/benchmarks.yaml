@@ -16,10 +16,11 @@ results_dir: outputs/benchmark_runs  # Each invocation creates its own timestamp
 include_autoregressive: false  # Options: true, false
 show_open_ended_answers: true  # Set true to print each open-ended prompt and final answer as it completes.
 perplexity:
-  model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
-  tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
-  quantization: none  # Use 4bit to reduce GPU memory usage; the same reference model is used for every run.
-  precision: fp16
+  # Independent 14B reference model used only after open-ended generation.
+  model_name_or_path: microsoft/phi-4
+  tokenizer_name_or_path: microsoft/phi-4
+  quantization: 4bit  # Keeps the 14B judge practical on a single validation GPU.
+  precision: bf16
   cache_dir: base_models
 generation:
   max_new_tokens: 128

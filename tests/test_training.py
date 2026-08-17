@@ -1,6 +1,9 @@
-import pytest
+import json
 
-from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_fp8, _resolve_learning_rate
+import pytest
+import torch
+
+from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_fp8, _resolve_learning_rate, generation_validation
 
 
 def test_available_output_dir_adds_incrementing_suffixes(tmp_path):
@@ -204,3 +207,44 @@ def test_structured_generation_keeps_configured_inference_settings():
 
     assert settings["noise_level"] == 0.35
     assert settings["permanent_unmask"] is False
+
+
+def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
+    class Model:
+        def eval(self):
+            return self
+
+    class Tokenizer:
+        all_special_ids = []
+
+        def encode(self, text, add_special_tokens=False):
+            return list(range(len(text.split())))
+
+    def fake_stream(*_args, **_kwargs):
+        yield "draft answer", "step 1", ""
+        yield "final answer", "step 2", ""
+
+    scored = []
+
+    def fake_perplexity(_model, _tokenizer, texts, _initial_norms, _device):
+        scored.extend(texts)
+        return {
+            "generation_perplexity": 2.0,
+            "generation_mean_nll": 0.5,
+            "generation_tokens": 2,
+            "_per_text_perplexities": [2.0],
+        }
+
+    monkeypatch.setattr("diffusion_lm.training.denoise_stream", fake_stream)
+    monkeypatch.setattr("diffusion_lm.training._base_perplexity", fake_perplexity)
+    metrics = generation_validation(
+        Model(), Tokenizer(), 99,
+        {"corruption_mode": "structured", "quantization": "none", "generation_perplexity": {"prompts": ["Prompt"], "num_prompts": 1}},
+        {}, torch.device("cpu"), tmp_path, 100,
+    )
+
+    record = json.loads((tmp_path / "generation_metrics.jsonl").read_text())
+    assert scored == ["final answer"]
+    assert record["final"] == "final answer"
+    assert "states" not in record
+    assert metrics["generation_perplexity"] == 2.0

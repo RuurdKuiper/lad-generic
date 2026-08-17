@@ -82,16 +82,24 @@ def test_multiple_choice_prompt_and_target_match_training_contract():
     prompt = _choice_prompt("mmlu", "Question?", ["First", "Second"])
     example = BenchmarkExample("mmlu", "0", prompt, "B: Second", "multiple_choice", {})
 
-    assert prompt == "Answer the following multiple-choice question.\n\nQuestion?\n\nA: First\nB: Second"
+    assert prompt == "Answer the following multiple-choice question. Start your response with the correct option label followed by a colon, for example `A:`.\n\nQuestion?\n\nA: First\nB: Second"
     assert score_prediction(example, "B: Second")
     assert score_prediction(example, "B. Second")
-    assert not score_prediction(example, "The answer is B: Second")
+    assert score_prediction(example, "The correct answer is B: Second")
+    assert score_prediction(example, "The answer is B: Second")
+    assert score_prediction(example, "I would select option B.")
+    assert not score_prediction(example, "I considered A and B, but the latter seems stronger.")
+
+
+def test_multiple_choice_extraction_ignores_unmarked_letters_in_explanations():
+    assert extract_answer("After considering A and B, the latter is stronger.", "multiple_choice") == ""
+    assert extract_answer("The correct answer is B: 12.", "multiple_choice") == "B"
 
 
 def test_hellaswag_uses_training_prompt_and_labelled_validation_split():
     prompt = _choice_prompt("hellaswag", "A person opens a door.", ["They enter.", "They leave."])
 
-    assert prompt.startswith("Choose the option that most plausibly continues the described event.\n\nBeginning of the event:")
+    assert prompt.startswith("Choose the option that most plausibly continues the described event. Start your response with the correct option label followed by a colon")
     assert _benchmark_spec("hellaswag", "test")[2] == "validation"
 
 

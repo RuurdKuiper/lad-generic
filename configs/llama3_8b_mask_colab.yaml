@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-100k-256
+dataset_name: Ruurd/LAD-training-1m-256
 splits: {train: train, validation: validation, test: test}
 
 # File paths
@@ -40,14 +40,15 @@ epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 10000
+max_updates: 25000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
+pad_to_multiple_of: 8  # Required for Transformer Engine FP8 matrix dimensions.
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false
-batch_size: 8
+batch_size: 16
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false
@@ -67,8 +68,8 @@ generation_perplexity:
   num_steps: 32
   max_new_tokens: 64
   noise_level: 1.0
-  temperature: 1.0
-  top_k: 100
+  temperature: 0.5
+  top_k: 3
   permanent_unmask: true
   confidence_guided: true
   proportional_unmask: false

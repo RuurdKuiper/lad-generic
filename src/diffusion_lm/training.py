@@ -275,31 +275,30 @@ def _available_output_dir(path: Path) -> Path:
 
 
 def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int) -> dict[str, float]:
-    """Generate fixed prompts step-by-step, save trajectories, and calculate base perplexity."""
+    """Generate fixed prompts, save final answers, and calculate base perplexity."""
     settings = _generation_inference_settings(config)
     prompts = settings.get("prompts", DEFAULT_GENERATION_PROMPTS)
     session = InferenceSession(model, tokenizer, device, output, config, mask_token_id, str(config.get("quantization", "none")))
-    trajectories = []
+    records = []
     finals = []
     model.eval()
     for prompt_index, prompt in enumerate(prompts[: int(settings.get("num_prompts", 5))]):
-        states = []
+        final_text = ""
         for generated_text, status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 128)), int(settings.get("num_steps", 32)), float(settings.get("noise_level", .5)), float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)) + prompt_index, bool(settings.get("permanent_unmask", False)), bool(settings.get("confidence_guided", False)), bool(settings.get("proportional_unmask", True)), bool(settings.get("early_stopping", False))):
-            states.append(generated_text)
-        finals.append(states[-1] if states else "")
-        final_text = finals[-1]
-        trajectories.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text, "states": states})
+            final_text = generated_text
+        finals.append(final_text)
+        records.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
-    for trajectory in trajectories:
+    for record in records:
         # Rebuild the mapping to keep the JSONL field order stable/readable.
-        trajectory["generation_perplexity"] = per_text_perplexities[trajectory["prompt_index"]]
-        ordered = {"step": trajectory["step"], "prompt_index": trajectory["prompt_index"], "unigram_repetition": trajectory["unigram_repetition"], "bigram_repetition": trajectory["bigram_repetition"], "trigram_repetition": trajectory["trigram_repetition"], "generation_perplexity": trajectory["generation_perplexity"], "prompt": trajectory["prompt"], "final": trajectory["final"], "states": trajectory["states"]}
-        trajectory.clear(); trajectory.update(ordered)
+        record["generation_perplexity"] = per_text_perplexities[record["prompt_index"]]
+        ordered = {"step": record["step"], "prompt_index": record["prompt_index"], "unigram_repetition": record["unigram_repetition"], "bigram_repetition": record["bigram_repetition"], "trigram_repetition": record["trigram_repetition"], "generation_perplexity": record["generation_perplexity"], "prompt": record["prompt"], "final": record["final"]}
+        record.clear(); record.update(ordered)
     generation_path = output / "generation_metrics.jsonl"
     with generation_path.open("a") as stream:
-        for trajectory in trajectories:
-            stream.write(json.dumps(trajectory, ensure_ascii=False) + "\n")
+        for record in records:
+            stream.write(json.dumps(record, ensure_ascii=False) + "\n")
     return generation_metrics
 
 

@@ -23,6 +23,8 @@ from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+DEFAULT_PERPLEXITY_MODEL = "microsoft/phi-4"
+
 
 def _generate_ar(session, prompt: str, max_new_tokens: int, original_base: bool = True) -> str:
     """Generate one autoregressive answer from a loaded adapter."""
@@ -120,7 +122,7 @@ def _load_perplexity_reference(config: dict):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     settings = dict(config.get("perplexity", {}))
-    model_name = settings.get("model_name_or_path", "meta-llama/Llama-3.1-8B-Instruct")
+    model_name = settings.get("model_name_or_path", DEFAULT_PERPLEXITY_MODEL)
     tokenizer_name = settings.get("tokenizer_name_or_path", model_name)
     device = select_device(settings.get("device", config.get("device", "auto")))
     cache_dir = settings.get("cache_dir", "base_models")

@@ -291,6 +291,19 @@ def _remask_offsets(confidence: torch.Tensor, mask_probability: float, confidenc
     return torch.where(torch.rand(len(confidence), device=confidence.device) < probability)[0]
 
 
+def _native_eot_token_id(tokenizer: Any) -> int | None:
+    """Return a tokenizer's native end-of-turn ID when it has one."""
+    convert = getattr(tokenizer, "convert_tokens_to_ids", None)
+    if convert is None:
+        return None
+    unknown = getattr(tokenizer, "unk_token_id", None)
+    for token in ("<|eot_id|>", "<end_of_turn>", "<|end_of_turn|>"):
+        token_id = convert(token)
+        if token_id is not None and token_id != unknown and int(token_id) >= 0:
+            return int(token_id)
+    return None
+
+
 def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
     """Return denoising logits for either the current or legacy model wrapper."""
     if session.llada:
@@ -510,7 +523,7 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
             f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green/blue hues indicate confidence; gray tokens are MASK; blue tokens are permanently retained.</div></div>")
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False):
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False):
     """Yield intermediate denoising states, optionally stopping after three identical predictions."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
@@ -527,11 +540,21 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     last_confidence = 0.0
     frozen: dict[int, int] = {}
     last_predictions: list[tuple[int, ...]] = []
+    eot_token_id = _native_eot_token_id(session.tokenizer) if confidence_eos_eot_inf else None
+    guided_retention = confidence_guided or confidence_eos_eot_inf
     for step in range(num_steps):
         tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
         with torch.inference_mode():
             logits = forward_denoising(session, tokens, padding)[0, answer_start:]
             sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
+        retention_confidence = confidence
+        if confidence_eos_eot_inf:
+            special_prediction = sampled == session.tokenizer.eos_token_id
+            if eot_token_id is not None:
+                special_prediction |= sampled == eot_token_id
+            retention_confidence = confidence.masked_fill(
+                special_prediction, torch.finfo(confidence.dtype).min
+            )
         ids[answer_start:] = sampled.tolist()
         for offset, token in frozen.items():
             ids[answer_start + offset] = token
@@ -563,8 +586,8 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                         for pool, target in zip(pools, target_counts):
                             if not pool or target <= 0:
                                 continue
-                            if confidence_guided:
-                                order = torch.argsort(confidence, descending=True).tolist()
+                            if guided_retention:
+                                order = torch.argsort(retention_confidence, descending=True).tolist()
                                 chosen.extend([i for i in order if i in pool][:target])
                             else:
                                 order = torch.randperm(len(pool), device=session.device)[:target].tolist()
@@ -572,8 +595,8 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                         if len(chosen) < needed:
                             remainder = [i for i in candidates if i not in chosen]
                             chosen.extend(remainder[: needed - len(chosen)])
-                    elif confidence_guided:
-                        confidence_order = torch.argsort(confidence, descending=True).tolist()
+                    elif guided_retention:
+                        confidence_order = torch.argsort(retention_confidence, descending=True).tolist()
                         chosen = [i for i in confidence_order if i in candidates][:needed]
                     else:
                         chosen = torch.randperm(len(candidates), device=session.device)[:needed].tolist()
@@ -587,7 +610,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 # Confidence-guided refinement keeps every token revisable, but
                 # preferentially re-masks the least certain predictions. The
                 # unguided mode retains the original random re-masking policy.
-                for offset in _remask_offsets(confidence, mask_probability, confidence_guided).tolist():
+                for offset in _remask_offsets(retention_confidence, mask_probability, guided_retention).tolist():
                     ids[answer_start + offset] = session.mask_token_id
         current_answer = ids[answer_start:]
         if session.tokenizer.eos_token_id in current_answer:
@@ -608,10 +631,10 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     return
 
 
-def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None) -> tuple[str, str]:
+def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False) -> tuple[str, str]:
     """Run denoising to completion and return only the final text and status."""
     result = ("", "")
-    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping), start=1):
+    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf), start=1):
         result = (text, status)
         if progress:
             progress(step / int(num_steps), status)

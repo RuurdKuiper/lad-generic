@@ -209,6 +209,48 @@ def test_llada_session_uses_the_app_denoising_loop():
     assert model.inference_mode is True
 
 
+def test_streaming_denoising_delays_eos_retention_when_configured():
+    class Tokenizer:
+        eos_token_id = 2
+        unk_token_id = 0
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def convert_tokens_to_ids(self, token):
+            return {"<|eot_id|>": 4}.get(token, self.unk_token_id)
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.inputs = []
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.inputs.append(input_ids.detach().clone())
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[:, -2, 2] = 10.0  # EOS would otherwise be retained first.
+            logits[:, -1, 3] = 8.0
+            return type("Output", (), {"logits": logits})()
+
+    model = Model()
+    session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    list(denoise_stream(
+        session, "Question", "System", 2, 3, 1.0, 0.0, 1, 1234,
+        permanent_unmask=True,
+        confidence_guided=False,
+        proportional_unmask=False,
+        confidence_eos_eot_inf=True,
+    ))
+
+    assert model.inputs[1].tolist() == [[1, 5, 3]]
+
+
 def test_official_llada_sampler_delays_eos_when_configured():
     class Tokenizer:
         eos_token_id = 2

@@ -78,12 +78,12 @@ def load_llada_model(repo_id, device):
     return f"Loaded LLaDA `{repo_id}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. Generation uses this app's standard denoising loop and controls."
 
 
-def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping):
+def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf):
     """Stream colored intermediate denoising states and the final answer to Gradio."""
     if SESSION is None:
         raise gr.Error("Choose and load a saved adapter first.")
     try:
-        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping), start=1):
+        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf), start=1):
             yield status, html
     except ValueError as error:
         raise gr.Error(str(error)) from error
@@ -129,6 +129,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         confidence_guided = gr.Checkbox(label="Use confidence-guided retention", value=False)
         proportional_unmask = gr.Checkbox(label="Proportional unmasking", value=True)
         early_stopping = gr.Checkbox(label="Early stop after 3 identical predictions", value=False)
+        confidence_eos_eot_inf = gr.Checkbox(label="Delay EOS/EOT using lowest confidence (LLaDA-style)", value=False)
     generate = gr.Button("Denoise", variant="primary")
     detail = gr.Markdown()
     intermediate = gr.HTML(label="Intermediate denoising states")
@@ -136,7 +137,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     load_adapter.click(load_saved_adapter, inputs=[adapter, adapter_device, adapter_quantization], outputs=status)
     load_legacy.click(load_legacy_checkpoint, inputs=[legacy_repo, legacy_filename, legacy_tokenizer, legacy_device], outputs=status)
     load_llada.click(load_llada_model, inputs=[llada_repo, llada_device], outputs=status)
-    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping], outputs=[detail, intermediate])
+    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate])
 
 
 if __name__ == "__main__":

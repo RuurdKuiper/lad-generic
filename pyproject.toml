@@ -10,7 +10,7 @@ cuda = ["bitsandbytes>=0.45"]
 # Colab currently ships CUDA 12; 2.13 is the latest CUDA-12 Torch build and
 # includes Blackwell/SM120 support.
 fp8 = ["transformer-engine[pytorch]==2.13.0"]
-evaluation = ["math-verify[antlr4_13_2]>=0.8"]
+evaluation = ["math-verify[antlr4_13_2]>=0.8", "openai>=1.68"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

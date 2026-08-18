@@ -20,6 +20,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
 from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
+from diffusion_lm.judging import judge_open_ended_groups
 
 load_dotenv(PROJECT_ROOT / ".env")
 
@@ -252,7 +253,7 @@ def main() -> None:
                     if show_open_ended_answers:
                         _show_open_ended_answer(diffusion_progress, "diffusion", index, len(examples), example.prompt, text)
                 open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "examples": examples, "texts": diffusion_texts, "inference_settings": task_settings})
-                message = f"{model_label} | {task} | diffusion generation complete; perplexity will be scored with the shared reference model at the end"
+                message = f"{model_label} | {task} | diffusion generation complete; shared quality metrics will be scored at the end"
                 if config.get("include_autoregressive", False) and supports_autoregressive:
                     print(f"[{model_label}] {task}: {len(examples)} validation samples (autoregressive)", flush=True)
                     ar_texts = []
@@ -313,13 +314,52 @@ def main() -> None:
     # Generation models are no longer needed; release the last session before
     # loading the shared reference model to keep peak GPU memory manageable.
     if open_ended_pending:
+        judge_result = None
+        judge_settings = dict(config.get("open_ended_judge", {}))
+        if judge_settings.get("enabled", False):
+            print(
+                f"\nBlind-ranking open-ended responses with {judge_settings.get('model', 'gpt-5')}...",
+                flush=True,
+            )
+            judge_result = judge_open_ended_groups(
+                open_ended_pending,
+                judge_settings,
+                on_progress=lambda complete, total: print(
+                    f"Judge comparisons: {complete}/{total}", flush=True
+                ),
+            )
+            if judge_result.get("skipped_reason"):
+                print(f"Open-ended judge skipped: {judge_result['skipped_reason']}", flush=True)
+            else:
+                reporter.save_run_records("judge_rankings.jsonl", judge_result["comparisons"])
+                reporter.save_run_json("judge_leaderboard.json", {
+                    "judge_model": judge_result["judge_model"],
+                    "methods": judge_result["methods"],
+                    "candidate_count": judge_result["candidate_count"],
+                    "successful_comparisons": len(judge_result["comparisons"]),
+                    "failed_comparisons": len(judge_result["errors"]),
+                    "errors": judge_result["errors"],
+                    "leaderboard": judge_result["leaderboard"],
+                })
+                print("Open-ended judge leaderboard:", flush=True)
+                for row in judge_result["leaderboard"]:
+                    print(
+                        f"  {row['judge_leaderboard_position']}. {row['model']} | {row['method']} "
+                        f"| points={row['judge_total_score']} | wins={row['judge_first_place_count']}",
+                        flush=True,
+                    )
         print("\nLoading shared perplexity reference model...", flush=True)
         reference_model, reference_tokenizer, reference_device, reference_info = _load_perplexity_reference(config)
         print(f"Scoring {len(open_ended_pending)} open-ended result groups with {reference_info['model_name_or_path']}...", flush=True)
-        for group in open_ended_pending:
+        judge_summaries = {
+            row["group_index"]: row for row in (judge_result or {}).get("leaderboard", [])
+        }
+        judge_annotations = (judge_result or {}).get("per_group", {})
+        for group_index, group in enumerate(open_ended_pending):
             scores = score_texts_with_model(reference_model, reference_tokenizer, reference_device, group["texts"])
-            for example, text, per_text in zip(group["examples"], group["texts"], scores["per_text"]):
-                reporter.save_result({
+            annotations = judge_annotations.get(group_index, [None] * len(group["examples"]))
+            for example, text, per_text, annotation in zip(group["examples"], group["texts"], scores["per_text"], annotations):
+                record = {
                     "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
                     "example_id": example.example_id, "method": group["method"],
                     "prompt": example.prompt, "prediction": text,
@@ -327,7 +367,12 @@ def main() -> None:
                     "perplexity_reference": reference_info,
                     **per_text,
                     **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
-                })
+                }
+                if annotation is not None:
+                    record.update(annotation)
+                reporter.save_result(record)
+            judge_summary = dict(judge_summaries.get(group_index, {}))
+            judge_summary.pop("group_index", None)
             summary = {
                 "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
                 "method": group["method"], "total": len(group["examples"]),
@@ -337,6 +382,7 @@ def main() -> None:
                 "mean_unigram_repetition": sum(item["unigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_bigram_repetition": sum(item["bigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
                 "mean_trigram_repetition": sum(item["trigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
+                **judge_summary,
                 **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
             }
             reporter.save_summary(summary)

@@ -92,6 +92,18 @@ class BenchmarkRunReporter:
         path = self.group_path(summary["model"], summary["task"], summary["method"]) / "summary.json"
         self._write_json(path, summary)
 
+    def save_run_json(self, filename: str, value: Any) -> None:
+        """Save a structured artifact at the root of this benchmark run."""
+        self._write_json(self.path / filename, value)
+
+    def save_run_records(self, filename: str, records: list[dict[str, Any]]) -> None:
+        """Save newline-delimited records at the root of this benchmark run."""
+        path = self.path / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8") as stream:
+            for record in records:
+                stream.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
+
     def complete(self) -> Path:
         """Write model and run rollups, then mark the invocation complete."""
         by_model: dict[str, list[dict[str, Any]]] = {}

@@ -22,6 +22,15 @@ perplexity:
   quantization: 4bit  # Keeps the 14B judge practical on a single validation GPU.
   precision: bf16
   cache_dir: base_models
+# Optional blind pairwise-or-multiway judge for open-ended generations. With N
+# models, each prompt awards N-1 points to first place down to 0 for last place.
+open_ended_judge:
+  enabled: false
+  model: gpt-5
+  methods: [diffusion]  # Add autoregressive only if those baselines should compete too.
+  reasoning_effort: medium
+  seed: 1234  # Deterministically shuffles anonymous candidate order per prompt.
+  fail_on_error: false
 generation:
   max_new_tokens: 128
   num_steps: 32

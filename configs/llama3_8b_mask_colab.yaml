@@ -44,7 +44,7 @@ max_updates: 25000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
-pad_to_multiple_of: 8  # Required for Transformer Engine FP8 matrix dimensions.
+pad_to_multiple_of: 16  # Required for Transformer Engine FP8 matrix dimensions.
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false

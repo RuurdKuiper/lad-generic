@@ -129,7 +129,8 @@ def test_reasoning_multiple_choice_tasks_request_answer_on_final_line():
         assert "put no option text or punctuation after the label" in prompt.casefold()
         assert "Start your response" not in prompt
 
-    assert "`ANSWER: A`" not in _choice_prompt("mmlu_pro", "Question?", ["First", "Second"])
+    for task in ("mmlu_pro", "gpqa"):
+        assert "`ANSWER: A`" not in _choice_prompt(task, "Question?", ["First", "Second"])
 
 
 def test_mmlu_prompts_include_available_subject_category_without_label_anchor():

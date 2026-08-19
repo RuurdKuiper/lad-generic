@@ -238,17 +238,11 @@ def _choice_prompt(name: str, question: str, choices: list[Any], category: str |
     """Format multiple choice and explicitly request an extractable answer label."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     options = "\n".join(f"{letters[i]}: {choice}" for i, choice in enumerate(choices))
-    if name == "mmlu_pro":
+    if name in {"mmlu_pro", "gpqa"}:
         answer_format = (
             "Think through the problem concisely, then end with exactly one final line containing "
             "`ANSWER:` followed by the correct option label. Put no option text or punctuation "
             "after the label on that line."
-        )
-    elif name == "gpqa":
-        answer_format = (
-            "Think through the problem concisely, then end with exactly one final line in the form "
-            "`ANSWER: A`. Replace `A` with the correct option label, and put no option text or "
-            "punctuation after the label on that line."
         )
     elif name == "mmlu":
         answer_format = "Start your response with the correct option label followed by a colon."

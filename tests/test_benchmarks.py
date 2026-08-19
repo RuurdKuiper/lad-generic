@@ -111,7 +111,8 @@ def test_multiple_choice_prompt_and_target_match_training_contract():
     prompt = _choice_prompt("mmlu", "Question?", ["First", "Second"])
     example = BenchmarkExample("mmlu", "0", prompt, "B: Second", "multiple_choice", {})
 
-    assert prompt == "Answer the following multiple-choice question. Start your response with the correct option label followed by a colon, for example `A:`.\n\nQuestion?\n\nA: First\nB: Second"
+    assert prompt == "Answer the following multiple-choice question. Start your response with the correct option label followed by a colon.\n\nQuestion?\n\nA: First\nB: Second"
+    assert "example `A:`" not in prompt
     assert score_prediction(example, "B: Second")
     assert score_prediction(example, "B. Second")
     assert score_prediction(example, "The correct answer is B: Second")
@@ -125,9 +126,19 @@ def test_reasoning_multiple_choice_tasks_request_answer_on_final_line():
         prompt = _choice_prompt(task, "Question?", ["First", "Second"])
 
         assert "Think through the problem concisely" in prompt
-        assert "`ANSWER: A`" in prompt
-        assert "put no option text or punctuation after the label" in prompt
+        assert "put no option text or punctuation after the label" in prompt.casefold()
         assert "Start your response" not in prompt
+
+    assert "`ANSWER: A`" not in _choice_prompt("mmlu_pro", "Question?", ["First", "Second"])
+
+
+def test_mmlu_prompts_include_available_subject_category_without_label_anchor():
+    mmlu = _choice_prompt("mmlu", "Question?", ["First", "Second"], "college_biology")
+    mmlu_pro = _choice_prompt("mmlu_pro", "Question?", ["First", "Second"], "computer science")
+
+    assert "Subject category: college biology." in mmlu
+    assert "Subject category: computer science." in mmlu_pro
+    assert "`ANSWER: A`" not in mmlu_pro
 
 
 def test_multiple_choice_extraction_accepts_official_answer_line():
@@ -187,7 +198,7 @@ def test_gsm8k_prompt_requests_canonical_final_answer_marker():
     prompt = _gsm8k_prompt("What is 20 + 22?")
 
     assert "step by step" in prompt
-    assert "final line in the form `#### 42`" in prompt
+    assert "final line in the form `#### number`" in prompt
     assert prompt.endswith("What is 20 + 22?")
 
 

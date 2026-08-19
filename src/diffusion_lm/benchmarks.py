@@ -234,16 +234,24 @@ class BenchmarkExample:
     metadata: dict[str, Any]
 
 
-def _choice_prompt(name: str, question: str, choices: list[Any]) -> str:
+def _choice_prompt(name: str, question: str, choices: list[Any], category: str | None = None) -> str:
     """Format multiple choice and explicitly request an extractable answer label."""
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     options = "\n".join(f"{letters[i]}: {choice}" for i, choice in enumerate(choices))
-    if name in {"mmlu_pro", "gpqa"}:
+    if name == "mmlu_pro":
+        answer_format = (
+            "Think through the problem concisely, then end with exactly one final line containing "
+            "`ANSWER:` followed by the correct option label. Put no option text or punctuation "
+            "after the label on that line."
+        )
+    elif name == "gpqa":
         answer_format = (
             "Think through the problem concisely, then end with exactly one final line in the form "
             "`ANSWER: A`. Replace `A` with the correct option label, and put no option text or "
             "punctuation after the label on that line."
         )
+    elif name == "mmlu":
+        answer_format = "Start your response with the correct option label followed by a colon."
     else:
         answer_format = "Start your response with the correct option label followed by a colon, for example `A:`."
     if name == "hellaswag":
@@ -252,6 +260,9 @@ def _choice_prompt(name: str, question: str, choices: list[Any]) -> str:
     else:
         instruction = f"Answer the following multiple-choice question. {answer_format}"
         task_input = f"{question.strip()}\n\n{options}"
+    if category and str(category).strip():
+        category_label = str(category).strip().replace("_", " ")
+        instruction += f" Subject category: {category_label}."
     return f"{instruction}\n\n{task_input}"
 
 
@@ -479,9 +490,9 @@ def _math_prompt(problem: str) -> str:
 def _gsm8k_prompt(question: str) -> str:
     """Request GSM8K reasoning followed by its canonical numeric answer marker."""
     return (
-        "Solve the following math problem step by step. End your response with a "
-        "final line in the form `#### 42`, containing only the final numeric answer "
-        "after `####`.\n\n" + question.strip()
+        "Solve the following math problem step by step. End your response with a final line in the "
+        "form `#### number`, containing only the final numeric answer after `####`.\n\n"
+        + question.strip()
     )
 
 
@@ -502,7 +513,8 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
             question, choices, answer = _multiple_choice_fields(name, row, index)
             answer_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".index(answer)
             target = f"{answer}: {choices[answer_index]}"
-            items.append(BenchmarkExample(name, str(index), _choice_prompt(name, question, choices), target, "multiple_choice", row))
+            category = row.get("subject", row.get("category")) if name in {"mmlu", "mmlu_pro"} else None
+            items.append(BenchmarkExample(name, str(index), _choice_prompt(name, question, choices, category), target, "multiple_choice", row))
         elif name == "gsm8k":
             prompt = _gsm8k_prompt(row["question"])
             items.append(BenchmarkExample(name, str(index), prompt, row["answer"].strip(), "gsm8k", row))

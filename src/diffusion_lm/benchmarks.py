@@ -240,8 +240,9 @@ def _choice_prompt(name: str, question: str, choices: list[Any]) -> str:
     options = "\n".join(f"{letters[i]}: {choice}" for i, choice in enumerate(choices))
     if name in {"mmlu_pro", "gpqa"}:
         answer_format = (
-            "Think through the problem concisely, then end your response with a final line "
-            "in the form `ANSWER: A`, using the correct option label."
+            "Think through the problem concisely, then end with exactly one final line in the form "
+            "`ANSWER: A`. Replace `A` with the correct option label, and put no option text or "
+            "punctuation after the label on that line."
         )
     else:
         answer_format = "Start your response with the correct option label followed by a colon, for example `A:`."
@@ -517,7 +518,21 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
     return items
 
 
-def extract_answer(text: str, kind: str) -> str:
+def _declared_option_text_matches(text: str, reference: str) -> bool:
+    """Match a terminal textual ANS/ANSWER against one labelled reference option."""
+    declarations = re.findall(r"(?im)^\s*(?:ANS|ANSWER)\s*:\s*(.*?)\s*$", text or "")
+    reference_match = re.match(r"^\s*[A-Z]\s*:\s*(.+?)\s*$", reference or "", flags=re.DOTALL)
+    if not declarations or not reference_match:
+        return False
+
+    def normalize(value: str) -> str:
+        value = re.sub(r"\s+", " ", value.strip()).casefold()
+        return value.rstrip(" .。;,:!?")
+
+    return normalize(declarations[-1]) == normalize(reference_match.group(1))
+
+
+def extract_answer(text: str, kind: str, reference: str | None = None) -> str:
     """Extract a comparable answer from free-form model output."""
     if kind == "multiple_choice":
         # Prefer the requested leading `A: ...` format. If a model ignores that
@@ -526,7 +541,7 @@ def extract_answer(text: str, kind: str) -> str:
         match = re.match(r"\s*([A-Z])(?=\s*(?::|[.)-]|$))", text.upper())
         if match:
             return match.group(1)
-        answer_line = re.search(r"(?im)^\s*ANSWER\s*:\s*[*_`(\[]*([A-Z])(?=\s*(?:[.)\]`*_]|$))", text)
+        answer_line = re.search(r"(?im)^\s*ANSWER\s*:\s*[*_`(\[]*([A-Z])(?=\s*(?::|[.)\]`*_]|$))", text)
         if answer_line:
             return answer_line.group(1).upper()
         declared = re.search(
@@ -541,7 +556,11 @@ def extract_answer(text: str, kind: str) -> str:
             r"(?=\s*(?::|[.)\]-]|$))",
             text.upper(),
         )
-        return option.group(1) if option else ""
+        if option:
+            return option.group(1)
+        if reference and _declared_option_text_matches(text, reference):
+            return extract_answer(reference, kind)
+        return ""
     if kind == "gsm8k":
         return _last_number(_boxed(text))
     if kind == "math":
@@ -620,7 +639,7 @@ def _run_code(candidate: str, example: BenchmarkExample, timeout: float = 10.0) 
 def score_prediction(example: BenchmarkExample, generated: str) -> bool:
     """Score one normalized prediction with exact-match or benchmark tests."""
     if example.kind == "multiple_choice":
-        return extract_answer(generated, example.kind) == extract_answer(example.answer, example.kind)
+        return extract_answer(generated, example.kind, example.answer) == extract_answer(example.answer, example.kind)
     if example.kind == "gsm8k":
         prediction = extract_answer(generated, example.kind)
         target = extract_answer(example.answer, example.kind)

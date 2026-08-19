@@ -126,12 +126,25 @@ def test_reasoning_multiple_choice_tasks_request_answer_on_final_line():
 
         assert "Think through the problem concisely" in prompt
         assert "`ANSWER: A`" in prompt
+        assert "put no option text or punctuation after the label" in prompt
         assert "Start your response" not in prompt
 
 
 def test_multiple_choice_extraction_accepts_official_answer_line():
     assert extract_answer("Reasoning here.\nANSWER: B", "multiple_choice") == "B"
     assert extract_answer("Reasoning here.\nANSWER: **B**", "multiple_choice") == "B"
+    assert extract_answer("ANSWER: C: Third option", "multiple_choice") == "C"
+
+
+def test_multiple_choice_scoring_accepts_an_exact_declared_option_text():
+    example = BenchmarkExample(
+        "mmlu_pro", "0", "prompt", "E: Full-service agency.", "multiple_choice", {}
+    )
+
+    assert extract_answer("ANS: Full-service agency.", "multiple_choice", example.answer) == "E"
+    assert score_prediction(example, "ANS: Full-service agency.")
+    assert not score_prediction(example, "ANS: Full service agency.")
+    assert not score_prediction(example, "A full-service agency is likely.")
 
 
 def test_multiple_choice_extraction_ignores_unmarked_letters_in_explanations():

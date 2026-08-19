@@ -282,7 +282,7 @@ def main() -> None:
                 diffusion_ok = score_prediction(example, diffusion_text)
                 record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "diffusion", "prompt": example.prompt, "prediction": diffusion_text, "target": example.answer, "correct": diffusion_ok, "inference_settings": task_settings}
                 if example.kind != "code":
-                    record.update(extracted_prediction=extract_answer(diffusion_text, example.kind), extracted_target=extract_answer(example.answer, example.kind))
+                    record.update(extracted_prediction=extract_answer(diffusion_text, example.kind, example.answer), extracted_target=extract_answer(example.answer, example.kind))
                 reporter.save_result(record); correct += int(diffusion_ok)
                 diffusion_progress.set_postfix(correct=f"{correct}/{index}", accuracy=f"{correct / index:.3f}")
             if config.get("include_autoregressive", False) and supports_autoregressive:
@@ -293,7 +293,7 @@ def main() -> None:
                     ar_ok = score_prediction(example, ar_text); ar_correct += int(ar_ok)
                     record = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}}
                     if example.kind != "code":
-                        record.update(extracted_prediction=extract_answer(ar_text, example.kind), extracted_target=extract_answer(example.answer, example.kind))
+                        record.update(extracted_prediction=extract_answer(ar_text, example.kind, example.answer), extracted_target=extract_answer(example.answer, example.kind))
                     reporter.save_result(record)
                     ar_progress.set_postfix(correct=f"{ar_correct}/{index}", accuracy=f"{ar_correct / index:.3f}")
             summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "inference_settings": task_settings, "accuracy": correct / max(len(examples), 1), "correct": correct, "total": len(examples)}

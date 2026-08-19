@@ -3,7 +3,7 @@ import json
 import pytest
 import torch
 
-from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _humaneval_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
 
 
 def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
@@ -189,14 +189,36 @@ def test_math_extracts_boxed_answers_with_nested_latex_braces():
     answer = r"Therefore, the answer is $\boxed{\left(3, \frac{\pi}{2}\right)}$."
 
     assert _boxed(answer) == r"\left(3, \frac{\pi}{2}\right)"
-    assert extract_answer(answer, "math") == r"(3\frac{\pi}{2})"
+    assert extract_answer(answer, "math") == r"(3,\frac{\pi}{2})"
+
+
+def test_math_accepts_only_a_terminal_inline_expression_when_box_is_missing():
+    target = r"Therefore, $\boxed{\left(3, \frac{\pi}{2}\right)}$."
+    prediction = r"The radius is 3. Therefore the coordinates are $(3,\\frac{\pi}{2}).$"
+
+    assert score_prediction(BenchmarkExample("math", "0", "problem", target, "math", {}), prediction)
+    assert extract_answer(r"An intermediate value is $27$, but more work remains.", "math") != "27"
+
+
+def test_math_removes_thousands_separators_without_corrupting_structured_answers():
+    assert extract_answer(r"\boxed{1,234,567}", "math") == "1234567"
+    assert extract_answer(r"\boxed{(3,4)}", "math") == "(3,4)"
+
+
+def test_math_normalizes_redundant_braces_and_degree_notation():
+    assert extract_answer(r"\boxed{{9}}", "math") == "9"
+    assert extract_answer(r"\boxed{90 degrees}", "math") == "90"
+    assert extract_answer(r"\boxed{90^\circ}", "math") == "90"
 
 
 def test_math_prompt_requests_a_boxed_answer_after_reasoning():
     prompt = _math_prompt("What is 1 + 1?")
 
-    assert prompt.startswith("Solve the following math problem with a concise explanation.")
-    assert r"End your response with the final answer in \boxed{...}." in prompt
+    assert prompt.startswith("Solve the following mathematics problem step by step.")
+    assert "Check every arithmetic and algebraic step" in prompt
+    assert "Simplify fractions, radicals, and expressions completely" in prompt
+    assert "FINAL: \\boxed{answer}" in prompt
+    assert "Put only the answer inside the box" in prompt
     assert prompt.endswith("What is 1 + 1?")
 
 
@@ -207,6 +229,18 @@ def _humaneval_add_example():
         "entry_point": "add",
         "test": "def check(candidate):\n    assert candidate(2, 3) == 5",
     })
+
+
+def test_humaneval_prompt_requests_a_complete_fenced_function():
+    specification = 'def add(a, b):\n    """Return the sum."""\n'
+
+    prompt = _humaneval_prompt(specification)
+
+    assert prompt.startswith("Implement the Python function described below.")
+    assert "Preserve the exact function name, signature, and return type" in prompt
+    assert "Silently trace the implementation against every shown example" in prompt
+    assert "exactly one complete Markdown code block tagged `python`" in prompt
+    assert prompt.endswith(specification.strip())
 
 
 def test_humaneval_executes_canonical_body_completions_with_the_prompt():
@@ -236,7 +270,18 @@ def test_mbpp_prompt_exposes_required_interface_through_tests():
 
     assert "from copy import deepcopy" in prompt
     assert "assert sort_matrix(" in prompt
-    assert prompt.endswith("without explanation or Markdown fences.")
+    assert "exact function name and number of positional arguments" in prompt
+    assert "remove/keep, first/last/all" in prompt
+    assert "Silently check the implementation against every shown assertion" in prompt
+    assert prompt.endswith("Do not write any text outside that block.")
+
+
+def test_mbpp_prompt_preserves_the_dataset_description_verbatim():
+    description = "Write a function to check if the given number is woodball or not."
+
+    prompt = _mbpp_prompt({"prompt": description, "test_list": []})
+
+    assert prompt.startswith(description + "\n\n")
 
 
 def test_mbpp_executes_fenced_code_with_official_test_imports():
@@ -253,6 +298,21 @@ def test_mbpp_executes_fenced_code_with_official_test_imports():
     )
     prediction = "Here is the implementation:\n```python\ndef root(value):\n    return sqrt(value)\n```"
 
+    assert score_prediction(example, prediction)
+
+
+def test_mbpp_ignores_a_standalone_trailing_fence_without_an_opening_fence():
+    example = BenchmarkExample(
+        "mbpp",
+        "0",
+        "prompt",
+        "",
+        "code",
+        {"test_list": ["assert square_perimeter(5) == 20"]},
+    )
+    prediction = "def square_perimeter(side):\n    return 4 * side\n```"
+
+    assert _extract_python_code(prediction) == "def square_perimeter(side):\n    return 4 * side"
     assert score_prediction(example, prediction)
 
 
@@ -285,6 +345,7 @@ def test_legacy_generation_settings_fall_back_to_structured_settings():
 
 def test_llada_uses_published_task_specific_inference_settings():
     gsm8k = resolve_llada_generation_settings({"generation": {"temperature": 0.7}}, "gsm8k")
+    math = resolve_llada_generation_settings({}, "math")
     humaneval = resolve_llada_generation_settings({}, "humaneval")
 
     assert gsm8k["sampler"] == "llada_official"
@@ -293,12 +354,14 @@ def test_llada_uses_published_task_specific_inference_settings():
     assert gsm8k["confidence_eos_eot_inf"] is True
     assert gsm8k["eot_token_id"] == 126348
     assert gsm8k["proportional_unmask"] is False
+    assert math["max_new_tokens"] == math["num_steps"] == math["block_length"] == 512
     assert humaneval["logits_eos_inf"] is True
     assert humaneval["confidence_eos_eot_inf"] is False
 
 
 def test_mask_only_adapters_use_the_same_official_task_sampler():
     gsm8k = resolve_mask_only_generation_settings({}, "gsm8k")
+    math = resolve_mask_only_generation_settings({}, "math")
     overridden = resolve_mask_only_generation_settings(
         {"mask_only_task_generation": {"gsm8k": {"block_length": 8}}}, "gsm8k"
     )
@@ -308,4 +371,5 @@ def test_mask_only_adapters_use_the_same_official_task_sampler():
     assert gsm8k["temperature"] == 0.0
     assert gsm8k["confidence_eos_eot_inf"] is True
     assert gsm8k["proportional_unmask"] is False
+    assert math["max_new_tokens"] == math["num_steps"] == math["block_length"] == 512
     assert overridden["block_length"] == 8

@@ -316,14 +316,50 @@ def _last_number(text: str) -> str:
 
 def _normalize_math_answer(text: str) -> str:
     """Normalize a generated or reference final MATH answer for comparison."""
+    has_box = re.search(r"\\(?:boxed|fbox)\s*\{", text) is not None
     value = _boxed(text).strip()
+    if not has_box:
+        # Accept only a terminal inline expression as a fallback. This recovers
+        # answers such as "Therefore ... $(3, \\frac{\\pi}{2}).$" without
+        # accidentally selecting an intermediate expression from a rationale.
+        terminal_math = re.search(r"\$([^$\n]+)\$\s*[.!]?\s*\Z", value)
+        if terminal_math:
+            value = terminal_math.group(1).strip()
     answer_match = re.search(r"(?is)(?:final\s+answer|answer)\s*(?:is|:)\s*(.+)$", value)
     if answer_match:
         value = answer_match.group(1).strip()
     value = re.sub(r"^\$|\$$", "", value.strip())
     value = value.rstrip(".。;,!").strip()
     value = value.replace("\\left", "").replace("\\right", "")
-    value = re.sub(r"\s+", "", value).replace(",", "")
+    # Repair duplicated command escapes occasionally emitted by diffusion
+    # decoding, while retaining legitimate LaTeX row separators such as `\\`.
+    value = re.sub(r"\\\\(?=[A-Za-z])", r"\\", value)
+    value = re.sub(r"\s+", "", value)
+    # Remove commas only inside conventional thousands-grouped numerals. A
+    # blanket removal corrupts tuples, coordinate pairs, intervals, and sets.
+    value = re.sub(
+        r"(?<![\d,])([+-]?\d{1,3}(?:,\d{3})+)(?![\d,])",
+        lambda match: match.group(1).replace(",", ""),
+        value,
+    )
+    # Normalize common answer-only presentation variants without attempting
+    # broad unit conversion. Redundant grouping braces and degree notation do
+    # not change the mathematical value of these terminal answers.
+    while value.startswith("{") and value.endswith("}"):
+        depth = 0
+        encloses_all = True
+        for index, character in enumerate(value):
+            if character == "{":
+                depth += 1
+            elif character == "}":
+                depth -= 1
+                if depth == 0 and index != len(value) - 1:
+                    encloses_all = False
+                    break
+        if not encloses_all or depth != 0:
+            break
+        value = value[1:-1]
+    value = re.sub(r"(?:\^\{?\\circ\}?|\\circ|°|degrees?)\Z", "", value, flags=re.IGNORECASE)
     return value
 
 
@@ -390,7 +426,7 @@ def _benchmark_spec(name: str, split: str) -> tuple[str, str | None, str]:
 
 
 def _mbpp_prompt(row: dict[str, Any]) -> str:
-    """Build the standard test-informed MBPP coding prompt."""
+    """Build a test-informed MBPP prompt that emphasizes exact semantics."""
     description = str(row.get("text") or row.get("prompt") or "").strip()
     test_imports = [str(statement) for statement in (row.get("test_imports") or [])]
     tests = [str(test) for test in (row.get("test_list") or [])]
@@ -401,15 +437,41 @@ def _mbpp_prompt(row: dict[str, Any]) -> str:
             "Your function must use the name and interface demonstrated by these tests:\n"
             f"```python\n{test_block}\n```"
         )
-    sections.append("Write only the Python function implementation, without explanation or Markdown fences.")
+    sections.append(
+        "Carefully infer the exact required behavior from the description and every assertion. "
+        "Pay particular attention to the exact function name and number of positional arguments; "
+        "words such as remove/keep, first/last/all, and ascending/descending; and the direction of "
+        "arithmetic relationships. Silently check the implementation against every shown assertion "
+        "before answering.\n\n"
+        "Return exactly one complete Markdown code block tagged `python`. Do not write any text "
+        "outside that block."
+    )
     return "\n\n".join(section for section in sections if section)
 
 
-def _math_prompt(problem: str) -> str:
-    """Request concise reasoning followed by a readily scoreable final answer."""
+def _humaneval_prompt(prompt: str) -> str:
+    """Wrap canonical HumanEval source for instruction-tuned chat models."""
     return (
-        "Solve the following math problem with a concise explanation. End your "
-        "response with the final answer in \\boxed{...}.\n\n" + problem.strip()
+        "Implement the Python function described below. Preserve the exact function name, signature, "
+        "and return type. Carefully follow the entire docstring, including edge cases and examples. "
+        "Silently trace the implementation against every shown example before answering.\n\n"
+        "Return exactly one complete Markdown code block tagged `python`, containing the complete "
+        "function and any required imports. Do not write any text outside that block.\n\n"
+        "Function specification:\n\n"
+        + prompt.strip()
+    )
+
+
+def _math_prompt(problem: str) -> str:
+    """Request checked, concise reasoning followed by an exact answer marker."""
+    return (
+        "Solve the following mathematics problem step by step. Keep the reasoning concise. "
+        "Check every arithmetic and algebraic step, and verify that the final result satisfies "
+        "all conditions in the problem. Simplify fractions, radicals, and expressions completely.\n\n"
+        "End with exactly one final line in this format:\n\n"
+        "FINAL: \\boxed{answer}\n\n"
+        "Put only the answer inside the box. Do not omit the final line.\n\n"
+        "Problem:\n\n" + problem.strip()
     )
 
 
@@ -449,7 +511,7 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
             prompt = _math_prompt(problem)
             items.append(BenchmarkExample(name, str(index), prompt, solution.strip(), "math", row))
         elif name == "humaneval":
-            items.append(BenchmarkExample(name, str(index), row["prompt"], row.get("canonical_solution", ""), "code", row))
+            items.append(BenchmarkExample(name, str(index), _humaneval_prompt(row["prompt"]), row.get("canonical_solution", ""), "code", row))
         elif name == "mbpp":
             items.append(BenchmarkExample(name, str(index), _mbpp_prompt(row), row.get("code", ""), "code", row))
     return items
@@ -498,6 +560,10 @@ def _extract_python_code(candidate: str, entry_point: str | None = None) -> str:
         else:
             candidate = fenced[0]
     else:
+        # Remove a standalone final closing fence before looking for an
+        # unterminated opening fence; otherwise the closing fence itself would
+        # be mistaken for the opening and all preceding Python would be lost.
+        candidate = re.sub(r"\n?[ \t]*```[ \t]*\Z", "", candidate)
         # Also handle an unterminated Markdown fence, which is common when a
         # fixed generation budget cuts off just after otherwise valid code.
         opening = re.search(r"```(?:python|py)?\s*\n?", candidate, flags=re.IGNORECASE)

@@ -1,6 +1,6 @@
 # Bidirectional denoising adaptation for instruction models
 
-This project adapts causal instruction models as same-position, bidirectional denoisers. It supports Llama 3 8B Instruct, Qwen2.5 7B Instruct, and Gemma 2 9B IT through one entry point.
+This project adapts causal instruction models as same-position, bidirectional denoisers. It supports Llama 3 8B Instruct, Qwen2.5 7B Instruct, Gemma 2 9B IT, and the text-only Ministral 8B Instruct 2410 checkpoint through one entry point.
 
 `mask_only` retokenizes the dataset source fields (`instruction`, `input`, `output`) for the chosen tokenizer and corrupts only genuine answer tokens online. Training masks are resampled; validation and test masks are deterministic from the configured seed and example index.
 
@@ -125,6 +125,8 @@ On one NVIDIA GPU:
 
 ```bash
 python train.py --config configs/llama3_8b.yaml
+# Text-only Ministral 8B (not the multimodal checkpoint):
+python train.py --config configs/ministral8b.yaml
 ```
 
 On an Ubuntu multi-GPU cluster:
@@ -305,7 +307,7 @@ prepared ahead by each DataLoader worker (default `4`). For sparse objectives,
 to supervised positions rather than constructing unused vocabulary logits for
 the rest of the sequence.
 
-Gated Llama/Gemma access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that literal `MASK` is exactly one ordinary vocabulary token and records the token ID/decoding in `mask_token.json`.
+Gated model access must be configured through the normal Hugging Face authentication mechanism. Each run verifies that `mask_token` (default `MASK`) is exactly one ordinary vocabulary token and records its text, token ID, and decoding in `mask_token.json`. Ministral's Tekken tokenizer splits uppercase `MASK`, so its supplied configurations use the verified single-token `<?>` vocabulary marker instead.
 
 ## Outputs
 

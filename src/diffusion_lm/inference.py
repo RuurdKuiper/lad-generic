@@ -131,7 +131,7 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     if not use_4bit:
         model.to(device)
     model.eval()
-    mask_info = validate_mask_token(tokenizer)
+    mask_info = validate_mask_token(tokenizer, str(run_config.get("mask_token", "MASK")))
     session = InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
     preflight_session(session)
     return session

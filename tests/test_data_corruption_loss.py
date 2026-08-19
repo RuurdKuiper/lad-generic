@@ -186,6 +186,25 @@ def test_every_usable_example_has_a_mask_and_multitoken_mask_is_rejected():
         raise AssertionError("expected MASK validation failure")
 
 
+def test_configured_single_token_mask_is_used():
+    class ConfigurableMaskTokenizer(ToyTokenizer):
+        def encode(self, text, add_special_tokens=False):
+            if text == "MASK":
+                return [9, 10]
+            if text == "mask":
+                return [11]
+            return super().encode(text, add_special_tokens)
+
+        def decode(self, ids):
+            return "mask" if ids == [11] else super().decode(ids)
+
+    collator = DenoisingCollator(
+        ConfigurableMaskTokenizer(), "mask_only", 32, mask_token="mask"
+    )
+    assert collator.mask_info["mask_token"] == "mask"
+    assert collator.mask_info["mask_token_id"] == 11
+
+
 def test_per_example_inverse_t_weighting_same_position():
     # p(correct)=e^-1 at row 0; p(correct)=e^-2 at row 1.
     logits = torch.tensor([[[0., 0.]], [[0., -2.]]])

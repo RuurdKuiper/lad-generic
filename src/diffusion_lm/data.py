@@ -47,15 +47,17 @@ def find_subsequence(sequence: list[int], needle: list[int]) -> int | None:
     return None
 
 
-def validate_mask_token(tokenizer: Any) -> dict[str, Any]:
-    """Validate and describe the tokenizer-specific one-token literal MASK."""
-    ids = tokenizer.encode("MASK", add_special_tokens=False)
+def validate_mask_token(tokenizer: Any, mask_token: str = "MASK") -> dict[str, Any]:
+    """Validate and describe the configured one-token corruption marker."""
+    if not mask_token:
+        raise ValueError("mask_token must be a non-empty string")
+    ids = tokenizer.encode(mask_token, add_special_tokens=False)
     if len(ids) != 1:
         raise ValueError(
-            f"'MASK' must encode to exactly one token for {tokenizer.name_or_path}; received {ids}. "
+            f"mask_token {mask_token!r} must encode to exactly one token for {tokenizer.name_or_path}; received {ids}. "
             "Choose an existing single-token ordinary-vocabulary alternative; do not resize the vocabulary."
         )
-    return {"tokenizer": tokenizer.name_or_path, "mask_token_id": ids[0], "mask_ids": ids, "decoded": tokenizer.decode(ids)}
+    return {"tokenizer": tokenizer.name_or_path, "mask_token": mask_token, "mask_token_id": ids[0], "mask_ids": ids, "decoded": tokenizer.decode(ids)}
 
 
 def llama_stored_ids_compatible(example: dict[str, Any], tokenizer: Any) -> bool:
@@ -199,10 +201,11 @@ class DenoisingCollator:
     t_min: float = 1e-3
     multi_turn_prob: float = 0.0
     max_history_turns: int = 2
+    mask_token: str = "MASK"
 
     def __post_init__(self) -> None:
         """Validate collator configuration and cache this tokenizer's MASK token."""
-        self.mask_info = validate_mask_token(self.tokenizer)
+        self.mask_info = validate_mask_token(self.tokenizer, self.mask_token)
         self.stats = DataStats()
         if self.corruption_mode not in {"structured", "mask_only"}:
             raise ValueError(f"Unknown corruption mode: {self.corruption_mode}")

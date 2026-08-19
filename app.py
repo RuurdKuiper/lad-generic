@@ -78,12 +78,20 @@ def load_llada_model(repo_id, device):
     return f"Loaded LLaDA `{repo_id}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. Generation uses this app's standard denoising loop and controls."
 
 
-def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf):
+def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf):
     """Stream colored intermediate denoising states and the final answer to Gradio."""
     if SESSION is None:
         raise gr.Error("Choose and load a saved adapter first.")
+    retention_settings = {
+        "Disabled": (False, True),
+        "Retain positions; allow token changes": (True, False),
+        "Retain and lock token values": (True, True),
+    }
+    if retention_mode not in retention_settings:
+        raise gr.Error(f"Unknown retention mode: {retention_mode}")
+    permanent_unmask, freeze_retained_tokens = retention_settings[retention_mode]
     try:
-        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf), start=1):
+        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens), start=1):
             yield status, html
     except ValueError as error:
         raise gr.Error(str(error)) from error
@@ -125,7 +133,11 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         top_k = gr.Slider(1, 100, value=20, step=1, label="Top-k")
         seed = gr.Number(value=42, precision=0, label="Seed")
     with gr.Row():
-        permanent_unmask = gr.Checkbox(label="Permanently retain selected tokens", value=False)
+        retention_mode = gr.Dropdown(
+            ["Disabled", "Retain positions; allow token changes", "Retain and lock token values"],
+            value="Disabled",
+            label="Selected-token retention",
+        )
         confidence_guided = gr.Checkbox(label="Use confidence-guided retention", value=False)
         proportional_unmask = gr.Checkbox(label="Proportional unmasking", value=True)
         early_stopping = gr.Checkbox(label="Early stop after 3 identical predictions", value=False)
@@ -137,7 +149,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     load_adapter.click(load_saved_adapter, inputs=[adapter, adapter_device, adapter_quantization], outputs=status)
     load_legacy.click(load_legacy_checkpoint, inputs=[legacy_repo, legacy_filename, legacy_tokenizer, legacy_device], outputs=status)
     load_llada.click(load_llada_model, inputs=[llada_repo, llada_device], outputs=status)
-    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate])
+    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate])
 
 
 if __name__ == "__main__":

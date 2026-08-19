@@ -495,7 +495,7 @@ def llada_generate(
     return session.tokenizer.decode(answer, skip_special_tokens=True).strip()
 
 
-def render_denoising_step(tokens: list[int], confidences: list[float], answer_start: int, tokenizer: Any, mask_token_id: int, step: int, total_steps: int, frozen: dict[int, int] | None = None) -> str:
+def render_denoising_step(tokens: list[int], confidences: list[float], answer_start: int, tokenizer: Any, mask_token_id: int, step: int, total_steps: int, retained: set[int] | None = None, frozen: dict[int, int] | None = None) -> str:
     """Render a confidence-colored HTML view of one denoising state."""
     eos_id = tokenizer.eos_token_id
     pieces = []
@@ -510,6 +510,8 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
             style, token_text = "background:#d1d5db;color:#111827;border-radius:3px;padding:1px 4px", "MASK"
         elif frozen and offset in frozen:
             style = "color:#1d4ed8;font-weight:700"
+        elif retained and offset in retained:
+            style = "color:#7c3aed;font-weight:700"
         else:
             confidence = max(0.0, min(1.0, float(confidences[offset]))) if offset < len(confidences) else 0.0
             hue = int(confidence * 120)
@@ -520,11 +522,11 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
             f"<div style='font-weight:700;color:#2563eb;margin-bottom:7px'>Denoising step {step}/{total_steps} · {output_token_count} output tokens</div>"
             f"<div style='background:#e5e7eb;border-radius:4px;height:7px;margin-bottom:10px'><div style='background:#2563eb;width:{pct}%;height:7px;border-radius:4px'></div></div>"
             f"<div style='line-height:2;font-size:15px;white-space:pre-wrap'>{''.join(pieces)}</div>"
-            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green/blue hues indicate confidence; gray tokens are MASK; blue tokens are permanently retained.</div></div>")
+            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green hues indicate confidence; gray tokens are MASK; purple tokens are retained but editable; blue tokens are retained and locked.</div></div>")
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False):
-    """Yield intermediate denoising states, optionally stopping after three identical predictions."""
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True):
+    """Yield denoising states with optionally retained positions and locked values."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
     if max_new_tokens < 1 or num_steps < 1:
@@ -538,6 +540,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         torch.cuda.manual_seed_all(int(seed))
     padding = torch.zeros((1, len(ids)), device=session.device, dtype=torch.bool)
     last_confidence = 0.0
+    retained: set[int] = set()
     frozen: dict[int, int] = {}
     last_predictions: list[tuple[int, ...]] = []
     eot_token_id = _native_eot_token_id(session.tokenizer) if confidence_eos_eot_inf else None
@@ -556,8 +559,9 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 special_prediction, torch.finfo(confidence.dtype).min
             )
         ids[answer_start:] = sampled.tolist()
-        for offset, token in frozen.items():
-            ids[answer_start + offset] = token
+        if freeze_retained_tokens:
+            for offset, token in frozen.items():
+                ids[answer_start + offset] = token
         last_confidence = float(confidence.mean().cpu())
         # Match the legacy application's criterion: compare complete sampled
         # answer token sequences before the next iteration's re-masking.  This
@@ -573,15 +577,15 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             mask_probability = max(0.0, min(1.0, float(noise_level) * (1.0 - (step + 1) / num_steps)))
             if permanent_unmask:
                 keep_count = min(max_new_tokens, max(0, round((1.0 - mask_probability) * max_new_tokens)))
-                needed = keep_count - len(frozen)
-                candidates = [i for i in range(max_new_tokens) if i not in frozen]
+                needed = keep_count - len(retained)
+                candidates = [i for i in range(max_new_tokens) if i not in retained]
                 if needed > 0 and candidates:
                     if proportional_unmask:
                         eos_positions = [i for i in range(max_new_tokens) if ids[answer_start + i] == session.tokenizer.eos_token_id]
                         boundary = min(eos_positions) if eos_positions else max_new_tokens
                         pools = [[i for i in candidates if i < boundary], [i for i in candidates if i >= boundary]]
                         target_normal = round(keep_count * boundary / max_new_tokens)
-                        target_counts = [max(0, target_normal - sum(i < boundary for i in frozen)), max(0, keep_count - target_normal - sum(i >= boundary for i in frozen))]
+                        target_counts = [max(0, target_normal - sum(i < boundary for i in retained)), max(0, keep_count - target_normal - sum(i >= boundary for i in retained))]
                         chosen = []
                         for pool, target in zip(pools, target_counts):
                             if not pool or target <= 0:
@@ -602,9 +606,11 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                         chosen = torch.randperm(len(candidates), device=session.device)[:needed].tolist()
                         chosen = [candidates[i] for i in chosen]
                     for offset in chosen:
-                        frozen[offset] = ids[answer_start + offset]
+                        retained.add(offset)
+                        if freeze_retained_tokens:
+                            frozen[offset] = ids[answer_start + offset]
                 for offset in range(max_new_tokens):
-                    if offset not in frozen:
+                    if offset not in retained:
                         ids[answer_start + offset] = session.mask_token_id
             else:
                 # Confidence-guided refinement keeps every token revisable, but
@@ -617,9 +623,22 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             current_answer = current_answer[:current_answer.index(session.tokenizer.eos_token_id)]
         current_text = session.tokenizer.decode(current_answer, skip_special_tokens=True).strip()
         status = f"Denoising step {step + 1}/{num_steps} · {len(current_answer)} output tokens · mean confidence {last_confidence:.3f}"
+        if permanent_unmask:
+            retention_kind = "locked" if freeze_retained_tokens else "editable"
+            status += f" · retained {len(retained)} tokens ({retention_kind})"
         if stopped_early:
             status += " · stopped early (same prediction for 3 iterations)"
-        html = render_denoising_step(ids, confidence.tolist(), answer_start, session.tokenizer, session.mask_token_id, step + 1, num_steps, frozen if permanent_unmask else None)
+        html = render_denoising_step(
+            ids,
+            confidence.tolist(),
+            answer_start,
+            session.tokenizer,
+            session.mask_token_id,
+            step + 1,
+            num_steps,
+            retained if permanent_unmask else None,
+            frozen if permanent_unmask and freeze_retained_tokens else None,
+        )
         yield current_text, status, html
         if stopped_early:
             break
@@ -627,14 +646,13 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     if session.tokenizer.eos_token_id in answer:
         answer = answer[:answer.index(session.tokenizer.eos_token_id)]
     text = session.tokenizer.decode(answer, skip_special_tokens=True).strip()
-    suffix = f" · permanently retained {len(frozen)} tokens" if permanent_unmask else ""
     return
 
 
-def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False) -> tuple[str, str]:
+def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True) -> tuple[str, str]:
     """Run denoising to completion and return only the final text and status."""
     result = ("", "")
-    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf), start=1):
+    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens), start=1):
         result = (text, status)
         if progress:
             progress(step / int(num_steps), status)

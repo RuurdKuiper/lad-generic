@@ -252,6 +252,13 @@ loop, so the ordinary re-masking and retention controls remain available. It
 downloads and executes the model's trusted remote Hugging Face code. The
 project pins Transformers to the LLaDA-compatible 4.x range.
 
+The app's `Selected-token retention` control has two retention variants.
+`Retain positions; allow token changes` prevents selected positions from being
+masked again while allowing later denoising steps to replace their token
+values. `Retain and lock token values` also prevents re-masking, but restores
+the selected value after every later prediction. Existing YAML settings with
+`permanent_unmask: true` retain the locked behavior for compatibility.
+
 The optional app setting `Early stop after 3 identical predictions` ends a
 denoising request after the complete sampled answer-token sequence is unchanged
 for three consecutive iterations, matching the legacy app. It is disabled by

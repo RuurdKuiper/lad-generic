@@ -251,6 +251,65 @@ def test_streaming_denoising_delays_eos_retention_when_configured():
     assert model.inputs[1].tolist() == [[1, 5, 3]]
 
 
+def test_retained_positions_can_remain_editable_or_lock_their_token_values():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class ChangingModel(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.inputs = []
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.inputs.append(input_ids.detach().clone())
+            call = len(self.inputs) - 1
+            logits = torch.full((*input_ids.shape, 10), -10.0)
+            logits[:, -2, 3 + call] = 10.0
+            logits[:, -1, 8] = 8.0
+            return type("Output", (), {"logits": logits})()
+
+    def generate(freeze_retained_tokens):
+        model = ChangingModel()
+        session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 9)
+        states = list(denoise_stream(
+            session,
+            "Question",
+            "System",
+            2,
+            3,
+            1.0,
+            0.0,
+            1,
+            1234,
+            permanent_unmask=True,
+            confidence_guided=True,
+            proportional_unmask=False,
+            freeze_retained_tokens=freeze_retained_tokens,
+        ))
+        return model, states
+
+    editable_model, editable_states = generate(False)
+    locked_model, locked_states = generate(True)
+
+    assert editable_model.inputs[1].tolist() == [[1, 3, 9]]
+    assert editable_model.inputs[2].tolist() == [[1, 4, 9]]
+    assert editable_states[-1][0].startswith("5 ")
+    assert "retained 1 tokens (editable)" in editable_states[-1][1]
+    assert locked_model.inputs[1].tolist() == [[1, 3, 9]]
+    assert locked_model.inputs[2].tolist() == [[1, 3, 9]]
+    assert locked_states[-1][0].startswith("3 ")
+    assert "retained 1 tokens (locked)" in locked_states[-1][1]
+
+
 def test_official_llada_sampler_delays_eos_when_configured():
     class Tokenizer:
         eos_token_id = 2

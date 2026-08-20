@@ -144,6 +144,14 @@ def resolve_generation_settings(config: dict[str, Any], task: str, mode: str) ->
     return settings
 
 
+def resolve_autoregressive_generation_settings(config: dict[str, Any], task: str) -> dict[str, Any]:
+    """Resolve settings for the independent autoregressive baseline."""
+    settings = dict(config.get("autoregressive_generation", {}))
+    settings.update(config.get("autoregressive_task_generation", {}).get(task, {}))
+    settings.setdefault("max_new_tokens", 256)
+    return settings
+
+
 def resolve_llada_generation_settings(config: dict[str, Any], task: str) -> dict[str, Any]:
     """Resolve official LLaDA-8B-Instruct decoding and per-task paper settings."""
     settings = resolve_generation_settings(config, task, "mask_only")

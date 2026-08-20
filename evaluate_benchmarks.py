@@ -18,7 +18,7 @@ from tqdm.auto import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_autoregressive_generation_settings, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
 from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
 from diffusion_lm.judging import judge_open_ended_groups
 
@@ -63,7 +63,19 @@ def _generate_ar(session, prompt: str, max_new_tokens: int, original_base: bool 
                     for name, value in initial.items():
                         if name in named:
                             named[name].data.copy_(value.to(named[name].device, dtype=named[name].dtype))
-            generated = session.model.generate(torch.tensor([prefix], device=session.device), max_new_tokens=max_new_tokens, do_sample=False, use_cache=True)
+            input_ids = torch.tensor([prefix], device=session.device)
+            attention_mask = torch.ones_like(input_ids)
+            pad_token_id = session.tokenizer.pad_token_id
+            if pad_token_id is None:
+                pad_token_id = session.tokenizer.eos_token_id
+            generated = session.model.generate(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+                use_cache=True,
+                pad_token_id=pad_token_id,
+            )
     finally:
         for name, value in original_config.items():
             setattr(config, name, value)
@@ -241,6 +253,7 @@ def main() -> None:
                 task_settings = resolve_generation_settings(config, task, mode)
             if task_settings.get("sampler") == "llada_official" and "eot_token_id" not in task_settings:
                 task_settings["eot_token_id"] = _native_eot_token_id(session.tokenizer)
+            autoregressive_settings = resolve_autoregressive_generation_settings(config, task)
             if task == "open_ended":
                 print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
                 diffusion_texts = []
@@ -261,11 +274,11 @@ def main() -> None:
                     for index, example in enumerate(ar_progress, start=1):
                         if show_open_ended_answers:
                             print(f"\n[autoregressive {index}/{len(examples)}] generating: {example.prompt}", flush=True)
-                        text = _generate_ar(session, example.prompt, int(task_settings.get("max_new_tokens", 256)), original_base=True)
+                        text = _generate_ar(session, example.prompt, int(autoregressive_settings["max_new_tokens"]), original_base=True)
                         ar_texts.append(text)
                         if show_open_ended_answers:
                             _show_open_ended_answer(ar_progress, "autoregressive", index, len(examples), example.prompt, text)
-                    open_ended_pending.append({"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}})
+                    open_ended_pending.append({"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "inference_settings": autoregressive_settings})
                     message += " | autoregressive generation complete"
                 if config.get("include_autoregressive", False) and not supports_autoregressive:
                     message += " | autoregressive comparison skipped"
@@ -289,9 +302,9 @@ def main() -> None:
                 print(f"[{model_label}] {task}: {total} validation samples (autoregressive)", flush=True)
                 ar_progress = tqdm(examples, desc=f"{model_label}/{task} autoregressive", unit="sample")
                 for index, example in enumerate(ar_progress, start=1):
-                    ar_text = _generate_ar(session, example.prompt, int(task_settings.get("max_new_tokens", 256)), original_base=True)
+                    ar_text = _generate_ar(session, example.prompt, int(autoregressive_settings["max_new_tokens"]), original_base=True)
                     ar_ok = score_prediction(example, ar_text); ar_correct += int(ar_ok)
-                    record = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}}
+                    record = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "autoregressive", "prompt": example.prompt, "prediction": ar_text, "target": example.answer, "correct": ar_ok, "inference_settings": autoregressive_settings}
                     if example.kind != "code":
                         record.update(extracted_prediction=extract_answer(ar_text, example.kind, example.answer), extracted_target=extract_answer(example.answer, example.kind))
                     reporter.save_result(record)
@@ -304,7 +317,7 @@ def main() -> None:
                     message += " | autoregressive comparison skipped"
                     print(message)
                     continue
-                ar_summary = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": {"max_new_tokens": int(task_settings.get("max_new_tokens", 256))}, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
+                ar_summary = {"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": autoregressive_settings, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
                 reporter.save_summary(ar_summary)
                 message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
             print(message)

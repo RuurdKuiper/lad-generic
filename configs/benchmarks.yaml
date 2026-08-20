@@ -15,6 +15,18 @@ cache_dir: data/huggingface
 results_dir: outputs/benchmark_runs  # Each invocation creates its own timestamped directory here.
 # run_name: arc-smoke  # Optional readable suffix for the timestamped run ID.
 include_autoregressive: false  # Options: true, false
+# Independent greedy-decoding budgets for the original-base AR comparison.
+autoregressive_task_generation:
+  open_ended: {max_new_tokens: 128}
+  mmlu: {max_new_tokens: 64}
+  mmlu_pro: {max_new_tokens: 2048}
+  hellaswag: {max_new_tokens: 64}
+  arc_c: {max_new_tokens: 64}
+  gsm8k: {max_new_tokens: 256}
+  math: {max_new_tokens: 256}
+  gpqa: {max_new_tokens: 128}
+  humaneval: {max_new_tokens: 256}
+  mbpp: {max_new_tokens: 128}
 show_open_ended_answers: true  # Set true to print each open-ended prompt and final answer as it completes.
 perplexity:
   # Independent 14B reference model used only after open-ended generation.

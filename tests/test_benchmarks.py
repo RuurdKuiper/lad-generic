@@ -3,7 +3,7 @@ import json
 import pytest
 import torch
 
-from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _humaneval_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.benchmarks import BenchmarkExample, BenchmarkRunReporter, _benchmark_spec, _boxed, _choice_prompt, _extract_python_code, _gsm8k_prompt, _humaneval_prompt, _math_prompt, _mbpp_prompt, _multiple_choice_fields, _sample_indices, extract_answer, load_benchmark, resolve_autoregressive_generation_settings, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
 
 
 def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
@@ -377,6 +377,19 @@ def test_legacy_generation_settings_fall_back_to_structured_settings():
     settings = resolve_generation_settings(config, "open_ended", "legacy")
 
     assert settings["temperature"] == 0.9
+
+
+def test_autoregressive_generation_has_independent_task_budgets():
+    config = {
+        "generation": {"max_new_tokens": 128},
+        "task_generation": {"mmlu_pro": {"max_new_tokens": 256}},
+        "autoregressive_generation": {"max_new_tokens": 512},
+        "autoregressive_task_generation": {"mmlu_pro": {"max_new_tokens": 2048}},
+    }
+
+    assert resolve_autoregressive_generation_settings(config, "mmlu_pro")["max_new_tokens"] == 2048
+    assert resolve_autoregressive_generation_settings(config, "mmlu")["max_new_tokens"] == 512
+    assert resolve_autoregressive_generation_settings({}, "mmlu_pro")["max_new_tokens"] == 256
 
 
 def test_llada_uses_published_task_specific_inference_settings():

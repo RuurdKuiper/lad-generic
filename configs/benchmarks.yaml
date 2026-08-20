@@ -8,6 +8,7 @@ tasks: [arc_c]  # Options: mmlu, mmlu_pro, hellaswag, arc_c, gsm8k, math, gpqa, 
 split: test
 limit: 10
 # Use `limit_fraction: 0.05` instead of `limit` for an evenly-spaced 1/20 smoke sample of every task.
+# MMLU and MMLU-Pro subsets are shuffled deterministically first to span subjects.
 # limit_fraction: 0.05
 device: auto  # Options: auto, cuda, mps, cpu
 cache_dir: data/huggingface

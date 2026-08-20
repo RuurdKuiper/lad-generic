@@ -78,6 +78,17 @@ def test_fractional_sampling_is_evenly_spaced_and_rounded_up():
     assert _sample_indices(101, limit_fraction=0.05) == [0, 16, 33, 50, 67, 84]
 
 
+def test_limited_sampling_spans_grouped_subjects():
+    indices = _sample_indices(400, limit=50, shuffle=True)
+
+    assert indices == _sample_indices(400, limit=50, shuffle=True)
+    assert {index // 100 for index in indices} == {0, 1, 2, 3}
+
+
+def test_limited_sampling_keeps_the_prefix_unless_shuffle_is_requested():
+    assert _sample_indices(100, limit=5) == [0, 1, 2, 3, 4]
+
+
 def test_benchmark_limits_are_mutually_exclusive():
     with pytest.raises(ValueError, match="either limit or limit_fraction"):
         _sample_indices(100, limit=5, limit_fraction=0.05)

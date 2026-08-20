@@ -20,9 +20,11 @@ import torch
 
 
 MC_TASKS = {"mmlu", "mmlu_pro", "hellaswag", "arc_c", "gpqa"}
+SUBJECT_CATEGORY_TASKS = {"mmlu", "mmlu_pro"}
 ALL_TASKS = ["mmlu", "mmlu_pro", "hellaswag", "arc_c", "gsm8k", "math", "gpqa", "humaneval", "mbpp"]
 OPEN_ENDED_TASK = "open_ended"
 AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
+BENCHMARK_SAMPLE_SEED = 1234
 
 # Published pure-diffusion settings for LLaDA-8B-Instruct (paper Appendix B.4
 # and the official OpenCompass reproduction configs).  The paper profiles use
@@ -391,8 +393,8 @@ def _math_answers_equal(prediction: str, target: str) -> bool:
         return False
 
 
-def _sample_indices(size: int, limit: int | None = None, limit_fraction: float | None = None) -> list[int]:
-    """Select a deterministic prefix or an evenly-spaced dataset fraction."""
+def _sample_indices(size: int, limit: int | None = None, limit_fraction: float | None = None, shuffle: bool = False) -> list[int]:
+    """Select a prefix/fraction, optionally shuffling grouped datasets first."""
     if limit is not None and limit_fraction is not None:
         raise ValueError("Set either limit or limit_fraction, not both")
     if limit_fraction is not None:
@@ -400,13 +402,22 @@ def _sample_indices(size: int, limit: int | None = None, limit_fraction: float |
         if not 0.0 < fraction <= 1.0:
             raise ValueError("limit_fraction must be greater than 0 and at most 1")
         count = min(size, max(1, math.ceil(size * fraction))) if size else 0
-        return [(index * size) // count for index in range(count)]
-    if limit is not None:
+    elif limit is not None:
         count = int(limit)
         if count < 1:
             raise ValueError("limit must be positive")
-        return list(range(min(count, size)))
-    return list(range(size))
+        count = min(count, size)
+    else:
+        count = size
+    if count >= size:
+        return list(range(size))
+    if shuffle:
+        indices = list(range(size))
+        random.Random(BENCHMARK_SAMPLE_SEED).shuffle(indices)
+        return indices[:count]
+    if limit_fraction is not None:
+        return [(index * size) // count for index in range(count)]
+    return list(range(count))
 
 
 def _benchmark_spec(name: str, split: str) -> tuple[str, str | None, str]:
@@ -498,7 +509,7 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
     from datasets import load_dataset
     path, config, actual_split = _benchmark_spec(name, split)
     dataset = load_dataset(path, config, split=actual_split, cache_dir=cache_dir, token=token)
-    indices = _sample_indices(len(dataset), limit, limit_fraction)
+    indices = _sample_indices(len(dataset), limit, limit_fraction, shuffle=name in SUBJECT_CATEGORY_TASKS)
     if len(indices) != len(dataset):
         dataset = dataset.select(indices)
     items = []
@@ -507,7 +518,7 @@ def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, tok
             question, choices, answer = _multiple_choice_fields(name, row, index)
             answer_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".index(answer)
             target = f"{answer}: {choices[answer_index]}"
-            category = row.get("subject", row.get("category")) if name in {"mmlu", "mmlu_pro"} else None
+            category = row.get("subject", row.get("category")) if name in SUBJECT_CATEGORY_TASKS else None
             items.append(BenchmarkExample(name, str(index), _choice_prompt(name, question, choices, category), target, "multiple_choice", row))
         elif name == "gsm8k":
             prompt = _gsm8k_prompt(row["question"])

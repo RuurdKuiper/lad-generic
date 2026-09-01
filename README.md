@@ -262,6 +262,17 @@ It is still a diffusion language model: inference must continue to use this
 repository's explicit bidirectional attention mask and denoising sampler;
 ordinary causal `model.generate()` does not reproduce LAD generation.
 
+The benchmark runner accepts a merged checkpoint by absolute path:
+
+```yaml
+models:
+  - merged:/content/drive/MyDrive/lad-generic-results/merged/llama-3.1-8b-mask
+```
+
+Merged entries support the same diffusion tasks and quantized inference as
+adapter entries. The optional original-base autoregressive comparison is
+skipped because merging permanently folds the adapter into that model copy.
+
 For an inference-only comparison with the earlier full-model checkpoint, the
 app has one `Legacy checkpoint` loader row. It automatically uses
 `legacy/inference/diffusion-model-3B.pth` when that local file exists, without

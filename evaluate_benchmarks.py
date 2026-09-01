@@ -19,7 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_autoregressive_generation_settings, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
-from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_session, release_session, select_device
+from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_merged_session, load_session, release_session, select_device
 from diffusion_lm.judging import judge_open_ended_groups
 
 load_dotenv(PROJECT_ROOT / ".env")
@@ -233,6 +233,32 @@ def main() -> None:
             run_config = {"model_source": "huggingface_legacy", "repo_id": repo_id, "filename": filename, "tokenizer_name_or_path": tokenizer_name}
             mode = "structured"
             session = load_hosted_legacy_session(repo_id, filename, tokenizer_name, config.get("device", "auto"))
+            supports_autoregressive = False
+        elif selection.startswith("merged:"):
+            merged_descriptor = selection.split(":", 1)[1].strip()
+            if not merged_descriptor:
+                raise ValueError("Merged model entries must use merged:/path/to/model")
+            merged_path = Path(merged_descriptor).expanduser().resolve()
+            saved_config_path = merged_path / "lad_run_config.json"
+            if saved_config_path.is_file():
+                run_config = json.loads(saved_config_path.read_text())
+            else:
+                # Merges created before lad_run_config.json was introduced can
+                # recover it from the adapter path recorded in the report.
+                report_path = merged_path / "lad_merge_report.json"
+                report = json.loads(report_path.read_text()) if report_path.is_file() else {}
+                source_adapter = Path(report.get("adapter_path", ""))
+                source_config_path = source_adapter.parent / "resolved_config.json"
+                run_config = json.loads(source_config_path.read_text()) if source_config_path.is_file() else {}
+            model_label = f"merged:{merged_path}"
+            mode = run_config.get("corruption_mode", "mask_only")
+            session = load_merged_session(
+                merged_path,
+                config.get("device", "auto"),
+                config.get("quantization"),
+                run_config,
+            )
+            # A merged model cannot disable LoRA to recover the original base.
             supports_autoregressive = False
         else:
             model_label = selection

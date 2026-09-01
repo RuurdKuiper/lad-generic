@@ -162,6 +162,10 @@ def merge_adapter(
         max_shard_size=max_shard_size,
     )
     tokenizer.save_pretrained(output_path)
+    if run_config:
+        (output_path / "lad_run_config.json").write_text(
+            json.dumps(run_config, indent=2, sort_keys=True) + "\n"
+        )
 
     report = MergeReport(
         base_model=str(base_model),

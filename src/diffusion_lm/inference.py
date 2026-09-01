@@ -137,6 +137,90 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     return session
 
 
+def load_merged_session(
+    model_path: str | Path,
+    device_name: str = "auto",
+    quantization: str | None = None,
+    source_config: dict[str, Any] | None = None,
+) -> InferenceSession:
+    """Load a standalone model produced by ``merge_adapter.py``."""
+    model_path = Path(model_path).expanduser().resolve()
+    if not (model_path / "config.json").is_file():
+        raise ValueError(f"Merged model directory has no config.json: {model_path}")
+
+    run_config = dict(source_config or {})
+    saved_run_config = model_path / "lad_run_config.json"
+    if not run_config and saved_run_config.is_file():
+        run_config = json.loads(saved_run_config.read_text())
+
+    device = select_device(device_name)
+    dtype = _precision_dtype(run_config.get("precision", "bf16"), device)
+    requested_quantization = str(quantization or "none").lower()
+    if requested_quantization == "auto":
+        requested_quantization = "none"
+    if requested_quantization in {"4-bit", "qlora"}:
+        requested_quantization = "4bit"
+    if requested_quantization not in {"none", "off", "false", "4bit"}:
+        raise ValueError("Merged-model quantization must be 'none' or '4bit'.")
+
+    token = os.getenv("HF_TOKEN")
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_path,
+        use_fast=True,
+        token=token,
+        clean_up_tokenization_spaces=False,
+    )
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    use_4bit = requested_quantization == "4bit"
+    compute_dtype = dtype
+    load_kwargs: dict[str, Any] = {
+        "torch_dtype": dtype,
+        "token": token,
+        "trust_remote_code": False,
+    }
+    if use_4bit:
+        if device.type != "cuda":
+            raise RuntimeError("4-bit merged-model inference requires an NVIDIA CUDA device.")
+        try:
+            from transformers import BitsAndBytesConfig
+            import bitsandbytes  # noqa: F401
+        except ImportError as exc:
+            raise ImportError("4-bit inference requires bitsandbytes; install with `pip install -e '.[cuda]'`.") from exc
+        compute_dtype = _precision_dtype(run_config.get("compute_dtype", run_config.get("precision", "bf16")), device)
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type=str(run_config.get("quantization_type", "nf4")),
+            bnb_4bit_compute_dtype=compute_dtype,
+            bnb_4bit_use_double_quant=bool(run_config.get("double_quant", True)),
+        )
+        load_kwargs["device_map"] = {"": device.index if device.index is not None else 0}
+
+    model = AutoModelForCausalLM.from_pretrained(model_path, **load_kwargs)
+    model.config.use_cache = False
+    model.config.is_causal = False
+    if hasattr(model.config, "use_bidirectional_attention"):
+        model.config.use_bidirectional_attention = True
+    if not use_4bit:
+        model.to(device)
+    model.eval()
+
+    mask_info = validate_mask_token(tokenizer, str(run_config.get("mask_token", "MASK")))
+    session = InferenceSession(
+        model=model,
+        tokenizer=tokenizer,
+        device=device,
+        adapter_path=model_path,
+        config=run_config,
+        mask_token_id=mask_info["mask_token_id"],
+        quantization="4bit" if use_4bit else "none",
+        compute_dtype=str(compute_dtype).removeprefix("torch."),
+    )
+    preflight_session(session)
+    return session
+
+
 def _load_legacy_checkpoint_session(checkpoint: str | Path, tokenizer_name_or_path: str, device_name: str = "auto", source_config: dict[str, Any] | None = None) -> InferenceSession:
     """Load one trusted legacy full-object checkpoint from a local path."""
     checkpoint = Path(checkpoint).expanduser().resolve()

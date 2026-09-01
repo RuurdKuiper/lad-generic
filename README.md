@@ -226,6 +226,42 @@ same `Inference quantization` selector. On CUDA GPUs without native BF16
 support (including T4), inference automatically uses FP16 compute even when
 the saved training configuration requested BF16.
 
+### Merge an adapter into the base model
+
+Standard LoRA is an additive low-rank update, so a finished adapter can be
+folded into each base projection without retraining. The resulting checkpoint
+has the same parameter shapes and inference cost as the original base model;
+its size no longer depends on LoRA rank. The merger also restores this
+project's separately saved normalization parameters and compares
+bidirectional logits before and after the merge.
+
+In Colab, after mounting Drive and installing this repository, run:
+
+```python
+import subprocess
+
+adapter = "/content/drive/MyDrive/lad-generic-results/outputs/llama-3.1-8b-mask/best"
+merged = "/content/drive/MyDrive/lad-generic-results/merged/llama-3.1-8b-mask"
+subprocess.run([
+    "python", "merge_adapter.py", adapter, merged,
+    "--dtype", "bf16", "--device", "cpu",
+], check=True)
+```
+
+The output directory must be new or empty. For an 8B model, BF16 merging
+typically needs roughly 18--22 GB of working RAM; select a high-RAM Colab
+runtime for the CPU command. An A100-class GPU can use `--device cuda`; a
+16 GB T4 is generally too small. Do not load the base through bitsandbytes
+during merging: merge into FP16/BF16/FP32 first, then quantize the completed
+checkpoint if desired. `--dtype fp32` minimizes merge rounding but doubles
+the checkpoint and working-memory requirement. `--no-verify` skips the logit
+comparison when memory is especially constrained.
+
+The merged model is standalone and no longer needs PEFT at inference time.
+It is still a diffusion language model: inference must continue to use this
+repository's explicit bidirectional attention mask and denoising sampler;
+ordinary causal `model.generate()` does not reproduce LAD generation.
+
 For an inference-only comparison with the earlier full-model checkpoint, the
 app has one `Legacy checkpoint` loader row. It automatically uses
 `legacy/inference/diffusion-model-3B.pth` when that local file exists, without

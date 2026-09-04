@@ -3,19 +3,23 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-100k-256
+dataset_name: Ruurd/LAD-training-1m-256
 splits: {train: train, validation: validation, test: test}
 
 # File paths
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
 validation_samples: 200
+# The original run used adapter-only checkpoints. Warm-start from its final
+# weights and exclude the samples consumed by its 25,000 updates.
+resume_from_adapter: outputs/llama-3.1-8b-mask/final
+resume_data_updates: 25000
 
 # Corruption and loss behavior
 corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask-long
+output_dir: outputs/llama-3.1-8b-mask-continued
 seed: 42
 t_min: 0.001
 include_answer_eos: true
@@ -27,30 +31,38 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
+# Treat learning_rate as the rate for the reference effective batch size.
+learning_rate_scaling:
+  enabled: false
+  mode: sqrt  # Options: sqrt, linear
+  reference_batch_size: 8
 scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
 warmup_steps: 100
 num_workers: 4
+prefetch_factor: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 100000
+max_updates: 25000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
+pad_to_multiple_of: 16  # Required for Transformer Engine FP8 matrix dimensions.
 lora_r: 1024
 lora_alpha: 1024
 train_normalization_layers: false
-batch_size: 8
+batch_size: 16
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false
+selected_logit_optimization: true
 
 # Logging and checkpointing
 logging_steps: 100
 validation_steps: 250
 checkpoint_steps: 5000
-checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
+checkpoint_mode: every_model  # Compact adapter snapshots; optimizer/scheduler/RNG state is not stored.
 
 # Perplexity evaluation during training
 generation_perplexity:
@@ -60,8 +72,8 @@ generation_perplexity:
   num_steps: 32
   max_new_tokens: 64
   noise_level: 1.0
-  temperature: 1.0
-  top_k: 100
+  temperature: 0.5
+  top_k: 3
   permanent_unmask: true
   confidence_guided: true
   proportional_unmask: false
@@ -69,7 +81,11 @@ generation_perplexity:
 
 
 # Quantization
-precision: fp16  # Options: fp16, bf16, fp32
+precision: bf16  # Master weights and unsupported-GPU fallback precision.
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
 quantization: none  # Options: none, 4bit
 optimizer: adamw  # Options: adamw, adamw8bit
 weight_decay: 0.01

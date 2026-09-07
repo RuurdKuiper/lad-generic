@@ -406,7 +406,10 @@ def _apply_repetition_penalty(
             exponents,
         )
         penalized = torch.where(scores < 0, scores * scales, scores / scales)
-        adjusted[batch_index, :, token_ids] = penalized
+        # FP32 scales intentionally avoid low-precision exponent overflow for
+        # moderate counts, but they promote BF16/FP16 scores during arithmetic.
+        # Cast back before indexed assignment into the original logits tensor.
+        adjusted[batch_index, :, token_ids] = penalized.to(dtype=adjusted.dtype)
     return adjusted
 
 

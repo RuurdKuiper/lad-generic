@@ -96,6 +96,23 @@ def test_repetition_penalty_rejects_values_below_one():
         )
 
 
+@pytest.mark.parametrize("dtype", [torch.float16, torch.bfloat16])
+def test_repetition_penalty_preserves_low_precision_logits_dtype(dtype):
+    logits = torch.zeros((1, 3, 6), dtype=dtype)
+    logits[0, :, 2] = 4.0
+
+    penalized = _apply_repetition_penalty(
+        logits,
+        torch.tensor([[2, 2, 5]]),
+        1.25,
+        mask_token_id=5,
+        exclude_self=True,
+    )
+
+    assert penalized.dtype == dtype
+    assert penalized[0, 2, 2].float().item() == pytest.approx(4.0 / (1.25 ** 2), rel=0.01)
+
+
 def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():
     class InnerModel(torch.nn.Module):
         def forward(self, input_ids, attention_mask, output_hidden_states, use_cache):

@@ -131,7 +131,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         noise_level = gr.Slider(0, 1, value=.5, step=.05, label="Initial re-mask probability")
         temperature = gr.Slider(0, 2, value=.7, step=.05, label="Temperature")
         top_k = gr.Slider(1, 100, value=20, step=1, label="Top-k")
-        repetition_penalty = gr.Slider(1, 2.5, value=1.1, step=.05, label="Repetition penalty (1 = off)")
+        repetition_penalty = gr.Slider(1, 2.5, value=1.02, step=.01, label="Repetition penalty (1 = off)")
         seed = gr.Number(value=42, precision=0, label="Seed")
     with gr.Row():
         retention_mode = gr.Dropdown(

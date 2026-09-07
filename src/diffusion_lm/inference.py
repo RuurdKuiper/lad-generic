@@ -365,14 +365,16 @@ def _apply_repetition_penalty(
     mask_token_id: int,
     *,
     exclude_self: bool = False,
+    excluded_token_ids: set[int] | None = None,
 ) -> torch.Tensor:
-    """Apply a frequency-scaled sign-aware repetition penalty to answer logits.
+    """Reduce repeated-token probability weights by ``penalty ** count``.
 
     Only tokens already present in the generated answer are penalized; prompt
-    tokens and MASK never contribute. For the revisable denoise stream, a
-    position's current token is excluded from its occurrence count, avoiding
-    needless churn of unique predictions. Predicting occurrence N therefore
-    uses ``penalty ** (N - 1)``.
+    tokens, MASK, and configured special tokens never contribute. Subtracting
+    ``count * log(penalty)`` from a logit divides its unnormalized softmax
+    probability by ``penalty ** count``. For the revisable denoise stream, a
+    position's current token is excluded from its count, avoiding needless
+    churn of unique predictions.
     """
     penalty = float(penalty)
     if penalty < 1.0:
@@ -386,11 +388,19 @@ def _apply_repetition_penalty(
     vocabulary_size = adjusted.shape[-1]
     for batch_index in range(answer_ids.shape[0]):
         valid = answer_ids[batch_index]
-        valid = valid[
+        valid_mask = (
             (valid != int(mask_token_id))
             & (valid >= 0)
             & (valid < vocabulary_size)
-        ]
+        )
+        excluded = set(excluded_token_ids or ())
+        excluded.add(int(mask_token_id))
+        if excluded:
+            excluded_tensor = torch.tensor(
+                sorted(excluded), device=valid.device, dtype=valid.dtype
+            )
+            valid_mask &= ~torch.isin(valid, excluded_tensor)
+        valid = valid[valid_mask]
         if not len(valid):
             continue
         token_ids, counts = torch.unique(valid, return_counts=True)
@@ -401,14 +411,12 @@ def _apply_repetition_penalty(
             exponents = exponents - (current[:, None] == token_ids[None, :]).to(
                 dtype=exponents.dtype
             )
-        scales = torch.pow(
-            torch.tensor(penalty, device=logits.device, dtype=torch.float32),
-            exponents,
+        log_penalty = torch.log(
+            torch.tensor(penalty, device=logits.device, dtype=torch.float32)
         )
-        penalized = torch.where(scores < 0, scores * scales, scores / scales)
-        # FP32 scales intentionally avoid low-precision exponent overflow for
-        # moderate counts, but they promote BF16/FP16 scores during arithmetic.
-        # Cast back before indexed assignment into the original logits tensor.
+        penalized = scores.float() - exponents.float() * log_penalty
+        # Penalty arithmetic stays in FP32 for numerical stability, then returns
+        # to the model's native BF16/FP16 dtype for indexed assignment.
         adjusted[batch_index, :, token_ids] = penalized.to(dtype=adjusted.dtype)
     return adjusted
 
@@ -607,10 +615,11 @@ def llada_generate(
             else:
                 logits = forward_denoising(session, x, padding)
             logits[:, prompt_length:] = _apply_repetition_penalty(
-                logits[:, prompt_length:],
-                x[:, prompt_length:],
-                repetition_penalty,
-                session.mask_token_id,
+            logits[:, prompt_length:],
+            x[:, prompt_length:],
+            repetition_penalty,
+            session.mask_token_id,
+            excluded_token_ids=set(getattr(session.tokenizer, "all_special_ids", [])),
             )
             if logits_eos_inf:
                 logits = logits.clone()
@@ -702,6 +711,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 repetition_penalty,
                 session.mask_token_id,
                 exclude_self=True,
+                excluded_token_ids=set(getattr(session.tokenizer, "all_special_ids", [])),
             )[0]
             sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
         retention_confidence = confidence

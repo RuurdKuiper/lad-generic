@@ -70,7 +70,7 @@ def test_llada_linear_schedule_transfers_every_mask_once():
     assert _llada_transfer_schedule(10, 4) == [3, 3, 2, 2]
 
 
-def test_repetition_penalty_is_frequency_scaled_and_excludes_current_position():
+def test_repetition_penalty_scales_probability_weight_and_excludes_current_position():
     logits = torch.zeros((1, 3, 6))
     logits[0, :, 2] = torch.tensor([4.0, -4.0, 2.0])
     logits[0, :, 3] = 6.0
@@ -81,10 +81,11 @@ def test_repetition_penalty_is_frequency_scaled_and_excludes_current_position():
     )
 
     # At an existing occurrence, the current position is excluded, leaving one
-    # other occurrence (2**1). At MASK, predicting a third copy uses 2**2.
-    assert penalized[0, 0, 2].item() == 2.0
-    assert penalized[0, 1, 2].item() == -8.0
-    assert penalized[0, 2, 2].item() == 0.5
+    # other occurrence. At MASK, predicting a third copy divides its softmax
+    # weight by 2**2, which subtracts log(2**2) from the logit.
+    assert penalized[0, 0, 2].item() == pytest.approx(4.0 - torch.log(torch.tensor(2.0)).item())
+    assert penalized[0, 1, 2].item() == pytest.approx(-4.0 - torch.log(torch.tensor(2.0)).item())
+    assert penalized[0, 2, 2].item() == pytest.approx(2.0 - torch.log(torch.tensor(4.0)).item())
     # Tokens absent from the current answer are unchanged; MASK is excluded.
     assert torch.equal(penalized[0, :, 3], logits[0, :, 3])
 
@@ -94,6 +95,21 @@ def test_repetition_penalty_rejects_values_below_one():
         _apply_repetition_penalty(
             torch.zeros((1, 1, 3)), torch.tensor([[1]]), 0.9, mask_token_id=2
         )
+
+
+def test_repetition_penalty_excludes_special_tokens():
+    logits = torch.zeros((1, 2, 6))
+    logits[0, :, 2] = 4.0
+
+    penalized = _apply_repetition_penalty(
+        logits,
+        torch.tensor([[2, 5]]),
+        2.0,
+        mask_token_id=5,
+        excluded_token_ids={2},
+    )
+
+    assert torch.equal(penalized, logits)
 
 
 @pytest.mark.parametrize("dtype", [torch.float16, torch.bfloat16])
@@ -110,7 +126,9 @@ def test_repetition_penalty_preserves_low_precision_logits_dtype(dtype):
     )
 
     assert penalized.dtype == dtype
-    assert penalized[0, 2, 2].float().item() == pytest.approx(4.0 / (1.25 ** 2), rel=0.01)
+    assert penalized[0, 2, 2].float().item() == pytest.approx(
+        4.0 - 2 * torch.log(torch.tensor(1.25)).item(), rel=0.01
+    )
 
 
 def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():

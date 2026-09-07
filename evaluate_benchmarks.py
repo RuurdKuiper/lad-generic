@@ -98,7 +98,8 @@ class _null_context:
 
 def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
     """Generate one pure-diffusion answer using the run's corruption strategy."""
-    if settings.get("sampler") == "llada_official":
+    sampler = str(settings.get("sampler", "denoise_stream"))
+    if sampler == "llada_official":
         return llada_generate(
             session,
             prompt,
@@ -114,12 +115,30 @@ def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
             system_prompt=str(settings.get("system_prompt", "")),
             seed=int(settings.get("seed", 1234)),
         )
+    if sampler != "denoise_stream":
+        raise ValueError(f"Unknown diffusion sampler: {sampler!r}")
     structured = mode in {"structured", "legacy"}
     # Mask-only (LLaDA-style) evaluation always begins with the answer fully
     # masked; configured noise levels remain applicable to structured runs.
     noise_level = 1.0 if mode == "mask_only" else float(settings.get("noise_level", .5))
     final = ""
-    for final, _status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 256)), int(settings.get("num_steps", settings.get("max_new_tokens", 256))), noise_level, float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)), bool(settings.get("permanent_unmask", structured)), bool(settings.get("confidence_guided", structured)), bool(settings.get("proportional_unmask", True))):
+    for final, _status, _html in denoise_stream(
+        session,
+        prompt,
+        settings.get("system_prompt", "You are a helpful assistant."),
+        int(settings.get("max_new_tokens", 256)),
+        int(settings.get("num_steps", settings.get("max_new_tokens", 256))),
+        noise_level,
+        float(settings.get("temperature", .7)),
+        int(settings.get("top_k", 20)),
+        int(settings.get("seed", 1234)),
+        permanent_unmask=bool(settings.get("permanent_unmask", structured)),
+        confidence_guided=bool(settings.get("confidence_guided", structured)),
+        proportional_unmask=bool(settings.get("proportional_unmask", True)),
+        early_stopping=bool(settings.get("early_stopping", False)),
+        confidence_eos_eot_inf=bool(settings.get("confidence_eos_eot_inf", False)),
+        freeze_retained_tokens=bool(settings.get("freeze_retained_tokens", True)),
+    ):
         pass
     return final
 

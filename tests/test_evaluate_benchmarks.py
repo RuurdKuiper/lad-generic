@@ -10,6 +10,7 @@ assert SPEC is not None and SPEC.loader is not None
 EVALUATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(EVALUATOR)
 _generate_ar = EVALUATOR._generate_ar
+_generate_diffusion = EVALUATOR._generate_diffusion
 
 
 def test_autoregressive_generation_passes_attention_mask_and_pad_token(monkeypatch):
@@ -45,3 +46,43 @@ def test_autoregressive_generation_passes_attention_mask_and_pad_token(monkeypat
     assert model.generate_kwargs["pad_token_id"] == tokenizer.eos_token_id
     assert model.generate_kwargs["max_new_tokens"] == 2048
     assert model.generate_kwargs["do_sample"] is False
+
+
+def test_denoise_stream_sampler_receives_all_configured_controls(monkeypatch):
+    captured = {}
+
+    def fake_denoise_stream(*args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+        yield "answer", "done", ""
+
+    monkeypatch.setattr(EVALUATOR, "denoise_stream", fake_denoise_stream)
+    session = SimpleNamespace()
+    settings = {
+        "sampler": "denoise_stream",
+        "system_prompt": "System",
+        "max_new_tokens": 128,
+        "num_steps": 64,
+        "noise_level": 0.75,
+        "temperature": 0.6,
+        "top_k": 7,
+        "seed": 99,
+        "permanent_unmask": False,
+        "confidence_guided": True,
+        "proportional_unmask": True,
+        "early_stopping": True,
+        "confidence_eos_eot_inf": True,
+        "freeze_retained_tokens": False,
+    }
+
+    assert _generate_diffusion(session, "Question", settings, "structured") == "answer"
+    assert captured["args"][:4] == (session, "Question", "System", 128)
+    assert captured["args"][4:] == (64, 0.75, 0.6, 7, 99)
+    assert captured["kwargs"] == {
+        "permanent_unmask": False,
+        "confidence_guided": True,
+        "proportional_unmask": True,
+        "early_stopping": True,
+        "confidence_eos_eot_inf": True,
+        "freeze_retained_tokens": False,
+    }

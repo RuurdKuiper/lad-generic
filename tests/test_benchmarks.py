@@ -422,3 +422,35 @@ def test_mask_only_adapters_use_the_same_official_task_sampler():
     assert gsm8k["proportional_unmask"] is False
     assert math["max_new_tokens"] == math["num_steps"] == math["block_length"] == 512
     assert overridden["block_length"] == 8
+
+
+def test_global_diffusion_sampler_switch_applies_to_every_model_family():
+    config = {
+        "diffusion_sampler": "denoise_stream",
+        "generation": {
+            "temperature": 0.6,
+            "top_k": 7,
+            "proportional_unmask": True,
+            "permanent_unmask": False,
+            "confidence_guided": True,
+        },
+    }
+
+    structured = resolve_generation_settings(config, "open_ended", "structured")
+    masked = resolve_mask_only_generation_settings(config, "open_ended")
+    llada = resolve_llada_generation_settings(config, "open_ended")
+
+    for settings in (structured, masked, llada):
+        assert settings["sampler"] == "denoise_stream"
+        assert settings["temperature"] == 0.6
+        assert settings["top_k"] == 7
+        assert settings["proportional_unmask"] is True
+        assert settings["permanent_unmask"] is False
+        assert settings["confidence_guided"] is True
+
+
+def test_unknown_global_diffusion_sampler_is_rejected():
+    with pytest.raises(ValueError, match="diffusion sampler"):
+        resolve_mask_only_generation_settings(
+            {"diffusion_sampler": "not-a-sampler"}, "open_ended"
+        )

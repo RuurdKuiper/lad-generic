@@ -44,6 +44,9 @@ open_ended_judge:
   reasoning_effort: medium
   seed: 1234  # Deterministically shuffles anonymous candidate order per prompt.
   fail_on_error: false
+# One global switch applies to hosted LLaDA, mask-only adapters, and legacy models.
+# Options: llada_official, denoise_stream
+diffusion_sampler: llada_official
 generation:
   max_new_tokens: 128
   num_steps: 32

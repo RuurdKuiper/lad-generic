@@ -25,6 +25,7 @@ ALL_TASKS = ["mmlu", "mmlu_pro", "hellaswag", "arc_c", "gsm8k", "math", "gpqa", 
 OPEN_ENDED_TASK = "open_ended"
 AVAILABLE_TASKS = [*ALL_TASKS, OPEN_ENDED_TASK]
 BENCHMARK_SAMPLE_SEED = 1234
+DIFFUSION_SAMPLERS = {"denoise_stream", "llada_official"}
 
 # Published pure-diffusion settings for LLaDA-8B-Instruct (paper Appendix B.4
 # and the official OpenCompass reproduction configs).  The paper profiles use
@@ -139,8 +140,20 @@ def resolve_generation_settings(config: dict[str, Any], task: str, mode: str) ->
     settings.update(config.get("task_generation_by_corruption", {}).get(mode, {}).get(task, {}))
     if mode == "mask_only":
         # Mask-only training is evaluated with the full-remasking setup used
-        # by the training-time generation validation.
-        settings.update(noise_level=1.0, permanent_unmask=True, confidence_guided=True)
+        # by the training-time generation validation. Retention behavior stays
+        # explicitly configurable when the denoise-stream sampler is selected.
+        settings["noise_level"] = 1.0
+        settings.setdefault("permanent_unmask", True)
+        settings.setdefault("confidence_guided", True)
+    if "diffusion_sampler" in config:
+        settings["sampler"] = config["diffusion_sampler"]
+    if "sampler" in settings:
+        sampler = str(settings["sampler"])
+        if sampler not in DIFFUSION_SAMPLERS:
+            raise ValueError(
+                f"diffusion sampler must be one of {sorted(DIFFUSION_SAMPLERS)}; received {sampler!r}"
+            )
+        settings["sampler"] = sampler
     return settings
 
 
@@ -153,13 +166,21 @@ def resolve_autoregressive_generation_settings(config: dict[str, Any], task: str
 
 
 def resolve_llada_generation_settings(config: dict[str, Any], task: str) -> dict[str, Any]:
-    """Resolve official LLaDA-8B-Instruct decoding and per-task paper settings."""
+    """Resolve selectable denoise-stream or official decoding for hosted LLaDA."""
     settings = resolve_generation_settings(config, task, "mask_only")
-    for unused in ("noise_level", "top_k", "permanent_unmask", "confidence_guided", "early_stopping", "system_prompt"):
-        settings.pop(unused, None)
     profile = LLADA_INSTRUCT_TASK_SETTINGS.get(task, {})
     settings.update(profile)
-    settings.update({
+    family_settings = dict(config.get("llada_generation", {}))
+    task_settings = dict(config.get("llada_task_generation", {}).get(task, {}))
+    sampler_settings = dict(settings)
+    sampler_settings.update(family_settings)
+    sampler_settings.update(task_settings)
+    sampler = str(config.get("diffusion_sampler", sampler_settings.get("sampler", "llada_official")))
+    if sampler not in DIFFUSION_SAMPLERS:
+        raise ValueError(
+            f"diffusion sampler must be one of {sorted(DIFFUSION_SAMPLERS)}; received {sampler!r}"
+        )
+    official_defaults = {
         "sampler": "llada_official",
         "temperature": 0.0,
         "cfg_scale": 0.0,
@@ -168,21 +189,45 @@ def resolve_llada_generation_settings(config: dict[str, Any], task: str) -> dict
         "confidence_eos_eot_inf": bool(profile.get("confidence_eos_eot_inf", False)),
         "eot_token_id": 126348,
         "proportional_unmask": False,
-    })
-    settings.update(config.get("llada_generation", {}))
-    settings.update(config.get("llada_task_generation", {}).get(task, {}))
+    }
+    if sampler == "llada_official":
+        # Official defaults supersede generic denoise-stream settings, while
+        # explicit family/task overrides retain their existing precedence.
+        settings.update(official_defaults)
+        settings.update(family_settings)
+        settings.update(task_settings)
+        for unused in (
+            "noise_level", "top_k", "permanent_unmask", "confidence_guided",
+            "early_stopping", "freeze_retained_tokens",
+        ):
+            settings.pop(unused, None)
+        settings["proportional_unmask"] = False
+    else:
+        # Family-wide llada_generation contains official-only controls. Shared
+        # denoise controls come from generation/generation_by_corruption, while
+        # task overrides remain useful to both samplers.
+        settings.update(task_settings)
+    settings["sampler"] = sampler
     settings["block_length"] = int(settings.get("block_length", settings.get("max_new_tokens", 128)))
     return settings
 
 
 def resolve_mask_only_generation_settings(config: dict[str, Any], task: str) -> dict[str, Any]:
-    """Use LLaDA's official sampler and paper profile for a mask-only adapter."""
+    """Resolve selectable denoise-stream or official decoding for a mask-only adapter."""
     settings = resolve_generation_settings(config, task, "mask_only")
-    for unused in ("noise_level", "top_k", "permanent_unmask", "confidence_guided", "early_stopping"):
-        settings.pop(unused, None)
     profile = LLADA_INSTRUCT_TASK_SETTINGS.get(task, {})
     settings.update(profile)
-    settings.update({
+    family_settings = dict(config.get("mask_only_generation", {}))
+    task_settings = dict(config.get("mask_only_task_generation", {}).get(task, {}))
+    sampler_settings = dict(settings)
+    sampler_settings.update(family_settings)
+    sampler_settings.update(task_settings)
+    sampler = str(config.get("diffusion_sampler", sampler_settings.get("sampler", "llada_official")))
+    if sampler not in DIFFUSION_SAMPLERS:
+        raise ValueError(
+            f"diffusion sampler must be one of {sorted(DIFFUSION_SAMPLERS)}; received {sampler!r}"
+        )
+    official_defaults = {
         "sampler": "llada_official",
         "temperature": 0.0,
         "cfg_scale": 0.0,
@@ -190,9 +235,20 @@ def resolve_mask_only_generation_settings(config: dict[str, Any], task: str) -> 
         "logits_eos_inf": bool(profile.get("logits_eos_inf", False)),
         "confidence_eos_eot_inf": bool(profile.get("confidence_eos_eot_inf", False)),
         "proportional_unmask": False,
-    })
-    settings.update(config.get("mask_only_generation", {}))
-    settings.update(config.get("mask_only_task_generation", {}).get(task, {}))
+    }
+    if sampler == "llada_official":
+        settings.update(official_defaults)
+        settings.update(family_settings)
+        settings.update(task_settings)
+        for unused in (
+            "noise_level", "top_k", "permanent_unmask", "confidence_guided",
+            "early_stopping", "freeze_retained_tokens",
+        ):
+            settings.pop(unused, None)
+        settings["proportional_unmask"] = False
+    else:
+        settings.update(task_settings)
+    settings["sampler"] = sampler
     settings["block_length"] = int(settings.get("block_length", settings.get("max_new_tokens", 128)))
     return settings
 

@@ -114,6 +114,7 @@ def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
             eot_token_id=settings.get("eot_token_id"),
             system_prompt=str(settings.get("system_prompt", "")),
             seed=int(settings.get("seed", 1234)),
+            repetition_penalty=float(settings.get("repetition_penalty", 1.0)),
         )
     if sampler != "denoise_stream":
         raise ValueError(f"Unknown diffusion sampler: {sampler!r}")
@@ -138,6 +139,7 @@ def _generate_diffusion(session, prompt: str, settings: dict, mode: str) -> str:
         early_stopping=bool(settings.get("early_stopping", False)),
         confidence_eos_eot_inf=bool(settings.get("confidence_eos_eot_inf", False)),
         freeze_retained_tokens=bool(settings.get("freeze_retained_tokens", True)),
+        repetition_penalty=float(settings.get("repetition_penalty", 1.0)),
     ):
         pass
     return final

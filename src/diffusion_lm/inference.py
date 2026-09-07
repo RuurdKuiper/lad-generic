@@ -358,6 +358,58 @@ def _llada_gumbel_noise(logits: torch.Tensor, temperature: float) -> torch.Tenso
     return logits.exp() / (-torch.log(noise)).pow(float(temperature))
 
 
+def _apply_repetition_penalty(
+    logits: torch.Tensor,
+    answer_ids: torch.Tensor,
+    penalty: float,
+    mask_token_id: int,
+    *,
+    exclude_self: bool = False,
+) -> torch.Tensor:
+    """Apply a frequency-scaled sign-aware repetition penalty to answer logits.
+
+    Only tokens already present in the generated answer are penalized; prompt
+    tokens and MASK never contribute. For the revisable denoise stream, a
+    position's current token is excluded from its occurrence count, avoiding
+    needless churn of unique predictions. Predicting occurrence N therefore
+    uses ``penalty ** (N - 1)``.
+    """
+    penalty = float(penalty)
+    if penalty < 1.0:
+        raise ValueError("repetition_penalty must be at least 1.0")
+    if penalty == 1.0:
+        return logits
+    if logits.ndim != 3 or answer_ids.ndim != 2 or logits.shape[:2] != answer_ids.shape:
+        raise ValueError("repetition penalty expects logits [batch, length, vocab] matching answer IDs")
+
+    adjusted = logits.clone()
+    vocabulary_size = adjusted.shape[-1]
+    for batch_index in range(answer_ids.shape[0]):
+        valid = answer_ids[batch_index]
+        valid = valid[
+            (valid != int(mask_token_id))
+            & (valid >= 0)
+            & (valid < vocabulary_size)
+        ]
+        if not len(valid):
+            continue
+        token_ids, counts = torch.unique(valid, return_counts=True)
+        current = answer_ids[batch_index]
+        scores = adjusted[batch_index, :, token_ids]
+        exponents = counts[None, :].expand(logits.shape[1], -1)
+        if exclude_self:
+            exponents = exponents - (current[:, None] == token_ids[None, :]).to(
+                dtype=exponents.dtype
+            )
+        scales = torch.pow(
+            torch.tensor(penalty, device=logits.device, dtype=torch.float32),
+            exponents,
+        )
+        penalized = torch.where(scores < 0, scores * scales, scores / scales)
+        adjusted[batch_index, :, token_ids] = penalized
+    return adjusted
+
+
 def _llada_transfer_schedule(mask_count: int, steps: int) -> list[int]:
     """Distribute a linear-noise transfer budget uniformly across steps."""
     if mask_count < 0 or steps < 1:
@@ -502,6 +554,7 @@ def llada_generate(
     eot_token_id: int | None = None,
     system_prompt: str = "",
     seed: int = 1234,
+    repetition_penalty: float = 1.0,
 ) -> str:
     """Generate with the official LLaDA fixed-budget transfer algorithm.
 
@@ -550,6 +603,12 @@ def llada_generate(
                 logits = unconditional_logits + (float(cfg_scale) + 1.0) * (conditional_logits - unconditional_logits)
             else:
                 logits = forward_denoising(session, x, padding)
+            logits[:, prompt_length:] = _apply_repetition_penalty(
+                logits[:, prompt_length:],
+                x[:, prompt_length:],
+                repetition_penalty,
+                session.mask_token_id,
+            )
             if logits_eos_inf:
                 logits = logits.clone()
                 logits[..., eos_token_id] = -torch.inf
@@ -609,7 +668,7 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
             f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green hues indicate confidence; gray tokens are MASK; purple tokens are retained but editable; blue tokens are retained and locked.</div></div>")
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True):
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0):
     """Yield denoising states with optionally retained positions and locked values."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
@@ -632,7 +691,15 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     for step in range(num_steps):
         tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
         with torch.inference_mode():
-            logits = forward_denoising(session, tokens, padding)[0, answer_start:]
+            answer_ids = tokens[:, answer_start:]
+            logits = forward_denoising(session, tokens, padding)[:, answer_start:]
+            logits = _apply_repetition_penalty(
+                logits,
+                answer_ids,
+                repetition_penalty,
+                session.mask_token_id,
+                exclude_self=True,
+            )[0]
             sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
         retention_confidence = confidence
         if confidence_eos_eot_inf:
@@ -733,10 +800,10 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     return
 
 
-def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True) -> tuple[str, str]:
+def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0) -> tuple[str, str]:
     """Run denoising to completion and return only the final text and status."""
     result = ("", "")
-    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens), start=1):
+    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty), start=1):
         result = (text, status)
         if progress:
             progress(step / int(num_steps), status)

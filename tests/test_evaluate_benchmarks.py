@@ -73,6 +73,7 @@ def test_denoise_stream_sampler_receives_all_configured_controls(monkeypatch):
         "early_stopping": True,
         "confidence_eos_eot_inf": True,
         "freeze_retained_tokens": False,
+        "repetition_penalty": 1.25,
     }
 
     assert _generate_diffusion(session, "Question", settings, "structured") == "answer"
@@ -85,4 +86,29 @@ def test_denoise_stream_sampler_receives_all_configured_controls(monkeypatch):
         "early_stopping": True,
         "confidence_eos_eot_inf": True,
         "freeze_retained_tokens": False,
+        "repetition_penalty": 1.25,
     }
+
+
+def test_official_sampler_receives_repetition_penalty(monkeypatch):
+    captured = {}
+
+    def fake_llada_generate(session, prompt, **kwargs):
+        captured.update(kwargs)
+        return "answer"
+
+    monkeypatch.setattr(EVALUATOR, "llada_generate", fake_llada_generate)
+
+    assert _generate_diffusion(
+        SimpleNamespace(),
+        "Question",
+        {
+            "sampler": "llada_official",
+            "max_new_tokens": 8,
+            "num_steps": 4,
+            "block_length": 8,
+            "repetition_penalty": 1.4,
+        },
+        "mask_only",
+    ) == "answer"
+    assert captured["repetition_penalty"] == 1.4

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _apply_repetition_penalty, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -68,6 +68,32 @@ def test_confidence_guided_remasking_targets_the_least_confident_tokens():
 
 def test_llada_linear_schedule_transfers_every_mask_once():
     assert _llada_transfer_schedule(10, 4) == [3, 3, 2, 2]
+
+
+def test_repetition_penalty_is_frequency_scaled_and_excludes_current_position():
+    logits = torch.zeros((1, 3, 6))
+    logits[0, :, 2] = torch.tensor([4.0, -4.0, 2.0])
+    logits[0, :, 3] = 6.0
+    answer_ids = torch.tensor([[2, 2, 5]])
+
+    penalized = _apply_repetition_penalty(
+        logits, answer_ids, 2.0, mask_token_id=5, exclude_self=True
+    )
+
+    # At an existing occurrence, the current position is excluded, leaving one
+    # other occurrence (2**1). At MASK, predicting a third copy uses 2**2.
+    assert penalized[0, 0, 2].item() == 2.0
+    assert penalized[0, 1, 2].item() == -8.0
+    assert penalized[0, 2, 2].item() == 0.5
+    # Tokens absent from the current answer are unchanged; MASK is excluded.
+    assert torch.equal(penalized[0, :, 3], logits[0, :, 3])
+
+
+def test_repetition_penalty_rejects_values_below_one():
+    with pytest.raises(ValueError, match="at least 1.0"):
+        _apply_repetition_penalty(
+            torch.zeros((1, 1, 3)), torch.tensor([[1]]), 0.9, mask_token_id=2
+        )
 
 
 def test_legacy_wrapper_uses_its_own_forward_without_duplicate_keywords():

@@ -65,14 +65,14 @@ generation_perplexity:
   enabled: true
   interval_steps: 1000
   num_prompts: 20
-  num_steps: 32
-  max_new_tokens: 64
+  num_steps: 64
+  max_new_tokens: 128
   noise_level: 1.0
-  temperature: 0.5
+  temperature: 0.7
   top_k: 3
   permanent_unmask: true
   confidence_guided: true
-  proportional_unmask: false
+  proportional_unmask: true
   seed: 1234
 
 

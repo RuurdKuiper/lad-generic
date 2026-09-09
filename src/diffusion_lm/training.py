@@ -727,8 +727,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
                 metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
                 generation_note = (
-                    f" | generation_median_ppl={metrics['generation_median_perplexity']:.4f}"
-                    if metrics.get("generation_median_perplexity") is not None else ""
+                    f" | generation_pooled_ppl={metrics['generation_perplexity']:.4f}"
+                    if metrics.get("generation_perplexity") is not None else ""
                 )
                 train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
                 interval_example_count = interval_examples.item()

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _apply_repetition_penalty, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _apply_repetition_penalty, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -68,6 +68,22 @@ def test_confidence_guided_remasking_targets_the_least_confident_tokens():
 
 def test_llada_linear_schedule_transfers_every_mask_once():
     assert _llada_transfer_schedule(10, 4) == [3, 3, 2, 2]
+
+
+def test_denoising_state_is_copyable_with_explicit_spaced_masks():
+    class Tokenizer:
+        eos_token_id = 2
+
+        def decode(self, token_ids, **_kwargs):
+            vocabulary = {0: "Kill", 1: " first", 4: " chicken", 5: " quickly"}
+            return "".join(vocabulary.get(token, "") for token in token_ids)
+
+    assert decode_denoising_state(
+        [0, 1, 9, 4, 9, 5, 2, 9], Tokenizer(), mask_token_id=9
+    ) == "Kill first MASK chicken MASK quickly"
+    assert decode_denoising_state(
+        [9, 9, 4], Tokenizer(), mask_token_id=9
+    ) == "MASK MASK chicken"
 
 
 def test_repetition_penalty_scales_probability_weight_and_excludes_current_position():

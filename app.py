@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import inspect
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -90,9 +91,11 @@ def run(question, system_prompt, max_new_tokens, num_steps, noise_level, tempera
     if retention_mode not in retention_settings:
         raise gr.Error(f"Unknown retention mode: {retention_mode}")
     permanent_unmask, freeze_retained_tokens = retention_settings[retention_mode]
+    trajectory = []
     try:
         for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty), start=1):
-            yield status, html
+            trajectory.append(f"Step {step}: {text}")
+            yield status, html, "\n".join(trajectory)
     except ValueError as error:
         raise gr.Error(str(error)) from error
 
@@ -143,14 +146,35 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         proportional_unmask = gr.Checkbox(label="Proportional unmasking", value=True)
         early_stopping = gr.Checkbox(label="Early stop after 3 identical predictions", value=False)
         confidence_eos_eot_inf = gr.Checkbox(label="Delay EOS/EOT using lowest confidence (LLaDA-style)", value=False)
+        show_trajectory = gr.Checkbox(label="Show copyable inference trajectory", value=False)
     generate = gr.Button("Denoise", variant="primary")
     detail = gr.Markdown()
     intermediate = gr.HTML(label="Intermediate denoising states")
+    trajectory_options = dict(
+        label="Inference trajectory",
+        info="Each line is the state after that denoising step; unresolved positions are shown as MASK.",
+        lines=12,
+        max_lines=32,
+        interactive=False,
+        visible=False,
+        autoscroll=True,
+    )
+    # Gradio 6 replaced show_copy_button with the more general buttons option.
+    if "buttons" in inspect.signature(gr.Textbox).parameters:
+        trajectory_options["buttons"] = ["copy"]
+    else:
+        trajectory_options["show_copy_button"] = True
+    trajectory_output = gr.Textbox(**trajectory_options)
     refresh.click(refresh_models, outputs=adapter)
     load_adapter.click(load_saved_adapter, inputs=[adapter, adapter_device, adapter_quantization], outputs=status)
     load_legacy.click(load_legacy_checkpoint, inputs=[legacy_repo, legacy_filename, legacy_tokenizer, legacy_device], outputs=status)
     load_llada.click(load_llada_model, inputs=[llada_repo, llada_device], outputs=status)
-    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, repetition_penalty, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate])
+    show_trajectory.change(
+        lambda show: gr.update(visible=show),
+        inputs=show_trajectory,
+        outputs=trajectory_output,
+    )
+    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, repetition_penalty, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate, trajectory_output])
 
 
 if __name__ == "__main__":

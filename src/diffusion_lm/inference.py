@@ -680,6 +680,39 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
             f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green hues indicate confidence; gray tokens are MASK; purple tokens are retained but editable; blue tokens are retained and locked.</div></div>")
 
 
+def decode_denoising_state(tokens: list[int], tokenizer: Any, mask_token_id: int) -> str:
+    """Decode one answer state with every unresolved position shown as MASK."""
+    eos_id = tokenizer.eos_token_id
+    if eos_id in tokens:
+        tokens = tokens[:tokens.index(eos_id)]
+
+    # Decode contiguous resolved spans so subword spacing remains natural, but
+    # make adjacent mask tokens unambiguous and independent of the configured
+    # mask vocabulary item (some model configs use markers such as `<?>`).
+    pieces: list[str] = []
+    resolved: list[int] = []
+
+    def flush_resolved() -> None:
+        if resolved:
+            text = tokenizer.decode(
+                resolved,
+                skip_special_tokens=True,
+                clean_up_tokenization_spaces=False,
+            ).strip()
+            if text:
+                pieces.append(text)
+            resolved.clear()
+
+    for token in tokens:
+        if token == mask_token_id:
+            flush_resolved()
+            pieces.append("MASK")
+        else:
+            resolved.append(token)
+    flush_resolved()
+    return " ".join(pieces)
+
+
 def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0):
     """Yield denoising states with optionally retained positions and locked values."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
@@ -783,10 +816,13 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 for offset in _remask_offsets(retention_confidence, mask_probability, guided_retention).tolist():
                     ids[answer_start + offset] = session.mask_token_id
         current_answer = ids[answer_start:]
-        if session.tokenizer.eos_token_id in current_answer:
-            current_answer = current_answer[:current_answer.index(session.tokenizer.eos_token_id)]
-        current_text = session.tokenizer.decode(current_answer, skip_special_tokens=True).strip()
-        status = f"Denoising step {step + 1}/{num_steps} · {len(current_answer)} output tokens · mean confidence {last_confidence:.3f}"
+        visible_answer = current_answer
+        if session.tokenizer.eos_token_id in visible_answer:
+            visible_answer = visible_answer[:visible_answer.index(session.tokenizer.eos_token_id)]
+        current_text = decode_denoising_state(
+            current_answer, session.tokenizer, session.mask_token_id
+        )
+        status = f"Denoising step {step + 1}/{num_steps} · {len(visible_answer)} output tokens · mean confidence {last_confidence:.3f}"
         if permanent_unmask:
             retention_kind = "locked" if freeze_retained_tokens else "editable"
             status += f" · retained {len(retained)} tokens ({retention_kind})"

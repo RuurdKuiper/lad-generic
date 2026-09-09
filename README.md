@@ -382,6 +382,22 @@ path on Drive. Use `--smooth 1` for the raw training curve or `--log-y` when
 early losses dominate the graph. Matplotlib is included in the normal project
 installation.
 
+For per-answer generation perplexity, open
+[`notebooks/lad-generic-generation-perplexity.ipynb`](notebooks/lad-generic-generation-perplexity.ipynb)
+in Colab or local Jupyter and edit `RUN_NAMES`. Locally, set `BASE_DIR` to the
+downloaded or Google Drive-synced directory containing your runs; the default
+is the repository's `outputs` directory. Colab mounts Drive automatically.
+It reads each run's `generation_metrics.jsonl`
+from `MyDrive/lad-generic-results/outputs/<run>` and plots the arithmetic mean
+with a shaded 25th–75th percentile band at each validation step. Any number
+of runs can share the figure. Validation `weighted_loss` from `metrics.jsonl`
+appears on the right axis as dashed lines in matching run colors, starting at
+`MIN_VALIDATION_STEP` (250 by default). Only validation records are used, and
+the aggregate loss is plotted without an IQR. Mean perplexity uses solid lines;
+median perplexity uses dotted lines on the same left axis.
+This is the mean of per-answer perplexities,
+distinct from the token-pooled perplexity printed during training.
+
 Checkpoint policy is controlled by `checkpoint_mode`:
 
 - `only_best_model`: overwrite `best/` whenever validation improves; no regular checkpoint snapshots or `final/` copy are written.
@@ -452,13 +468,47 @@ and retains the existing inverse-`r` loss weighting. Padding length does not
 affect the answer frontier or its masking draws.
 Prompt and other excluded positions remain untouched. A frontier sample uses
 independent Bernoulli draws without forcing a mask when none are selected;
-empty draws contribute no supervised tokens. The existing loss reducer excludes
+empty draws contribute no supervised tokens. The legacy loss reducer excludes
 examples with no selected tokens. For inverse-t objectives, frontier token losses
 use their individual inverse masking probabilities; IID samples retain their
 existing masking, forced-mask fallback, and loss weighting. The unweighted CE
 metric remains unweighted. The all-token objective retains its existing reduction.
 Omitting `frontier_masking_probability` keeps IID training. Denoising-loss
 validation and testing continue to use deterministic IID corruption.
+
+The main `configs/llama3_8b_mask_colab.yaml` now starts a fresh run matching
+`llama-3.1-8b-mask-frontier-2` with separately normalized answer and padding loss:
+
+```yaml
+structured_loss_behavior: corrupted_answer_tokens
+eos_padding_loss: true
+answer_padding_loss:
+  enabled: true
+  answer_weight: 0.9
+  padding_weight: 0.1
+output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10
+```
+
+For each example and each region, sum the masked-token CE divided by its
+masking probability, then divide by the full eligible region length. Answer
+positions include the genuine terminating EOS when `include_answer_eos` is
+enabled; trailing EOS padding belongs only to the padding region. Average the
+components over eligible examples, then compute
+`weighted_loss = 0.9 * answer_loss + 0.1 * padding_loss`. This prevents extra
+padding positions from diluting the answer contribution. Frontier answers keep
+their per-position inverse-probability weighting, while IID answers and padding
+keep inverse-`t` weighting. A region with no positions or no masks contributes
+zero; its coefficient is not reassigned to the other region. Examples with no
+selected tokens contribute zero and remain in this objective's batch average.
+
+`metrics.jsonl` records both `answer_loss` and `padding_loss` (before the 0.9/0.1
+coefficients) alongside `weighted_loss` for `train`, `train_interval`, and
+`validation`; `test_metrics.json` contains the same components. Validation,
+checkpoint selection, and testing use this same objective, so the new weighted
+loss values have a different scale from legacy runs. Generation perplexity
+evaluation is unchanged. Other configs retain their existing objective unless
+`answer_padding_loss.enabled` is explicitly set. This option requires mask-only
+corrupted-position supervision and enabled EOS padding supervision.
 
 Intermediate generation validation now defaults to the same ordered 30 questions
 as the open-ended benchmark, both loaded from

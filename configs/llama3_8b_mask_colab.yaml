@@ -13,9 +13,15 @@ validation_samples: 200
 
 # Corruption and loss behavior
 corruption_mode: mask_only  # Options: structured, mask_only
-structured_loss_behavior: all_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
+structured_loss_behavior: corrupted_answer_tokens  # Only corrupted answer/padding positions contribute.
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask-frontier-all-tokens
+# Separately length-normalize each region, then mix: 0.9 * L_answer + 0.1 * L_padding.
+# L_answer includes the genuine terminating EOS; L_padding covers only trailing EOS padding.
+answer_padding_loss:
+  enabled: true
+  answer_weight: 0.9
+  padding_weight: 0.1
+output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10
 seed: 42
 t_min: 0.001
 # Per training sample: 75% soft frontier, 25% existing IID masking.

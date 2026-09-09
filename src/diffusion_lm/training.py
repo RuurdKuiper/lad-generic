@@ -314,11 +314,38 @@ def _ngram_repetition(text: str, tokenizer: Any, n: int = 3) -> float:
     return float(1.0 - len(set(grams)) / len(grams))
 
 
+def _resolve_answer_padding_weights(config: dict[str, Any]) -> tuple[float, float] | None:
+    """Validate the optional separately normalized masked-response objective."""
+    settings = config.get("answer_padding_loss", {})
+    if not isinstance(settings, dict):
+        raise ValueError("answer_padding_loss must be a mapping")
+    enabled = settings.get("enabled", False)
+    if not isinstance(enabled, bool):
+        raise ValueError("answer_padding_loss.enabled must be true or false")
+    if not enabled:
+        return None
+    if config.get("corruption_mode") != "mask_only" or config.get("structured_loss_behavior", "all_answer_tokens") not in {
+        "all_answer_tokens", "corrupted_answer_tokens",
+    }:
+        raise ValueError("answer_padding_loss requires mask_only with a corrupted-answer objective, not all_tokens")
+    if config.get("eos_padding_loss") is not True:
+        raise ValueError("answer_padding_loss requires eos_padding_loss=true")
+    weights = tuple(float(settings.get(key, default)) for key, default in (
+        ("answer_weight", 0.9), ("padding_weight", 0.1),
+    ))
+    if not all(math.isfinite(weight) and weight >= 0 for weight in weights) or not math.isclose(sum(weights), 1.0):
+        raise ValueError("answer_padding_loss weights must be finite, nonnegative, and sum to 1")
+    return weights
+
+
 @torch.no_grad()
-def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eos_padding_loss: bool = False) -> dict[str, float]:
+def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eos_padding_loss: bool = False,
+             answer_padding_weights: tuple[float, float] | None = None) -> dict[str, float]:
     """Evaluate deterministic denoising loss and aggregate metrics across ranks."""
     model.eval()
     totals = {"weighted_loss_sum": 0.0, "unweighted_ce_sum": 0.0, "valid_examples": 0, "supervised_tokens": 0, "eligible_answer_tokens": 0, "masked_tokens": 0, "t_sum": 0.0, "t_count": 0}
+    if answer_padding_weights is not None:
+        totals.update(answer_loss_sum=0.0, padding_loss_sum=0.0)
     for batch in loader:
         logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
         t = batch["sampled_t"] if mode == "mask_only" and not all_tokens else None
@@ -330,6 +357,9 @@ def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eo
             t,
             normalization_mask,
             sparse_positions=not all_tokens,
+            answer_padding_weights=answer_padding_weights,
+            answer_mask=batch["answer_mask"], padding_mask=batch["padding_mask"],
+            token_weights=batch.get("token_loss_weights") if t is not None else None,
         )
         valid = int(m["valid_examples"])
         tokens = int(m["supervised_tokens"])
@@ -337,15 +367,21 @@ def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eo
         totals["unweighted_ce_sum"] += float(m["unweighted_masked_token_ce"]) * tokens
         totals["valid_examples"] += valid
         totals["supervised_tokens"] += tokens
+        if answer_padding_weights is not None:
+            totals["answer_loss_sum"] += float(m["answer_loss"]) * valid
+            totals["padding_loss_sum"] += float(m["padding_loss"]) * valid
         totals["eligible_answer_tokens"] += int((batch["answer_mask"] & ~batch["padding_mask"]).sum())
         totals["masked_tokens"] += int(batch["loss_mask"].sum())
         if mode == "mask_only":
             totals["t_sum"] += float(torch.nansum(batch["sampled_t"]))
             totals["t_count"] += len(batch["sampled_t"])
-    totals = accelerator.reduce(torch.tensor([totals[k] for k in totals], device=accelerator.device), reduction="sum").tolist()
-    keys = ["weighted_loss_sum", "unweighted_ce_sum", "valid_examples", "supervised_tokens", "eligible_answer_tokens", "masked_tokens", "t_sum", "t_count"]
+    keys = list(totals)
+    totals = accelerator.reduce(torch.tensor([totals[k] for k in keys], device=accelerator.device), reduction="sum").tolist()
     d = dict(zip(keys, totals))
     d["weighted_loss"] = d["weighted_loss_sum"] / max(d["valid_examples"], 1)
+    if answer_padding_weights is not None:
+        for component in ("answer", "padding"):
+            d[f"{component}_loss"] = d[f"{component}_loss_sum"] / max(d["valid_examples"], 1)
     d["unweighted_masked_token_ce"] = d["unweighted_ce_sum"] / max(d["supervised_tokens"], 1)
     d["realized_masked_fraction"] = d["masked_tokens"] / max(d["eligible_answer_tokens"], 1)
     if mode == "mask_only": d["mean_sampled_t"] = d["t_sum"] / max(d["t_count"], 1)
@@ -354,6 +390,10 @@ def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eo
 
 def run_training(config: dict[str, Any]) -> dict[str, Any]:
     """Execute model setup, training, validation, selection, and final testing."""
+    answer_padding_weights = _resolve_answer_padding_weights(config)
+    if answer_padding_weights is not None:
+        config["answer_padding_loss"] = dict(enabled=True, answer_weight=answer_padding_weights[0],
+                                           padding_weight=answer_padding_weights[1])
     storage_root = os.getenv("LAD_STORAGE")
     if storage_root:
         # Relative configured paths become node-local; absolute paths preserve
@@ -653,6 +693,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     # when a log or validation record is actually emitted.
     interval_loss_sum = torch.zeros((), device=accelerator.device, dtype=torch.float64)
     interval_examples = torch.zeros((), device=accelerator.device, dtype=torch.int64)
+    interval_component_sums = {
+        name: torch.zeros((), device=accelerator.device, dtype=torch.float64)
+        for name in (("answer_loss", "padding_loss") if answer_padding_weights is not None else ())
+    }
     update_step = start_step
     for microstep, batch in enumerate(train_loader, start=start_step * grad_accumulation + 1):
         step = microstep
@@ -686,6 +730,15 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     compute_unweighted_metric=False,
                     token_weights=(batch["token_loss_weights"][example_ids, token_ids]
                                    if use_t_weighting and "token_loss_weights" in batch else None),
+                    answer_padding_weights=answer_padding_weights,
+                    selected_answer_mask=(batch["answer_mask"] & ~batch["padding_mask"])[example_ids, token_ids]
+                    if answer_padding_weights is not None else None,
+                    selected_padding_mask=batch["padding_mask"][example_ids, token_ids]
+                    if answer_padding_weights is not None else None,
+                    answer_lengths=(batch["answer_mask"] & ~batch["padding_mask"]).sum(dim=1)
+                    if answer_padding_weights is not None else None,
+                    padding_lengths=batch["padding_mask"].sum(dim=1)
+                    if answer_padding_weights is not None else None,
                 )
             else:
                 logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
@@ -698,6 +751,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     compute_unweighted_metric=False,
                     sparse_positions=sparse_positions,
                     token_weights=batch.get("token_loss_weights") if use_t_weighting else None,
+                    answer_padding_weights=answer_padding_weights,
+                    answer_mask=batch["answer_mask"], padding_mask=batch["padding_mask"],
                 )
             accelerator.backward(loss)
             # Clip only after all gradient-accumulation microbatches have
@@ -707,6 +762,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             optimizer.step(); scheduler.step(); optimizer.zero_grad()
         interval_loss_sum += loss.detach().to(torch.float64) * info["valid_examples"]
         interval_examples += info["valid_examples"]
+        for name, total in interval_component_sums.items():
+            total.add_(info[name].to(torch.float64) * info["valid_examples"])
         if accelerator.sync_gradients:
             update_step += 1
             progress.update(1)
@@ -717,26 +774,37 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             supervised_tokens = info["supervised_tokens"].item()
             train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
             progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{train_avg:.4f}")
-            _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value, "supervised_tokens": supervised_tokens})
+            _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value,
+                                        "supervised_tokens": supervised_tokens,
+                                        **{name: info[name].item() for name in interval_component_sums}})
         if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
-            metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)))
+            metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
             if accelerator.is_main_process:
                 generation_due = generation_interval is not None and (update_step % generation_interval == 0 or update_step == max_updates)
                 if generation_due:
                     unwrapped = accelerator.unwrap_model(model)
                     metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
                 metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
-                generation_note = (
-                    f" | generation_pooled_ppl={metrics['generation_perplexity']:.4f}"
-                    if metrics.get("generation_perplexity") is not None else ""
+                generation_note = "".join(
+                    f" | {label}={metrics[key]:.4f}"
+                    for key, label in (
+                        ("generation_median_perplexity", "generation_median_ppl"),
+                        ("generation_perplexity", "generation_pooled_ppl"),
+                    )
+                    if metrics.get(key) is not None
                 )
                 train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
                 interval_example_count = interval_examples.item()
                 progress.write(f"step {update_step}/{max_updates} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
                 if accelerator.is_main_process:
-                    _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step, "weighted_loss": train_avg, "examples": interval_example_count})
+                    _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step,
+                                                "weighted_loss": train_avg, "examples": interval_example_count,
+                                                **{name: (total / interval_examples.clamp_min(1)).item()
+                                                   for name, total in interval_component_sums.items()}})
                 interval_loss_sum.zero_()
                 interval_examples.zero_()
+                for total in interval_component_sums.values():
+                    total.zero_()
                 if metrics["weighted_loss"] < best:
                     best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
             accelerator.wait_for_everyone()
@@ -758,7 +826,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     elif accelerator.is_main_process and checkpoint_mode == "every_model":
         unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
     # Test is deliberately after best-model selection/finalization.
-    test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)))
+    test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
     if accelerator.is_main_process: _write_json(output / "test_metrics.json", test_metrics)
     accelerator.end_training()
     return test_metrics

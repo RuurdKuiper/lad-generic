@@ -202,6 +202,9 @@ class DenoisingCollator:
     multi_turn_prob: float = 0.0
     max_history_turns: int = 2
     mask_token: str = "MASK"
+    frontier_masking_probability: float = 0.0
+    frontier_masking_epsilon: float = 0.03
+    frontier_masking_tau: float = 3.0
 
     def __post_init__(self) -> None:
         """Validate collator configuration and cache this tokenizer's MASK token."""
@@ -209,6 +212,14 @@ class DenoisingCollator:
         self.stats = DataStats()
         if self.corruption_mode not in {"structured", "mask_only"}:
             raise ValueError(f"Unknown corruption mode: {self.corruption_mode}")
+        if not 0.0 <= self.frontier_masking_probability <= 1.0:
+            raise ValueError("frontier_masking_probability must be between 0 and 1")
+        if not 0.0 < self.frontier_masking_epsilon < 0.5:
+            raise ValueError("frontier_masking_epsilon must be between 0 and 0.5 (exclusive)")
+        if not 0.0 < self.frontier_masking_tau < float("inf"):
+            raise ValueError("frontier_masking_tau must be finite and positive")
+        if self.frontier_masking_probability and self.corruption_mode != "mask_only":
+            raise ValueError("Frontier masking requires corruption_mode=mask_only")
         # Preserve the established behavior for existing configs: all_tokens
         # includes EOS padding, while the answer-only objectives do not.  A
         # config can now explicitly override this independently.
@@ -319,4 +330,8 @@ class DenoisingCollator:
             "structured_online": torch.tensor(batch["structured_online"], dtype=torch.bool),
         }
         from .corruption import apply_corruption
-        return apply_corruption(result, self.mask_info["mask_token_id"], self.corruption_mode, self.structured_loss_behavior, bool(self.eos_padding_loss), self.t_min, self.seed, self.deterministic)
+        return apply_corruption(
+            result, self.mask_info["mask_token_id"], self.corruption_mode,
+            self.structured_loss_behavior, bool(self.eos_padding_loss), self.t_min, self.seed, self.deterministic,
+            self.frontier_masking_probability, self.frontier_masking_epsilon, self.frontier_masking_tau,
+        )

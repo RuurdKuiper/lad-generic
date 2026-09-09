@@ -83,6 +83,8 @@ mask_only_generation:
   temperature: 0.0
   cfg_scale: 0.0
   remasking: low_confidence
+mask_only_task_generation:
+  open_ended: &open_ended_generation {temperature: 0.7, max_new_tokens: 128, num_steps: 64, block_length: 128, confidence_eos_eot_inf: true, proportional_unmask: false, permanent_unmask: true, confidence_guided: true, repetition_penalty: 1.0}
 # mask_only_task_generation:
 #   gsm8k: {max_new_tokens: 256, num_steps: 256, block_length: 8, confidence_eos_eot_inf: false}
 # Hosted LLaDA bypasses the generic mask-only loop and uses the official
@@ -93,10 +95,12 @@ llada_generation:
   cfg_scale: 0.0
   remasking: low_confidence
   eot_token_id: 126348
+llada_task_generation:
+  open_ended: *open_ended_generation
 # llada_task_generation:
 #   gsm8k: {max_new_tokens: 256, num_steps: 256, block_length: 8, confidence_eos_eot_inf: false}  # Official optional block-diffusion variant.
 task_generation:
-  open_ended: {max_new_tokens: 128, num_steps: 32}
+  open_ended: *open_ended_generation
   mmlu: {max_new_tokens: 64, num_steps: 32}
   mmlu_pro: {max_new_tokens: 256, num_steps: 256}
   hellaswag: {max_new_tokens: 64, num_steps: 32}

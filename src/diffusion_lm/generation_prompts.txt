@@ -1,8 +1,7 @@
-# One prompt per line. The ordered prefix is selected with num_prompts.
+# Shared ordered questions for training validation and open-ended benchmarks.
 What do you know about Amsterdam?
-Tell me a story about a little dwarf.
 Why is the sky blue?
-Explain how plants grow.
+How do plants convert sunlight into energy?
 What makes a good friend?
 Explain how a refrigerator keeps food cold.
 Why do we have different seasons on Earth?
@@ -18,4 +17,15 @@ What are the main benefits of regular exercise?
 How does the water cycle work?
 Why is sleep important for people?
 Explain the difference between renewable and nonrenewable energy.
+How do trees communicate or share resources?
+What is inflation and how does it affect households?
+Why do leaves change color in autumn?
+How does a bicycle stay balanced while moving?
+What are practical ways to reduce household waste?
+Explain how an electric battery stores and releases energy.
+What is the purpose of the scientific method?
+How do languages change over time?
+Why are oceans important to the global climate?
+What makes an explanation clear and persuasive?
+How can someone evaluate whether an online claim is reliable?
 Tell a short story about a traveler who learns an unexpected lesson.

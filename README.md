@@ -433,6 +433,58 @@ Each invocation creates a new timestamped directory under `results_dir` (default
 
 For structured loss, `all_answer_tokens` is the default safe objective; `corrupted_answer_tokens` restricts loss to changed answer positions; and `all_tokens` supervises prompt, assistant formatting, and answer positions. Set `eos_padding_loss: true` to include trailing EOS padding in any of these objectives, or `false` to exclude it. When omitted, the legacy behavior is retained: enabled for `all_tokens`, disabled for answer-only objectives. Validation can optionally run fixed-prompt generation and base-model perplexity. Enable `generation_perplexity.enabled` in a YAML to save each prompt’s final generated answer in `generation_metrics.jsonl` and add the corresponding per-prompt `generation_perplexity` plus aggregate `generation_perplexity`, `generation_mean_nll`, and `generation_tokens` to validation metrics. Set `generation_perplexity.interval_steps` to run this more expensive generation calculation less often than ordinary loss validation; it defaults to `validation_steps` and must be a multiple of it. The shared ordered prompt set lives in `src/diffusion_lm/generation_prompts.txt`; `generation_perplexity.num_prompts` selects its prefix, and it is loaded once so every validation checkpoint in a run uses the same prompts. The evaluator temporarily disables LoRA and restores the original pre-training normalization weights, so trained norms do not contaminate the base-model score. `train_normalization_layers` independently controls whether norms are trainable.
 
+Soft frontier masking is available for mask-only training. The mask-only Colab
+configs start with 75% frontier samples and 25% existing IID samples:
+
+```yaml
+frontier_masking_probability: 0.75  # 0 disables; 0.5 gives an equal mixture.
+frontier_masking_epsilon: 0.03
+frontier_masking_tau: 3.0
+```
+
+Each training example first samples its usual masking ratio `r`. For frontier
+samples, `L` is the number of eligible response positions (including EOS padding
+only when already enabled), and position `i` has masking probability
+`epsilon + (1 - 2 * epsilon) * sigmoid((i - L * (1 - r)) / tau)`.
+Prompt and other excluded positions remain untouched. A frontier sample uses
+independent Bernoulli draws without forcing a mask when none are selected;
+empty draws contribute no supervised tokens. The existing loss reducer excludes
+examples with no selected tokens. For inverse-t objectives, frontier token losses
+use their individual inverse masking probabilities; IID samples retain their
+existing masking, forced-mask fallback, and loss weighting. The unweighted CE
+metric remains unweighted. The all-token objective retains its existing reduction.
+Omitting `frontier_masking_probability` keeps IID training. Denoising-loss
+validation and testing continue to use deterministic IID corruption.
+
+Intermediate generation validation now defaults to the same ordered 30 questions
+as the open-ended benchmark, both loaded from
+`src/diffusion_lm/generation_prompts.txt`. All Colab training configs use:
+
+```yaml
+generation_perplexity:
+  enabled: true
+  interval_steps: 1000  # Must be a multiple of validation_steps.
+  sampler: llada_official
+  num_prompts: 30
+  temperature: 0.7
+  max_new_tokens: 128
+  num_steps: 64
+  block_length: 128
+  confidence_eos_eot_inf: true
+  proportional_unmask: false
+  permanent_unmask: true
+  confidence_guided: true
+  seed: 1234
+```
+
+The official sampler permanently transfers the most confident predictions
+in a fixed budget, with EOS/native end-of-turn predictions delayed. It does not
+use the old top-k or proportional-remasking controls. The default system prompt
+is empty, matching the benchmark runner. Explicit prompt or budget overrides
+remain available for smoke runs. Perplexity still comes from the original base
+model with adapters disabled and initial normalization weights restored; no
+separate reference model is loaded for intermediate validation.
+
 With `corruption_mode: mask_only`, enabled `eos_padding_loss` also places EOS padding in the stochastic corruption candidates. Thus it is learned as a denoising target rather than simply copied from the input; this applies to all three loss behaviors. EOS padding is visible to attention in both directions, making the configured context width an explicit signal during concise-answer training.
 
 For an adapter warm-start where the original run did not save full

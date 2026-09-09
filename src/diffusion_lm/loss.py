@@ -46,12 +46,14 @@ def selected_denoising_loss(
     normalization_mask=None,
     *,
     compute_unweighted_metric=True,
+    token_weights=None,
 ):
     """Compute the objective when the LM head emitted supervised positions only."""
     selected_ce = F.cross_entropy(selected_logits, selected_labels, reduction="none")
+    weighted_ce = selected_ce if token_weights is None else selected_ce * token_weights
     selected_ce_sums = torch.zeros(
-        counts.shape[0], device=selected_logits.device, dtype=selected_ce.dtype
-    ).scatter_add(0, example_ids, selected_ce)
+        counts.shape[0], device=selected_logits.device, dtype=weighted_ce.dtype
+    ).scatter_add(0, example_ids, weighted_ce)
     return _finish_selected_loss(
         selected_ce_sums,
         selected_ce.sum(),
@@ -71,13 +73,16 @@ def masked_denoising_loss(
     *,
     compute_unweighted_metric=True,
     sparse_positions=True,
+    token_weights=None,
 ):
     """Compute masked CE with optional LLaDA-style inverse-t weighting.
 
     Returns a differentiable scalar and aggregate metrics. Examples without selected
     tokens are excluded rather than changing another example's denominator. When
     sampled_t is provided, normalization_mask must represent the complete eligible
-    response, not only the positions selected for corruption.
+    response, not only the positions selected for corruption. Optional token_weights
+    correct frontier positions by t / p(position) before inverse-t reduction;
+    unweighted_masked_token_ce always reports the original CE.
     """
     counts = loss_mask.sum(dim=1)
     if sparse_positions:
@@ -88,10 +93,11 @@ def masked_denoising_loss(
         selected_ce = F.cross_entropy(
             logits[example_ids, token_ids], labels[example_ids, token_ids], reduction="none"
         )
+        weighted_ce = selected_ce if token_weights is None else selected_ce * token_weights[example_ids, token_ids]
         return _finish_selected_loss(
             torch.zeros(
-                logits.shape[0], device=logits.device, dtype=selected_ce.dtype
-            ).scatter_add(0, example_ids, selected_ce),
+                logits.shape[0], device=logits.device, dtype=weighted_ce.dtype
+            ).scatter_add(0, example_ids, weighted_ce),
             selected_ce.sum(),
             counts,
             sampled_t,
@@ -103,8 +109,9 @@ def masked_denoising_loss(
         # the entire logits tensor through advanced indexing in that mode.
         token_ce = F.cross_entropy(logits.transpose(1, 2), labels, reduction="none")
         selected_ce_sums = (token_ce * loss_mask).sum(dim=1)
+        weighted_ce_sums = selected_ce_sums if token_weights is None else (token_ce * loss_mask * token_weights).sum(dim=1)
         return _finish_selected_loss(
-            selected_ce_sums,
+            weighted_ce_sums,
             selected_ce_sums.sum(),
             counts,
             sampled_t,

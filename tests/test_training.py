@@ -26,10 +26,12 @@ def test_shared_generation_prompts_are_loaded_in_stable_order(tmp_path):
     prompt_file.write_text("# fixed set\nFirst prompt\n\nSecond prompt\n")
 
     assert _load_generation_prompts(prompt_file) == ("First prompt", "Second prompt")
-    assert len(DEFAULT_GENERATION_PROMPTS) == 20
+    assert len(DEFAULT_GENERATION_PROMPTS) == 30
+    from diffusion_lm.benchmarks import OPEN_ENDED_PROMPTS
+    assert list(DEFAULT_GENERATION_PROMPTS) == OPEN_ENDED_PROMPTS
     assert DEFAULT_GENERATION_PROMPTS[:2] == (
         "What do you know about Amsterdam?",
-        "Tell me a story about a little dwarf.",
+        "Why is the sky blue?",
     )
 
 
@@ -173,40 +175,28 @@ def test_fp8_supported_gpu_requires_transformer_engine():
         )
 
 
-def test_mask_only_generation_uses_full_remasking_and_permanent_retention():
-    settings = _generation_inference_settings({
-        "corruption_mode": "mask_only",
-        "generation_perplexity": {
-            "noise_level": 0.35,
-            "permanent_unmask": False,
-            "confidence_guided": False,
-            "max_new_tokens": 128,
-            "temperature": 0.7,
-            "top_k": 20,
-            "num_steps": 12,
-        },
-    })
-
-    assert settings["noise_level"] == 1.0
+@pytest.mark.parametrize("mode", ["mask_only", "structured"])
+def test_generation_defaults_match_open_ended_protocol(mode):
+    settings = _generation_inference_settings({"corruption_mode": mode})
+    assert settings["sampler"] == "llada_official"
+    assert settings["num_prompts"] == 30
     assert settings["permanent_unmask"] is True
     assert settings["confidence_guided"] is True
-    assert settings["max_new_tokens"] == 64
-    assert settings["num_steps"] == 32
-    assert settings["temperature"] == 1.0
-    assert settings["top_k"] == 100
+    assert settings["proportional_unmask"] is False
+    assert settings["confidence_eos_eot_inf"] is True
+    assert settings["max_new_tokens"] == settings["block_length"] == 128
+    assert settings["num_steps"] == 64
+    assert settings["temperature"] == 0.7
+    assert settings["system_prompt"] == ""
 
 
-def test_structured_generation_keeps_configured_inference_settings():
-    settings = _generation_inference_settings({
-        "corruption_mode": "structured",
-        "generation_perplexity": {
-            "noise_level": 0.35,
-            "permanent_unmask": False,
-        },
-    })
-
-    assert settings["noise_level"] == 0.35
-    assert settings["permanent_unmask"] is False
+def test_generation_allows_explicit_smoke_budgets():
+    settings = _generation_inference_settings({"generation_perplexity": {
+        "max_new_tokens": 16, "block_length": 16, "num_steps": 2, "num_prompts": 1,
+    }})
+    assert settings["max_new_tokens"] == settings["block_length"] == 16
+    assert settings["num_steps"] == 2
+    assert settings["num_prompts"] == 1
 
 
 def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
@@ -220,9 +210,15 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
         def encode(self, text, add_special_tokens=False):
             return list(range(len(text.split())))
 
-    def fake_stream(*_args, **_kwargs):
-        yield "draft answer", "step 1", ""
-        yield "final answer", "step 2", ""
+    def fake_generate(_session, prompt, **kwargs):
+        assert prompt == "Prompt"
+        assert kwargs == {
+            "gen_length": 128, "steps": 64, "block_length": 128,
+            "temperature": 0.7, "remasking": "low_confidence",
+            "confidence_eos_eot_inf": True, "eot_token_id": None,
+            "system_prompt": "", "seed": 1234,
+        }
+        return "final answer"
 
     scored = []
 
@@ -235,7 +231,7 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
             "_per_text_perplexities": [2.0],
         }
 
-    monkeypatch.setattr("diffusion_lm.training.denoise_stream", fake_stream)
+    monkeypatch.setattr("diffusion_lm.training.llada_generate", fake_generate)
     monkeypatch.setattr("diffusion_lm.training._base_perplexity", fake_perplexity)
     metrics = generation_validation(
         Model(), Tokenizer(), 99,
@@ -250,3 +246,72 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
     assert metrics["generation_perplexity"] == 2.0
     assert metrics["generation_mean_perplexity"] == 2.0
     assert metrics["generation_median_perplexity"] == 2.0
+
+
+def test_generation_validation_scores_all_thirty_shared_questions(tmp_path, monkeypatch):
+    class Model:
+        def eval(self):
+            return self
+
+    class Tokenizer:
+        unk_token_id = -1
+        all_special_ids = []
+
+        def convert_tokens_to_ids(self, token):
+            return 42 if token == "<|eot_id|>" else -1
+
+        def encode(self, text, **_kwargs):
+            return [1, 2]
+
+    calls = []
+    model, tokenizer, norms = Model(), Tokenizer(), {}
+
+    def generate(session, prompt, **kwargs):
+        assert session.model is model
+        assert kwargs["eot_token_id"] == 42
+        calls.append((prompt, kwargs["seed"]))
+        return f"Answer {len(calls)}"
+
+    def score(actual_model, actual_tokenizer, texts, actual_norms, device):
+        assert actual_model is model and actual_tokenizer is tokenizer
+        assert actual_norms is norms
+        assert texts == [f"Answer {i}" for i in range(1, 31)]
+        return {"generation_perplexity": 2.0, "generation_mean_nll": 0.7,
+                "generation_tokens": 60, "_per_text_perplexities": [2.0] * 30}
+
+    monkeypatch.setattr("diffusion_lm.training.llada_generate", generate)
+    monkeypatch.setattr("diffusion_lm.training._base_perplexity", score)
+    generation_validation(model, tokenizer, 99, {"corruption_mode": "mask_only"},
+                          norms, torch.device("cpu"), tmp_path, 1000)
+    assert calls == [(prompt, 1234 + i) for i, prompt in enumerate(DEFAULT_GENERATION_PROMPTS)]
+    records = [json.loads(line) for line in (tmp_path / "generation_metrics.jsonl").read_text().splitlines()]
+    assert len(records) == 30
+    assert [record["prompt"] for record in records] == list(DEFAULT_GENERATION_PROMPTS)
+
+
+def test_shipped_training_and_benchmark_configs_share_open_ended_settings():
+    from pathlib import Path
+    import yaml
+    from diffusion_lm.benchmarks import (
+        resolve_generation_settings, resolve_llada_generation_settings,
+        resolve_mask_only_generation_settings,
+    )
+
+    root = Path(__file__).resolve().parents[1]
+    expected = _generation_inference_settings({})
+    keys = ("sampler", "temperature", "max_new_tokens", "num_steps", "block_length",
+            "confidence_eos_eot_inf", "proportional_unmask")
+    for path in (root / "configs").glob("*colab*.yaml"):
+        config = yaml.safe_load(path.read_text())
+        actual = _generation_inference_settings(config)
+        assert actual["num_prompts"] == 30
+        assert {key: actual[key] for key in keys} == {key: expected[key] for key in keys}
+        if config["corruption_mode"] == "mask_only":
+            assert config["frontier_masking_probability"] == 0.75
+    benchmark = yaml.safe_load((root / "configs/benchmarks.yaml").read_text())
+    for actual in (
+        resolve_generation_settings(benchmark, "open_ended", "structured"),
+        resolve_llada_generation_settings(benchmark, "open_ended"),
+        resolve_mask_only_generation_settings(benchmark, "open_ended"),
+    ):
+        assert {key: actual[key] for key in keys} == {key: expected[key] for key in keys}

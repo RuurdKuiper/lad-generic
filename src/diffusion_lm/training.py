@@ -20,26 +20,8 @@ from transformers import AutoTokenizer, get_scheduler
 from .data import DenoisingCollator, llama_stored_ids_compatible, prepare_mask_only_cache_record, stored_example_usable
 from .loss import masked_denoising_loss, selected_denoising_loss
 from .modeling import forward_bidirectional, forward_bidirectional_selected, load_denoising_model, parameter_audit
-from .inference import InferenceSession, denoise_stream
-
-
-GENERATION_PROMPTS_PATH = Path(__file__).with_name("generation_prompts.txt")
-
-
-def _load_generation_prompts(path: str | Path = GENERATION_PROMPTS_PATH) -> tuple[str, ...]:
-    """Load the shared, ordered generation-validation prompt set."""
-    prompts = tuple(
-        line
-        for raw_line in Path(path).read_text().splitlines()
-        if (line := raw_line.strip()) and not line.startswith("#")
-    )
-    if not prompts:
-        raise ValueError(f"Generation prompt file is empty: {path}")
-    return prompts
-
-
-# Resolve once so every validation checkpoint in a run uses the exact same set.
-DEFAULT_GENERATION_PROMPTS = _load_generation_prompts()
+from .inference import InferenceSession, _native_eot_token_id, llada_generate
+from .generation_prompts import DEFAULT_GENERATION_PROMPTS, _load_generation_prompts
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -130,21 +112,24 @@ def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], i
 
 
 def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
-    """Resolve generation settings, including corruption-mode-specific inference."""
-    settings = dict(config.get("generation_perplexity", {}))
-    if config.get("corruption_mode") == "mask_only":
-        # Mask-only training learns to reconstruct fully masked answers. Use a
-        # fixed LLaDA-style evaluation setup: begin fully masked and retain the
-        # most confident recovered tokens between refinement steps.
-        settings.update(
-            max_new_tokens=64,
-            num_steps=32,
-            noise_level=1.0,
-            temperature=1.0,
-            top_k=100,
-            permanent_unmask=True,
-            confidence_guided=True,
-        )
+    """Use the shared open-ended protocol for intermediate generation validation."""
+    settings = {
+        "sampler": "llada_official",
+        "num_prompts": len(DEFAULT_GENERATION_PROMPTS),
+        "max_new_tokens": 128,
+        "num_steps": 64,
+        "block_length": 128,
+        "temperature": 0.7,
+        "confidence_eos_eot_inf": True,
+        "system_prompt": "",
+        "seed": 1234,
+    }
+    settings.update(config.get("generation_perplexity", {}))
+    if settings["sampler"] != "llada_official":
+        raise ValueError("Training generation validation requires sampler=llada_official")
+    # These behaviors are intrinsic to the official low-confidence sampler.
+    settings.update(permanent_unmask=True, confidence_guided=True,
+                    proportional_unmask=False, remasking="low_confidence")
     return settings
 
 
@@ -283,10 +268,19 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
     records = []
     finals = []
     model.eval()
-    for prompt_index, prompt in enumerate(prompts[: int(settings.get("num_prompts", 5))]):
-        final_text = ""
-        for generated_text, status, _html in denoise_stream(session, prompt, settings.get("system_prompt", "You are a helpful assistant."), int(settings.get("max_new_tokens", 128)), int(settings.get("num_steps", 32)), float(settings.get("noise_level", .5)), float(settings.get("temperature", .7)), int(settings.get("top_k", 20)), int(settings.get("seed", 1234)) + prompt_index, bool(settings.get("permanent_unmask", False)), bool(settings.get("confidence_guided", False)), bool(settings.get("proportional_unmask", True)), bool(settings.get("early_stopping", False))):
-            final_text = generated_text
+    for prompt_index, prompt in enumerate(prompts[: int(settings["num_prompts"])]):
+        final_text = llada_generate(
+            session, prompt,
+            gen_length=int(settings["max_new_tokens"]),
+            steps=int(settings["num_steps"]),
+            block_length=int(settings["block_length"]),
+            temperature=float(settings["temperature"]),
+            remasking=settings["remasking"],
+            confidence_eos_eot_inf=bool(settings["confidence_eos_eot_inf"]),
+            eot_token_id=_native_eot_token_id(tokenizer),
+            system_prompt=str(settings["system_prompt"]),
+            seed=int(settings["seed"]) + prompt_index,
+        )
         finals.append(final_text)
         records.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
@@ -562,7 +556,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         validation_limit = min(int(validation_limit), len(val_data))
         val_data = val_data.select(range(validation_limit))
     common = dict(tokenizer=tokenizer, corruption_mode=config["corruption_mode"], max_sequence_length=int(config["max_sequence_length"]), include_answer_eos=bool(config.get("include_answer_eos", True)), pad_to_multiple_of=config.get("pad_to_multiple_of"), structured_loss_behavior=config.get("structured_loss_behavior", "all_answer_tokens"), eos_padding_loss=config.get("eos_padding_loss"), seed=seed, t_min=float(config.get("t_min", .1)), multi_turn_prob=float(config.get("multi_turn_prob", 0.0)), max_history_turns=int(config.get("max_history_turns", 2)), mask_token=str(config.get("mask_token", "MASK")))
-    train_collator = DenoisingCollator(**common, deterministic=False)
+    train_collator = DenoisingCollator(
+        **common, deterministic=False,
+        frontier_masking_probability=float(config.get("frontier_masking_probability", 0.0)),
+        frontier_masking_epsilon=float(config.get("frontier_masking_epsilon", 0.03)),
+        frontier_masking_tau=float(config.get("frontier_masking_tau", 3.0)),
+    )
     # Keep validation single-turn by default; multi-turn can be enabled
     # explicitly when comparing models on conversational context.
     eval_collator = DenoisingCollator(**common, deterministic=True)
@@ -685,6 +684,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     batch["sampled_t"] if use_t_weighting else None,
                     normalization_mask,
                     compute_unweighted_metric=False,
+                    token_weights=(batch["token_loss_weights"][example_ids, token_ids]
+                                   if use_t_weighting and "token_loss_weights" in batch else None),
                 )
             else:
                 logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
@@ -696,6 +697,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     normalization_mask,
                     compute_unweighted_metric=False,
                     sparse_positions=sparse_positions,
+                    token_weights=batch.get("token_loss_weights") if use_t_weighting else None,
                 )
             accelerator.backward(loss)
             # Clip only after all gradient-accumulation microbatches have

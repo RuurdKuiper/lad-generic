@@ -48,7 +48,8 @@ def _legacy_structural_noise(tokens: torch.Tensor, mask_token_id: int, generator
     return corrupted
 
 
-def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_padding_loss, t_min, seed, deterministic):
+def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_padding_loss, t_min, seed, deterministic,
+                     frontier_masking_probability=0.0, frontier_masking_epsilon=0.03, frontier_masking_tau=3.0):
     """Apply configured corruption and choose the positions used for loss."""
     answer = batch["answer_mask"] & ~batch["padding_mask"]
     eos_padding = batch["padding_mask"]
@@ -87,6 +88,9 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_p
     # untouched.
     eligible_mask_only = supervised
     selected = torch.zeros_like(eligible_mask_only)
+    # The IID branch keeps its original inverse-t weighting. Frontier rows
+    # correct that weighting by t / p(position), leaving raw CE metrics intact.
+    token_weights = torch.ones_like(noised, dtype=torch.float32) if frontier_masking_probability > 0 else None
     ts = []
     for row, index in enumerate(batch["example_index"].tolist()):
         generator = None
@@ -95,10 +99,22 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_p
         t = torch.empty((), dtype=torch.float32).uniform_(t_min, 1.0, generator=generator).item()
         eligible = torch.where(eligible_mask_only[row])[0]
         if len(eligible):
-            draw = torch.rand(len(eligible), generator=generator) < t
-            if not draw.any():
-                pick = torch.randint(len(eligible), (1,), generator=generator)
-                draw[pick] = True
+            use_frontier = frontier_masking_probability > 0 and torch.rand((), generator=generator).item() < frontier_masking_probability
+            if use_frontier:
+                # Index only eligible response positions; prompts and excluded
+                # padding/special tokens neither move the frontier nor get masked.
+                positions = torch.arange(len(eligible), device=noised.device, dtype=torch.float32)
+                frontier = len(eligible) * (1.0 - t)
+                probabilities = frontier_masking_epsilon + (1.0 - 2.0 * frontier_masking_epsilon) * torch.sigmoid(
+                    (positions - frontier) / frontier_masking_tau
+                )
+                draw = torch.rand(len(eligible), generator=generator, device=noised.device) < probabilities
+                token_weights[row, eligible] = t / probabilities
+            else:
+                draw = torch.rand(len(eligible), generator=generator) < t
+                if not draw.any():
+                    pick = torch.randint(len(eligible), (1,), generator=generator)
+                    draw[pick] = True
             selected[row, eligible[draw]] = True
         ts.append(t)
     noised[selected] = mask_token_id
@@ -115,4 +131,6 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_p
     else:
         raise ValueError(f"Unknown structured_loss_behavior={structured_loss_behavior}; expected all_answer_tokens, corrupted_answer_tokens, or all_tokens")
     batch["sampled_t"] = torch.tensor(ts, dtype=torch.float32)
+    if token_weights is not None:
+        batch["token_loss_weights"] = token_weights
     return batch

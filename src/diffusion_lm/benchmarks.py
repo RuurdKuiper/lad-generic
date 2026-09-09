@@ -18,6 +18,8 @@ from typing import Any, Callable
 
 import torch
 
+from .generation_prompts import DEFAULT_GENERATION_PROMPTS
+
 
 MC_TASKS = {"mmlu", "mmlu_pro", "hellaswag", "arc_c", "gpqa"}
 SUBJECT_CATEGORY_TASKS = {"mmlu", "mmlu_pro"}
@@ -255,38 +257,7 @@ def resolve_mask_only_generation_settings(config: dict[str, Any], task: str) -> 
 # Fixed prompts make comparisons between runs reproducible.  `limit` can be
 # used to evaluate a smaller prefix, while the default benchmark config uses
 # all 30 questions.
-OPEN_ENDED_PROMPTS = [
-    "What do you know about Amsterdam?",
-    "Why is the sky blue?",
-    "How do plants convert sunlight into energy?",
-    "What makes a good friend?",
-    "Explain how a refrigerator keeps food cold.",
-    "Why do we have different seasons on Earth?",
-    "How does vaccination help protect a population?",
-    "What is the difference between weather and climate?",
-    "Explain the basic idea behind supply and demand.",
-    "How does a search engine find relevant web pages?",
-    "What causes a rainbow?",
-    "How does the human heart circulate blood?",
-    "Why do objects fall toward the ground?",
-    "Explain what machine learning is in simple terms.",
-    "What are the main benefits of regular exercise?",
-    "How does the water cycle work?",
-    "Why is sleep important for people?",
-    "Explain the difference between renewable and nonrenewable energy.",
-    "How do trees communicate or share resources?",
-    "What is inflation and how does it affect households?",
-    "Why do leaves change color in autumn?",
-    "How does a bicycle stay balanced while moving?",
-    "What are practical ways to reduce household waste?",
-    "Explain how an electric battery stores and releases energy.",
-    "What is the purpose of the scientific method?",
-    "How do languages change over time?",
-    "Why are oceans important to the global climate?",
-    "What makes an explanation clear and persuasive?",
-    "How can someone evaluate whether an online claim is reliable?",
-    "Tell a short story about a traveler who learns an unexpected lesson.",
-]
+OPEN_ENDED_PROMPTS = list(DEFAULT_GENERATION_PROMPTS)
 
 
 @dataclass

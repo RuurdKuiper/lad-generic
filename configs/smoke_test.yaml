@@ -30,6 +30,7 @@ generation_perplexity:
   enabled: false
   num_prompts: 2
   num_steps: 2
+  block_length: 16
   max_new_tokens: 16
   noise_level: 0.5
   temperature: 0.7

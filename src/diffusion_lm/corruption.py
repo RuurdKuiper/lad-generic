@@ -101,21 +101,30 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_p
         if len(eligible):
             use_frontier = frontier_masking_probability > 0 and torch.rand((), generator=generator).item() < frontier_masking_probability
             if use_frontier:
-                # Index only eligible response positions; prompts and excluded
-                # padding/special tokens neither move the frontier nor get masked.
-                positions = torch.arange(len(eligible), device=noised.device, dtype=torch.float32)
-                frontier = len(eligible) * (1.0 - t)
+                # The genuine terminating EOS belongs to answer when enabled;
+                # repeated EOS padding must never move the answer's frontier.
+                answer_positions = torch.where(answer[row])[0]
+                positions = torch.arange(len(answer_positions), device=noised.device, dtype=torch.float32)
+                frontier = len(answer_positions) * (1.0 - t)
                 probabilities = frontier_masking_epsilon + (1.0 - 2.0 * frontier_masking_epsilon) * torch.sigmoid(
                     (positions - frontier) / frontier_masking_tau
                 )
-                draw = torch.rand(len(eligible), generator=generator, device=noised.device) < probabilities
-                token_weights[row, eligible] = t / probabilities
+                draw = torch.rand(len(answer_positions), generator=generator, device=noised.device) < probabilities
+                selected[row, answer_positions[draw]] = True
+                token_weights[row, answer_positions] = t / probabilities
+                # Draw padding after the answer, so adding padding or changing
+                # its supervision cannot change this example's answer masks.
+                # Padding uses p=t, so its loss correction remains one.
+                if eos_padding_loss:
+                    padding_positions = torch.where(eos_padding[row])[0]
+                    padding_draw = torch.rand(len(padding_positions), generator=generator, device=noised.device) < t
+                    selected[row, padding_positions[padding_draw]] = True
             else:
                 draw = torch.rand(len(eligible), generator=generator) < t
                 if not draw.any():
                     pick = torch.randint(len(eligible), (1,), generator=generator)
                     draw[pick] = True
-            selected[row, eligible[draw]] = True
+                selected[row, eligible[draw]] = True
         ts.append(t)
     noised[selected] = mask_token_id
     batch["input_ids"] = noised

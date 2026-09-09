@@ -15,7 +15,7 @@ validation_samples: 200
 corruption_mode: mask_only  # Options: structured, mask_only
 structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
 eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask-frontier
+output_dir: outputs/llama-3.1-8b-mask-frontier-2
 seed: 42
 t_min: 0.001
 # Per training sample: 75% soft frontier, 25% existing IID masking.

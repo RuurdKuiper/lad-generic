@@ -443,9 +443,13 @@ frontier_masking_tau: 3.0
 ```
 
 Each training example first samples its usual masking ratio `r`. For frontier
-samples, `L` is the number of eligible response positions (including EOS padding
-only when already enabled), and position `i` has masking probability
+samples, `L` is the number of eligible actual-answer positions, including the
+genuine terminating EOS when enabled, but excluding trailing EOS padding.
+Answer position `i` has masking probability
 `epsilon + (1 - 2 * epsilon) * sigmoid((i - L * (1 - r)) / tau)`.
+Supervised trailing EOS padding is masked independently with probability `r`
+and retains the existing inverse-`r` loss weighting. Padding length does not
+affect the answer frontier or its masking draws.
 Prompt and other excluded positions remain untouched. A frontier sample uses
 independent Bernoulli draws without forcing a mask when none are selected;
 empty draws contribute no supervised tokens. The existing loss reducer excludes

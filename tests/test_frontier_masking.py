@@ -63,6 +63,36 @@ def test_frontier_has_visible_prefix_and_masked_suffix_with_exceptions():
     assert 0.94 < late < 0.99
 
 
+@pytest.mark.parametrize("padding_loss", [False, True])
+def test_short_answer_frontier_is_unchanged_by_two_hundred_padding_tokens(padding_loss):
+    unpadded = make_batch(rows=100, length=5, padding=0)
+    padded = make_batch(rows=100, length=5, padding=200)
+    # The fifth answer token is the genuine EOS, not padding.
+    unpadded["labels"][:, 12] = 2
+    padded["labels"][:, 12] = 2
+    short = corrupt(unpadded, eos_padding_loss=padding_loss)
+    long = corrupt(padded, eos_padding_loss=padding_loss)
+    assert torch.equal(short["sampled_t"], long["sampled_t"])
+    for key in ("input_ids", "loss_mask", "token_loss_weights"):
+        assert torch.equal(short[key], long[key][:, :13]), key
+    assert long["loss_mask"][:, 12].any()  # Genuine EOS still participates.
+    assert torch.equal(long["token_loss_weights"][:, 13:], torch.ones(100, 200))
+    if not padding_loss:
+        assert not long["loss_mask"][:, 13:].any()
+
+
+def test_frontier_padding_uses_iid_ratio_without_changing_answer_draws():
+    disabled = corrupt(make_batch(rows=1000, length=5, padding=200))
+    enabled = corrupt(make_batch(rows=1000, length=5, padding=200), eos_padding_loss=True)
+    assert torch.equal(disabled["loss_mask"][:, :13], enabled["loss_mask"][:, :13])
+    # Across masking-rate buckets, repeated EOS follows r, not the sigmoid.
+    for lower, upper in ((0.1, 0.3), (0.4, 0.6), (0.7, 0.9)):
+        rows = (enabled["sampled_t"] >= lower) & (enabled["sampled_t"] < upper)
+        observed = enabled["loss_mask"][rows, 13:].float().mean()
+        expected = enabled["sampled_t"][rows].mean()
+        assert abs(observed - expected) < 0.015
+
+
 def test_frontier_mixture_is_sampled_per_example():
     batch = corrupt(make_batch(rows=1000), probability=0.75)
     frontier_rows = (batch["token_loss_weights"] != 1).any(dim=1)

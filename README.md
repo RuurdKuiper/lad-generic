@@ -96,14 +96,21 @@ python build_training_dataset.py --repo-id YOUR_HF_USER/LAD-training-v2
 removes exact normalized prompt matches from the represented benchmarks'
 validation/test splits. It keeps complete examples whose prompt is at most 256
 tokens and whose full chat sequence is at most 512 tokens—accepted answers are
-never silently truncated.
+never silently truncated by default. Pass `--truncate-long-answers` to retain
+examples with an eligible prompt but an overlong answer. The builder truncates
+only the answer, uses the remaining context without appending a false terminal
+EOS, rewrites the stored `output` to the retained text, and marks the row with
+`answer_truncated: true`. The manifest reports truncated-answer counts per
+split. This policy is part of the generated dataset, so changing it requires a
+new build (and a new upload if training reads the dataset from Hugging Face).
 
 Within each category, preferred source shares are filled first. If a smaller
 source runs out, unused unique examples from the larger sources fill the gap.
 Only when the entire category is exhausted does the builder cycle through its
 eligible rows again, distributing repeats evenly while preserving the requested
-45/18/18/19 category proportions. The console reports each oversampled category
-and its unique-row count.
+category proportions. Override the default 45/18/18/19 mixture with
+`--category-weights GENERAL REASONING MATH CODE`. The console reports each
+oversampled category and its unique-row count.
 
 Each row retains `system`, `instruction`, `input`, and `output` for tokenizer-independent
 `mask_only` training. It also stores identical clean `input_ids` and `labels`
@@ -113,6 +120,24 @@ trial before the full upload:
 
 ```bash
 python build_training_dataset.py --total-examples 1000 --no-upload
+```
+
+For a small trial that includes long-answer source rows:
+
+```bash
+python build_training_dataset.py --total-examples 1000 --truncate-long-answers --no-upload
+```
+
+For the long-answer 70% general / 10% reasoning / 10% math / 10% code variant:
+
+```bash
+python build_training_dataset.py \
+  --repo-id YOUR_HF_USER/LAD-training-1m-256-long \
+  --total-examples 1000000 \
+  --max-prompt-tokens 256 \
+  --max-sequence-tokens 256 \
+  --truncate-long-answers \
+  --category-weights 0.70 0.10 0.10 0.10
 ```
 
 On macOS CPU/MPS, use a tiny configuration after setting a reachable tiny dataset/model:

@@ -108,7 +108,11 @@ def source_to_tokens(example: dict[str, Any], tokenizer: Any) -> tuple[list[int]
     eos = tokenizer.eos_token_id
     if eos is None:
         raise ValueError(f"Tokenizer {tokenizer.name_or_path} has no eos_token_id")
-    return list(prefix) + list(answer) + [eos], len(prefix)
+    # Builder-truncated answers represent an unfinished prefix, not a completed
+    # response. Preserve that distinction when retokenizing for mask-only
+    # models instead of manufacturing a false terminal target.
+    terminal = [] if bool(example.get("answer_truncated", False)) else [eos]
+    return list(prefix) + list(answer) + terminal, len(prefix)
 
 
 def stored_to_tokens(example: dict[str, Any], tokenizer: Any) -> tuple[list[int], list[int], int]:

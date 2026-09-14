@@ -16,6 +16,12 @@ class TinyTokenizer:
         ids = list(range(20, 20 + len(text.split())))
         return {"input_ids": ids[:max_length] if truncation else ids}
 
+    def encode(self, text, add_special_tokens=False):
+        return self(text, add_special_tokens=add_special_tokens)["input_ids"]
+
+    def decode(self, ids, skip_special_tokens=True, clean_up_tokenization_spaces=False):
+        return " ".join(f"token{index}" for index in ids)
+
 
 class FailingTokenizer(TinyTokenizer):
     def apply_chat_template(self, *args, **kwargs):
@@ -58,6 +64,26 @@ def test_take_filters_heldout_and_lengths_and_stores_clean_ids_twice():
     assert result[0]["input"] == "usable"
     assert result[0]["input_ids"] == result[0]["labels"]
     assert result[0]["labels"][-1] == TinyTokenizer.eos_token_id
+    assert result[0]["answer_truncated"] is False
+
+
+def test_take_optionally_truncates_long_answers_without_false_eos():
+    rows = [{"q": "usable", "a": "one two three four five"}]
+    formatter = lambda x: {"instruction": "", "input": x["q"], "output": x["a"]}
+    base = BuildConfig(total_examples=1, max_prompt_tokens=8, max_sequence_tokens=10)
+    assert _take(rows, formatter, 1, TinyTokenizer(), base, set(), "general:test") == []
+
+    enabled = BuildConfig(
+        total_examples=1,
+        max_prompt_tokens=8,
+        max_sequence_tokens=10,
+        truncate_long_answers=True,
+    )
+    result = _take(rows, formatter, 1, TinyTokenizer(), enabled, set(), "general:test")
+    assert len(result) == 1
+    assert result[0]["answer_truncated"] is True
+    assert len(result[0]["labels"]) == enabled.max_sequence_tokens
+    assert result[0]["labels"][-1] != TinyTokenizer.eos_token_id
 
 
 def test_take_rejects_pathological_text_before_normalization_and_tokenization():

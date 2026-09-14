@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from diffusion_lm.dataset_builder import BuildConfig, build_dataset, write_manifest
+from diffusion_lm.dataset_builder import DEFAULT_WEIGHTS, BuildConfig, build_dataset, write_manifest
 
 
 def main() -> None:
@@ -23,6 +23,18 @@ def main() -> None:
     parser.add_argument("--tokenizer", default="meta-llama/Llama-3.1-8B-Instruct")
     parser.add_argument("--max-prompt-tokens", type=int, default=256)
     parser.add_argument("--max-sequence-tokens", type=int, default=512)
+    parser.add_argument(
+        "--truncate-long-answers",
+        action="store_true",
+        help="Keep overlong examples by truncating the answer to fit without adding a terminal EOS",
+    )
+    parser.add_argument(
+        "--category-weights",
+        type=float,
+        nargs=4,
+        metavar="WEIGHT",
+        help="Category weights in this order: general reasoning math code (default: 0.45 0.18 0.18 0.19)",
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--private", action="store_true", help="Create/update a private Hub dataset")
     parser.add_argument("--no-upload", action="store_true", help="Build and save locally only")
@@ -31,9 +43,12 @@ def main() -> None:
     token = os.getenv("HF_TOKEN")
     if not args.no_upload and not args.repo_id:
         parser.error("--repo-id is required unless --no-upload is used")
+    weights = dict(DEFAULT_WEIGHTS)
+    if args.category_weights is not None:
+        weights = dict(zip(DEFAULT_WEIGHTS, args.category_weights))
     config = BuildConfig(tokenizer_name=args.tokenizer, total_examples=args.total_examples,
                          max_prompt_tokens=args.max_prompt_tokens, max_sequence_tokens=args.max_sequence_tokens,
-                         seed=args.seed)
+                         truncate_long_answers=args.truncate_long_answers, weights=weights, seed=args.seed)
     dataset = build_dataset(config, token=token)
     output = Path(args.output_dir)
     dataset.save_to_disk(str(output))

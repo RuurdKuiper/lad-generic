@@ -65,6 +65,16 @@ def test_mask_only_starts_clean_and_never_changes_prompt_or_padding():
     assert changed[0, 2:].all()
 
 
+def test_source_tokenization_does_not_append_eos_to_builder_truncated_answer():
+    complete, start = source_to_tokens(row(), ToyTokenizer())
+    truncated, truncated_start = source_to_tokens(
+        {**row(), "answer_truncated": True}, ToyTokenizer()
+    )
+    assert truncated_start == start
+    assert complete[-1] == ToyTokenizer.eos_token_id
+    assert truncated == complete[:-1]
+
+
 def test_cached_mask_only_preparation_matches_online_tokenization_exactly():
     tokenizer = ToyTokenizer()
     features = [row(2), {**row(7), "output": "abcdef"}]

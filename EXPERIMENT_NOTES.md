@@ -2,13 +2,13 @@
 
 ## Structured-model regression investigation
 
-The current `Ruurd/LAD-training-1m-256` mixture should retain its category
-proportions (45% general, 18% reasoning, 18% math, and 19% code), but a future
-dataset revision should not reject a source row merely because its complete
-answer does not fit the training context. Keep longer-answer examples and
-truncate their answer at training time instead. The truncation policy should
-preserve a non-empty answer span and explicitly decide whether to append a
-terminating EOS after truncation.
+The current `Ruurd/LAD-training-1m-256` mixture remains the 45% general, 18%
+reasoning, 18% math, and 19% code baseline. The long-answer variant should use
+70% general, 10% reasoning, 10% math, and 10% code and should not reject a
+source row merely because its complete answer does not fit the training
+context. Build it with `--truncate-long-answers --category-weights 0.70 0.10
+0.10 0.10`. An answer cut off by the context limit deliberately receives no
+terminating EOS; complete answers retain their genuine EOS.
 
 This change needs an ablation against the current complete-example-only
 builder. Track the raw and effective answer-length distributions, the fraction
@@ -30,4 +30,3 @@ Other high-priority confounds to isolate:
 - Perplexity is comparable only when the same generated prompts, sampler,
   generation budget, conditioning text, tokenizer, reference model, and
   aggregation method are used.
-

@@ -41,6 +41,7 @@ class BuildConfig:
     total_examples: int = 500_000
     max_prompt_tokens: int = 256
     max_sequence_tokens: int = 512
+    truncate_long_answers: bool = False
     validation_fraction: float = 0.01
     test_fraction: float = 0.01
     seed: int = 42
@@ -183,28 +184,59 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         )
         if len(prompt_ids) > config.max_prompt_tokens:
             continue
-        # Do not render and tokenize the prompt a second time. The generation
-        # prefix already ends immediately before assistant content, so append
-        # answer IDs and the tokenizer's EOS/EOT marker directly. This matches
-        # the representation consumed by source_to_tokens in the trainer.
-        answer_limit = config.max_sequence_tokens - len(prompt_ids) - 1
-        if answer_limit < 1:
+        # Do not render and tokenize the prompt a second time. Complete answers
+        # reserve one position for EOS. With truncation enabled, an overlong
+        # answer may use the whole remaining context and deliberately has no
+        # EOS because the source answer did not actually finish.
+        answer_capacity = config.max_sequence_tokens - len(prompt_ids)
+        complete_answer_limit = answer_capacity - 1
+        if complete_answer_limit < 1:
             continue
         answer_ids = tokenizer(
             item["output"].strip(), add_special_tokens=False, truncation=True,
-            max_length=answer_limit + 1,
+            max_length=answer_capacity + 1,
         )["input_ids"]
-        if len(answer_ids) > answer_limit:
+        answer_truncated = len(answer_ids) > complete_answer_limit
+        if answer_truncated and config.truncate_long_answers:
+            # Keep the raw text and stored IDs consistent. Decoding and then
+            # re-encoding can occasionally change a boundary token, so shorten
+            # until the normalized truncated text fills no more than the
+            # remaining context. Truncated answers intentionally omit EOS.
+            candidate_ids = list(answer_ids[:answer_capacity])
+            while candidate_ids:
+                truncated_output = tokenizer.decode(
+                    candidate_ids,
+                    skip_special_tokens=True,
+                    clean_up_tokenization_spaces=False,
+                ).strip()
+                normalized_ids = tokenizer.encode(truncated_output, add_special_tokens=False)
+                if truncated_output and len(normalized_ids) <= answer_capacity:
+                    item = {**item, "output": truncated_output}
+                    answer_ids = normalized_ids
+                    break
+                candidate_ids.pop()
+            else:
+                continue
+        if answer_truncated and not config.truncate_long_answers:
             continue
         if tokenizer.eos_token_id is None:
             raise ValueError(f"Tokenizer {tokenizer.name_or_path} has no eos_token_id")
-        full_ids = list(prompt_ids) + list(answer_ids) + [tokenizer.eos_token_id]
+        terminal = [] if answer_truncated else [tokenizer.eos_token_id]
+        full_ids = list(prompt_ids) + list(answer_ids) + terminal
         # Share one immutable-in-practice Python list while rows are buffered;
         # Dataset.from_list materializes the two required Arrow columns later.
         # Keeping two Python list copies here roughly doubles peak preparation
         # memory and causes severe slowdown from memory pressure on Colab.
         clean_ids = list(full_ids)
-        accepted.append({**item, "system": system, "input_ids": clean_ids, "labels": clean_ids, "category": source.split(":", 1)[0], "source": source})
+        accepted.append({
+            **item,
+            "system": system,
+            "input_ids": clean_ids,
+            "labels": clean_ids,
+            "category": source.split(":", 1)[0],
+            "source": source,
+            "answer_truncated": answer_truncated,
+        })
         if progress is not None:
             progress.update(1)
         if len(accepted) >= count:
@@ -264,7 +296,7 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         # All supported vocabularies fit int32. The collator converts these
         # lists to torch.long, so training behavior is unchanged.
         "input_ids": Sequence(Value("int32")), "labels": Sequence(Value("int32")),
-        "category": Value("string"), "source": Value("string"),
+        "category": Value("string"), "source": Value("string"), "answer_truncated": Value("bool"),
     })
     print("Loading held-out benchmark prompts for decontamination...", flush=True)
     blocked = _evaluation_hashes(load)
@@ -343,6 +375,12 @@ def build_dataset(config: BuildConfig, token: str | None = None):
 
 def write_manifest(dataset: Any, config: BuildConfig, path: str | Path) -> None:
     counts: dict[str, dict[str, int]] = {}
+    truncated: dict[str, int] = {}
     for split, rows in dataset.items():
         counts[split] = {name: rows["category"].count(name) for name in DEFAULT_WEIGHTS}
-    Path(path).write_text(json.dumps({"config": config.__dict__, "rows": counts}, indent=2, sort_keys=True) + "\n")
+        truncated[split] = sum(rows["answer_truncated"])
+    Path(path).write_text(json.dumps({
+        "config": config.__dict__,
+        "rows": counts,
+        "truncated_answers": truncated,
+    }, indent=2, sort_keys=True) + "\n")

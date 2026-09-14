@@ -1,0 +1,44 @@
+{
+  "config": {
+    "cache_dir": "data/huggingface",
+    "max_prompt_tokens": 256,
+    "max_sequence_tokens": 256,
+    "seed": 42,
+    "test_fraction": 0.01,
+    "tokenizer_name": "meta-llama/Llama-3.1-8B-Instruct",
+    "total_examples": 1000000,
+    "truncate_long_answers": true,
+    "validation_fraction": 0.01,
+    "weights": {
+      "code": 0.1,
+      "general": 0.7,
+      "math": 0.1,
+      "reasoning": 0.1
+    }
+  },
+  "rows": {
+    "test": {
+      "code": 981,
+      "general": 7026,
+      "math": 1002,
+      "reasoning": 991
+    },
+    "train": {
+      "code": 98019,
+      "general": 685928,
+      "math": 98023,
+      "reasoning": 98030
+    },
+    "validation": {
+      "code": 1000,
+      "general": 7046,
+      "math": 975,
+      "reasoning": 979
+    }
+  },
+  "truncated_answers": {
+    "test": 2234,
+    "train": 224237,
+    "validation": 2276
+  }
+}

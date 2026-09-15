@@ -1,0 +1,45 @@
+{
+  "_data_files": [
+    {
+      "filename": "data-00000-of-00008.arrow"
+    },
+    {
+      "filename": "data-00001-of-00008.arrow"
+    },
+    {
+      "filename": "data-00002-of-00008.arrow"
+    },
+    {
+      "filename": "data-00003-of-00008.arrow"
+    },
+    {
+      "filename": "data-00004-of-00008.arrow"
+    },
+    {
+      "filename": "data-00005-of-00008.arrow"
+    },
+    {
+      "filename": "data-00006-of-00008.arrow"
+    },
+    {
+      "filename": "data-00007-of-00008.arrow"
+    }
+  ],
+  "_fingerprint": "0b639fb5243c6be1",
+  "_format_columns": [
+    "answer_truncated",
+    "category",
+    "input",
+    "input_ids",
+    "instruction",
+    "labels",
+    "output",
+    "sample_origin",
+    "source",
+    "system"
+  ],
+  "_format_kwargs": {},
+  "_format_type": null,
+  "_output_all_columns": false,
+  "_split": null
+}

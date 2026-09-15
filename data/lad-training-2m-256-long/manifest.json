@@ -1,0 +1,105 @@
+{
+  "config": {
+    "allow_excluded_fallback": false,
+    "cache_dir": "data/huggingface",
+    "exclude_dataset": null,
+    "max_prompt_tokens": 256,
+    "max_sequence_tokens": 256,
+    "seed": 42,
+    "test_fraction": 0.01,
+    "tokenizer_name": "meta-llama/Llama-3.1-8B-Instruct",
+    "total_examples": 2000000,
+    "truncate_long_answers": true,
+    "validation_fraction": 0.01,
+    "weights": {
+      "code": 0.1,
+      "general": 0.7,
+      "math": 0.1,
+      "reasoning": 0.1
+    }
+  },
+  "novelty": {
+    "allow_excluded_fallback": false,
+    "categories": {
+      "code": {
+        "excluded_training_fallback_unique_rows": 0,
+        "final_sample_origins": {
+          "new_source": 200000
+        },
+        "new_unique_rows": 92270,
+        "oversampled_rows": 107730,
+        "target_rows": 200000
+      },
+      "general": {
+        "excluded_training_fallback_unique_rows": 0,
+        "final_sample_origins": {
+          "new_source": 1400000
+        },
+        "new_unique_rows": 1400000,
+        "oversampled_rows": 0,
+        "target_rows": 1400000
+      },
+      "math": {
+        "excluded_training_fallback_unique_rows": 0,
+        "final_sample_origins": {
+          "new_source": 200000
+        },
+        "new_unique_rows": 183145,
+        "oversampled_rows": 16855,
+        "target_rows": 200000
+      },
+      "reasoning": {
+        "excluded_training_fallback_unique_rows": 0,
+        "final_sample_origins": {
+          "new_source": 200000
+        },
+        "new_unique_rows": 36672,
+        "oversampled_rows": 163328,
+        "target_rows": 200000
+      }
+    },
+    "exclude_dataset": null,
+    "excluded_prompt_hashes": 0,
+    "filter_counts": {
+      "benchmark_blocked": 569,
+      "within_build_duplicate": 268688
+    },
+    "reused_heldout_rows": {}
+  },
+  "rows": {
+    "test": {
+      "code": 2010,
+      "general": 14025,
+      "math": 1980,
+      "reasoning": 1985
+    },
+    "train": {
+      "code": 196000,
+      "general": 1371995,
+      "math": 195982,
+      "reasoning": 196023
+    },
+    "validation": {
+      "code": 1990,
+      "general": 13980,
+      "math": 2038,
+      "reasoning": 1992
+    }
+  },
+  "sample_origins": {
+    "test": {
+      "new_source": 20000
+    },
+    "train": {
+      "new_source": 1960000
+    },
+    "validation": {
+      "new_source": 20000
+    }
+  },
+  "truncated_answers": {
+    "test": 4031,
+    "train": 401261,
+    "validation": 4158
+  }
+}

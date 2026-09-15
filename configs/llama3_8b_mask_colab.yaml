@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-1m-256-long
+dataset_name: Ruurd/LAD-training-2m-256-long
 splits: {train: train, validation: validation, test: test}
 # Long-answer inclusion is fixed when this dataset is built, not during
 # training. Rebuild/upload it with build_training_dataset.py
@@ -60,7 +60,7 @@ answer_padding_loss:
   enabled: true
   answer_weight: 0.9
   padding_weight: 0.1
-output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long
+output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-2m
 seed: 42
 
 # Minimum mask ratio t. mask_only samples one t per example uniformly from
@@ -134,8 +134,8 @@ selected_logit_optimization: true  # Options: true, false
 
 # Logging and checkpointing
 logging_steps: 100
-validation_steps: 250
-checkpoint_steps: 1000
+validation_steps: 500
+checkpoint_steps: 2500
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training

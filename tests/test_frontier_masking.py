@@ -76,21 +76,33 @@ def test_short_answer_frontier_is_unchanged_by_two_hundred_padding_tokens(paddin
     for key in ("input_ids", "loss_mask", "token_loss_weights"):
         assert torch.equal(short[key], long[key][:, :13]), key
     assert long["loss_mask"][:, 12].any()  # Genuine EOS still participates.
-    assert torch.equal(long["token_loss_weights"][:, 13:], torch.ones(100, 200))
-    if not padding_loss:
+    if padding_loss:
+        assert not torch.equal(long["token_loss_weights"][:, 13:], torch.ones(100, 200))
+    else:
+        assert torch.equal(long["token_loss_weights"][:, 13:], torch.ones(100, 200))
         assert not long["loss_mask"][:, 13:].any()
 
 
-def test_frontier_padding_uses_iid_ratio_without_changing_answer_draws():
+def test_frontier_continues_through_padding_without_changing_answer_draws():
     disabled = corrupt(make_batch(rows=1000, length=5, padding=200))
     enabled = corrupt(make_batch(rows=1000, length=5, padding=200), eos_padding_loss=True)
     assert torch.equal(disabled["loss_mask"][:, :13], enabled["loss_mask"][:, :13])
-    # Across masking-rate buckets, repeated EOS follows r, not the sigmoid.
-    for lower, upper in ((0.1, 0.3), (0.4, 0.6), (0.7, 0.9)):
-        rows = (enabled["sampled_t"] >= lower) & (enabled["sampled_t"] < upper)
-        observed = enabled["loss_mask"][rows, 13:].float().mean()
-        expected = enabled["sampled_t"][rows].mean()
-        assert abs(observed - expected) < 0.015
+    # Padding immediately follows the genuine answer in frontier coordinates;
+    # positions far into its tail approach the 1-epsilon masking ceiling.
+    near = enabled["loss_mask"][:, 13:16].float().mean().item()
+    far = enabled["loss_mask"][:, -100:].float().mean().item()
+    assert 0.70 < near < 0.90
+    assert 0.96 < far < 0.98
+
+
+def test_frontier_padding_uses_matching_inverse_probability_weights():
+    batch = corrupt(make_batch(rows=20, length=5, padding=10), eos_padding_loss=True)
+    t = batch["sampled_t"][:, None]
+    offsets = torch.arange(5, 15, dtype=torch.float32)
+    frontier = 5 * (1.0 - t)
+    probabilities = 0.03 + 0.94 * torch.sigmoid((offsets - frontier) / 3.0)
+    expected = t / probabilities
+    assert torch.allclose(batch["token_loss_weights"][:, 13:], expected)
 
 
 def test_frontier_mixture_is_sampled_per_example():

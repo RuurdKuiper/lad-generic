@@ -114,11 +114,27 @@ def apply_corruption(batch, mask_token_id, mode, structured_loss_behavior, eos_p
                 token_weights[row, answer_positions] = t / probabilities
                 # Draw padding after the answer, so adding padding or changing
                 # its supervision cannot change this example's answer masks.
-                # Padding uses p=t, so its loss correction remains one.
+                # Continue the answer's positional frontier into padding while
+                # keeping the frontier itself based only on genuine answer
+                # length. Thus distant EOS padding is almost always masked but
+                # can never move the answer boundary used by the corruption.
                 if eos_padding_loss:
                     padding_positions = torch.where(eos_padding[row])[0]
-                    padding_draw = torch.rand(len(padding_positions), generator=generator, device=noised.device) < t
+                    padding_offsets = torch.arange(
+                        len(answer_positions),
+                        len(answer_positions) + len(padding_positions),
+                        device=noised.device,
+                        dtype=torch.float32,
+                    )
+                    padding_probabilities = frontier_masking_epsilon + (
+                        1.0 - 2.0 * frontier_masking_epsilon
+                    ) * torch.sigmoid((padding_offsets - frontier) / frontier_masking_tau)
+                    padding_draw = (
+                        torch.rand(len(padding_positions), generator=generator, device=noised.device)
+                        < padding_probabilities
+                    )
                     selected[row, padding_positions[padding_draw]] = True
+                    token_weights[row, padding_positions] = t / padding_probabilities
             else:
                 draw = torch.rand(len(eligible), generator=generator) < t
                 if not draw.any():

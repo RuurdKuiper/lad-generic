@@ -3,30 +3,101 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-1m-256
+dataset_name: Ruurd/LAD-training-1m-256-long
 splits: {train: train, validation: validation, test: test}
+# Long-answer inclusion is fixed when this dataset is built, not during
+# training. Rebuild/upload it with build_training_dataset.py
+# --truncate-long-answers, then point dataset_name at that revision/repository.
 
 # File paths
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
 validation_samples: 200
-# The original run used adapter-only checkpoints. Warm-start from its final
-# weights and exclude the samples consumed by its 25,000 updates.
-resume_from_adapter: outputs/llama-3.1-8b-mask/final
-resume_data_updates: 25000
+# Warm-start from the completed first pass. Under LAD_OUTPUT_ROOT this relative
+# path resolves inside /content/drive/MyDrive/lad-generic-results.
+resume_from_adapter: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long_1/final
+# Do not set resume_data_updates: this run intentionally revisits the dataset
+# as a second pass, with a new shuffle and fresh online masking.
 
 # Corruption and loss behavior
-corruption_mode: mask_only  # Options: structured, mask_only
-structured_loss_behavior: corrupted_answer_tokens  # Options: all_answer_tokens, corrupted_answer_tokens, all_tokens
-eos_padding_loss: true  # Options: true, false
-output_dir: outputs/llama-3.1-8b-mask-continued
-seed: 42
+# corruption_mode options:
+#   mask_only  - sample t uniformly from [t_min, 1], then replace selected
+#                answer targets with MASK. Selection is IID, soft-frontier, or
+#                a per-example mixture controlled by frontier_masking_probability.
+#   structured - legacy LAD corruption: random masking plus token swaps,
+#                neighbour duplication and short span moves; 10% of examples
+#                receive a fully masked answer. Frontier controls are invalid.
+corruption_mode: mask_only
+
+# structured_loss_behavior options (the name is historical; it applies to both modes):
+#   corrupted_answer_tokens - supervise only answer/EOS-padding positions whose
+#                              input differs from the target. In mask_only this
+#                              means the positions selected for masking.
+#   all_answer_tokens       - supervise every answer target, changed or visible,
+#                              in structured mode. In mask_only it currently has
+#                              the same selected-mask objective as
+#                              corrupted_answer_tokens.
+#   all_tokens              - supervise the complete non-padding sequence
+#                              (prompt, formatting and answer), plus trailing EOS
+#                              padding when eos_padding_loss=true. For mask_only,
+#                              this disables inverse-t weighting.
+structured_loss_behavior: corrupted_answer_tokens
+
+# true: include trailing batch-padding EOS positions in the eligible target
+# region. mask_only can then mask and learn them; structured corruption leaves
+# them visible, so corrupted_answer_tokens will still exclude unchanged padding.
+# false: exclude trailing EOS padding; other supervised positions continue to
+# follow structured_loss_behavior. If omitted, the compatibility default is true
+# for all_tokens and false for the two answer-only objectives.
+eos_padding_loss: true
+
+# Optional separately normalized answer/padding objective:
+#   enabled: false - use the standard joint loss over all selected targets.
+#   enabled: true  - compute answer and padding losses separately and mix them
+#                    with the weights below, preventing long padding regions
+#                    from diluting the answer contribution.
+# Requirements when enabled: corruption_mode=mask_only,
+# structured_loss_behavior=all_answer_tokens or corrupted_answer_tokens,
+# eos_padding_loss=true, and nonnegative weights summing to 1.
+# The answer region includes the genuine terminating EOS when
+# include_answer_eos=true; padding is only the repeated trailing EOS region.
+answer_padding_loss:
+  enabled: true
+  answer_weight: 0.9
+  padding_weight: 0.1
+output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-epoch2
+seed: 43
+
+# Minimum mask ratio t. mask_only samples one t per example uniformly from
+# [t_min, 1]. Smaller values include nearly clean inputs; larger values bias
+# training toward heavily masked inputs. Use 0 < t_min <= 1 (0 is accepted but
+# is numerically undesirable with inverse-t weighting). Ignored by structured.
 t_min: 0.001
-# Per training sample: 75% soft frontier, 25% existing IID masking.
+
+# mask_only masking-policy options:
+#   0.0 - IID masking only; every eligible position is masked independently
+#         with probability t (with a one-mask fallback for an empty IID draw).
+#   1.0 - soft-frontier masking only; later answer positions are progressively
+#         more likely to be masked. Empty frontier draws are allowed.
+#   0..1 - probability of choosing frontier masking per example; the remainder
+#          use IID masking. For example, 0.75 = 75% frontier / 25% IID.
+# Frontier samples use inverse-probability correction; IID samples use inverse-t.
+# Validation/test loss always uses deterministic IID masking, regardless of this value.
 frontier_masking_probability: 0.75
+# Frontier probability floor/ceiling: epsilon and 1-epsilon. Valid: 0 < value < 0.5.
 frontier_masking_epsilon: 0.03
+# Frontier transition width in token positions. Must be > 0; lower is sharper,
+# higher is softer. These three frontier settings are ignored when probability=0.
 frontier_masking_tau: 3.0
+
+# true includes the answer's one genuine terminating EOS in its supervised and
+# mask-eligible answer region; false excludes it. This is distinct from the
+# repeated trailing EOS positions controlled by eos_padding_loss.
 include_answer_eos: true
+
+# Optional token used for mask_only corruption; it must encode to exactly one
+# vocabulary token. The default "MASK" is one token for this Llama tokenizer.
+# mask_token: MASK
 
 # Include multi-turn
 multi_turn_prob: 0.0
@@ -35,20 +106,21 @@ max_history_turns: 2
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
 learning_rate: 1.0e-5
+
 # Treat learning_rate as the rate for the reference effective batch size.
 learning_rate_scaling:
   enabled: false
   mode: sqrt  # Options: sqrt, linear
   reference_batch_size: 8
-scheduler: cosine  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
-warmup_steps: 100
+scheduler: constant_with_warmup  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
+warmup_steps: 1000
 num_workers: 4
 prefetch_factor: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 25000
+max_updates: 50000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
@@ -60,13 +132,16 @@ batch_size: 16
 eval_batch_size: 8
 gradient_accumulation_steps: 1
 gradient_checkpointing: false
-selected_logit_optimization: true
+# Compute logits only at supervised positions when supported. This changes
+# memory/runtime, not the objective. It is used only for sparse objectives on a
+# single process without active FP8; otherwise training safely uses full logits.
+selected_logit_optimization: true  # Options: true, false
 
 # Logging and checkpointing
 logging_steps: 100
 validation_steps: 250
-checkpoint_steps: 5000
-checkpoint_mode: every_model  # Compact adapter snapshots; optimizer/scheduler/RNG state is not stored.
+checkpoint_steps: 1000
+checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training
 generation_perplexity:

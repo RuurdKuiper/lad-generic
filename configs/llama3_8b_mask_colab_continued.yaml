@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-1m-256-long
+dataset_name: Ruurd/LAD-training-1m-256-long-epoch2
 splits: {train: train, validation: validation, test: test}
 # Long-answer inclusion is fixed when this dataset is built, not during
 # training. Rebuild/upload it with build_training_dataset.py
@@ -16,8 +16,8 @@ validation_samples: 200
 # Warm-start from the completed first pass. Under LAD_OUTPUT_ROOT this relative
 # path resolves inside /content/drive/MyDrive/lad-generic-results.
 resume_from_adapter: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-epoch1-lr1e-5/final
-# Do not set resume_data_updates: this run intentionally revisits the dataset
-# as a second pass, with a new shuffle and fresh online masking.
+# Do not set resume_data_updates: this is a new dataset and should start from
+# its beginning, with a fresh shuffle and fresh online masking.
 
 # Corruption and loss behavior
 # corruption_mode options:
@@ -65,7 +65,7 @@ answer_padding_loss:
   enabled: true
   answer_weight: 0.9
   padding_weight: 0.1
-output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-epoch2
+output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-newdata-epoch2-lr1e-5
 seed: 43
 
 # Minimum mask ratio t. mask_only samples one t per example uniformly from
@@ -105,7 +105,7 @@ max_history_turns: 2
 
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
-learning_rate: 1.0e-6
+learning_rate: 1.0e-5
 
 # Treat learning_rate as the rate for the reference effective batch size.
 learning_rate_scaling:

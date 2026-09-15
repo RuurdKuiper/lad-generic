@@ -140,6 +140,36 @@ python build_training_dataset.py \
   --category-weights 0.70 0.10 0.10 0.10
 ```
 
+To build a second one-million-row mixture while excluding exact normalized
+prompt matches from the first, provide either its local `DatasetDict` directory
+or Hugging Face repository. A new seed alone reshuffles the sources but does
+not guarantee novelty; explicit exclusion does:
+
+```bash
+python build_training_dataset.py \
+  --repo-id YOUR_HF_USER/LAD-training-1m-256-long-epoch2 \
+  --output-dir data/lad-training-1m-256-long-epoch2 \
+  --total-examples 1000000 \
+  --max-prompt-tokens 256 \
+  --max-sequence-tokens 256 \
+  --truncate-long-answers \
+  --category-weights 0.70 0.10 0.10 0.10 \
+  --seed 43 \
+  --exclude-dataset Ruurd/LAD-training-1m-256-long \
+  --allow-excluded-fallback
+```
+
+The builder excludes both instruction-wrapped and non-empty raw-input hashes
+from all earlier splits and deduplicates newly accepted prompts across sources.
+With `--allow-excluded-fallback`, categories that exhaust their novel upstream
+pool are filled from unique rows in the earlier **training** split before any
+balanced oversampling. The earlier validation and test splits are preserved
+unchanged, keeping them comparable and preventing prior training rows from
+entering held-out evaluation. Omit the fallback flag to require strict novelty;
+the build then fails with a clear category error if no eligible novel rows
+remain. Each row's `sample_origin` and the manifest's `novelty` and
+`sample_origins` sections report new, fallback, held-out, and oversampled counts.
+
 On macOS CPU/MPS, use a tiny configuration after setting a reachable tiny dataset/model:
 
 ```bash

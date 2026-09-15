@@ -36,6 +36,21 @@ def main() -> None:
         help="Category weights in this order: general reasoning math code (default: 0.45 0.18 0.18 0.19)",
     )
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--exclude-dataset",
+        help=(
+            "Local DatasetDict directory or Hugging Face dataset repository whose "
+            "prompts must be excluded from newly sourced rows"
+        ),
+    )
+    parser.add_argument(
+        "--allow-excluded-fallback",
+        action="store_true",
+        help=(
+            "When novel category sources are exhausted, fill the training split from "
+            "unique rows in the excluded dataset's train split and preserve its held-out splits"
+        ),
+    )
     parser.add_argument("--private", action="store_true", help="Create/update a private Hub dataset")
     parser.add_argument("--no-upload", action="store_true", help="Build and save locally only")
     args = parser.parse_args()
@@ -48,7 +63,9 @@ def main() -> None:
         weights = dict(zip(DEFAULT_WEIGHTS, args.category_weights))
     config = BuildConfig(tokenizer_name=args.tokenizer, total_examples=args.total_examples,
                          max_prompt_tokens=args.max_prompt_tokens, max_sequence_tokens=args.max_sequence_tokens,
-                         truncate_long_answers=args.truncate_long_answers, weights=weights, seed=args.seed)
+                         truncate_long_answers=args.truncate_long_answers, weights=weights, seed=args.seed,
+                         exclude_dataset=args.exclude_dataset,
+                         allow_excluded_fallback=args.allow_excluded_fallback)
     dataset = build_dataset(config, token=token)
     output = Path(args.output_dir)
     dataset.save_to_disk(str(output))

@@ -47,6 +47,9 @@ class BuildConfig:
     seed: int = 42
     weights: dict[str, float] = field(default_factory=lambda: dict(DEFAULT_WEIGHTS))
     cache_dir: str = "data/huggingface"
+    exclude_dataset: str | None = None
+    allow_excluded_fallback: bool = False
+    build_report: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
 
 
 def normalized_prompt(text: str) -> str:
@@ -56,6 +59,19 @@ def normalized_prompt(text: str) -> str:
 
 def prompt_hash(text: str) -> str:
     return hashlib.sha256(normalized_prompt(text).encode()).hexdigest()
+
+
+def row_prompt_hashes(row: dict[str, Any]) -> set[str]:
+    """Return wrapped and raw-input hashes used for overlap detection."""
+    instruction = str(row.get("instruction") or "").strip()
+    input_text = str(row.get("input") or "").strip()
+    user = "\n\n".join(part for part in (instruction, input_text) if part)
+    hashes = {prompt_hash(user)}
+    # Code-instruction datasets commonly have an empty separate input field;
+    # its hash must not make every such prompt collide with every other one.
+    if input_text:
+        hashes.add(prompt_hash(input_text))
+    return hashes
 
 
 def format_mc(question: str, choices: list[Any], answer: int | str) -> dict[str, str] | None:
@@ -150,7 +166,9 @@ def _targets(total: int, weights: dict[str, float]) -> dict[str, int]:
 
 def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], dict[str, str] | None], count: int,
           tokenizer: Any, config: BuildConfig, blocked: set[str], source: str,
-          progress: Any | None = None) -> list[dict[str, Any]]:
+          progress: Any | None = None, *, excluded: set[str] | None = None,
+          used: set[str] | None = None, stats: dict[str, int] | None = None,
+          sample_origin: str = "new_source") -> list[dict[str, Any]]:
     accepted = []
     scanned = 0
     for row in rows:
@@ -167,11 +185,26 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
         if len(user) > config.max_prompt_tokens * 50 or len(item["output"]) > config.max_sequence_tokens * 50:
             continue
         key = prompt_hash(user)
+        input_text = item["input"].strip()
         # Compare both the raw task text and its instruction-wrapped form: held-out
         # benchmark hashes contain the raw question, while general datasets vary.
-        if key in blocked or prompt_hash(item["input"]) in blocked:
+        keys = {key}
+        if input_text:
+            keys.add(prompt_hash(input_text))
+        if keys & blocked:
+            if stats is not None:
+                stats["benchmark_blocked"] = stats.get("benchmark_blocked", 0) + 1
             continue
-        system = choose_system_prompt(item, source, key)
+        if excluded is not None and keys & excluded:
+            if stats is not None:
+                stats["excluded_overlap"] = stats.get("excluded_overlap", 0) + 1
+            continue
+        if used is not None and keys & used:
+            if stats is not None:
+                stats["within_build_duplicate"] = stats.get("within_build_duplicate", 0) + 1
+            continue
+        resolved_source = str(item.pop("_lad_source", source))
+        system = choose_system_prompt(item, resolved_source, key)
         if len(system) > config.max_prompt_tokens * 50:
             continue
         prompt_messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
@@ -233,10 +266,13 @@ def _take(rows: Iterable[dict[str, Any]], formatter: Callable[[dict[str, Any]], 
             "system": system,
             "input_ids": clean_ids,
             "labels": clean_ids,
-            "category": source.split(":", 1)[0],
-            "source": source,
+            "category": resolved_source.split(":", 1)[0],
+            "source": resolved_source,
             "answer_truncated": answer_truncated,
+            "sample_origin": sample_origin,
         })
+        if used is not None:
+            used.update(keys)
         if progress is not None:
             progress.update(1)
         if len(accepted) >= count:
@@ -282,7 +318,7 @@ def _repeat_dataset(dataset: Any, count: int, seed: int, concatenate: Callable) 
 
 def build_dataset(config: BuildConfig, token: str | None = None):
     """Download, normalize, balance, split, and return a DatasetDict."""
-    from datasets import Dataset, DatasetDict, Features, Sequence, Value, concatenate_datasets, load_dataset
+    from datasets import Dataset, DatasetDict, Features, Sequence, Value, concatenate_datasets, load_dataset, load_from_disk
     from transformers import AutoTokenizer
     from tqdm.auto import tqdm
 
@@ -297,11 +333,74 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         # lists to torch.long, so training behavior is unchanged.
         "input_ids": Sequence(Value("int32")), "labels": Sequence(Value("int32")),
         "category": Value("string"), "source": Value("string"), "answer_truncated": Value("bool"),
+        "sample_origin": Value("string"),
     })
+    heldout = config.validation_fraction + config.test_fraction
+    if not 0 < heldout < 1:
+        raise ValueError("validation_fraction + test_fraction must be between zero and one")
+    if config.allow_excluded_fallback and not config.exclude_dataset:
+        raise ValueError("allow_excluded_fallback requires exclude_dataset")
+
+    excluded_data = None
+    excluded_hashes: set[str] = set()
+    build_targets = dict(targets)
+    reused_heldout = {}
+    if config.exclude_dataset:
+        exclusion_path = Path(config.exclude_dataset).expanduser()
+        print(f"Loading exclusion dataset {config.exclude_dataset}...", flush=True)
+        excluded_data = (
+            load_from_disk(str(exclusion_path))
+            if exclusion_path.is_dir()
+            else load_dataset(config.exclude_dataset, cache_dir=cache, token=token)
+        )
+        required_text = {"instruction", "input"}
+        for split_name, rows in excluded_data.items():
+            missing = required_text - set(rows.column_names)
+            if missing:
+                raise ValueError(
+                    f"Exclusion dataset split {split_name!r} lacks required columns: {sorted(missing)}"
+                )
+            for row in rows.select_columns(sorted(required_text)):
+                excluded_hashes.update(row_prompt_hashes(row))
+        print(f"Loaded {len(excluded_hashes):,} exclusion prompt hashes.", flush=True)
+
+        if config.allow_excluded_fallback:
+            required_splits = {"train", "validation", "test"}
+            missing_splits = required_splits - set(excluded_data)
+            if missing_splits:
+                raise ValueError(
+                    "Excluded fallback requires train/validation/test splits; missing "
+                    f"{sorted(missing_splits)}"
+                )
+            # Preserve the earlier held-out rows exactly. This keeps validation
+            # comparable and prevents previously trained fallback rows from
+            # leaking into validation or test after a fresh random split.
+            for split_name in ("validation", "test"):
+                rows = excluded_data[split_name]
+                missing = set(output_features) - {"sample_origin"} - set(rows.column_names)
+                if missing:
+                    raise ValueError(
+                        f"Excluded fallback split {split_name!r} lacks required columns: {sorted(missing)}"
+                    )
+                category_counts = {name: rows["category"].count(name) for name in DEFAULT_WEIGHTS}
+                for category, count in category_counts.items():
+                    build_targets[category] -= count
+                    if build_targets[category] < 0:
+                        raise ValueError(
+                            f"Excluded {split_name} contains more {category} rows than the requested "
+                            "mixture can accommodate"
+                        )
+                reused_heldout[split_name] = rows
     print("Loading held-out benchmark prompts for decontamination...", flush=True)
     blocked = _evaluation_hashes(load)
     print(f"Loaded {len(blocked):,} held-out prompt hashes.", flush=True)
     rng = random.Random(config.seed)
+    used: set[str] = set()
+    if reused_heldout:
+        for rows in reused_heldout.values():
+            for row in rows.select_columns(["instruction", "input"]):
+                used.update(row_prompt_hashes(row))
+    filter_stats: dict[str, int] = {}
 
     def shuffled(path: str, name: str | None = None, split: str = "train"):
         return load(path, name, split=split).shuffle(seed=config.seed)
@@ -329,9 +428,18 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         ],
     }
     print("Source datasets loaded; formatting and tokenization are starting.", flush=True)
+    fallback_train = None
+    if config.allow_excluded_fallback:
+        fallback_columns = ["system", "instruction", "input", "output", "category", "source"]
+        missing = set(fallback_columns) - set(excluded_data["train"].column_names)
+        if missing:
+            raise ValueError(f"Excluded fallback train split lacks required columns: {sorted(missing)}")
+        fallback_train = excluded_data["train"].select_columns(fallback_columns).shuffle(seed=config.seed)
+
     groups = []
+    category_report = {}
     for category, entries in sources.items():
-        wanted = targets[category]
+        wanted = build_targets[category]
         progress = tqdm(total=wanted, desc=f"Preparing {category}", unit="rows")
         allocations = [int(wanted * share) for *_, share in entries]
         allocations[0] += wanted - sum(allocations)
@@ -341,18 +449,50 @@ def build_dataset(config: BuildConfig, token: str | None = None):
         # cannot meet its allocation, without rescanning or duplicating rows.
         prepared = [(source, data, formatter, iter(data)) for source, data, formatter, _ in entries]
         for (source, _, formatter, iterator), count in zip(prepared, allocations):
-            rows.extend(_take(iterator, formatter, count, tokenizer, config, blocked, source, progress))
+            rows.extend(_take(
+                iterator, formatter, count, tokenizer, config, blocked, source, progress,
+                excluded=excluded_hashes, used=used, stats=filter_stats,
+            ))
         if len(rows) < wanted:
             # Exhaust still-unused rows from the largest sources first. Dataset
             # size is only a priority heuristic; exact token filtering remains
             # authoritative.
             for source, data, formatter, iterator in sorted(prepared, key=lambda item: len(item[1]), reverse=True):
-                rows.extend(_take(iterator, formatter, wanted - len(rows), tokenizer, config, blocked, source, progress))
+                rows.extend(_take(
+                    iterator, formatter, wanted - len(rows), tokenizer, config, blocked, source, progress,
+                    excluded=excluded_hashes, used=used, stats=filter_stats,
+                ))
                 if len(rows) >= wanted:
                     break
+        novel_count = len(rows)
+        if len(rows) < wanted and fallback_train is not None:
+            def fallback_rows():
+                for old_row in fallback_train:
+                    if old_row.get("category") == category:
+                        yield old_row
+
+            def format_fallback(old_row):
+                return {
+                    "system": old_row.get("system", ""),
+                    "instruction": old_row.get("instruction", ""),
+                    "input": old_row.get("input", ""),
+                    "output": old_row.get("output", ""),
+                    "_lad_source": old_row.get("source", f"{category}:excluded-fallback"),
+                }
+
+            rows.extend(_take(
+                fallback_rows(), format_fallback, wanted - len(rows), tokenizer, config,
+                blocked, f"{category}:excluded-fallback", progress,
+                used=used, stats=filter_stats, sample_origin="excluded_training_fallback",
+            ))
+        fallback_unique = len(rows) - novel_count
         unique_count = len(rows)
         if not unique_count:
-            raise RuntimeError(f"{category}: no rows survived filtering")
+            hint = (
+                "; add new source datasets or pass --allow-excluded-fallback"
+                if config.exclude_dataset and not config.allow_excluded_fallback else ""
+            )
+            raise RuntimeError(f"{category}: no rows survived filtering{hint}")
         rng.shuffle(rows)
         group = Dataset.from_list(rows, features=output_features)
         if unique_count < wanted:
@@ -363,24 +503,62 @@ def build_dataset(config: BuildConfig, token: str | None = None):
             progress.update(wanted - unique_count)
         progress.set_postfix_str(f"{unique_count:,} unique", refresh=True)
         progress.close()
-        groups.append(_repeat_dataset(group, wanted, config.seed, concatenate_datasets))
+        repeated_group = _repeat_dataset(group, wanted, config.seed, concatenate_datasets)
+        category_report[category] = {
+            "target_rows": wanted,
+            "new_unique_rows": novel_count,
+            "excluded_training_fallback_unique_rows": fallback_unique,
+            "oversampled_rows": wanted - unique_count,
+            "final_sample_origins": {
+                origin: repeated_group["sample_origin"].count(origin)
+                for origin in sorted(set(repeated_group["sample_origin"]))
+            },
+        }
+        groups.append(repeated_group)
     combined = concatenate_datasets(groups).shuffle(seed=config.seed)
-    heldout = config.validation_fraction + config.test_fraction
-    if not 0 < heldout < 1:
-        raise ValueError("validation_fraction + test_fraction must be between zero and one")
-    first = combined.train_test_split(test_size=heldout, seed=config.seed)
-    second = first["test"].train_test_split(test_size=config.test_fraction / heldout, seed=config.seed)
-    return DatasetDict(train=first["train"], validation=second["train"], test=second["test"])
+    if reused_heldout:
+        normalized_heldout = {}
+        for split_name, rows in reused_heldout.items():
+            if "sample_origin" in rows.column_names:
+                rows = rows.remove_columns("sample_origin")
+            rows = rows.map(lambda _: {"sample_origin": "excluded_heldout"})
+            normalized_heldout[split_name] = rows.select_columns(list(output_features)).cast(output_features)
+        result = DatasetDict(
+            train=combined,
+            validation=normalized_heldout["validation"],
+            test=normalized_heldout["test"],
+        )
+    else:
+        first = combined.train_test_split(test_size=heldout, seed=config.seed)
+        second = first["test"].train_test_split(test_size=config.test_fraction / heldout, seed=config.seed)
+        result = DatasetDict(train=first["train"], validation=second["train"], test=second["test"])
+    config.build_report = {
+        "exclude_dataset": config.exclude_dataset,
+        "allow_excluded_fallback": config.allow_excluded_fallback,
+        "excluded_prompt_hashes": len(excluded_hashes),
+        "filter_counts": filter_stats,
+        "categories": category_report,
+        "reused_heldout_rows": {name: len(rows) for name, rows in reused_heldout.items()},
+    }
+    return result
 
 
 def write_manifest(dataset: Any, config: BuildConfig, path: str | Path) -> None:
     counts: dict[str, dict[str, int]] = {}
     truncated: dict[str, int] = {}
+    origins: dict[str, dict[str, int]] = {}
     for split, rows in dataset.items():
         counts[split] = {name: rows["category"].count(name) for name in DEFAULT_WEIGHTS}
         truncated[split] = sum(rows["answer_truncated"])
+        origins[split] = {
+            name: rows["sample_origin"].count(name)
+            for name in sorted(set(rows["sample_origin"]))
+        }
+    serialized_config = {key: value for key, value in config.__dict__.items() if key != "build_report"}
     Path(path).write_text(json.dumps({
-        "config": config.__dict__,
+        "config": serialized_config,
         "rows": counts,
         "truncated_answers": truncated,
+        "sample_origins": origins,
+        "novelty": config.build_report,
     }, indent=2, sort_keys=True) + "\n")

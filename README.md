@@ -594,7 +594,16 @@ remain available for smoke runs. Perplexity still comes from the original base
 model with adapters disabled and initial normalization weights restored; no
 separate reference model is loaded for intermediate validation.
 
-With `corruption_mode: mask_only`, enabled `eos_padding_loss` also places EOS padding in the stochastic corruption candidates. Thus it is learned as a denoising target rather than simply copied from the input; this applies to all three loss behaviors. EOS padding is visible to attention in both directions, making the configured context width an explicit signal during concise-answer training.
+With `corruption_mode: mask_only`, enabled `eos_padding_loss` also places EOS
+padding in the stochastic corruption candidates. Thus it is learned as a
+denoising target rather than simply copied from the input; this applies to all
+three loss behaviors. On frontier examples, `frontier_padding_mode: iid`
+reproduces the historical behavior by masking each padding position with
+probability `t`, while `frontier_padding_mode: frontier` continues the answer's
+sigmoid masking curve into padding. The default is `iid` for compatibility, and
+the resolved configuration always records the effective mode. EOS padding is
+visible to attention in both directions, making the configured context width an
+explicit signal during concise-answer training.
 
 For an adapter warm-start where the original run did not save full
 Accelerate checkpoints, set `resume_data_updates` to the number of updates

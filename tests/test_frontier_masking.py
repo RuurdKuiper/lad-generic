@@ -20,10 +20,11 @@ def make_batch(rows=1, length=128, prefix=8, padding=4):
                 padding_mask=pads, example_index=torch.arange(rows))
 
 
-def corrupt(batch, probability=1.0, eos_padding_loss=False, seed=123):
+def corrupt(batch, probability=1.0, eos_padding_loss=False, seed=123, padding_mode="frontier"):
     return apply_corruption(batch, 9, "mask_only", "corrupted_answer_tokens",
                             eos_padding_loss, 0.001, seed, True,
-                            frontier_masking_probability=probability)
+                            frontier_masking_probability=probability,
+                            frontier_padding_mode=padding_mode)
 
 
 def test_disabled_frontier_preserves_original_iid_rng_and_forced_mask():
@@ -105,6 +106,22 @@ def test_frontier_padding_uses_matching_inverse_probability_weights():
     assert torch.allclose(batch["token_loss_weights"][:, 13:], expected)
 
 
+def test_iid_frontier_padding_exactly_preserves_historical_behavior():
+    batch = corrupt(
+        make_batch(rows=50, length=5, padding=20),
+        eos_padding_loss=True,
+        padding_mode="iid",
+    )
+    for row in range(50):
+        generator = torch.Generator().manual_seed(123 + row)
+        t = torch.empty(()).uniform_(0.001, 1.0, generator=generator).item()
+        assert torch.rand((), generator=generator).item() < 1.0  # frontier branch draw
+        torch.rand(5, generator=generator)  # answer frontier draws happen first
+        expected_padding = torch.rand(20, generator=generator) < t
+        assert torch.equal(batch["loss_mask"][row, 13:], expected_padding)
+        assert torch.equal(batch["token_loss_weights"][row, 13:], torch.ones(20))
+
+
 def test_frontier_mixture_is_sampled_per_example():
     batch = corrupt(make_batch(rows=1000), probability=0.75)
     frontier_rows = (batch["token_loss_weights"] != 1).any(dim=1)
@@ -117,6 +134,7 @@ def test_frontier_mixture_is_sampled_per_example():
     ("frontier_masking_probability", -0.1), ("frontier_masking_probability", 1.1),
     ("frontier_masking_epsilon", 0), ("frontier_masking_epsilon", 0.5),
     ("frontier_masking_tau", 0), ("frontier_masking_tau", float("nan")),
+    ("frontier_padding_mode", "invalid"),
 ])
 def test_invalid_frontier_settings_fail_early(setting, value):
     with pytest.raises(ValueError, match=setting):

@@ -28,6 +28,7 @@ t_min: 0.001
 frontier_masking_probability: 0.75
 frontier_masking_epsilon: 0.03
 frontier_masking_tau: 3.0
+frontier_padding_mode: frontier
 include_answer_eos: true
 
 # Include multi-turn

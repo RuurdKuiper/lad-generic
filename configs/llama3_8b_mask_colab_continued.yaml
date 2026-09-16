@@ -89,6 +89,7 @@ frontier_masking_epsilon: 0.03
 # Frontier transition width in token positions. Must be > 0; lower is sharper,
 # higher is softer. These three frontier settings are ignored when probability=0.
 frontier_masking_tau: 3.0
+frontier_padding_mode: frontier
 
 # true includes the answer's one genuine terminating EOS in its supervised and
 # mask-eligible answer region; false excludes it. This is distinct from the

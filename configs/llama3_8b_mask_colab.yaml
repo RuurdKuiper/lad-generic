@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-2m-256-long
+dataset_name: Ruurd/LAD-training-1m-256-long
 splits: {train: train, validation: validation, test: test}
 # Long-answer inclusion is fixed when this dataset is built, not during
 # training. Rebuild/upload it with build_training_dataset.py
@@ -60,7 +60,7 @@ answer_padding_loss:
   enabled: true
   answer_weight: 0.9
   padding_weight: 0.1
-output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-2m
+output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-epoch1-lr1e-5-reproduction
 seed: 42
 
 # Minimum mask ratio t. mask_only samples one t per example uniformly from
@@ -84,6 +84,13 @@ frontier_masking_epsilon: 0.03
 # Frontier transition width in token positions. Must be > 0; lower is sharper,
 # higher is softer. These three frontier settings are ignored when probability=0.
 frontier_masking_tau: 3.0
+
+# EOS padding on frontier examples:
+#   iid      - historical successful-run behavior: mask each padding token with p=t.
+#   frontier - continue the answer's sigmoid frontier into EOS padding.
+# This is explicit because it changes the objective but older resolved configs
+# did not record it. Use iid to reproduce the original 50k run.
+frontier_padding_mode: iid
 
 # true includes the answer's one genuine terminating EOS in its supervised and
 # mask-eligible answer region; false excludes it. This is distinct from the
@@ -115,7 +122,7 @@ epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
 # updates and release the Slurm allocation; leave null to use the full epoch.
-max_updates: 125000
+max_updates: 50000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
@@ -134,8 +141,8 @@ selected_logit_optimization: true  # Options: true, false
 
 # Logging and checkpointing
 logging_steps: 100
-validation_steps: 500
-checkpoint_steps: 2500
+validation_steps: 250
+checkpoint_steps: 1000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
 # Perplexity evaluation during training

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _block_step_plan, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -70,6 +70,18 @@ def test_llada_linear_schedule_transfers_every_mask_once():
     assert _llada_transfer_schedule(10, 4) == [3, 3, 2, 2]
 
 
+def test_block_step_plan_distributes_steps_and_supports_a_short_final_block():
+    assert _block_step_plan(10, 5, 4) == [
+        (0, 0, 4, 0, 2),
+        (0, 0, 4, 1, 2),
+        (1, 4, 8, 0, 2),
+        (1, 4, 8, 1, 2),
+        (2, 8, 10, 0, 1),
+    ]
+    with pytest.raises(ValueError, match="at least the number of blocks"):
+        _block_step_plan(10, 2, 4)
+
+
 def test_denoising_state_is_copyable_with_explicit_spaced_masks():
     class Tokenizer:
         eos_token_id = 2
@@ -84,6 +96,19 @@ def test_denoising_state_is_copyable_with_explicit_spaced_masks():
     assert decode_denoising_state(
         [9, 9, 4], Tokenizer(), mask_token_id=9
     ) == "MASK MASK chicken"
+    assert decode_denoising_state(
+        [0, 2, 4, 2], Tokenizer(), mask_token_id=9, show_eos_tokens=True
+    ) == "Kill <EOS> chicken <EOS>"
+
+    class EotTokenizer(Tokenizer):
+        unk_token_id = 8
+
+        def convert_tokens_to_ids(self, token):
+            return {"<|eot_id|>": 7}.get(token, self.unk_token_id)
+
+    assert decode_denoising_state(
+        [0, 7, 4, 2], EotTokenizer(), mask_token_id=9, show_eos_tokens=True
+    ) == "Kill <EOT> chicken <EOS>"
 
 
 def test_repetition_penalty_scales_probability_weight_and_excludes_current_position():
@@ -445,6 +470,55 @@ def test_copyable_trajectory_can_show_prediction_before_and_after_remasking():
         "Predicted (before re-mask):\n3 3 3 3\n"
         "State after re-mask (unchanged; final state):\n3 3 3 3"
     )
+
+
+def test_streaming_block_generation_finishes_each_block_before_the_next():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.inputs = []
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.inputs.append(input_ids.detach().clone())
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[..., 3] = 10.0
+            return type("Output", (), {"logits": logits})()
+
+    model = Model()
+    session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    states = list(denoise_stream(
+        session,
+        "Question",
+        "System",
+        4,
+        4,
+        1.0,
+        0.0,
+        1,
+        1234,
+        include_pre_remask_prediction=True,
+        block_length=2,
+    ))
+
+    assert len(states) == 4
+    assert model.inputs[0].tolist() == [[1, 5, 5, 5, 5]]
+    assert model.inputs[2].tolist() == [[1, 3, 3, 5, 5]]
+    assert "Predicted (before re-mask):\n3 3 MASK MASK" in states[1][0]
+    assert "Predicted (before re-mask):\n3 3 3 3" in states[2][0]
+    assert states[-1][0].endswith("State after re-mask (unchanged; final state):\n3 3 3 3")
+    assert "block 2/2" in states[-1][1]
 
 
 def test_retained_positions_can_remain_editable_or_lock_their_token_values():

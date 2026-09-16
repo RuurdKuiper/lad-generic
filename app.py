@@ -79,7 +79,7 @@ def load_llada_model(repo_id, device):
     return f"Loaded LLaDA `{repo_id}` on `{SESSION.device}` with `{SESSION.compute_dtype}` compute. Generation uses this app's standard denoising loop and controls."
 
 
-def run(question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, repetition_penalty, eos_eot_prediction_penalty, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf):
+def run(question, system_prompt, max_new_tokens, block_length, num_steps, noise_level, temperature, top_k, repetition_penalty, eos_eot_prediction_penalty, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf):
     """Stream colored intermediate denoising states and the final answer to Gradio."""
     if SESSION is None:
         raise gr.Error("Choose and load a saved adapter first.")
@@ -93,7 +93,7 @@ def run(question, system_prompt, max_new_tokens, num_steps, noise_level, tempera
     permanent_unmask, freeze_retained_tokens = retention_settings[retention_mode]
     trajectory = []
     try:
-        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty, eos_eot_prediction_penalty, True), start=1):
+        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty, eos_eot_prediction_penalty, True, block_length), start=1):
             trajectory.append(f"Step {step}:\n{text}")
             yield status, html, "\n".join(trajectory)
     except ValueError as error:
@@ -130,7 +130,8 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     system_prompt = gr.Textbox(label="System prompt", value="You are a helpful assistant.")
     with gr.Row():
         max_new_tokens = gr.Slider(1, 512, value=128, step=1, label="Answer tokens")
-        num_steps = gr.Slider(1, 128, value=32, step=1, label="Denoising steps")
+        block_length = gr.Slider(1, 512, value=128, step=1, label="Block length")
+        num_steps = gr.Slider(1, 512, value=32, step=1, label="Denoising steps")
         noise_level = gr.Slider(0, 1, value=.5, step=.05, label="Initial re-mask probability")
         temperature = gr.Slider(0, 2, value=.7, step=.05, label="Temperature")
         top_k = gr.Slider(1, 100, value=20, step=1, label="Top-k")
@@ -153,7 +154,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
     intermediate = gr.HTML(label="Intermediate denoising states")
     trajectory_options = dict(
         label="Inference trajectory",
-        info="Each line is the state after that denoising step; unresolved positions are shown as MASK.",
+        info="Each step shows the prediction before re-masking and the resulting state; unresolved positions and future blocks are shown as MASK.",
         lines=12,
         max_lines=32,
         interactive=False,
@@ -175,7 +176,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         inputs=show_trajectory,
         outputs=trajectory_output,
     )
-    generate.click(run, inputs=[question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, repetition_penalty, eos_eot_prediction_penalty, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate, trajectory_output])
+    generate.click(run, inputs=[question, system_prompt, max_new_tokens, block_length, num_steps, noise_level, temperature, top_k, repetition_penalty, eos_eot_prediction_penalty, seed, retention_mode, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf], outputs=[detail, intermediate, trajectory_output])
 
 
 if __name__ == "__main__":

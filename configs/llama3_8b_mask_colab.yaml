@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-1m-256-long
+dataset_name: Ruurd/LAD-training-2m-256-long
 splits: {train: train, validation: validation, test: test}
 # Long-answer inclusion is fixed when this dataset is built, not during
 # training. Rebuild/upload it with build_training_dataset.py
@@ -90,7 +90,7 @@ frontier_masking_tau: 3.0
 #   frontier - continue the answer's sigmoid frontier into EOS padding.
 # This is explicit because it changes the objective but older resolved configs
 # did not record it. Use iid to reproduce the original 50k run.
-frontier_padding_mode: frontier
+frontier_padding_mode: iid
 
 # true includes the answer's one genuine terminating EOS in its supervised and
 # mask-eligible answer region; false excludes it. This is distinct from the

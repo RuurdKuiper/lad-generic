@@ -403,6 +403,50 @@ def test_eos_prediction_penalty_does_not_enable_confidence_guided_remasking(monk
     assert guided_arguments == [False]
 
 
+def test_copyable_trajectory_can_show_prediction_before_and_after_remasking():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[..., 3] = 10.0
+            return type("Output", (), {"logits": logits})()
+
+    session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    states = list(denoise_stream(
+        session,
+        "Question",
+        "System",
+        4,
+        2,
+        1.0,
+        0.0,
+        1,
+        1234,
+        include_pre_remask_prediction=True,
+    ))
+
+    assert states[0][0].startswith("Predicted (before re-mask):\n3 3 3 3\nState after re-mask:\n")
+    assert "MASK" in states[0][0]
+    assert states[-1][0] == (
+        "Predicted (before re-mask):\n3 3 3 3\n"
+        "State after re-mask (unchanged; final state):\n3 3 3 3"
+    )
+
+
 def test_retained_positions_can_remain_editable_or_lock_their_token_values():
     class Tokenizer:
         eos_token_id = 2

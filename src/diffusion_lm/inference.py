@@ -758,7 +758,7 @@ def decode_denoising_state(tokens: list[int], tokenizer: Any, mask_token_id: int
     return " ".join(pieces)
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0):
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False):
     """Yield denoising states with optionally retained positions and locked values."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
@@ -810,6 +810,9 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if freeze_retained_tokens:
             for offset, token in frozen.items():
                 ids[answer_start + offset] = token
+        predicted_text = decode_denoising_state(
+            ids[answer_start:], session.tokenizer, session.mask_token_id
+        )
         last_confidence = float(confidence.mean().cpu())
         # Match the legacy application's criterion: compare complete sampled
         # answer token sequences before the next iteration's re-masking.  This
@@ -870,9 +873,20 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         visible_answer = current_answer
         if session.tokenizer.eos_token_id in visible_answer:
             visible_answer = visible_answer[:visible_answer.index(session.tokenizer.eos_token_id)]
-        current_text = decode_denoising_state(
+        remasked_text = decode_denoising_state(
             current_answer, session.tokenizer, session.mask_token_id
         )
+        current_text = remasked_text
+        if include_pre_remask_prediction:
+            remask_label = (
+                "State after re-mask"
+                if step + 1 < num_steps and not stopped_early
+                else "State after re-mask (unchanged; final state)"
+            )
+            current_text = (
+                f"Predicted (before re-mask):\n{predicted_text}\n"
+                f"{remask_label}:\n{remasked_text}"
+            )
         status = f"Denoising step {step + 1}/{num_steps} · {len(visible_answer)} output tokens · mean confidence {last_confidence:.3f}"
         if permanent_unmask:
             retention_kind = "locked" if freeze_retained_tokens else "editable"

@@ -93,8 +93,8 @@ def run(question, system_prompt, max_new_tokens, num_steps, noise_level, tempera
     permanent_unmask, freeze_retained_tokens = retention_settings[retention_mode]
     trajectory = []
     try:
-        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty, eos_eot_prediction_penalty), start=1):
-            trajectory.append(f"Step {step}: {text}")
+        for step, (text, status, html) in enumerate(denoise_stream(SESSION, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty, eos_eot_prediction_penalty, True), start=1):
+            trajectory.append(f"Step {step}:\n{text}")
             yield status, html, "\n".join(trajectory)
     except ValueError as error:
         raise gr.Error(str(error)) from error

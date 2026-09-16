@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
-from diffusion_lm.inference import InferenceSession, _apply_repetition_penalty, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -126,6 +126,25 @@ def test_repetition_penalty_excludes_special_tokens():
     )
 
     assert torch.equal(penalized, logits)
+
+
+def test_eos_eot_prediction_penalty_only_reduces_special_token_logits():
+    logits = torch.zeros((2, 6), dtype=torch.bfloat16)
+    logits[:, 2] = 4.0
+    logits[:, 4] = 3.0
+
+    penalized = _apply_eos_eot_prediction_penalty(
+        logits, 10.0, eos_token_id=2, eot_token_id=4
+    )
+
+    expected_delta = torch.log(torch.tensor(10.0)).item()
+    assert penalized.dtype == logits.dtype
+    assert penalized[0, 2].float().item() == pytest.approx(4.0 - expected_delta, abs=.02)
+    assert penalized[0, 4].float().item() == pytest.approx(3.0 - expected_delta, abs=.02)
+    assert torch.equal(penalized[:, [0, 1, 3, 5]], logits[:, [0, 1, 3, 5]])
+    assert torch.equal(_apply_eos_eot_prediction_penalty(logits, 1.0, 2, 4), logits)
+    with pytest.raises(ValueError, match="at least 1.0"):
+        _apply_eos_eot_prediction_penalty(logits, 0.5, 2, 4)
 
 
 @pytest.mark.parametrize("dtype", [torch.float16, torch.bfloat16])
@@ -326,6 +345,62 @@ def test_streaming_denoising_delays_eos_retention_when_configured():
     ))
 
     assert model.inputs[1].tolist() == [[1, 5, 3]]
+
+
+def test_eos_prediction_penalty_does_not_enable_confidence_guided_remasking(monkeypatch):
+    from diffusion_lm import inference
+
+    class Tokenizer:
+        eos_token_id = 2
+        unk_token_id = 0
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def convert_tokens_to_ids(self, token):
+            return {"<|eot_id|>": 4}.get(token, self.unk_token_id)
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[..., 2] = 5.0
+            logits[..., 3] = 4.0
+            return type("Output", (), {"logits": logits})()
+
+    guided_arguments = []
+    original_remask_offsets = inference._remask_offsets
+
+    def recording_remask_offsets(confidence, mask_probability, confidence_guided):
+        guided_arguments.append(confidence_guided)
+        return original_remask_offsets(confidence, mask_probability, confidence_guided)
+
+    monkeypatch.setattr(inference, "_remask_offsets", recording_remask_offsets)
+    session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    list(denoise_stream(
+        session,
+        "Question",
+        "System",
+        2,
+        2,
+        1.0,
+        0.0,
+        1,
+        1234,
+        confidence_guided=False,
+        confidence_eos_eot_inf=False,
+        eos_eot_prediction_penalty=10.0,
+    ))
+
+    assert guided_arguments == [False]
 
 
 def test_retained_positions_can_remain_editable_or_lock_their_token_values():

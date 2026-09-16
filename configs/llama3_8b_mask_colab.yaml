@@ -3,7 +3,7 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-2m-256-long
+dataset_name: Ruurd/LAD-training-1m-256-long
 splits: {train: train, validation: validation, test: test}
 # Long-answer inclusion is fixed when this dataset is built, not during
 # training. Rebuild/upload it with build_training_dataset.py
@@ -36,7 +36,7 @@ corruption_mode: mask_only
 #                              (prompt, formatting and answer), plus trailing EOS
 #                              padding when eos_padding_loss=true. For mask_only,
 #                              this disables inverse-t weighting.
-structured_loss_behavior: corrupted_answer_tokens
+structured_loss_behavior: all_tokens
 
 # true: include trailing batch-padding EOS positions in the eligible target
 # region. mask_only can then mask and learn them; structured corruption leaves
@@ -57,10 +57,10 @@ eos_padding_loss: true
 # The answer region includes the genuine terminating EOS when
 # include_answer_eos=true; padding is only the repeated trailing EOS region.
 answer_padding_loss:
-  enabled: true
+  enabled: false
   answer_weight: 0.9
   padding_weight: 0.1
-output_dir: outputs/llama-3.1-8b-mask-frontier-answer90-padding10-long-epoch1-lr1e-5-reproduction
+output_dir: outputs/llama-3.1-8b-mask-iid-alltokens-answerpadding-long-1m
 seed: 42
 
 # Minimum mask ratio t. mask_only samples one t per example uniformly from
@@ -78,7 +78,7 @@ t_min: 0.001
 #          use IID masking. For example, 0.75 = 75% frontier / 25% IID.
 # Frontier samples use inverse-probability correction; IID samples use inverse-t.
 # Validation/test loss always uses deterministic IID masking, regardless of this value.
-frontier_masking_probability: 0.75
+frontier_masking_probability: 0.0
 # Frontier probability floor/ceiling: epsilon and 1-epsilon. Valid: 0 < value < 0.5.
 frontier_masking_epsilon: 0.03
 # Frontier transition width in token positions. Must be > 0; lower is sharper,

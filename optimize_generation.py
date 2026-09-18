@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Grid-search denoising parameters using autoregressive perplexity and repetition."""
+"""Grid-search denoising parameters using perplexity and token-level Distinct-n."""
 from __future__ import annotations
 
 import argparse
@@ -11,6 +11,7 @@ import torch
 import yaml
 
 from diffusion_lm.inference import denoise_stream, load_session
+from diffusion_lm.metrics import distinct_n
 
 
 DEFAULT_PROMPTS = [
@@ -20,16 +21,6 @@ DEFAULT_PROMPTS = [
     "Write a short mystery set in a library.", "How would you teach patience to a child?",
     "Explain the benefits and risks of renewable energy.", "Describe an imaginary planet and its inhabitants.",
 ]
-
-
-def _repetition(text: str, n: int, tokenizer) -> float:
-    """Calculate repeated token n-gram fraction, excluding EOS/special IDs."""
-    tokens = tokenizer.encode(text, add_special_tokens=False)
-    special = set(getattr(tokenizer, "all_special_ids", []))
-    tokens = [token for token in tokens if token not in special]
-    # Compare non-overlapping chunks: [A B] vs [C D], not [A B] vs [B C].
-    grams = [tuple(tokens[i:i + n]) for i in range(0, len(tokens) - n + 1, n)]
-    return 0.0 if not grams else 1.0 - len(set(grams)) / len(grams)
 
 
 @torch.no_grad()
@@ -80,12 +71,13 @@ def main() -> None:
                 texts.append(final)
                 print(f"  sample {len(texts)}/{len(prompts) * int(config.get('repetitions', 5))} | prompt={prompt}\n  output={final}\n", flush=True)
         ppl = _perplexity(session, texts)
-        unigram = sum(_repetition(t, 1, session.tokenizer) for t in texts) / max(len(texts), 1)
-        bigram = sum(_repetition(t, 2, session.tokenizer) for t in texts) / max(len(texts), 1)
-        trigram = sum(_repetition(t, 3, session.tokenizer) for t in texts) / max(len(texts), 1)
-        repetition = (unigram + bigram + trigram) / 3.0
-        score = ppl + float(config.get("repetition_weight", 10.0)) * repetition
-        results.append({"parameters": candidate, "perplexity": ppl, "unigram_repetition": unigram, "bigram_repetition": bigram, "trigram_repetition": trigram, "ngram_repetition": repetition, "score": score})
+        distinct = {
+            f"distinct_{n}": sum(distinct_n(text, session.tokenizer, n) for text in texts) / max(len(texts), 1)
+            for n in (1, 2, 3)
+        }
+        diversity_penalty = 1.0 - sum(distinct.values()) / len(distinct)
+        score = ppl + float(config.get("diversity_weight", 10.0)) * diversity_penalty
+        results.append({"parameters": candidate, "perplexity": ppl, **distinct, "diversity_penalty": diversity_penalty, "score": score})
         print(json.dumps(results[-1], ensure_ascii=False), flush=True)
     results.sort(key=lambda x: x["score"]); output = Path(config.get("output", "outputs/generation_search.json")); output.parent.mkdir(parents=True, exist_ok=True); output.write_text(json.dumps({"best": results[0], "results": results}, indent=2, ensure_ascii=False))
 

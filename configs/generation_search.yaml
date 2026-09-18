@@ -3,7 +3,7 @@ outputs_dir: outputs
 device: auto  # Options: auto, cuda, mps, cpu
 num_prompts: 10
 repetitions: 5
-repetition_weight: 10.0
+diversity_weight: 10.0
 generation:
   max_new_tokens: 128
   num_steps: 32

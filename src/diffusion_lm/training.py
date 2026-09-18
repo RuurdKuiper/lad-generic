@@ -22,6 +22,7 @@ from .loss import masked_denoising_loss, selected_denoising_loss
 from .modeling import forward_bidirectional, forward_bidirectional_selected, load_denoising_model, parameter_audit
 from .inference import InferenceSession, _native_eot_token_id, llada_generate
 from .generation_prompts import DEFAULT_GENERATION_PROMPTS, _load_generation_prompts
+from .metrics import distinct_n
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -282,7 +283,7 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
             seed=int(settings["seed"]) + prompt_index,
         )
         finals.append(final_text)
-        records.append({"step": step, "prompt_index": prompt_index, "unigram_repetition": _ngram_repetition(final_text, tokenizer, 1), "bigram_repetition": _ngram_repetition(final_text, tokenizer, 2), "trigram_repetition": _ngram_repetition(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
+        records.append({"step": step, "prompt_index": prompt_index, "distinct_1": distinct_n(final_text, tokenizer, 1), "distinct_2": distinct_n(final_text, tokenizer, 2), "distinct_3": distinct_n(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
     generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
     valid_perplexities = [value for value in per_text_perplexities if value is not None]
@@ -292,27 +293,20 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
     generation_metrics["generation_median_perplexity"] = (
         float(median(valid_perplexities)) if valid_perplexities else None
     )
+    for n in (1, 2, 3):
+        generation_metrics[f"generation_mean_distinct_{n}"] = float(
+            sum(record[f"distinct_{n}"] for record in records) / len(records)
+        ) if records else None
     for record in records:
         # Rebuild the mapping to keep the JSONL field order stable/readable.
         record["generation_perplexity"] = per_text_perplexities[record["prompt_index"]]
-        ordered = {"step": record["step"], "prompt_index": record["prompt_index"], "unigram_repetition": record["unigram_repetition"], "bigram_repetition": record["bigram_repetition"], "trigram_repetition": record["trigram_repetition"], "generation_perplexity": record["generation_perplexity"], "prompt": record["prompt"], "final": record["final"]}
+        ordered = {"step": record["step"], "prompt_index": record["prompt_index"], "distinct_1": record["distinct_1"], "distinct_2": record["distinct_2"], "distinct_3": record["distinct_3"], "generation_perplexity": record["generation_perplexity"], "prompt": record["prompt"], "final": record["final"]}
         record.clear(); record.update(ordered)
     generation_path = output / "generation_metrics.jsonl"
     with generation_path.open("a") as stream:
         for record in records:
             stream.write(json.dumps(record, ensure_ascii=False) + "\n")
     return generation_metrics
-
-
-def _ngram_repetition(text: str, tokenizer: Any, n: int = 3) -> float:
-    """Return the fraction of n-gram occurrences repeated beyond their first use."""
-    tokens = [token for token in tokenizer.encode(text, add_special_tokens=False) if token not in set(getattr(tokenizer, "all_special_ids", []))]
-    if len(tokens) < n:
-        return 0.0
-    # Compare non-overlapping chunks: [A B] vs [C D], not [A B] vs [B C].
-    grams = [tuple(tokens[i : i + n]) for i in range(0, len(tokens) - n + 1, n)]
-    return float(1.0 - len(set(grams)) / len(grams))
-
 
 def _resolve_answer_padding_weights(config: dict[str, Any]) -> tuple[float, float] | None:
     """Validate the optional separately normalized masked-response objective."""
@@ -790,6 +784,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     for key, label in (
                         ("generation_median_perplexity", "generation_median_ppl"),
                         ("generation_perplexity", "generation_pooled_ppl"),
+                        ("generation_mean_distinct_1", "generation_distinct_1"),
                     )
                     if metrics.get(key) is not None
                 )

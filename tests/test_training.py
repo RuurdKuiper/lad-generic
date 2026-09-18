@@ -243,9 +243,14 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
     assert scored == ["final answer"]
     assert record["final"] == "final answer"
     assert "states" not in record
+    assert record["distinct_1"] == 1.0
+    assert record["distinct_2"] == 1.0
+    assert record["distinct_3"] == 0.0
+    assert "unigram_repetition" not in record
     assert metrics["generation_perplexity"] == 2.0
     assert metrics["generation_mean_perplexity"] == 2.0
     assert metrics["generation_median_perplexity"] == 2.0
+    assert metrics["generation_mean_distinct_1"] == 1.0
 
 
 def test_generation_validation_scores_all_thirty_shared_questions(tmp_path, monkeypatch):

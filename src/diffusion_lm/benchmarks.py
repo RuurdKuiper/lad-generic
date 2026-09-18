@@ -19,6 +19,7 @@ from typing import Any, Callable
 import torch
 
 from .generation_prompts import DEFAULT_GENERATION_PROMPTS
+from .metrics import distinct_n
 
 
 MC_TASKS = {"mmlu", "mmlu_pro", "hellaswag", "arc_c", "gpqa"}
@@ -707,14 +708,6 @@ def save_result(path: Path, result: dict[str, Any]) -> None:
         stream.write(json.dumps(result, ensure_ascii=False, default=str) + "\n")
 
 
-def _ngram_repetition(text: str, tokenizer: Any, n: int) -> float:
-    """Return the fraction of non-overlapping n-gram occurrences repeated."""
-    special_ids = set(getattr(tokenizer, "all_special_ids", []))
-    tokens = [token for token in tokenizer.encode(text, add_special_tokens=False) if token not in special_ids]
-    grams = [tuple(tokens[index : index + n]) for index in range(0, len(tokens) - n + 1, n)]
-    return float(1.0 - len(set(grams)) / len(grams)) if grams else 0.0
-
-
 @torch.no_grad()
 def score_texts_with_model(model: Any, tokenizer: Any, device: torch.device, texts: list[str]) -> dict[str, Any]:
     """Score texts with one fixed causal reference model.
@@ -745,9 +738,6 @@ def score_texts_with_model(model: Any, tokenizer: Any, device: torch.device, tex
             perplexity = float(torch.exp(torch.tensor(text_nll / text_tokens)))
         per_text.append({
             "perplexity": perplexity,
-            "unigram_repetition": _ngram_repetition(text, tokenizer, 1),
-            "bigram_repetition": _ngram_repetition(text, tokenizer, 2),
-            "trigram_repetition": _ngram_repetition(text, tokenizer, 3),
         })
     mean_nll = total_nll / max(total_tokens, 1)
     valid_perplexities = [item["perplexity"] for item in per_text if item["perplexity"] is not None]
@@ -763,7 +753,7 @@ def score_texts_with_model(model: Any, tokenizer: Any, device: torch.device, tex
 
 @torch.no_grad()
 def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, Any]:
-    """Score generated texts with base-model perplexity and repetition metrics.
+    """Score generated texts with base-model perplexity and Distinct-n metrics.
 
     Perplexity is measured with adapters disabled and the saved initial
     normalization weights restored, matching training-time generation
@@ -804,9 +794,9 @@ def score_open_ended_generations(session: Any, texts: list[str]) -> dict[str, An
                     perplexity = float(torch.exp(torch.tensor(text_nll / text_tokens)))
                 per_text.append({
                     "perplexity": perplexity,
-                    "unigram_repetition": _ngram_repetition(text, tokenizer, 1),
-                    "bigram_repetition": _ngram_repetition(text, tokenizer, 2),
-                    "trigram_repetition": _ngram_repetition(text, tokenizer, 3),
+                    "distinct_1": distinct_n(text, tokenizer, 1),
+                    "distinct_2": distinct_n(text, tokenizer, 2),
+                    "distinct_3": distinct_n(text, tokenizer, 3),
                 })
     finally:
         named = dict(model.named_parameters())

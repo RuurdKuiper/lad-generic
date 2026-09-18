@@ -19,6 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_autoregressive_generation_settings, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.metrics import distinct_n
 from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_merged_session, load_session, release_session, select_device
 from diffusion_lm.judging import judge_open_ended_groups
 
@@ -312,7 +313,11 @@ def main() -> None:
                     diffusion_texts.append(text)
                     if show_open_ended_answers:
                         _show_open_ended_answer(diffusion_progress, "diffusion", index, len(examples), example.prompt, text)
-                open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "examples": examples, "texts": diffusion_texts, "inference_settings": task_settings})
+                diffusion_distinct = [
+                    {f"distinct_{n}": distinct_n(text, session.tokenizer, n) for n in (1, 2, 3)}
+                    for text in diffusion_texts
+                ]
+                open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "examples": examples, "texts": diffusion_texts, "distinct": diffusion_distinct, "inference_settings": task_settings})
                 message = f"{model_label} | {task} | diffusion generation complete; shared quality metrics will be scored at the end"
                 if config.get("include_autoregressive", False) and supports_autoregressive:
                     print(f"[{model_label}] {task}: {len(examples)} validation samples (autoregressive)", flush=True)
@@ -325,7 +330,11 @@ def main() -> None:
                         ar_texts.append(text)
                         if show_open_ended_answers:
                             _show_open_ended_answer(ar_progress, "autoregressive", index, len(examples), example.prompt, text)
-                    open_ended_pending.append({"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "inference_settings": autoregressive_settings})
+                    ar_distinct = [
+                        {f"distinct_{n}": distinct_n(text, session.tokenizer, n) for n in (1, 2, 3)}
+                        for text in ar_texts
+                    ]
+                    open_ended_pending.append({"model": model_label, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "distinct": ar_distinct, "inference_settings": autoregressive_settings})
                     message += " | autoregressive generation complete"
                 if config.get("include_autoregressive", False) and not supports_autoregressive:
                     message += " | autoregressive comparison skipped"
@@ -418,7 +427,7 @@ def main() -> None:
         for group_index, group in enumerate(open_ended_pending):
             scores = score_texts_with_model(reference_model, reference_tokenizer, reference_device, group["texts"])
             annotations = judge_annotations.get(group_index, [None] * len(group["examples"]))
-            for example, text, per_text, annotation in zip(group["examples"], group["texts"], scores["per_text"], annotations):
+            for example, text, per_text, diversity, annotation in zip(group["examples"], group["texts"], scores["per_text"], group["distinct"], annotations):
                 record = {
                     "model": group["model"], "corruption_mode": group["corruption_mode"], "task": group["task"],
                     "example_id": example.example_id, "method": group["method"],
@@ -426,6 +435,7 @@ def main() -> None:
                     "inference_settings": group["inference_settings"],
                     "perplexity_reference": reference_info,
                     **per_text,
+                    **diversity,
                     **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
                 }
                 if annotation is not None:
@@ -439,14 +449,14 @@ def main() -> None:
                 "inference_settings": group["inference_settings"],
                 "perplexity_reference": reference_info,
                 "perplexity": scores["perplexity"], "mean_perplexity": scores["mean_perplexity"], "median_perplexity": scores["median_perplexity"], "mean_nll": scores["mean_nll"], "tokens": scores["tokens"],
-                "mean_unigram_repetition": sum(item["unigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
-                "mean_bigram_repetition": sum(item["bigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
-                "mean_trigram_repetition": sum(item["trigram_repetition"] for item in scores["per_text"]) / max(len(scores["per_text"]), 1),
+                "mean_distinct_1": sum(item["distinct_1"] for item in group["distinct"]) / max(len(group["distinct"]), 1),
+                "mean_distinct_2": sum(item["distinct_2"] for item in group["distinct"]) / max(len(group["distinct"]), 1),
+                "mean_distinct_3": sum(item["distinct_3"] for item in group["distinct"]) / max(len(group["distinct"]), 1),
                 **judge_summary,
                 **({"evaluation_model": group["evaluation_model"], "model_variant": group["model_variant"]} if "evaluation_model" in group else {}),
             }
             reporter.save_summary(summary)
-            print(f"{group['model']} | {group['method']} | median perplexity={summary['median_perplexity']:.4f} | mean per-response perplexity={summary['mean_perplexity']:.4f} | pooled perplexity={summary['perplexity']:.4f} | trigram repetition={summary['mean_trigram_repetition']:.4f}", flush=True)
+            print(f"{group['model']} | {group['method']} | median perplexity={summary['median_perplexity']:.4f} | mean per-response perplexity={summary['mean_perplexity']:.4f} | pooled perplexity={summary['perplexity']:.4f} | Distinct-1={summary['mean_distinct_1']:.4f}", flush=True)
         del reference_model
         gc.collect()
         try:

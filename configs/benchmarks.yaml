@@ -14,6 +14,8 @@ device: auto  # Options: auto, cuda, mps, cpu
 cache_dir: data/huggingface
 results_dir: outputs/benchmark_runs  # Each invocation creates its own timestamped directory here.
 # run_name: arc-smoke  # Optional readable suffix for the timestamped run ID.
+# Shared AR parents are evaluated only once per task/settings combination, even
+# when multiple diffusion adapters or checkpoints use that same base model.
 include_autoregressive: false  # Options: true, false
 # Independent greedy-decoding budgets for the original-base AR comparison.
 autoregressive_task_generation:

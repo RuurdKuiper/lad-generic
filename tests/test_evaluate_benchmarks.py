@@ -11,6 +11,7 @@ EVALUATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(EVALUATOR)
 _generate_ar = EVALUATOR._generate_ar
 _generate_diffusion = EVALUATOR._generate_diffusion
+_autoregressive_baseline_key = EVALUATOR._autoregressive_baseline_key
 
 
 def test_autoregressive_generation_passes_attention_mask_and_pad_token(monkeypatch):
@@ -46,6 +47,34 @@ def test_autoregressive_generation_passes_attention_mask_and_pad_token(monkeypat
     assert model.generate_kwargs["pad_token_id"] == tokenizer.eos_token_id
     assert model.generate_kwargs["max_new_tokens"] == 2048
     assert model.generate_kwargs["do_sample"] is False
+
+
+def test_autoregressive_baseline_key_deduplicates_variants_of_same_base():
+    settings = {"max_new_tokens": 128}
+    first = {
+        "model_name_or_path": "meta-llama/Llama-3.1-8B-Instruct",
+        "tokenizer_name_or_path": "meta-llama/Llama-3.1-8B-Instruct",
+        "output_dir": "outputs/llama-mask",
+    }
+    continued = {
+        **first,
+        "output_dir": "outputs/llama-mask-continued",
+        "resume_from_adapter": "outputs/llama-mask/final",
+    }
+
+    assert _autoregressive_baseline_key(first, "open_ended", settings, "first") == (
+        _autoregressive_baseline_key(continued, "open_ended", settings, "continued")
+    )
+
+
+def test_autoregressive_baseline_key_keeps_distinct_baselines_separate():
+    llama = {"model_name_or_path": "meta-llama/Llama-3.1-8B-Instruct"}
+    gemma = {"model_name_or_path": "google/gemma-2-9b-it"}
+
+    base = _autoregressive_baseline_key(llama, "open_ended", {"max_new_tokens": 128}, "llama")
+    assert base != _autoregressive_baseline_key(gemma, "open_ended", {"max_new_tokens": 128}, "gemma")
+    assert base != _autoregressive_baseline_key(llama, "mmlu", {"max_new_tokens": 128}, "llama")
+    assert base != _autoregressive_baseline_key(llama, "open_ended", {"max_new_tokens": 64}, "llama")
 
 
 def test_denoise_stream_sampler_receives_all_configured_controls(monkeypatch):

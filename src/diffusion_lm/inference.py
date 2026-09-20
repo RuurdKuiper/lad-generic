@@ -82,6 +82,7 @@ def _load_adapter_path(
     adapter_path: str | Path,
     device_name: str = "auto",
     quantization: str | None = None,
+    preflight: bool = True,
 ) -> InferenceSession:
     """Load an adapter directory that has already been resolved and validated."""
     adapter_path = Path(adapter_path).expanduser().resolve()
@@ -166,7 +167,8 @@ def _load_adapter_path(
     model.eval()
     mask_info = validate_mask_token(tokenizer, str(run_config.get("mask_token", "MASK")))
     session = InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
-    preflight_session(session)
+    if preflight:
+        preflight_session(session)
     return session
 
 
@@ -182,6 +184,7 @@ def load_hub_adapter_session(
     quantization: str | None = None,
     revision: str | None = None,
     cache_dir: str | Path | None = None,
+    preflight: bool = True,
 ) -> InferenceSession:
     """Download and load a BYOD adapter from the Hugging Face Hub."""
     try:
@@ -197,7 +200,7 @@ def load_hub_adapter_session(
         cache_dir=str(cache_dir) if cache_dir is not None else None,
         token=os.getenv("HF_TOKEN"),
     )
-    return _load_adapter_path(adapter_path, device_name, quantization)
+    return _load_adapter_path(adapter_path, device_name, quantization, preflight=preflight)
 
 
 def load_merged_session(
@@ -399,7 +402,12 @@ def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: 
     return session
 
 
-def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: torch.Generator | None) -> tuple[torch.Tensor, torch.Tensor]:
+def _sample(
+    logits: torch.Tensor,
+    temperature: float,
+    top_k: int,
+    generator: torch.Generator | None,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     """Top-k sample token IDs and return their normalized sampling confidence."""
     logits = logits / max(temperature, 1e-5)
     vocab_size = logits.shape[-1]
@@ -409,7 +417,7 @@ def _sample(logits: torch.Tensor, temperature: float, top_k: int, generator: tor
     picked_local = torch.multinomial(probabilities, 1, generator=generator)
     picked = indices.gather(-1, picked_local).squeeze(-1)
     confidence = probabilities.gather(-1, picked_local).squeeze(-1)
-    return picked, confidence
+    return picked, confidence, indices, probabilities
 
 
 def _llada_gumbel_noise(logits: torch.Tensor, temperature: float) -> torch.Tensor:
@@ -797,22 +805,31 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
         output_token_count += 1
         token_text = escape(tokenizer.decode([token], skip_special_tokens=False)).replace("\n", "↵ ")
         if token == mask_token_id:
-            style, token_text = "background:#d1d5db;color:#111827;border-radius:3px;padding:1px 4px", "MASK"
-        elif frozen and offset in frozen:
-            style = "color:#1d4ed8;font-weight:700"
-        elif retained and offset in retained:
-            style = "color:#7c3aed;font-weight:700"
+            style, token_text = (
+                "display:inline-block;background:#d1d5db;color:#4b5563;"
+                "border:1px solid #9ca3af;border-radius:4px;padding:0 4px;"
+                "font-size:.78em;line-height:1.45;margin:0 1px;vertical-align:baseline",
+                "mask",
+            )
+            title = f"position {offset} · masked"
         else:
             confidence = max(0.0, min(1.0, float(confidences[offset]))) if offset < len(confidences) else 0.0
             hue = int(confidence * 120)
             style = f"color:hsl({hue},90%,30%);font-weight:{'600' if confidence > .8 else '400'}"
-        pieces.append(f"<span style='{style}' title='position {offset}'>{token_text}</span>")
+            title = f"position {offset} · sampling probability {confidence:.1%}"
+            if frozen and offset in frozen:
+                style += ";border-bottom:2px solid #2563eb"
+                title += " · retained and locked"
+            elif retained and offset in retained:
+                style += ";border-bottom:2px solid #7c3aed"
+                title += " · retained and editable"
+        pieces.append(f"<span style='{style}' title='{title}'>{token_text}</span>")
     pct = int(100 * step / max(total_steps, 1))
     return (f"<div style='font-family:system-ui;padding:14px;border:1px solid #d1d5db;border-radius:9px;background:#fafafa'>"
             f"<div style='font-weight:700;color:#2563eb;margin-bottom:7px'>Denoising step {step}/{total_steps} · {output_token_count} output tokens</div>"
             f"<div style='background:#e5e7eb;border-radius:4px;height:7px;margin-bottom:10px'><div style='background:#2563eb;width:{pct}%;height:7px;border-radius:4px'></div></div>"
             f"<div style='line-height:2;font-size:15px;white-space:pre-wrap'>{''.join(pieces)}</div>"
-            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Green hues indicate confidence; gray tokens are MASK; purple tokens are retained but editable; blue tokens are retained and locked.</div></div>")
+            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Red-to-green text indicates lower-to-higher sampling probability; gray chips are masks; purple underlines indicate retained/editable tokens; blue underlines indicate retained/locked tokens. Hover for details.</div></div>")
 
 
 def decode_denoising_state(
@@ -913,7 +930,12 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 session.tokenizer.eos_token_id,
                 eot_token_id,
             )
-            sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
+            sampled, confidence, candidate_ids, candidate_probabilities = _sample(
+                logits,
+                float(temperature),
+                int(top_k),
+                None,
+            )
         retention_confidence = confidence
         if confidence_eos_eot_inf:
             special_prediction = sampled == session.tokenizer.eos_token_id
@@ -926,6 +948,14 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if freeze_retained_tokens:
             for offset, token in frozen.items():
                 ids[answer_start + offset] = token
+        display_confidence = confidence.clone()
+        if freeze_retained_tokens:
+            # The sampled token may be overwritten by a previously locked one.
+            # Report the probability of the token actually displayed, rather
+            # than the confidence of the discarded sample.
+            for offset, token in frozen.items():
+                matches = candidate_ids[offset] == int(token)
+                display_confidence[offset] = candidate_probabilities[offset][matches].sum()
         predicted_text = decode_denoising_state(
             ids[answer_start:],
             session.tokenizer,
@@ -1029,7 +1059,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             status += " · block stopped early (same prediction for 3 iterations)"
         html = render_denoising_step(
             ids,
-            confidence.tolist(),
+            display_confidence.tolist(),
             answer_start,
             session.tokenizer,
             session.mask_token_id,

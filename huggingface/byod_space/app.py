@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 import gradio as gr
@@ -25,6 +26,8 @@ SESSION = load_hub_adapter_session(
     MODEL_REPO_ID,
     device_name="cuda",
     quantization="none",
+    # A forward pass is only valid after @spaces.GPU has allocated hardware.
+    preflight=False,
 )
 print(f"Loaded {DISPLAY_NAME} ({SESSION.compute_dtype}, unquantized).")
 
@@ -33,9 +36,11 @@ def _duration(*args) -> int:
     """Reserve enough GPU time for the requested number of denoising steps."""
     try:
         steps = int(args[3])
+        pause_per_step = float(args[8])
     except (IndexError, TypeError, ValueError):
         steps = 64
-    return min(300, max(30, steps * 2))
+        pause_per_step = 0.0
+    return min(300, max(30, round(steps * (2.0 + pause_per_step))))
 
 
 @spaces.GPU(size="large", duration=_duration)
@@ -48,12 +53,13 @@ def generate(
     temperature: float,
     top_k: int,
     seed: int,
-    show_trajectory: bool,
+    pause_per_step: float,
+    delay_eos_eot: bool,
 ):
     """Stream iterative masked-diffusion generation from the fixed model."""
     question = question.strip() or "What do you know about Amsterdam?"
     block_length = min(int(block_length), int(max_new_tokens))
-    latest = ("", "Starting…", "")
+    first_step = True
     for text, status, trajectory_html in denoise_stream(
         SESSION,
         question=question,
@@ -68,15 +74,21 @@ def generate(
         confidence_guided=True,
         proportional_unmask=False,
         early_stopping=False,
-        confidence_eos_eot_inf=True,
+        # This delays retention of predicted endings; it does not alter their
+        # sampling probability. Keep it optional so answers can end naturally.
+        confidence_eos_eot_inf=bool(delay_eos_eot),
         freeze_retained_tokens=True,
         repetition_penalty=1.0,
         eos_eot_prediction_penalty=1.0,
-        include_pre_remask_prediction=show_trajectory,
+        include_pre_remask_prediction=False,
         block_length=block_length,
     ):
-        latest = (text, status, trajectory_html if show_trajectory else "")
-        yield latest
+        if not first_step and float(pause_per_step) > 0:
+            # The sleep occurs inside this one decorated generator invocation,
+            # so ZeroGPU remains allocated for the entire denoising run.
+            time.sleep(float(pause_per_step))
+        first_step = False
+        yield text, status, trajectory_html
 
 
 with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
@@ -102,14 +114,26 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 value="You are a helpful assistant.",
                 lines=2,
             )
-            max_new_tokens = gr.Slider(16, 512, value=128, step=16, label="New tokens")
+            max_new_tokens = gr.Slider(16, 512, value=64, step=16, label="New tokens")
             num_steps = gr.Slider(1, 512, value=64, step=1, label="Denoising steps")
-            block_length = gr.Slider(16, 512, value=128, step=16, label="Block length")
+            block_length = gr.Slider(16, 512, value=64, step=16, label="Block length")
             temperature = gr.Slider(0.0, 2.0, value=0.7, step=0.05, label="Temperature")
             top_k = gr.Slider(1, 100, value=3, step=1, label="Top-k")
             seed = gr.Number(value=1234, precision=0, label="Seed")
-            show_trajectory = gr.Checkbox(value=False, label="Show inference trajectory")
-    trajectory = gr.HTML(label="Token trajectory", visible=True)
+            pause_per_step = gr.Slider(
+                0.0,
+                1.0,
+                value=0.0,
+                step=0.05,
+                label="Pause between denoising steps (seconds)",
+                info="Slows the visualization while keeping one GPU allocation for the full run.",
+            )
+            delay_eos_eot = gr.Checkbox(
+                value=False,
+                label="Delay EOS/EOT retention (longer answers)",
+                info="Preferentially re-masks predicted endings; it does not lower their prediction probability.",
+            )
+    trajectory = gr.HTML(label="Live confidence-colored denoising")
     gr.Markdown(
         "The first request may take longer while the base model and adapter are loaded. "
         f"[Model card](https://huggingface.co/{MODEL_REPO_ID}) · "
@@ -125,7 +149,8 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         temperature,
         top_k,
         seed,
-        show_trajectory,
+        pause_per_step,
+        delay_eos_eot,
     ]
     run.click(generate, inputs=inputs, outputs=[output, status, trajectory])
     question.submit(generate, inputs=inputs, outputs=[output, status, trajectory])

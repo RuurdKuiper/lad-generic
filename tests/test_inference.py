@@ -5,7 +5,7 @@ import pytest
 import torch
 
 import diffusion_lm.inference as inference_module
-from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _block_step_plan, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
+from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _block_step_plan, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session, render_denoising_step
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -35,7 +35,13 @@ def test_hub_adapter_loader_downloads_then_uses_shared_loader(monkeypatch, tmp_p
     monkeypatch.setattr(
         inference_module,
         "_load_adapter_path",
-        lambda path, device, quantization: (sentinel, Path(path), device, quantization),
+        lambda path, device, quantization, preflight=True: (
+            sentinel,
+            Path(path),
+            device,
+            quantization,
+            preflight,
+        ),
     )
 
     result = inference_module.load_hub_adapter_session(
@@ -46,7 +52,7 @@ def test_hub_adapter_loader_downloads_then_uses_shared_loader(monkeypatch, tmp_p
         cache_dir=tmp_path / "cache",
     )
 
-    assert result == (sentinel, adapter.resolve(), "cuda", "none")
+    assert result == (sentinel, adapter.resolve(), "cuda", "none", True)
     assert calls["repo_id"] == "Ruurd/BYOD-Llama-3.1-8B"
     assert calls["repo_type"] == "model"
     assert calls["revision"] == "main"
@@ -141,6 +147,30 @@ def test_denoising_state_is_copyable_with_explicit_spaced_masks():
     assert decode_denoising_state(
         [0, 7, 4, 2], EotTokenizer(), mask_token_id=9, show_eos_tokens=True
     ) == "Kill <EOT> chicken <EOS>"
+
+
+def test_denoising_html_uses_probability_colors_and_mask_chips():
+    class Tokenizer:
+        eos_token_id = 2
+
+        def decode(self, token_ids, **_kwargs):
+            return {4: " answer", 9: "MASK"}.get(token_ids[0], "")
+
+    html = render_denoising_step(
+        [1, 4, 9],
+        [0.0, 0.75],
+        answer_start=1,
+        tokenizer=Tokenizer(),
+        mask_token_id=9,
+        step=1,
+        total_steps=2,
+        retained={0},
+        frozen={0: 4},
+    )
+
+    assert "sampling probability 0.0%" in html
+    assert "retained and locked" in html
+    assert ">mask</span>" in html
 
 
 def test_repetition_penalty_scales_probability_weight_and_excludes_current_position():

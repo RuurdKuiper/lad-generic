@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 
+import diffusion_lm.inference as inference_module
 from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _block_step_plan, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
@@ -18,6 +19,37 @@ def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
     assert _safe_adapter_path(tmp_path, "run-a/best") == valid.resolve()
     with pytest.raises(ValueError):
         _safe_adapter_path(tmp_path, "../outside")
+
+
+def test_hub_adapter_loader_downloads_then_uses_shared_loader(monkeypatch, tmp_path):
+    adapter = tmp_path / "snapshot"
+    adapter.mkdir()
+    calls = {}
+
+    def fake_snapshot_download(**kwargs):
+        calls.update(kwargs)
+        return str(adapter)
+
+    sentinel = object()
+    monkeypatch.setattr("huggingface_hub.snapshot_download", fake_snapshot_download)
+    monkeypatch.setattr(
+        inference_module,
+        "_load_adapter_path",
+        lambda path, device, quantization: (sentinel, Path(path), device, quantization),
+    )
+
+    result = inference_module.load_hub_adapter_session(
+        "Ruurd/BYOD-Llama-3.1-8B",
+        device_name="cuda",
+        quantization="none",
+        revision="main",
+        cache_dir=tmp_path / "cache",
+    )
+
+    assert result == (sentinel, adapter.resolve(), "cuda", "none")
+    assert calls["repo_id"] == "Ruurd/BYOD-Llama-3.1-8B"
+    assert calls["repo_type"] == "model"
+    assert calls["revision"] == "main"
 
 
 def test_prompt_ids_falls_back_for_systemless_chat_template():

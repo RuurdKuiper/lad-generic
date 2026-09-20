@@ -1,0 +1,31 @@
+---
+title: __TITLE__
+emoji: 🧬
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+sdk_version: 5.49.1
+python_version: "3.12"
+app_file: app.py
+pinned: false
+license: other
+startup_duration_timeout: 1h
+short_description: Masked-diffusion demo for __TITLE__
+---
+
+# __TITLE__
+
+Interactive full-precision inference for **__TITLE__**, one of the BYOD
+(Bring Your Own Diffusion) models. It uses the exact `best` LoRA checkpoint
+from the corresponding experiment and loads its original base model in BF16.
+No 4-bit quantization is used.
+
+Generation starts from masked answer positions and refines them in parallel.
+Fewer denoising steps than generated tokens provide a sub-autoregressive
+inference budget; increasing the step count gives the model more refinement
+opportunities.
+
+Model: [__MODEL_REPO_ID__](https://huggingface.co/__MODEL_REPO_ID__)
+
+This is a research demo. Outputs may be inaccurate or inappropriate and
+inherit limitations from the original base model.

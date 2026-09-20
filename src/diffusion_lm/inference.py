@@ -78,11 +78,22 @@ class InferenceSession:
     llada: bool = False
 
 
-def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
-    """Load a base model, saved LoRA adapter, tokenizer, and norm state."""
-    adapter_path = _safe_adapter_path(outputs_dir, adapter_selection)
-    run_config_path = adapter_path.parent / "resolved_config.json"
-    run_config = json.loads(run_config_path.read_text()) if run_config_path.is_file() else {}
+def _load_adapter_path(
+    adapter_path: str | Path,
+    device_name: str = "auto",
+    quantization: str | None = None,
+) -> InferenceSession:
+    """Load an adapter directory that has already been resolved and validated."""
+    adapter_path = Path(adapter_path).expanduser().resolve()
+    if not (adapter_path / "adapter_config.json").is_file():
+        raise ValueError(f"Adapter directory has no adapter_config.json: {adapter_path}")
+    config_candidates = (
+        adapter_path / "resolved_config.json",
+        adapter_path / "lad_run_config.json",
+        adapter_path.parent / "resolved_config.json",
+    )
+    run_config_path = next((path for path in config_candidates if path.is_file()), None)
+    run_config = json.loads(run_config_path.read_text()) if run_config_path else {}
     adapter_config = json.loads((adapter_path / "adapter_config.json").read_text())
     base_model = adapter_config["base_model_name_or_path"]
     device = select_device(device_name)
@@ -98,7 +109,17 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     cache_dir = run_config.get("base_model_cache_dir", "base_models")
     token = os.getenv("HF_TOKEN")
     tokenizer_name = run_config.get("tokenizer_name_or_path", base_model)
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, use_fast=True, token=token, cache_dir=cache_dir, clean_up_tokenization_spaces=False)
+    tokenizer_kwargs: dict[str, Any] = {}
+    if "mistral" in str(tokenizer_name).lower():
+        tokenizer_kwargs["fix_mistral_regex"] = True
+    tokenizer = AutoTokenizer.from_pretrained(
+        tokenizer_name,
+        use_fast=True,
+        token=token,
+        cache_dir=cache_dir,
+        clean_up_tokenization_spaces=False,
+        **tokenizer_kwargs,
+    )
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
     load_kwargs: dict[str, Any] = dict(torch_dtype=dtype, token=token, cache_dir=cache_dir, trust_remote_code=False)
@@ -124,7 +145,19 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     base.config.is_causal = False
     if hasattr(base.config, "use_bidirectional_attention"):
         base.config.use_bidirectional_attention = True
-    model = PeftModel.from_pretrained(base, adapter_path, is_trainable=False)
+    adapter_load_kwargs: dict[str, Any] = {}
+    if not use_4bit:
+        # Stage adapter tensors on CPU before moving the assembled root module.
+        # This is required by ZeroGPU, where CUDA is represented by a proxy at
+        # module-import time but no physical GPU has been allocated yet.
+        adapter_load_kwargs["device_map"] = {"": "cpu"}
+        adapter_load_kwargs["torch_device"] = "cpu"
+    model = PeftModel.from_pretrained(
+        base,
+        adapter_path,
+        is_trainable=False,
+        **adapter_load_kwargs,
+    )
     norm_path = adapter_path / "normalization_state.pt"
     if norm_path.is_file():
         model.load_state_dict(torch.load(norm_path, map_location="cpu", weights_only=True), strict=False)
@@ -135,6 +168,36 @@ def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", de
     session = InferenceSession(model, tokenizer, device, adapter_path, run_config, mask_info["mask_token_id"], "4bit" if use_4bit else "none", str(compute_dtype).removeprefix("torch."))
     preflight_session(session)
     return session
+
+
+def load_session(adapter_selection: str, outputs_dir: str | Path = "outputs", device_name: str = "auto", quantization: str | None = None) -> InferenceSession:
+    """Load a base model, saved LoRA adapter, tokenizer, and norm state."""
+    adapter_path = _safe_adapter_path(outputs_dir, adapter_selection)
+    return _load_adapter_path(adapter_path, device_name, quantization)
+
+
+def load_hub_adapter_session(
+    repo_id: str,
+    device_name: str = "auto",
+    quantization: str | None = None,
+    revision: str | None = None,
+    cache_dir: str | Path | None = None,
+) -> InferenceSession:
+    """Download and load a BYOD adapter from the Hugging Face Hub."""
+    try:
+        from huggingface_hub import snapshot_download
+    except ImportError as exc:
+        raise ImportError(
+            "Hub inference requires huggingface_hub; install it with `pip install huggingface-hub`."
+        ) from exc
+    adapter_path = snapshot_download(
+        repo_id=repo_id,
+        repo_type="model",
+        revision=revision,
+        cache_dir=str(cache_dir) if cache_dir is not None else None,
+        token=os.getenv("HF_TOKEN"),
+    )
+    return _load_adapter_path(adapter_path, device_name, quantization)
 
 
 def load_merged_session(

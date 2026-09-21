@@ -26,7 +26,7 @@ def test_shared_generation_prompts_are_loaded_in_stable_order(tmp_path):
     prompt_file.write_text("# fixed set\nFirst prompt\n\nSecond prompt\n")
 
     assert _load_generation_prompts(prompt_file) == ("First prompt", "Second prompt")
-    assert len(DEFAULT_GENERATION_PROMPTS) == 30
+    assert len(DEFAULT_GENERATION_PROMPTS) == 100
     from diffusion_lm.benchmarks import OPEN_ENDED_PROMPTS
     assert list(DEFAULT_GENERATION_PROMPTS) == OPEN_ENDED_PROMPTS
     assert DEFAULT_GENERATION_PROMPTS[:2] == (
@@ -253,7 +253,7 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
     assert metrics["generation_mean_distinct_1"] == 1.0
 
 
-def test_generation_validation_scores_all_thirty_shared_questions(tmp_path, monkeypatch):
+def test_generation_validation_scores_configured_thirty_prompt_prefix(tmp_path, monkeypatch):
     class Model:
         def eval(self):
             return self
@@ -288,10 +288,10 @@ def test_generation_validation_scores_all_thirty_shared_questions(tmp_path, monk
     monkeypatch.setattr("diffusion_lm.training._base_perplexity", score)
     generation_validation(model, tokenizer, 99, {"corruption_mode": "mask_only"},
                           norms, torch.device("cpu"), tmp_path, 1000)
-    assert calls == [(prompt, 1234 + i) for i, prompt in enumerate(DEFAULT_GENERATION_PROMPTS)]
+    assert calls == [(prompt, 1234 + i) for i, prompt in enumerate(DEFAULT_GENERATION_PROMPTS[:30])]
     records = [json.loads(line) for line in (tmp_path / "generation_metrics.jsonl").read_text().splitlines()]
     assert len(records) == 30
-    assert [record["prompt"] for record in records] == list(DEFAULT_GENERATION_PROMPTS)
+    assert [record["prompt"] for record in records] == list(DEFAULT_GENERATION_PROMPTS[:30])
 
 
 def test_shipped_training_and_benchmark_configs_share_open_ended_settings():

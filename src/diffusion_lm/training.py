@@ -116,7 +116,9 @@ def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
     """Use the shared open-ended protocol for intermediate generation validation."""
     settings = {
         "sampler": "llada_official",
-        "num_prompts": len(DEFAULT_GENERATION_PROMPTS),
+        # Keep recurring checkpoint validation inexpensive; the standalone
+        # open-ended benchmark evaluates the complete shared prompt suite.
+        "num_prompts": 30,
         "max_new_tokens": 128,
         "num_steps": 64,
         "block_length": 128,

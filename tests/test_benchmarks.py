@@ -24,10 +24,10 @@ def test_benchmark_reporter_isolates_and_structures_each_run(tmp_path):
     assert json.loads((group / "summary.json").read_text()) == summary
 
 
-def test_open_ended_benchmark_has_reproducible_thirty_prompt_suite():
+def test_open_ended_benchmark_has_reproducible_hundred_prompt_suite():
     examples = load_benchmark("open_ended", "test", None, "unused", None)
 
-    assert len(examples) == 30
+    assert len(examples) == 100
     assert examples[0].example_id == "0"
     assert examples[0].kind == "open_ended"
     assert examples[0].prompt == "What do you know about Amsterdam?"
@@ -42,8 +42,8 @@ def test_open_ended_benchmark_respects_limit():
 def test_open_ended_benchmark_supports_fractional_smoke_suite():
     examples = load_benchmark("open_ended", "test", None, "unused", None, limit_fraction=0.05)
 
-    assert len(examples) == 2
-    assert [example.example_id for example in examples] == ["0", "15"]
+    assert len(examples) == 5
+    assert [example.example_id for example in examples] == ["0", "20", "40", "60", "80"]
 
 
 def test_open_ended_scoring_reports_median_per_response_perplexity():

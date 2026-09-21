@@ -407,7 +407,7 @@ def _sample(
     temperature: float,
     top_k: int,
     generator: torch.Generator | None,
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     """Top-k sample token IDs and return their normalized sampling confidence."""
     logits = logits / max(temperature, 1e-5)
     vocab_size = logits.shape[-1]
@@ -417,7 +417,7 @@ def _sample(
     picked_local = torch.multinomial(probabilities, 1, generator=generator)
     picked = indices.gather(-1, picked_local).squeeze(-1)
     confidence = probabilities.gather(-1, picked_local).squeeze(-1)
-    return picked, confidence, indices, probabilities
+    return picked, confidence
 
 
 def _llada_gumbel_noise(logits: torch.Tensor, temperature: float) -> torch.Tensor:
@@ -793,8 +793,21 @@ def llada_generate(
     return session.tokenizer.decode(answer, skip_special_tokens=True).strip()
 
 
-def render_denoising_step(tokens: list[int], confidences: list[float], answer_start: int, tokenizer: Any, mask_token_id: int, step: int, total_steps: int, retained: set[int] | None = None, frozen: dict[int, int] | None = None) -> str:
-    """Render a confidence-colored HTML view of one denoising state."""
+def render_denoising_step(
+    tokens: list[int],
+    confidences: list[float],
+    answer_start: int,
+    tokenizer: Any,
+    mask_token_id: int,
+    step: int,
+    total_steps: int,
+    retained: set[int] | None = None,
+    frozen: dict[int, int] | None = None,
+    frozen_confidences: dict[int, float] | None = None,
+    frozen_steps: dict[int, int] | None = None,
+    color_mode: str = "Prediction probability",
+) -> str:
+    """Render one denoising state with optional token coloring."""
     eos_id = tokenizer.eos_token_id
     pieces = []
     answer = tokens[answer_start:]
@@ -811,25 +824,45 @@ def render_denoising_step(tokens: list[int], confidences: list[float], answer_st
                 "font-size:.78em;line-height:1.45;margin:0 1px;vertical-align:baseline",
                 "mask",
             )
-            title = f"position {offset} · masked"
+            title = f"token position {offset} · masked at iteration {step}"
         else:
-            confidence = max(0.0, min(1.0, float(confidences[offset]))) if offset < len(confidences) else 0.0
-            hue = int(confidence * 120)
-            style = f"color:hsl({hue},90%,30%);font-weight:{'600' if confidence > .8 else '400'}"
-            title = f"position {offset} · sampling probability {confidence:.1%}"
-            if frozen and offset in frozen:
-                style += ";border-bottom:2px solid #2563eb"
-                title += " · retained and locked"
-            elif retained and offset in retained:
-                style += ";border-bottom:2px solid #7c3aed"
-                title += " · retained and editable"
+            confidence = (
+                frozen_confidences[offset]
+                if frozen and offset in frozen and frozen_confidences and offset in frozen_confidences
+                else float(confidences[offset]) if offset < len(confidences) else 0.0
+            )
+            confidence = max(0.0, min(1.0, confidence))
+            predicted_step = (
+                frozen_steps[offset]
+                if frozen and offset in frozen and frozen_steps and offset in frozen_steps
+                else step
+            )
+            if color_mode == "Prediction iteration":
+                iteration_fraction = max(0.0, min(1.0, predicted_step / max(total_steps, 1)))
+                lightness = 72 - round(42 * iteration_fraction)
+                style = f"color:hsl(210,90%,{lightness}%);font-weight:500"
+            elif color_mode == "Prediction probability":
+                hue = int(confidence * 120)
+                style = f"color:hsl({hue},90%,30%);font-weight:{'600' if confidence > .8 else '400'}"
+            else:
+                style = "color:inherit;font-weight:400"
+            title = (
+                f"token position {offset} · predicted at iteration {predicted_step} · "
+                f"sampling probability {confidence:.1%}"
+            )
         pieces.append(f"<span style='{style}' title='{title}'>{token_text}</span>")
     pct = int(100 * step / max(total_steps, 1))
+    if color_mode == "Prediction iteration":
+        legend = "Light-to-dark blue indicates earlier-to-later prediction iterations"
+    elif color_mode == "Prediction probability":
+        legend = "Red-to-green indicates lower-to-higher sampling probability"
+    else:
+        legend = "Token coloring is disabled"
     return (f"<div style='font-family:system-ui;padding:14px;border:1px solid #d1d5db;border-radius:9px;background:#fafafa'>"
             f"<div style='font-weight:700;color:#2563eb;margin-bottom:7px'>Denoising step {step}/{total_steps} · {output_token_count} output tokens</div>"
             f"<div style='background:#e5e7eb;border-radius:4px;height:7px;margin-bottom:10px'><div style='background:#2563eb;width:{pct}%;height:7px;border-radius:4px'></div></div>"
             f"<div style='line-height:2;font-size:15px;white-space:pre-wrap'>{''.join(pieces)}</div>"
-            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>Red-to-green text indicates lower-to-higher sampling probability; gray chips are masks; purple underlines indicate retained/editable tokens; blue underlines indicate retained/locked tokens. Hover for details.</div></div>")
+            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>{legend}; gray chips are masks. Hover over a token for its position, prediction iteration, and probability.</div></div>")
 
 
 def decode_denoising_state(
@@ -884,7 +917,7 @@ def decode_denoising_state(
     return " ".join(pieces)
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False, block_length: int | None = None):
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False, block_length: int | None = None, trajectory_color_mode: str = "Prediction probability"):
     """Yield denoising states with optionally retained positions and locked values."""
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
@@ -903,6 +936,8 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     last_confidence = 0.0
     retained: set[int] = set()
     frozen: dict[int, int] = {}
+    frozen_confidences: dict[int, float] = {}
+    frozen_steps: dict[int, int] = {}
     last_predictions: list[tuple[int, ...]] = []
     eot_token_id = _native_eot_token_id(session.tokenizer) if confidence_eos_eot_inf or float(eos_eot_prediction_penalty) > 1.0 else None
     guided_retention = confidence_guided or confidence_eos_eot_inf
@@ -930,12 +965,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 session.tokenizer.eos_token_id,
                 eot_token_id,
             )
-            sampled, confidence, candidate_ids, candidate_probabilities = _sample(
-                logits,
-                float(temperature),
-                int(top_k),
-                None,
-            )
+            sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
         retention_confidence = confidence
         if confidence_eos_eot_inf:
             special_prediction = sampled == session.tokenizer.eos_token_id
@@ -948,14 +978,6 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if freeze_retained_tokens:
             for offset, token in frozen.items():
                 ids[answer_start + offset] = token
-        display_confidence = confidence.clone()
-        if freeze_retained_tokens:
-            # The sampled token may be overwritten by a previously locked one.
-            # Report the probability of the token actually displayed, rather
-            # than the confidence of the discarded sample.
-            for offset, token in frozen.items():
-                matches = candidate_ids[offset] == int(token)
-                display_confidence[offset] = candidate_probabilities[offset][matches].sum()
         predicted_text = decode_denoising_state(
             ids[answer_start:],
             session.tokenizer,
@@ -963,11 +985,14 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             show_eos_tokens=include_pre_remask_prediction,
         )
         last_confidence = float(confidence[block_start:block_end].mean().cpu())
-        # Match the legacy application's criterion: compare complete sampled
-        # answer token sequences before the next iteration's re-masking.  This
-        # includes EOS/padding tokens, so a changing invisible tail does not
-        # count as convergence.
-        last_predictions.append(tuple(ids[answer_start + block_start : answer_start + block_end]))
+        # Compare the visible sampled answer before the next iteration's
+        # re-masking. Tokens after the first EOS are not part of the answer and
+        # must not prevent convergence. Excluding EOS itself still preserves
+        # its position through the tuple length: moving EOS changes the prefix.
+        prediction = ids[answer_start:]
+        if session.tokenizer.eos_token_id in prediction:
+            prediction = prediction[:prediction.index(session.tokenizer.eos_token_id)]
+        last_predictions.append(tuple(prediction))
         if len(last_predictions) > 3:
             last_predictions.pop(0)
         stopped_early = early_stopping and len(last_predictions) == 3 and len(set(last_predictions)) == 1
@@ -1014,6 +1039,8 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                         retained.add(offset)
                         if freeze_retained_tokens:
                             frozen[offset] = ids[answer_start + offset]
+                            frozen_confidences[offset] = float(confidence[offset].cpu())
+                            frozen_steps[offset] = step + 1
                 for offset in range(block_start, block_end):
                     if offset not in retained:
                         ids[answer_start + offset] = session.mask_token_id
@@ -1053,13 +1080,12 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if num_blocks > 1:
             status += f" · block {block_index + 1}/{num_blocks}"
         if permanent_unmask:
-            retention_kind = "locked" if freeze_retained_tokens else "editable"
-            status += f" · retained {len(retained)} tokens ({retention_kind})"
+            status += f" · retained {len(retained)} tokens"
         if stopped_early:
-            status += " · block stopped early (same prediction for 3 iterations)"
+            status += " · block stopped early (same answer for 3 iterations)"
         html = render_denoising_step(
             ids,
-            display_confidence.tolist(),
+            confidence.tolist(),
             answer_start,
             session.tokenizer,
             session.mask_token_id,
@@ -1067,6 +1093,9 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             num_steps,
             retained if permanent_unmask else None,
             frozen if permanent_unmask and freeze_retained_tokens else None,
+            frozen_confidences if permanent_unmask and freeze_retained_tokens else None,
+            frozen_steps if permanent_unmask and freeze_retained_tokens else None,
+            trajectory_color_mode,
         )
         yield current_text, status, html
         if stopped_early:

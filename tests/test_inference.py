@@ -166,11 +166,29 @@ def test_denoising_html_uses_probability_colors_and_mask_chips():
         total_steps=2,
         retained={0},
         frozen={0: 4},
+        frozen_confidences={0: 0.75},
+        frozen_steps={0: 1},
     )
 
-    assert "sampling probability 0.0%" in html
-    assert "retained and locked" in html
+    assert "sampling probability 75.0%" in html
+    assert "predicted at iteration 1" in html
+    assert "retained and locked" not in html
+    assert "border-bottom" not in html
     assert ">mask</span>" in html
+
+    iteration_html = render_denoising_step(
+        [1, 4], [0.75], 1, Tokenizer(), 9, 1, 2,
+        frozen={0: 4}, frozen_confidences={0: 0.75}, frozen_steps={0: 1},
+        color_mode="Prediction iteration",
+    )
+    assert "hsl(210,90%" in iteration_html
+    assert "Light-to-dark blue" in iteration_html
+
+    plain_html = render_denoising_step(
+        [1, 4], [0.75], 1, Tokenizer(), 9, 1, 2, color_mode="No coloring"
+    )
+    assert "color:inherit" in plain_html
+    assert "Token coloring is disabled" in plain_html
 
 
 def test_repetition_penalty_scales_probability_weight_and_excludes_current_position():
@@ -353,6 +371,78 @@ def test_early_stopping_requires_three_identical_complete_predictions():
     assert len(states) == 3
     assert "stopped early" in states[-1][1]
     assert "2 output tokens" in states[-1][1]
+
+
+def test_early_stopping_ignores_changes_after_first_eos():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.calls = 0
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.calls += 1
+            logits = torch.full((*input_ids.shape, 7), -100.0)
+            answer = [3, 2, 4 + self.calls % 2, 6 - self.calls % 2]
+            for position, token in enumerate(answer, start=1):
+                logits[:, position, token] = 100.0
+            return type("Output", (), {"logits": logits})()
+
+    model = Model()
+    session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 6)
+    states = list(denoise_stream(
+        session, "Test", "System", 4, 6, .5, 1., 1, 1234, early_stopping=True
+    ))
+
+    assert len(states) == 3
+    assert "same answer for 3 iterations" in states[-1][1]
+
+
+def test_early_stopping_continues_when_first_eos_moves():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.calls = 0
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.calls += 1
+            logits = torch.full((*input_ids.shape, 7), -100.0)
+            answer = [3, 2, 4, 4] if self.calls != 2 else [3, 4, 2, 4]
+            for position, token in enumerate(answer, start=1):
+                logits[:, position, token] = 100.0
+            return type("Output", (), {"logits": logits})()
+
+    model = Model()
+    session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 6)
+    states = list(denoise_stream(
+        session, "Test", "System", 4, 6, .5, 1., 1, 1234, early_stopping=True
+    ))
+
+    assert len(states) == 5
+    assert "same answer for 3 iterations" in states[-1][1]
 
 
 def test_llada_session_uses_the_app_denoising_loop():
@@ -635,11 +725,13 @@ def test_retained_positions_can_remain_editable_or_lock_their_token_values():
     assert editable_model.inputs[1].tolist() == [[1, 3, 9]]
     assert editable_model.inputs[2].tolist() == [[1, 4, 9]]
     assert editable_states[-1][0].startswith("5 ")
-    assert "retained 1 tokens (editable)" in editable_states[-1][1]
+    assert "retained 1 tokens" in editable_states[-1][1]
+    assert "editable" not in editable_states[-1][1]
     assert locked_model.inputs[1].tolist() == [[1, 3, 9]]
     assert locked_model.inputs[2].tolist() == [[1, 3, 9]]
     assert locked_states[-1][0].startswith("3 ")
-    assert "retained 1 tokens (locked)" in locked_states[-1][1]
+    assert "retained 1 tokens" in locked_states[-1][1]
+    assert "locked" not in locked_states[-1][1]
 
 
 def test_official_llada_sampler_delays_eos_when_configured():

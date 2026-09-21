@@ -102,7 +102,7 @@ The clean terminating EOS is included as a genuine answer token. To teach the fi
 
 \subsection{Bidirectional conversion and trainable parameters}
 
-We replace the causal mask with an all-zero four-dimensional additive attention mask, so every prompt, answer, and EOS-padding position can attend to every position. The architecture and output vocabulary remain unchanged. We attach LoRA adapters to every self-attention query and value projection, with rank $r=1024$, scaling $\alpha=1024$, and dropout zero. This high rank reflects the scale of the intervention: the adapters must learn a new conditional denoising process rather than a narrow downstream task. In LAD's rank study, increasing rank from 512 to 1024 at 3B improved every reported benchmark and perplexity, whereas increasing from 1024 to 2048 at 8B gave no consistent further gain; our preliminary rank experiments showed the same pattern. We therefore chose 1024 as a compromise between conversion capacity and training footprint \citep{kuiper2025lad}. Backbone weights, token embeddings, the language-model head, biases, and normalization layers are frozen. Each model reuses an existing single-token string from its tokenizer (\texttt{MASK} for Gemma, Llama, and Qwen; \texttt{<?>} for Ministral), avoiding vocabulary expansion.
+We replace the causal mask with an all-zero four-dimensional additive attention mask, so every prompt, answer, and EOS-padding position can attend to every position. The architecture and output vocabulary remain unchanged. This intervention makes right-hand response evidence available to masked positions; Section~\ref{sec:bidirectional-infilling} tests whether the converted models use that access in practice. We attach LoRA adapters to every self-attention query and value projection, with rank $r=1024$, scaling $\alpha=1024$, and dropout zero. This high rank reflects the scale of the intervention: the adapters must learn a new conditional denoising process rather than a narrow downstream task. In LAD's rank study, increasing rank from 512 to 1024 at 3B improved every reported benchmark and perplexity, whereas increasing from 1024 to 2048 at 8B gave no consistent further gain; our preliminary rank experiments showed the same pattern. We therefore chose 1024 as a compromise between conversion capacity and training footprint \citep{kuiper2025lad}. Backbone weights, token embeddings, the language-model head, biases, and normalization layers are frozen. Each model reuses an existing single-token string from its tokenizer (\texttt{MASK} for Gemma, Llama, and Qwen; \texttt{<?>} for Ministral), avoiding vocabulary expansion.
 
 Table~\ref{tab:models} reports the total and trainable parameter counts of the converted models. The trainable fraction varies because the four attention implementations have different projection shapes and layer counts.
 
@@ -149,7 +149,9 @@ For Gemma, Llama, Qwen, and Ministral we compare the diffusion adapter with gree
 
 Our validation suite contains MMLU, MMLU-Pro, HellaSwag, ARC-Challenge, GSM8K, MATH-500, GPQA-Main, HumanEval, and sanitized MBPP \citep{hendrycks2021mmlu,wang2024mmlupro,zellers2019hellaswag,clark2018arc,cobbe2021gsm8k,hendrycks2021math,rein2023gpqa,chen2021codex,austin2021mbpp}. HellaSwag uses its labelled validation split, ARC-Challenge and MATH-500 use test, and GPQA-Main uses the release's train-named evaluation split. Multiple-choice answers are extracted by label; GSM8K uses the final numeric answer; MATH uses normalized boxed answers; and HumanEval/MBPP execute tests in isolated local subprocesses.
 
-For 30 fixed open-ended prompts, Microsoft Phi-4 scores each generated answer autoregressively. Our primary aggregate is token-weighted perplexity, $\exp(\sum_j \mathrm{NLL}_j/\sum_j N_j)$, so each scored token contributes equally; per-answer means and medians are retained as supplementary diagnostics. These are external-reference fluency measures, not likelihoods of the diffusion model itself. This distinction is important: generative perplexity inherits the reference model's preferences and does not penalize loss of sample diversity \citep{turok2026duel}. We therefore also compute sliding model-token Distinct-1/2/3 after excluding special tokens. Higher Distinct-$n$ means a larger fraction of unique $n$-grams.
+We evaluate functional use of bidirectional context separately from these capability benchmarks with a deterministic in-place infilling diagnostic (Appendix~\ref{app:bidirectional-infilling}). Each example places a fully masked target span between an answer prefix and a suffix that contains the decisive target evidence. All target tokens are masked simultaneously, so the model cannot recover later target tokens from earlier target tokens. We compare the converted model's one-pass same-position predictions with the suffix present against a prefix-only pass of the same model. For unmerged adapters, we additionally score the untouched causal parent by conventional teacher forcing; this control is deliberately favorable to the AR model but cannot access the right-hand evidence. The diagnostic tests whether the attention intervention is functionally used, rather than measuring broad natural-language reasoning.
+
+For 100 fixed open-ended prompts, Microsoft Phi-4 scores each generated answer autoregressively. Our primary aggregate is token-weighted perplexity, $\exp(\sum_j \mathrm{NLL}_j/\sum_j N_j)$, so each scored token contributes equally; per-answer means and medians are retained as supplementary diagnostics. These are external-reference fluency measures, not likelihoods of the diffusion model itself. This distinction is important: generative perplexity inherits the reference model's preferences and does not penalize loss of sample diversity \citep{turok2026duel}. We therefore also compute sliding model-token Distinct-1/2/3 after excluding special tokens. Higher Distinct-$n$ means a larger fraction of unique $n$-grams.
 
 \section{Results}
 
@@ -184,6 +186,29 @@ Average    & \underline{.507} & .671 & .487 & .476 & .584 & .491 & .736 & .557 (
 \end{table*}
 
 The provisional complete diffusion macro averages are 50.7\% for Gemma, 48.7\% for Llama-25k, 47.6\% for Llama-50k, 49.1\% for Qwen, and 54.0\% for LLaDA in our harness. Ministral's 55.7\% diffusion and 63.2\% AR averages are explicitly partial. The matched AR parents outperform their converted counterparts on average, although individual tasks differ. Notably, the second Llama stage does not uniformly improve downstream accuracy despite reducing its 64-step generation perplexity (Section~\ref{sec:perplexity}), motivating checkpoint-wise evaluation rather than selecting solely by denoising loss or fluency. Published values from other diffusion systems are provided separately in Appendix~\ref{app:published-results} because their protocols are not matched to ours.
+
+\subsection{Bidirectional infilling diagnostic}
+\label{sec:bidirectional-infilling}
+
+Table~\ref{tab:bidirectional-infilling} is reserved for the separate functional-attention diagnostic. The primary comparison is within each converted model: full-context performance versus the same model with the informative suffix removed. A positive suffix gain would show that right-hand evidence changes target recovery; comparison with the causal parent then tests whether this ability is specifically enabled by the conversion. Results are still being collected and all entries are therefore marked as placeholders rather than preliminary evidence.
+
+\begin{table}[t]
+\caption{Bidirectional infilling diagnostic on 100 deterministic examples. Full and prefix-only columns evaluate the converted model; $\Delta$ suffix is full-context minus prefix-only exact match. AR is the untouched causal parent under favorable teacher-forced scoring. EM: exact match; Tok.: token accuracy. All values are pending.}
+\label{tab:bidirectional-infilling}
+\centering
+\scriptsize
+\begin{tabular}{lccccc}
+\toprule
+Model & Full EM & Full Tok. & Prefix EM & $\Delta$ suffix EM & AR EM \\
+\midrule
+Gemma 2 9B, 25k & XXX & XXX & XXX & XXX & XXX \\
+Llama 3.1 8B, 25k & XXX & XXX & XXX & XXX & XXX \\
+Llama 3.1 8B, 50k & XXX & XXX & XXX & XXX & XXX \\
+Qwen2.5 7B, 25k & XXX & XXX & XXX & XXX & XXX \\
+Ministral 8B, 25k & XXX & XXX & XXX & XXX & XXX \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Open-ended fluency and denoising budget}
 \label{sec:perplexity}
@@ -348,7 +373,7 @@ Data-loader workers & 4 & Prefetch factor & 4 \\
 \section{Complete inference configuration}
 \label{app:inference-settings}
 
-Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7 and 30 fixed prompts. Archived run manifests take precedence over mutable notebook defaults.
+Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7 and 100 fixed prompts. Archived run manifests take precedence over mutable notebook defaults.
 
 \begin{table*}[h]
 \caption{Task-specific masked-diffusion inference settings in the validation notebook. NFE is the number of denoising network evaluations.}
@@ -392,6 +417,37 @@ HumanEval & 256 & MBPP & 128 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{Bidirectional infilling diagnostic}
+\label{app:bidirectional-infilling}
+
+This diagnostic is designed to isolate access to right-hand evidence, which ordinary left-to-right generation benchmarks do not test directly. It is synthetic and deterministic: no external corpus is downloaded, and no model is fine-tuned on the evaluation examples. The suite contains 100 examples divided evenly between two mechanically generated templates. In the \emph{identifier-copy} subset, a response first leaves an access code blank and a later verification sentence states the code. In the \emph{ordered-relation} subset, a response leaves the label immediately preceding an anchor blank and a later sentence gives the complete local order. Targets are generated alphanumeric identifiers or nonce labels; they are absent from the instruction and answer prefix and occur in the visible suffix. The two templates test the same right-context dependency through different surface forms. They should be interpreted as a controlled functional test, not as a broad benchmark of reasoning, factual knowledge, poetry completion, or free-form infilling quality.
+
+For each model, the instruction is rendered with its native chat template. Let $l_k$ denote the tokenized chat context and answer prefix for example $k$, let $y_k=(y_k^1,\ldots,y_k^{m_k})$ be its target span, and let $r_k$ be the answer suffix. Target length $m_k$ is determined by the model's own tokenizer. Every target token is replaced simultaneously by the model's native mask token, producing the full-context input
+\begin{equation}
+    z_k^{\mathrm{full}} = [l_k,\underbrace{\mathtt{MASK},\ldots,\mathtt{MASK}}_{m_k},r_k].
+\end{equation}
+The converted model performs one bidirectional forward pass and predicts each target from the logits at the same position. There is no iterative sampler, denoising schedule, temperature, top-$k$ filter, or EOS heuristic in this test. Greedy predictions are used only to calculate exact match and token accuracy; target probabilities provide the likelihood diagnostics.
+
+We evaluate two controls. First, the \emph{prefix-only} condition removes $r_k$ while retaining the same prompt, masked target, model weights, and scoring code. The difference between full-context and prefix-only performance therefore measures the benefit obtained from the right-hand evidence within the converted model. Second, when an unmerged PEFT checkpoint is available, we disable its adapter, restore the parent normalization state, reinstate causal attention, and score the clean target with shifted next-token logits. This AR control does not receive the suffix. It is teacher-forced, so target token $y_k^j$ for $j>1$ may condition on the preceding gold target tokens $y_k^{<j}$; this makes the comparison favorable to the causal parent while preserving its structural inability to condition on $r_k$. A merged checkpoint cannot recover its untouched parent internally, so its AR control must come from the corresponding unmerged run and is deduplicated when several adapters share that parent.
+
+For condition $c$, exact match and token accuracy are
+\begin{align}
+    \mathrm{EM}_c &= \frac{1}{K}\sum_{k=1}^{K}
+    \mathbb{1}\!\left[\hat{y}_{k,c}=y_k\right], \\
+    \mathrm{TokAcc}_c &=
+    \frac{\sum_{k=1}^{K}\sum_{j=1}^{m_k}
+    \mathbb{1}\!\left[\hat{y}_{k,c}^{j}=y_k^j\right]}
+    {\sum_{k=1}^{K}m_k},
+\end{align}
+where $K=100$, $m_k$ is the target length in model tokens, $y_k$ is the gold target, and $\hat{y}_{k,c}$ is the condition's position-wise argmax prediction. We also report the token-weighted negative log-likelihood and perplexity,
+\begin{align}
+    \mathrm{NLL}_c &= -\frac{1}{\sum_k m_k}
+    \sum_{k=1}^{K}\sum_{j=1}^{m_k}
+    \log p_c(y_k^j), \\
+    \mathrm{PPL}_c &= \exp(\mathrm{NLL}_c).
+\end{align}
+Suffix gains are $\Delta\mathrm{EM}=\mathrm{EM}_{\mathrm{full}}-\mathrm{EM}_{\mathrm{prefix}}$ and $\Delta\mathrm{TokAcc}=\mathrm{TokAcc}_{\mathrm{full}}-\mathrm{TokAcc}_{\mathrm{prefix}}$; the likelihood gain is $\mathrm{NLL}_{\mathrm{prefix}}-\mathrm{NLL}_{\mathrm{full}}$, so a positive value always denotes useful right context. Aggregate and per-template summaries are retained, together with every tokenized target, prediction, and per-example loss, in the validation artifacts.
 
 \section{Cost and operational-emissions estimation}
 \label{app:cost}

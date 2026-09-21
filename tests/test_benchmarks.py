@@ -46,6 +46,23 @@ def test_open_ended_benchmark_supports_fractional_smoke_suite():
     assert [example.example_id for example in examples] == ["0", "20", "40", "60", "80"]
 
 
+def test_bidirectional_infilling_benchmark_is_deterministic_and_suffix_dependent():
+    examples = load_benchmark("bidirectional_infilling", "test", None, "unused", None)
+
+    assert len(examples) == 100
+    assert len({example.example_id for example in examples}) == 100
+    assert {example.metadata["subset"] for example in examples} == {"identifier_copy", "ordered_relation"}
+    assert all(example.metadata["target_text"].strip() in example.metadata["answer_suffix"] for example in examples)
+    assert all(example.metadata["target_text"].strip() not in example.metadata["answer_prefix"] for example in examples)
+
+
+def test_bidirectional_infilling_benchmark_respects_limit():
+    examples = load_benchmark("bidirectional_infilling", "test", 7, "unused", None)
+
+    assert len(examples) == 7
+    assert examples[0].example_id == "identifier-000"
+
+
 def test_open_ended_scoring_reports_median_per_response_perplexity():
     class Tokenizer:
         all_special_ids = []

@@ -18,7 +18,8 @@ from tqdm.auto import tqdm
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from diffusion_lm.benchmarks import ALL_TASKS, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_autoregressive_generation_settings, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.benchmarks import ALL_TASKS, BIDIRECTIONAL_INFILLING_TASK, BenchmarkRunReporter, extract_answer, load_benchmark, resolve_autoregressive_generation_settings, resolve_generation_settings, resolve_llada_generation_settings, resolve_mask_only_generation_settings, score_prediction, score_texts_with_model
+from diffusion_lm.infilling import original_base_causal, score_bidirectional_example, score_causal_example, summarize_infilling
 from diffusion_lm.metrics import distinct_n
 from diffusion_lm.inference import denoise_stream, find_adapters, llada_generate, load_hosted_legacy_session, load_llada_session, load_local_legacy_session, load_merged_session, load_session, release_session, select_device
 from diffusion_lm.judging import judge_open_ended_groups
@@ -185,6 +186,51 @@ def _show_open_ended_answer(progress, method: str, index: int, total: int, promp
     print(f"[{method} {index}/{total}] sample complete", flush=True)
 
 
+def _infilling_subset_summaries(examples, results, *, include_prefix_control: bool) -> dict[str, dict]:
+    """Preserve diagnostic scores for both synthetic dependency templates."""
+    subsets = {}
+    names = sorted({str(example.metadata["subset"]) for example in examples})
+    for name in names:
+        selected = [
+            result for example, result in zip(examples, results)
+            if str(example.metadata["subset"]) == name
+        ]
+        subsets[name] = summarize_infilling(selected, include_prefix_control=include_prefix_control)
+    return subsets
+
+
+def _save_infilling_results(reporter, model_label: str, mode: str, method: str, examples, results, protocol: dict, **extra) -> dict:
+    """Write per-example and aggregate records for one infilling method."""
+    for example, result in zip(examples, results):
+        reporter.save_result({
+            "model": model_label,
+            "corruption_mode": mode,
+            "task": BIDIRECTIONAL_INFILLING_TASK,
+            "example_id": example.example_id,
+            "method": method,
+            "subset": example.metadata["subset"],
+            "prompt": example.prompt,
+            "answer_prefix": example.metadata["answer_prefix"],
+            "answer_suffix": example.metadata["answer_suffix"],
+            "inference_settings": protocol,
+            **result,
+            **extra,
+        })
+    include_prefix = method == "diffusion"
+    summary = {
+        "model": model_label,
+        "corruption_mode": mode,
+        "task": BIDIRECTIONAL_INFILLING_TASK,
+        "method": method,
+        "inference_settings": protocol,
+        **summarize_infilling(results, include_prefix_control=include_prefix),
+        "subsets": _infilling_subset_summaries(examples, results, include_prefix_control=include_prefix),
+        **extra,
+    }
+    reporter.save_summary(summary)
+    return summary
+
+
 def _load_perplexity_reference(config: dict):
     """Load the single model used for all benchmark perplexity scores."""
     import torch
@@ -326,6 +372,64 @@ def main() -> None:
                 run_config, task, autoregressive_settings, model_label
             )
             autoregressive_already_run = autoregressive_key in completed_autoregressive
+            if task == BIDIRECTIONAL_INFILLING_TASK:
+                total = len(examples)
+                include_infilling_ar = bool(config.get("infilling_include_autoregressive", True))
+                protocol = {
+                    "type": "in_place_masked_span",
+                    "full_context": "bidirectional same-position logits with visible suffix",
+                    "control": "same adapter and masked span with suffix removed",
+                    "masking": "all target-span tokens masked simultaneously",
+                    "seed": None,
+                }
+                print(f"\n[{model_label}] {task}: {total} deterministic samples (bidirectional + prefix-only control)", flush=True)
+                diffusion_results = []
+                progress = tqdm(examples, desc=f"{model_label}/{task} bidirectional", unit="sample")
+                for index, example in enumerate(progress, start=1):
+                    result = score_bidirectional_example(session, example)
+                    diffusion_results.append(result)
+                    exact = sum(int(item["exact_match"]) for item in diffusion_results)
+                    progress.set_postfix(exact=f"{exact}/{index}")
+                summary = _save_infilling_results(
+                    reporter, model_label, mode, "diffusion", examples, diffusion_results, protocol
+                )
+                message = (
+                    f"{model_label} | {task} | full-context exact={summary['exact_match']:.4f} "
+                    f"| token accuracy={summary['token_accuracy']:.4f} "
+                    f"| prefix-only exact={summary['prefix_only_exact_match']:.4f} "
+                    f"| suffix gain={summary['suffix_gain_exact_match']:+.4f}"
+                )
+                if include_infilling_ar and supports_autoregressive and not autoregressive_already_run:
+                    ar_protocol = {
+                        "type": "causal_teacher_forced_span",
+                        "suffix_visible": False,
+                        "note": "Later target tokens receive earlier gold target tokens; the right-hand suffix remains inaccessible.",
+                        "seed": None,
+                    }
+                    print(f"[{ar_model_name}] {task}: {total} deterministic samples (causal base)", flush=True)
+                    ar_results = []
+                    with original_base_causal(session):
+                        ar_progress = tqdm(examples, desc=f"{ar_model_name}/{task} causal", unit="sample")
+                        for index, example in enumerate(ar_progress, start=1):
+                            result = score_causal_example(session, example)
+                            ar_results.append(result)
+                            exact = sum(int(item["exact_match"]) for item in ar_results)
+                            ar_progress.set_postfix(exact=f"{exact}/{index}")
+                    ar_summary = _save_infilling_results(
+                        reporter, ar_model_name, mode, "autoregressive", examples, ar_results,
+                        ar_protocol, evaluation_model=ar_model_name, model_variant="original_base",
+                    )
+                    completed_autoregressive[autoregressive_key] = ar_model_name
+                    message += (
+                        f" | causal exact={ar_summary['exact_match']:.4f}"
+                        f" | causal token accuracy={ar_summary['token_accuracy']:.4f}"
+                    )
+                elif include_infilling_ar and autoregressive_already_run:
+                    message += f" | duplicate causal baseline skipped (already evaluated as {completed_autoregressive[autoregressive_key]})"
+                elif include_infilling_ar and not supports_autoregressive:
+                    message += " | causal base comparison unavailable for this model source"
+                print(message, flush=True)
+                continue
             if task == "open_ended":
                 print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
                 diffusion_texts = []

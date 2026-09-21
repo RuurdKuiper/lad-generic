@@ -43,7 +43,16 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - Both use 30 prompts, 128 generated tokens, 32 denoising steps, seed 1234, temperature 0.7, the LLaDA-style sampler, and Phi-4 scoring.
 - Adapter-loaded: token-weighted PPL 19.381430; mean sliding model-token Distinct-1/2/3 = 0.495153/0.788446/0.898893.
 - Merged: token-weighted PPL 19.282753; mean sliding model-token Distinct-1/2/3 = 0.497539/0.806884/0.917994.
+- At 128 denoising steps, token-weighted PPL is 3.753 (adapter-loaded) versus 3.720 (merged).
+- Preliminary 50-example/task accuracies (adapter-loaded / merged): ARC-C 82.8/82.0, GPQA 28.0/30.0, GSM8K 65.2/58.0, HellaSwag 73.2/68.0, HumanEval 50.0/48.0, MATH 22.0/22.0, MBPP 46.0/44.0, MMLU 61.2/64.0, and MMLU-Pro 33.2/28.0. The unweighted means are 51.3 and 49.3.
 - The merged safetensors index records 8,030,261,248 parameters and 16,060,522,496 bytes of BF16 weights. The adapter-loaded parameter audit records 8.466B total parameters, including 436.2M LoRA parameters. Phrase the conclusion as restoration of the base architecture's parameter count; on-disk size can vary with dtype, quantization, and serialization.
+
+## Compute-estimate reproduction
+
+- Run `python scripts/estimate_paper_compute.py --output iclr2027_submission/source_results/compute_estimates.csv` from the repository root.
+- The manuscript uses $C=6ND$, 40% MFU, and 989 dense-BF16 TFLOP/s for standardized H100-equivalent estimates.
+- The LLaDA calibration gives 77,519.380 predicted versus 130,000 reported GPU-hours and 23.8521% implied utilization.
+- The Fast-dLLM v2 calibration uses its exact appendix token count, $2{,}500\times256\times2{,}048=1.31072$B, and 312 dense-BF16 TFLOP/s for A100: 122.530 predicted versus 768 reported GPU-hours and 6.3818% implied utilization. Its doubled clean/noised representation and specialized attention make this an estimator diagnostic rather than a measured MFU.
 
 ## Must resolve before submission
 

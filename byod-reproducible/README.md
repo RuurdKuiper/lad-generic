@@ -1,4 +1,4 @@
-# Bring Your Own Diffusion
+# BYOD: Build Your Own DLM
 
 Convert a pretrained instruction model into a bidirectional masked-diffusion
 language model on one GPU. The same training entry point supports:

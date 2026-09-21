@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "byod-diffusion"
 version = "0.1.0"
-description = "Single-GPU conversion of instruction LMs into masked diffusion models"
+description = "Build Your Own DLM: single-GPU conversion of instruction LMs into masked diffusion models"
 requires-python = ">=3.10"
 dependencies = [
   "torch>=2.5",

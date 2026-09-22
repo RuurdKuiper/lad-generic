@@ -940,7 +940,10 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     frozen_steps: dict[int, int] = {}
     last_predictions: list[tuple[int, ...]] = []
     eot_token_id = _native_eot_token_id(session.tokenizer) if confidence_eos_eot_inf or float(eos_eot_prediction_penalty) > 1.0 else None
-    guided_retention = confidence_guided or confidence_eos_eot_inf
+    # EOS/EOT delaying and confidence-guided retention are independent. In
+    # random mode, endings are still retained last, while ordinary tokens are
+    # selected randomly.
+    guided_retention = confidence_guided
     skip_block_index: int | None = None
     for step, (block_index, block_start, block_end, block_step, block_steps) in enumerate(step_plan):
         if block_index == skip_block_index:
@@ -967,6 +970,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             )
             sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
         retention_confidence = confidence
+        special_prediction = torch.zeros_like(sampled, dtype=torch.bool)
         if confidence_eos_eot_inf:
             special_prediction = sampled == session.tokenizer.eos_token_id
             if eot_token_id is not None:
@@ -993,9 +997,9 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if session.tokenizer.eos_token_id in prediction:
             prediction = prediction[:prediction.index(session.tokenizer.eos_token_id)]
         last_predictions.append(tuple(prediction))
-        if len(last_predictions) > 3:
+        if len(last_predictions) > 2:
             last_predictions.pop(0)
-        stopped_early = early_stopping and len(last_predictions) == 3 and len(set(last_predictions)) == 1
+        stopped_early = early_stopping and len(last_predictions) == 2 and len(set(last_predictions)) == 1
         # Progressively reduce corruption. Re-mask independently, retaining the
         # legacy schedule's initial noise_level and ending with a clean sample.
         if block_step + 1 < block_steps and not stopped_early:
@@ -1007,6 +1011,15 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 needed = keep_count - retained_in_block
                 candidates = [i for i in range(block_start, block_end) if i not in retained]
                 if needed > 0 and candidates:
+                    def random_retention_order(pool: list[int]) -> list[int]:
+                        order = torch.randperm(len(pool), device=session.device).tolist()
+                        randomized = [pool[i] for i in order]
+                        if not confidence_eos_eot_inf:
+                            return randomized
+                        ordinary = [i for i in randomized if not bool(special_prediction[i])]
+                        endings = [i for i in randomized if bool(special_prediction[i])]
+                        return ordinary + endings
+
                     if proportional_unmask:
                         eos_positions = [i for i in range(block_start, block_end) if ids[answer_start + i] == session.tokenizer.eos_token_id]
                         boundary = min(eos_positions) if eos_positions else block_end
@@ -1024,8 +1037,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                                 order = torch.argsort(retention_confidence, descending=True).tolist()
                                 chosen.extend([i for i in order if i in pool][:target])
                             else:
-                                order = torch.randperm(len(pool), device=session.device)[:target].tolist()
-                                chosen.extend(pool[i] for i in order)
+                                chosen.extend(random_retention_order(pool)[:target])
                         if len(chosen) < needed:
                             remainder = [i for i in candidates if i not in chosen]
                             chosen.extend(remainder[: needed - len(chosen)])
@@ -1033,8 +1045,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                         confidence_order = torch.argsort(retention_confidence, descending=True).tolist()
                         chosen = [i for i in confidence_order if i in candidates][:needed]
                     else:
-                        chosen = torch.randperm(len(candidates), device=session.device)[:needed].tolist()
-                        chosen = [candidates[i] for i in chosen]
+                        chosen = random_retention_order(candidates)[:needed]
                     for offset in chosen:
                         retained.add(offset)
                         if freeze_retained_tokens:
@@ -1053,6 +1064,9 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                     mask_probability,
                     guided_retention,
                 )
+                if confidence_eos_eot_inf and not guided_retention:
+                    ending_offsets = torch.where(special_prediction[block_start:block_end])[0]
+                    remask_offsets = torch.unique(torch.cat((remask_offsets, ending_offsets)))
                 for offset in remask_offsets.tolist():
                     ids[answer_start + block_start + offset] = session.mask_token_id
         current_answer = ids[answer_start:]
@@ -1082,7 +1096,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if permanent_unmask:
             status += f" · retained {len(retained)} tokens"
         if stopped_early:
-            status += " · block stopped early (same answer for 3 iterations)"
+            status += " · block stopped early (same answer for 2 consecutive iterations)"
         html = render_denoising_step(
             ids,
             confidence.tolist(),

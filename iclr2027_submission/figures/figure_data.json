@@ -1,0 +1,231 @@
+{
+  "source_workbook": "/Users/rkuiper/Documents/Code/lad-generic/results/Results_accuracy-125-partial_20260921.xlsx",
+  "source_sheet": "Primary outcomes",
+  "accuracy_cells": "model names from row 5; tasks from rows 7--15",
+  "progression_cells": "rows 42--46",
+  "distinct_progression_cells": "pending: add an equivalent Training iterations block beginning at C49",
+  "radar": {
+    "tasks": [
+      "arc_c",
+      "gpqa",
+      "gsm8k",
+      "hellaswag",
+      "humaneval",
+      "math",
+      "mbpp",
+      "mmlu",
+      "mmlu_pro"
+    ],
+    "task_labels": [
+      "ARC-C",
+      "GPQA",
+      "GSM8K",
+      "HellaSwag",
+      "HumanEval",
+      "MATH-500",
+      "MBPP",
+      "MMLU",
+      "MMLU-Pro"
+    ],
+    "groups": {
+      "llama_comparison": {
+        "LLaDA (DLM)": [
+          0.864,
+          0.312,
+          0.648,
+          0.696,
+          0.4,
+          0.344,
+          0.424,
+          0.56,
+          0.424
+        ],
+        "BYOD-Llama (DLM)": [
+          0.832,
+          0.296,
+          0.656,
+          0.704,
+          0.312,
+          0.256,
+          0.432,
+          0.592,
+          0.304
+        ],
+        "Llama (AR)": [
+          0.792,
+          0.32,
+          0.864,
+          0.608,
+          0.56,
+          0.48,
+          0.712,
+          0.536,
+          0.416
+        ]
+      },
+      "byod_families": {
+        "BYOD-Gemma": [
+          0.864,
+          0.24,
+          0.54,
+          0.752,
+          0.38,
+          0.3,
+          0.46,
+          0.688,
+          0.368
+        ],
+        "BYOD-Llama": [
+          0.832,
+          0.296,
+          0.656,
+          0.704,
+          0.312,
+          0.256,
+          0.432,
+          0.592,
+          0.304
+        ],
+        "BYOD-Qwen": [
+          0.86,
+          0.3,
+          0.5,
+          0.74,
+          0.38,
+          0.28,
+          0.5,
+          0.58,
+          0.28
+        ],
+        "BYOD-Ministral": [
+          0.82,
+          0.24,
+          0.6,
+          0.82,
+          0.5,
+          0.24,
+          0.52,
+          0.6,
+          0.36
+        ]
+      }
+    }
+  },
+  "training_progression": {
+    "all_steps": [
+      1000,
+      5000,
+      10000,
+      15000,
+      20000,
+      25000,
+      30000,
+      35000,
+      40000,
+      45000,
+      50000
+    ],
+    "series": {
+      "32": {
+        "label": "LAD-Llama (32 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "perplexity": 15.5018
+          },
+          {
+            "step": 10000,
+            "perplexity": 23.138
+          },
+          {
+            "step": 20000,
+            "perplexity": 17.091
+          },
+          {
+            "step": 30000,
+            "perplexity": 14.7366
+          },
+          {
+            "step": 40000,
+            "perplexity": 17.2013
+          },
+          {
+            "step": 50000,
+            "perplexity": 16.7965
+          }
+        ],
+        "llada_label": "LlaDa (32 it.)",
+        "llada": 5.3349
+      },
+      "64": {
+        "label": "LAD-Llama (64 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "perplexity": 10.256
+          },
+          {
+            "step": 10000,
+            "perplexity": 10.015
+          },
+          {
+            "step": 20000,
+            "perplexity": 9.646
+          },
+          {
+            "step": 30000,
+            "perplexity": 9.839
+          },
+          {
+            "step": 40000,
+            "perplexity": 8.716
+          },
+          {
+            "step": 50000,
+            "perplexity": 8.382
+          }
+        ],
+        "llada_label": "LlaDa (64 it.)",
+        "llada": 4.065
+      },
+      "128": {
+        "label": "LAD-Llama (128 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "perplexity": 5.7954
+          },
+          {
+            "step": 10000,
+            "perplexity": 5.2868
+          },
+          {
+            "step": 20000,
+            "perplexity": 4.7627
+          },
+          {
+            "step": 30000,
+            "perplexity": 4.6642
+          },
+          {
+            "step": 40000,
+            "perplexity": 4.4202
+          },
+          {
+            "step": 50000,
+            "perplexity": 4.8757
+          }
+        ],
+        "llada_label": "LlaDa (128 it.)",
+        "llada": 2.7948
+      }
+    }
+  },
+  "distinct_1_progression": null,
+  "notes": [
+    "Blank checkpoint cells are omitted; lines connect only recorded values.",
+    "Dashed horizontal lines are the LLaDA values stored beside each NFE row.",
+    "The four-family radar uses the currently populated workbook values, whose sample counts may differ; consult workbook provenance.",
+    "All radar spokes share the same absolute 0--100% scale; per-task min/max normalization is intentionally avoided."
+  ]
+}

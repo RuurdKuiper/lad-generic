@@ -361,10 +361,12 @@ values. `Retain and lock token values` also prevents re-masking, but restores
 the selected value after every later prediction. Existing YAML settings with
 `permanent_unmask: true` retain the locked behavior for compatibility.
 
-The optional app setting `Early stop after 3 identical predictions` ends a
-denoising request after the complete sampled answer-token sequence is unchanged
-for three consecutive iterations, matching the legacy app. It is disabled by
-default. For validation generation, set
+The optional app setting `Early stop after 2 consecutive identical predictions`
+ends a denoising request when the sampled token prefix before the first EOS is
+unchanged across two consecutive iterations. Tokens after the first EOS are
+ignored, but moving the first EOS changes the compared prefix and prevents a
+premature stop. It is disabled by default in the legacy app and enabled by
+default in the BYOD demos. For validation generation, set
 `generation_perplexity.early_stopping: true` in the YAML.
 
 Run the same check without starting Gradio:

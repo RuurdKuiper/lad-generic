@@ -1,0 +1,396 @@
+#!/usr/bin/env python3
+"""Generate paper figures directly from the maintained results workbook.
+
+The script intentionally reads model and task labels rather than relying only
+on column numbers.  This makes accidental column moves in Excel fail loudly or
+resolve correctly instead of silently plotting the wrong model.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import re
+from pathlib import Path
+from typing import Any
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+import numpy as np
+from openpyxl import load_workbook
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_WORKBOOK = ROOT / "results" / "Results_accuracy-125-partial_20260921.xlsx"
+DEFAULT_OUTPUT_DIR = ROOT / "iclr2027_submission" / "figures"
+
+TASK_LABELS = {
+    "arc_c": "ARC-C",
+    "gpqa": "GPQA",
+    "gsm8k": "GSM8K",
+    "hellaswag": "HellaSwag",
+    "humaneval": "HumanEval",
+    "math": "MATH-500",
+    "mbpp": "MBPP",
+    "mmlu": "MMLU",
+    "mmlu_pro": "MMLU-Pro",
+}
+TASK_ORDER = list(TASK_LABELS)
+
+RADAR_GROUPS = {
+    "llama_comparison": {
+        "LLaDA (DLM)": "LLaDA-8B-Instruct (own validation)",
+        "BYOD-Llama (DLM)": "llama-3.1-8b-mask",
+        "Llama (AR)": "llama-3.1-8b-autoregressive",
+    },
+    "byod_families": {
+        "BYOD-Gemma": "gemma-2-9b-mask",
+        "BYOD-Llama": "llama-3.1-8b-mask",
+        "BYOD-Qwen": "qwen-2.5-7b-mask",
+        "BYOD-Ministral": "ministral-mask",
+    },
+}
+
+COLORS = {
+    "LLaDA (DLM)": "#009E73",
+    "BYOD-Llama (DLM)": "#0072B2",
+    "Llama (AR)": "#D55E00",
+    "BYOD-Gemma": "#E69F00",
+    "BYOD-Llama": "#0072B2",
+    "BYOD-Qwen": "#009E73",
+    "BYOD-Ministral": "#CC79A7",
+    32: "#0072B2",
+    64: "#D55E00",
+    128: "#009E73",
+}
+
+
+def _numeric(value: Any, location: str) -> float:
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)):
+        raise ValueError(f"Expected a finite number at {location}, found {value!r}")
+    return float(value)
+
+
+def _find_in_row(sheet: Any, row: int, value: str) -> int:
+    matches = [cell.column for cell in sheet[row] if cell.value == value]
+    if len(matches) != 1:
+        raise ValueError(f"Expected one {value!r} in {sheet.title} row {row}, found {len(matches)}")
+    return matches[0]
+
+
+def load_radar_data(sheet: Any) -> dict[str, Any]:
+    """Read the nine accuracy tasks and named comparison columns."""
+    model_row = next(
+        (row for row in range(1, sheet.max_row + 1) if sheet.cell(row, 2).value == "model"),
+        None,
+    )
+    if model_row is None:
+        raise ValueError(f"Could not find the model header in {sheet.title}")
+    model_columns = {
+        str(sheet.cell(model_row, column).value): column
+        for column in range(1, sheet.max_column + 1)
+        if sheet.cell(model_row, column).value is not None
+    }
+    task_rows = {
+        str(sheet.cell(row, 2).value): row
+        for row in range(model_row + 1, sheet.max_row + 1)
+        if sheet.cell(row, 2).value in TASK_ORDER
+    }
+    missing_tasks = set(TASK_ORDER) - set(task_rows)
+    if missing_tasks:
+        raise ValueError(f"Missing benchmark rows: {sorted(missing_tasks)}")
+
+    groups: dict[str, dict[str, list[float]]] = {}
+    for group_name, series in RADAR_GROUPS.items():
+        groups[group_name] = {}
+        for display_name, workbook_name in series.items():
+            if workbook_name not in model_columns:
+                raise ValueError(f"Workbook has no model column {workbook_name!r}")
+            column = model_columns[workbook_name]
+            groups[group_name][display_name] = [
+                _numeric(sheet.cell(task_rows[task], column).value, f"{sheet.title}!{sheet.cell(task_rows[task], column).coordinate}")
+                for task in TASK_ORDER
+            ]
+    return {
+        "tasks": TASK_ORDER,
+        "task_labels": [TASK_LABELS[task] for task in TASK_ORDER],
+        "groups": groups,
+    }
+
+
+def load_progression_data(
+    sheet: Any,
+    header_row: int = 42,
+    *,
+    value_name: str = "perplexity",
+    required: bool = True,
+) -> dict[str, Any] | None:
+    """Read a manually maintained 32/64/128-NFE checkpoint block."""
+    if sheet.cell(header_row, 3).value != "Training iterations":
+        if not required:
+            return None
+        raise ValueError(
+            f"Expected 'Training iterations' at {sheet.title}!C{header_row}; "
+            f"found {sheet.cell(header_row, 3).value!r}"
+        )
+    step_columns = {
+        cell.column: int(cell.value)
+        for cell in sheet[header_row]
+        if isinstance(cell.value, (int, float)) and 1_000 <= int(cell.value) <= 50_000
+    }
+    if not step_columns:
+        raise ValueError(f"No checkpoint steps found in {sheet.title} row {header_row}")
+
+    series: dict[int, dict[str, Any]] = {}
+    pattern = re.compile(r"\((32|64|128)\s+it\.\)", re.IGNORECASE)
+    # The first row below the header is a free-form block subtitle; the next
+    # three rows are the fixed 32/64/128-NFE series.
+    for row in range(header_row + 2, min(header_row + 4, sheet.max_row) + 1):
+        label = sheet.cell(row, 3).value
+        match = pattern.search(str(label)) if label is not None else None
+        if not match:
+            continue
+        nfe = int(match.group(1))
+        points = []
+        for column, step in step_columns.items():
+            value = sheet.cell(row, column).value
+            if value is not None:
+                points.append({"step": step, value_name: _numeric(value, f"{sheet.title}!{sheet.cell(row, column).coordinate}")})
+
+        baseline = None
+        baseline_label = None
+        for column in range(max(step_columns) + 1, sheet.max_column):
+            candidate_label = sheet.cell(row, column).value
+            candidate_value = sheet.cell(row, column + 1).value
+            if isinstance(candidate_label, str) and "llada" in candidate_label.lower() and candidate_value is not None:
+                baseline_label = candidate_label
+                baseline = _numeric(candidate_value, f"{sheet.title}!{sheet.cell(row, column + 1).coordinate}")
+                break
+        if baseline is None:
+            raise ValueError(f"No LLaDA baseline found for {nfe} NFE in row {row}")
+        series[nfe] = {"label": str(label), "points": points, "llada_label": baseline_label, "llada": baseline}
+
+    if set(series) != {32, 64, 128}:
+        raise ValueError(f"Expected progression rows for 32/64/128 NFE, found {sorted(series)}")
+    return {"all_steps": sorted(step_columns.values()), "series": series}
+
+
+def _configure_radar(ax: Any, labels: list[str], title: str) -> np.ndarray:
+    angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
+    ax.set_theta_offset(np.pi / 2)
+    ax.set_theta_direction(-1)
+    ax.set_xticks(angles)
+    ax.set_xticklabels(labels, fontsize=8)
+    ax.tick_params(axis="x", pad=8)
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.set_yticklabels(["20", "40", "60", "80", "100"], fontsize=7, color="#555555")
+    ax.set_rlabel_position(8)
+    ax.grid(color="#C8C8C8", linewidth=0.6)
+    ax.spines["polar"].set_color("#999999")
+    ax.set_title(title, fontsize=10, fontweight="bold", pad=18)
+    return angles
+
+
+def _draw_radar(ax: Any, labels: list[str], series: dict[str, list[float]], title: str) -> None:
+    angles = _configure_radar(ax, labels, title)
+    closed_angles = np.r_[angles, angles[0]]
+    for name, values in series.items():
+        closed_values = np.r_[values, values[0]]
+        color = COLORS[name]
+        ax.plot(closed_angles, closed_values, color=color, linewidth=1.8, marker="o", markersize=3.2, label=name)
+        ax.fill(closed_angles, closed_values, color=color, alpha=0.055)
+
+
+def _save(fig: Any, stem: Path) -> None:
+    stem.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(stem.with_suffix(".pdf"), bbox_inches="tight")
+    fig.savefig(stem.with_suffix(".png"), dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_radar_panels(data: dict[str, Any], output_dir: Path) -> None:
+    labels = data["task_labels"]
+    fig, axes = plt.subplots(1, 2, figsize=(11.2, 5.2), subplot_kw={"projection": "polar"})
+    _draw_radar(axes[0], labels, data["groups"]["llama_comparison"], "(a) Matched Llama and LLaDA comparison")
+    _draw_radar(axes[1], labels, data["groups"]["byod_families"], "(b) BYOD backbone comparison")
+    for ax in axes:
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), frameon=False, fontsize=8, ncol=2)
+    fig.subplots_adjust(wspace=0.35, bottom=0.22, top=0.88)
+    _save(fig, output_dir / "benchmark_radar_panels")
+
+    for filename, group_name, title in (
+        ("benchmark_radar_llama", "llama_comparison", "Matched Llama and LLaDA comparison"),
+        ("benchmark_radar_byod_families", "byod_families", "BYOD backbone comparison"),
+    ):
+        fig, ax = plt.subplots(figsize=(6.2, 5.5), subplot_kw={"projection": "polar"})
+        _draw_radar(ax, labels, data["groups"][group_name], title)
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.14), frameon=False, fontsize=8, ncol=2)
+        fig.subplots_adjust(bottom=0.2, top=0.88)
+        _save(fig, output_dir / filename)
+
+
+def _plot_progression_panel(
+    ax: Any,
+    data: dict[str, Any],
+    *,
+    value_name: str,
+    ylabel: str,
+    title: str,
+) -> None:
+    for nfe in (32, 64, 128):
+        item = data["series"][nfe]
+        steps = [point["step"] for point in item["points"]]
+        values = [point[value_name] for point in item["points"]]
+        color = COLORS[nfe]
+        ax.plot(steps, values, color=color, marker="o", linewidth=2, markersize=4.5, label=f"{nfe} NFE")
+        ax.axhline(item["llada"], color=color, linestyle=(0, (4, 3)), linewidth=1.4, alpha=0.9)
+
+    ax.set_xlabel("BYOD-Llama training updates")
+    ax.set_ylabel(ylabel)
+    ax.set_title(title, fontsize=10, fontweight="bold")
+    ax.set_xticks(data["all_steps"])
+    ax.set_xticklabels([f"{step // 1000}k" for step in data["all_steps"]], fontsize=8)
+    ax.set_xlim(min(data["all_steps"]) - 1_500, max(data["all_steps"]) + 1_500)
+    ax.set_ylim(bottom=0)
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
+    ax.spines[["top", "right"]].set_visible(False)
+    nfe_legend = ax.legend(title="BYOD-Llama", frameon=False, loc="upper right", fontsize=8, title_fontsize=8)
+    ax.add_artist(nfe_legend)
+    style_handles = [
+        Line2D([0], [0], color="#333333", marker="o", linewidth=2, label="BYOD checkpoints"),
+        Line2D([0], [0], color="#333333", linestyle=(0, (4, 3)), linewidth=1.4, label="LLaDA reference"),
+    ]
+    ax.legend(handles=style_handles, frameon=False, loc="upper center", fontsize=8)
+
+
+def _plot_pending_distinct_panel(ax: Any, all_steps: list[int]) -> None:
+    ax.set_title("(b) Distinct-1 progression", fontsize=10, fontweight="bold")
+    ax.set_xlabel("BYOD-Llama training updates")
+    ax.set_ylabel("Mean sliding model-token Distinct-1 (↑)")
+    ax.set_xticks(all_steps)
+    ax.set_xticklabels([f"{step // 1000}k" for step in all_steps], fontsize=8)
+    ax.set_xlim(min(all_steps) - 1_500, max(all_steps) + 1_500)
+    ax.set_ylim(0, 1)
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.text(
+        0.5,
+        0.52,
+        "Checkpoint Distinct-1 results pending",
+        ha="center",
+        va="center",
+        transform=ax.transAxes,
+        color="#555555",
+        fontsize=10,
+    )
+
+
+def plot_training_progression(
+    perplexity_data: dict[str, Any],
+    distinct_data: dict[str, Any] | None,
+    output_dir: Path,
+) -> None:
+    # Retain the original single-panel artifact for slides and backwards compatibility.
+    fig, ax = plt.subplots(figsize=(7.2, 4.3))
+    _plot_progression_panel(
+        ax,
+        perplexity_data,
+        value_name="perplexity",
+        ylabel="Phi-4 token-weighted perplexity (↓)",
+        title="Perplexity progression",
+    )
+    fig.tight_layout()
+    _save(fig, output_dir / "llama_training_perplexity")
+
+    fig, axes = plt.subplots(1, 2, figsize=(12.2, 4.25))
+    _plot_progression_panel(
+        axes[0],
+        perplexity_data,
+        value_name="perplexity",
+        ylabel="Phi-4 token-weighted perplexity (↓)",
+        title="(a) Perplexity progression",
+    )
+    if distinct_data is None:
+        _plot_pending_distinct_panel(axes[1], perplexity_data["all_steps"])
+    else:
+        _plot_progression_panel(
+            axes[1],
+            distinct_data,
+            value_name="distinct_1",
+            ylabel="Mean sliding model-token Distinct-1 (↑)",
+            title="(b) Distinct-1 progression",
+        )
+        axes[1].set_ylim(0, 1)
+    fig.tight_layout(w_pad=2.2)
+    _save(fig, output_dir / "llama_training_diagnostics")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--workbook", type=Path, default=DEFAULT_WORKBOOK)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--progression-header-row", type=int, default=42)
+    parser.add_argument(
+        "--distinct-progression-header-row",
+        type=int,
+        default=49,
+        help="Optional Distinct-1 checkpoint block; a missing block produces a clearly marked placeholder panel.",
+    )
+    args = parser.parse_args()
+
+    workbook = args.workbook.expanduser().resolve()
+    output_dir = args.output_dir.expanduser().resolve()
+    if not workbook.is_file():
+        raise FileNotFoundError(workbook)
+    wb = load_workbook(workbook, data_only=True, read_only=True)
+    sheet = wb["Primary outcomes"]
+    radar = load_radar_data(sheet)
+    progression = load_progression_data(sheet, args.progression_header_row)
+    distinct_progression = load_progression_data(
+        sheet,
+        args.distinct_progression_header_row,
+        value_name="distinct_1",
+        required=False,
+    )
+
+    plt.rcParams.update({
+        "font.family": "DejaVu Sans",
+        "font.size": 9,
+        "axes.labelsize": 9,
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
+    })
+    plot_radar_panels(radar, output_dir)
+    plot_training_progression(progression, distinct_progression, output_dir)
+
+    manifest = {
+        "source_workbook": str(workbook),
+        "source_sheet": sheet.title,
+        "accuracy_cells": "model names from row 5; tasks from rows 7--15",
+        "progression_cells": f"rows {args.progression_header_row}--{args.progression_header_row + 4}",
+        "distinct_progression_cells": (
+            f"rows {args.distinct_progression_header_row}--{args.distinct_progression_header_row + 4}"
+            if distinct_progression is not None
+            else "pending: add an equivalent Training iterations block beginning at C49"
+        ),
+        "radar": radar,
+        "training_progression": progression,
+        "distinct_1_progression": distinct_progression,
+        "notes": [
+            "Blank checkpoint cells are omitted; lines connect only recorded values.",
+            "Dashed horizontal lines are the LLaDA values stored beside each NFE row.",
+            "The four-family radar uses the currently populated workbook values, whose sample counts may differ; consult workbook provenance.",
+            "All radar spokes share the same absolute 0--100% scale; per-task min/max normalization is intentionally avoided.",
+        ],
+    }
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "figure_data.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    print(f"Generated figures in {output_dir}")
+
+
+if __name__ == "__main__":
+    main()

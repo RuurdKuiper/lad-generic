@@ -16,7 +16,7 @@ short_description: Masked-diffusion demo for __TITLE__
 # __TITLE__
 
 Interactive full-precision inference for **__TITLE__**, one of the BYOD
-(Bring Your Own Diffusion) models. It uses the exact `best` LoRA checkpoint
+(Build Your Own DLM) models. It uses the exact `best` LoRA checkpoint
 from the corresponding experiment and loads its original base model in BF16.
 No 4-bit quantization is used.
 

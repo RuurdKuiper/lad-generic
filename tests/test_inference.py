@@ -344,7 +344,7 @@ def test_preflight_runs_a_real_forward_pass():
     assert preflight_session(session) == (3, 4)
 
 
-def test_early_stopping_requires_three_identical_complete_predictions():
+def test_early_stopping_requires_two_consecutive_identical_complete_predictions():
     class Tokenizer:
         eos_token_id = 2
         chat_template = "template"
@@ -368,7 +368,7 @@ def test_early_stopping_requires_three_identical_complete_predictions():
 
     session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 3)
     states = list(denoise_stream(session, "Test", "System", 2, 6, .5, 1., 1, 1234, early_stopping=True))
-    assert len(states) == 3
+    assert len(states) == 2
     assert "stopped early" in states[-1][1]
     assert "2 output tokens" in states[-1][1]
 
@@ -405,8 +405,8 @@ def test_early_stopping_ignores_changes_after_first_eos():
         session, "Test", "System", 4, 6, .5, 1., 1, 1234, early_stopping=True
     ))
 
-    assert len(states) == 3
-    assert "same answer for 3 iterations" in states[-1][1]
+    assert len(states) == 2
+    assert "same answer for 2 consecutive iterations" in states[-1][1]
 
 
 def test_early_stopping_continues_when_first_eos_moves():
@@ -441,8 +441,8 @@ def test_early_stopping_continues_when_first_eos_moves():
         session, "Test", "System", 4, 6, .5, 1., 1, 1234, early_stopping=True
     ))
 
-    assert len(states) == 5
-    assert "same answer for 3 iterations" in states[-1][1]
+    assert len(states) == 4
+    assert "same answer for 2 consecutive iterations" in states[-1][1]
 
 
 def test_llada_session_uses_the_app_denoising_loop():

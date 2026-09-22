@@ -55,6 +55,7 @@ def generate(
     top_k: int,
     pause_per_step: float,
     trajectory_color_mode: str,
+    remasking_strategy: str,
     delay_eos_eot: bool,
     early_stopping: bool,
 ):
@@ -74,7 +75,7 @@ def generate(
         top_k=int(top_k),
         seed=int(seed),
         permanent_unmask=True,
-        confidence_guided=True,
+        confidence_guided=remasking_strategy == "Confidence-guided",
         proportional_unmask=False,
         early_stopping=bool(early_stopping),
         # This delays retention of predicted endings; it does not alter their
@@ -148,6 +149,12 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 label="Token coloring",
                 info="Hover over any token to see its position, prediction iteration, and probability.",
             )
+            remasking_strategy = gr.Radio(
+                choices=["Confidence-guided", "Random"],
+                value="Confidence-guided",
+                label="Remasking strategy",
+                info="Confidence-guided retains the most confident predictions; random selects ordinary token positions randomly.",
+            )
             delay_eos_eot = gr.Checkbox(
                 value=True,
                 label="Delay EOS/EOT retention (longer answers)",
@@ -156,7 +163,7 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
             early_stopping = gr.Checkbox(
                 value=True,
                 label="Early stopping",
-                info="Stop after the visible answer is unchanged for three consecutive iterations.",
+                info="Stop after the visible answer is unchanged for two consecutive iterations.",
             )
     gr.Markdown(
         "The first request may take longer while the base model and adapter are loaded. "
@@ -174,6 +181,7 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         top_k,
         pause_per_step,
         trajectory_color_mode,
+        remasking_strategy,
         delay_eos_eot,
         early_stopping,
     ]

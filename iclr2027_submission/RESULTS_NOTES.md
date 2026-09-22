@@ -24,6 +24,15 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - The workbook row named `1-gram repetition` predates the final sliding model-token Distinct-n implementation. Those numbers are intentionally not presented as Distinct-1.
 - The manuscript treats published LLaDA results as protocol-separated context, not as directly matched measurements.
 
+## Automatically generated figures
+
+- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_accuracy-125-partial_20260921.xlsx`.
+- Install the spreadsheet dependency with `pip install -e '.[paper]'` if `openpyxl` is unavailable.
+- PDF and 300-DPI PNG outputs are written to `iclr2027_submission/figures/`; `figure_data.json` records the exact extracted values and source workbook.
+- `benchmark_radar_panels` contains the matched LLaDA/BYOD-Llama/Llama-AR comparison and the four-family BYOD comparison. The latter is provisional because the workbook currently combines task cells from runs with different sample counts.
+- `llama_training_diagnostics` reads the perplexity checkpoint block beginning at `Primary outcomes!C42`. Its second panel reads an equivalent optional Distinct-1 block beginning at `C49`; until that block is populated, it is explicitly marked as pending. Each block uses a header row, one subtitle row, then 32/64/128-NFE rows, with LLaDA labels and baselines in columns O/P. Blank checkpoint cells are omitted rather than imputed. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are the LLaDA values stored with each NFE row.
+- Radar spokes deliberately retain a common absolute 0--100% accuracy scale. Per-benchmark min--max normalization would visually magnify narrow ranges and make equal radii and polygon areas incomparable across tasks.
+
 ## Earlier-draft statements corrected
 
 - Four parent families are now included, not three: Gemma, Llama, Qwen, and Ministral.

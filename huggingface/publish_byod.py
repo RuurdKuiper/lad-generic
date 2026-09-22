@@ -197,7 +197,7 @@ def make_space_bundle(spec: ByodModel, namespace: str, destination: Path) -> Non
     shutil.copytree(
         REPO_ROOT / "src" / "diffusion_lm",
         destination / "src" / "diffusion_lm",
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
     )
 
 
@@ -247,6 +247,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--namespace", default="Ruurd")
     parser.add_argument("--outputs-root", type=Path, default=DEFAULT_OUTPUTS_ROOT)
     parser.add_argument("--execute", action="store_true", help="Create/update Hub repositories. Default is validation-only.")
+    parser.add_argument("--spaces-only", action="store_true", help="Update only the four demo Spaces; do not re-upload model repositories.")
     return parser.parse_args()
 
 
@@ -268,7 +269,8 @@ def main() -> None:
     identity = api.whoami()
     print(f"Authenticated as {identity.get('name', 'unknown')}")
     for spec, adapter_dir, config_path, run_config in artifacts:
-        publish_model(api, spec, args.namespace, adapter_dir, config_path, run_config)
+        if not args.spaces_only:
+            publish_model(api, spec, args.namespace, adapter_dir, config_path, run_config)
         publish_space(api, spec, args.namespace)
     print("Publication complete. Add a read-only HF_TOKEN secret to each gated-model Space.")
 

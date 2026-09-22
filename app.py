@@ -146,7 +146,7 @@ with gr.Blocks(title="Diffusion LM inference") as demo:
         )
         confidence_guided = gr.Checkbox(label="Use confidence-guided retention", value=False)
         proportional_unmask = gr.Checkbox(label="Proportional unmasking", value=True)
-        early_stopping = gr.Checkbox(label="Early stop after 3 identical predictions", value=False)
+        early_stopping = gr.Checkbox(label="Early stop after 2 consecutive identical predictions", value=False)
         confidence_eos_eot_inf = gr.Checkbox(label="Delay EOS/EOT using lowest confidence (LLaDA-style)", value=False)
         show_trajectory = gr.Checkbox(label="Show copyable inference trajectory", value=False)
     generate = gr.Button("Denoise", variant="primary")

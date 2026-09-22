@@ -11,6 +11,7 @@ cuda = ["bitsandbytes>=0.45"]
 # includes Blackwell/SM120 support.
 fp8 = ["transformer-engine[pytorch]==2.13.0"]
 evaluation = ["math-verify[antlr4_13_2]>=0.8", "openai>=1.68"]
+paper = ["openpyxl>=3.1"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

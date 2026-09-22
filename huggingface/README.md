@@ -37,6 +37,12 @@ Create/update the public model repositories and Spaces:
 python huggingface/publish_byod.py --execute
 ```
 
+To update only the demo code without re-uploading the model repositories:
+
+```bash
+python huggingface/publish_byod.py --spaces-only --execute
+```
+
 The four Spaces request the Hugging Face `zero-a10g` hardware tier (ZeroGPU).
 Hugging Face currently permits two ZeroGPU Spaces for a free personal account
 and up to ten for PRO. Existing ZeroGPU Spaces count toward the limit.

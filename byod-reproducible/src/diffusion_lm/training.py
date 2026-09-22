@@ -15,7 +15,7 @@ from tqdm.auto import tqdm
 from accelerate import Accelerator, DataLoaderConfiguration
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, get_scheduler
+from transformers import AutoTokenizer, get_polynomial_decay_schedule_with_warmup, get_scheduler
 
 from .data import DenoisingCollator, llama_stored_ids_compatible, prepare_mask_only_cache_record, stored_example_usable
 from .loss import masked_denoising_loss, selected_denoising_loss
@@ -174,6 +174,29 @@ def _resolve_learning_rate(config: dict[str, Any], num_processes: int = 1) -> tu
     batch_ratio = effective_batch_size / reference_batch_size
     scale = (math.sqrt(batch_ratio) if mode == "sqrt" else batch_ratio) if enabled else 1.0
     return base_learning_rate * scale, effective_batch_size, scale
+
+
+def _build_learning_rate_scheduler(
+    config: dict[str, Any], optimizer: torch.optim.Optimizer, max_updates: int, initial_learning_rate: float
+):
+    """Build the configured scheduler, optionally with a nonzero linear endpoint."""
+    scheduler_name = str(config.get("scheduler", "linear")).lower()
+    warmup_steps = int(config.get("warmup_steps", 0))
+    end_learning_rate = config.get("end_learning_rate")
+    if end_learning_rate is None:
+        return get_scheduler(scheduler_name, optimizer, warmup_steps, max_updates)
+    if scheduler_name != "linear":
+        raise ValueError("end_learning_rate is supported only with scheduler=linear")
+    end_learning_rate = float(end_learning_rate)
+    if end_learning_rate < 0 or end_learning_rate > initial_learning_rate:
+        raise ValueError("end_learning_rate must be between zero and the resolved learning_rate")
+    return get_polynomial_decay_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=warmup_steps,
+        num_training_steps=max_updates,
+        lr_end=end_learning_rate,
+        power=1.0,
+    )
 
 
 def _native_fp8_capability(capability: tuple[int, int]) -> bool:
@@ -676,7 +699,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("max_updates must be a positive number of gradient updates")
     max_updates = int(configured_updates) if configured_updates is not None else (len(train_loader) * int(config.get("epochs", 1)) + grad_accumulation - 1) // grad_accumulation
     max_steps = max_updates * grad_accumulation
-    scheduler = get_scheduler(config.get("scheduler", "linear"), optimizer, int(config.get("warmup_steps", 0)), max_updates)
+    scheduler = _build_learning_rate_scheduler(config, optimizer, max_updates, resolved_learning_rate)
     model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)
     if fp8_resolution["active"]:
         # Accelerate replaces nn.Linear modules with Transformer Engine modules.

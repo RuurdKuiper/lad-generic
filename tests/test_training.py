@@ -3,7 +3,17 @@ import json
 import pytest
 import torch
 
-from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_fp8, _resolve_learning_rate, generation_validation
+from diffusion_lm.training import (
+    DEFAULT_GENERATION_PROMPTS,
+    _available_output_dir,
+    _build_learning_rate_scheduler,
+    _generation_inference_settings,
+    _generation_perplexity_interval,
+    _load_generation_prompts,
+    _resolve_fp8,
+    _resolve_learning_rate,
+    generation_validation,
+)
 
 
 def test_available_output_dir_adds_incrementing_suffixes(tmp_path):
@@ -120,6 +130,58 @@ def test_learning_rate_scaling_rejects_invalid_reference_batch_size(reference):
                 "reference_batch_size": reference,
             },
         })
+
+
+def test_linear_scheduler_reaches_configured_nonzero_endpoint():
+    parameter = torch.nn.Parameter(torch.tensor(1.0))
+    optimizer = torch.optim.AdamW([parameter], lr=1e-5)
+    scheduler = _build_learning_rate_scheduler(
+        {"scheduler": "linear", "warmup_steps": 2, "end_learning_rate": 1e-6},
+        optimizer,
+        max_updates=10,
+        initial_learning_rate=1e-5,
+    )
+
+    rates = []
+    for _ in range(10):
+        optimizer.step()
+        scheduler.step()
+        rates.append(optimizer.param_groups[0]["lr"])
+
+    assert rates[1] == pytest.approx(1e-5)
+    assert rates[-1] == pytest.approx(1e-6)
+    assert rates[2:] == sorted(rates[2:], reverse=True)
+
+
+def test_end_learning_rate_requires_linear_scheduler():
+    parameter = torch.nn.Parameter(torch.tensor(1.0))
+    optimizer = torch.optim.AdamW([parameter], lr=1e-5)
+
+    with pytest.raises(ValueError, match="scheduler=linear"):
+        _build_learning_rate_scheduler(
+            {"scheduler": "cosine", "end_learning_rate": 1e-6},
+            optimizer,
+            max_updates=10,
+            initial_learning_rate=1e-5,
+        )
+
+
+def test_llama_colab_long_run_uses_800k_samples_and_nonzero_linear_endpoint():
+    from pathlib import Path
+    import yaml
+
+    config = yaml.safe_load(
+        (Path(__file__).resolve().parents[1] / "configs/llama3_8b_mask_colab.yaml").read_text()
+    )
+
+    assert config["output_dir"] == "outputs/llama-3.1-8b-mask-long"
+    assert config["max_updates"] * config["batch_size"] * config["gradient_accumulation_steps"] == 800_000
+    assert config["scheduler"] == "linear"
+    assert config["learning_rate"] == pytest.approx(1e-5)
+    assert config["end_learning_rate"] == pytest.approx(1e-6)
+    assert config["validation_steps"] == 500
+    assert config["generation_perplexity"]["sampler"] == "llada_official"
+    assert config["generation_perplexity"]["interval_steps"] % config["validation_steps"] == 0
 
 
 @pytest.mark.parametrize("capability", [(8, 9), (9, 0), (10, 0), (12, 0)])

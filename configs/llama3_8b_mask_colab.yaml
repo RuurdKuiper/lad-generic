@@ -3,15 +3,17 @@ model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
 
 # Dataset
-dataset_name: Ruurd/LAD-training-1m-256-long
+# 50,000 updates x batch size 16 x one accumulation step = 800,000 samples.
+dataset_name: Ruurd/LAD-training-1m-256
 splits: {train: train, validation: validation, test: test}
-# Long-answer inclusion is fixed when this dataset is built, not during
-# training. Rebuild/upload it with build_training_dataset.py
-# --truncate-long-answers, then point dataset_name at that revision/repository.
+# Long-answer inclusion is fixed when a dataset is built, not during training.
+# To use it later, rebuild/upload with build_training_dataset.py
+# --truncate-long-answers and point dataset_name at that revision/repository.
 
 # File paths
 cache_dir: data/huggingface
 base_model_cache_dir: base_models
+output_dir: outputs/llama-3.1-8b-mask-long
 validation_samples: 200
 
 # Corruption and loss behavior
@@ -36,7 +38,7 @@ corruption_mode: mask_only
 #                              (prompt, formatting and answer), plus trailing EOS
 #                              padding when eos_padding_loss=true. For mask_only,
 #                              this disables inverse-t weighting.
-structured_loss_behavior: all_tokens
+structured_loss_behavior: corrupted_answer_tokens
 
 # true: include trailing batch-padding EOS positions in the eligible target
 # region. mask_only can then mask and learn them; structured corruption leaves
@@ -60,7 +62,6 @@ answer_padding_loss:
   enabled: false
   answer_weight: 0.9
   padding_weight: 0.1
-output_dir: outputs/llama-3.1-8b-mask-iid-alltokens-answerpadding-long-1m
 seed: 42
 
 # Minimum mask ratio t. mask_only samples one t per example uniformly from
@@ -86,10 +87,10 @@ frontier_masking_epsilon: 0.03
 frontier_masking_tau: 3.0
 
 # EOS padding on frontier examples:
-#   iid      - historical successful-run behavior: mask each padding token with p=t.
+#   iid      - historical behavior: mask each padding token independently with p=t.
 #   frontier - continue the answer's sigmoid frontier into EOS padding.
 # This is explicit because it changes the objective but older resolved configs
-# did not record it. Use iid to reproduce the original 50k run.
+# did not record it. IID reproduces the original llama-3.1-8b-mask behavior.
 frontier_padding_mode: iid
 
 # true includes the answer's one genuine terminating EOS in its supervised and
@@ -105,31 +106,43 @@ include_answer_eos: true
 multi_turn_prob: 0.0
 max_history_turns: 2
 
+# LoRA
 lora_dropout: 0.0
 lora_targets: [q_proj, v_proj]
+lora_r: 1024
+lora_alpha: 1024
+train_normalization_layers: false
+
+# Optimization
 learning_rate: 1.0e-5
+# With scheduler=linear, this uses a power-1 polynomial schedule so the decay
+# ends at this nonzero rate instead of Transformers' usual zero endpoint.
+end_learning_rate: 1.0e-6
 
 # Treat learning_rate as the rate for the reference effective batch size.
 learning_rate_scaling:
   enabled: false
   mode: sqrt  # Options: sqrt, linear
   reference_batch_size: 8
-scheduler: constant_with_warmup  # Options: any Transformers SchedulerType (linear, cosine, constant, ...)
+scheduler: linear  # Options: linear (supports end_learning_rate), cosine, constant, ...
 warmup_steps: 100
+optimizer: adamw  # Options: adamw, adamw8bit
+weight_decay: 0.01
+max_grad_norm: 0.5
+
 num_workers: 4
 prefetch_factor: 4
 epochs: 1
 # Optional cap expressed in optimizer/gradient updates, not micro-batches.
 # Set a positive integer (for example 1000) to end cleanly after that many
-# updates and release the Slurm allocation; leave null to use the full epoch.
+# updates and release the allocation; leave null to use the full epoch.
 max_updates: 50000
 
 # Training parameters influencing memory usage
 max_sequence_length: 256
-pad_to_multiple_of: 16  # Required for Transformer Engine FP8 matrix dimensions.
-lora_r: 1024
-lora_alpha: 1024
-train_normalization_layers: false
+# The original run used 8. Some Transformer Engine/GPU combinations may require
+# 16; change this only if the FP8 backend reports an alignment error.
+pad_to_multiple_of: 8
 batch_size: 16
 eval_batch_size: 8
 gradient_accumulation_steps: 1
@@ -141,14 +154,17 @@ selected_logit_optimization: true  # Options: true, false
 
 # Logging and checkpointing
 logging_steps: 100
-validation_steps: 250
+validation_steps: 500
 checkpoint_steps: 1000
 checkpoint_mode: every_model  # Options: only_best_model, every_checkpoint, every_model
 
-# Perplexity evaluation during training
+# Generation evaluation during training
+# generation_perplexity is the current token-pooled (token-weighted) perplexity
+# over all generated answers. Per-answer mean/median perplexity and model-token
+# distinct-1/2/3 are logged alongside it for diagnosis.
 generation_perplexity:
   enabled: true
-  interval_steps: 1000
+  interval_steps: 1000  # Must be a multiple of validation_steps.
   sampler: llada_official
   num_prompts: 30
   num_steps: 64
@@ -161,14 +177,10 @@ generation_perplexity:
   proportional_unmask: false
   seed: 1234
 
-
-# Quantization
+# Quantization and precision
 precision: bf16  # Master weights and unsupported-GPU fallback precision.
 fp8:
   enabled: true
   backend: transformer_engine
   format: HYBRID
 quantization: none  # Options: none, 4bit
-optimizer: adamw  # Options: adamw, adamw8bit
-weight_decay: 0.01
-max_grad_norm: 0.5

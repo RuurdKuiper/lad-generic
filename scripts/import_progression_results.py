@@ -22,12 +22,12 @@ DRIVE_ROOT = (
 )
 RUN_IDS = {
     32: "20260923T134029.046940Z--colab-validation",
-    64: "20260922T182255.239456Z--colab-validation",
+    64: "20260923T190517.263478Z--colab-validation",
 }
 ALL_GLOBAL_STEPS = (1_000, 5_000, 10_000, 15_000, 20_000, 25_000, 30_000, 35_000, 40_000, 45_000, 50_000)
 SELECTED_GLOBAL_STEPS = {
     32: ALL_GLOBAL_STEPS,
-    64: (1_000, 10_000, 20_000, 30_000, 40_000, 50_000),
+    64: ALL_GLOBAL_STEPS,
 }
 METRIC_FIELDS = {
     "perplexity": "perplexity",
@@ -101,6 +101,7 @@ def _write_progression_block(
     title: str,
     sweeps: dict[int, dict[int, dict[str, float]]],
     baselines: dict[int, float],
+    autoregressive: float,
     preserve_128: bool = False,
 ) -> None:
     if header_row != template_row:
@@ -123,6 +124,24 @@ def _write_progression_block(
                     sheet.cell(row, column, sweeps[nfe][step][metric])
         sheet.cell(row, 15, f"LLaDA ({nfe} it.)")
         sheet.cell(row, 16, baselines[nfe])
+        sheet.cell(row, 17, "Llama 3.1 8B AR")
+        sheet.cell(row, 18, autoregressive)
+
+
+def _autoregressive_reference(metadata: dict, metric: str) -> tuple[float, int, str]:
+    """Extract the single Llama AR reference from the 32-NFE benchmark run."""
+    matches = [
+        result
+        for model in metadata["summary"]["models"]
+        for result in model["results"]
+        if result.get("task") == "open_ended"
+        and result.get("method") == "autoregressive"
+        and result.get("model") == "meta-llama/Llama-3.1-8B-Instruct"
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"Expected one Llama AR open-ended result, found {len(matches)}")
+    result = matches[0]
+    return float(result[METRIC_FIELDS[metric]]), int(result["total"]), str(result["model"])
 
 
 def _append_provenance(sheet, rows: list[tuple[str, object]]) -> None:
@@ -202,22 +221,27 @@ def main() -> None:
         "distinct_2": {32: float(primary["P28"].value), 64: float(primary["P29"].value), 128: float(primary["P30"].value)},
         "distinct_3": {32: float(primary["P33"].value), 64: float(primary["P34"].value), 128: float(primary["P35"].value)},
     }
+    ar_references = {
+        metric: _autoregressive_reference(metadata[32], metric)[0]
+        for metric in METRIC_FIELDS
+    }
+    ar_value, ar_total, ar_model = _autoregressive_reference(metadata[32], "perplexity")
 
-    _write_progression_block(primary, header_row=42, template_row=42, metric="perplexity", title="128 tokens generated — Phi-4 token-weighted perplexity", sweeps=sweeps, baselines=perplexity_baselines, preserve_128=True)
+    _write_progression_block(primary, header_row=42, template_row=42, metric="perplexity", title="128 tokens generated — Phi-4 token-weighted perplexity", sweeps=sweeps, baselines=perplexity_baselines, autoregressive=ar_references["perplexity"], preserve_128=True)
     for header_row, metric, title in (
         (49, "distinct_1", "128 tokens generated — mean sliding model-token Distinct-1"),
         (56, "distinct_2", "128 tokens generated — mean sliding model-token Distinct-2"),
         (63, "distinct_3", "128 tokens generated — mean sliding model-token Distinct-3"),
     ):
-        _write_progression_block(primary, header_row=header_row, template_row=42, metric=metric, title=title, sweeps=sweeps, baselines=distinct_baselines[metric])
+        _write_progression_block(primary, header_row=header_row, template_row=42, metric=metric, title=title, sweeps=sweeps, baselines=distinct_baselines[metric], autoregressive=ar_references[metric])
 
-    _write_progression_block(training, header_row=4, template_row=4, metric="perplexity", title="128 tokens generated — Phi-4 token-weighted perplexity", sweeps=sweeps, baselines=perplexity_baselines, preserve_128=True)
+    _write_progression_block(training, header_row=4, template_row=4, metric="perplexity", title="128 tokens generated — Phi-4 token-weighted perplexity", sweeps=sweeps, baselines=perplexity_baselines, autoregressive=ar_references["perplexity"], preserve_128=True)
     for header_row, metric, title in (
         (17, "distinct_1", "128 tokens generated — mean sliding model-token Distinct-1"),
         (24, "distinct_2", "128 tokens generated — mean sliding model-token Distinct-2"),
         (31, "distinct_3", "128 tokens generated — mean sliding model-token Distinct-3"),
     ):
-        _write_progression_block(training, header_row=header_row, template_row=4, metric=metric, title=title, sweeps=sweeps, baselines=distinct_baselines[metric])
+        _write_progression_block(training, header_row=header_row, template_row=4, metric=metric, title=title, sweeps=sweeps, baselines=distinct_baselines[metric], autoregressive=ar_references[metric])
 
     metrics_path = args.drive_root / "outputs/llama-3.1-8b-mask-long/metrics.jsonl"
     first_validation_step, last_validation_step = _write_validation_sheet(workbook, metrics_path)
@@ -235,6 +259,11 @@ def main() -> None:
             (f"{nfe}-NFE imported metrics", "Token-weighted perplexity; mean sliding model-token Distinct-1/2/3"),
         ))
     provenance_rows.extend((
+        ("Autoregressive reference run ID", metadata[32]["run"]["run_id"]),
+        ("Autoregressive reference model", ar_model),
+        ("Autoregressive reference scored prompts", ar_total),
+        ("Autoregressive reference perplexity", ar_value),
+        ("Autoregressive reference mean Distinct-1", ar_references["distinct_1"]),
         ("Long-run validation-loss source", str(metrics_path)),
         ("Long-run validation-loss snapshot", f"steps {first_validation_step}--{last_validation_step} in increments of 500"),
         ("Progression import timestamp UTC", datetime.now(timezone.utc).isoformat()),

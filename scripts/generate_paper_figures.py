@@ -172,7 +172,25 @@ def load_progression_data(
                 break
         if baseline is None:
             raise ValueError(f"No LLaDA baseline found for {nfe} NFE in row {row}")
-        series[nfe] = {"label": str(label), "points": points, "llada_label": baseline_label, "llada": baseline}
+        ar_label = None
+        ar_value = None
+        for column in range(max(step_columns) + 1, sheet.max_column):
+            candidate_label = sheet.cell(row, column).value
+            candidate_value = sheet.cell(row, column + 1).value
+            if isinstance(candidate_label, str) and candidate_label.endswith(" AR") and candidate_value is not None:
+                ar_label = candidate_label
+                ar_value = _numeric(candidate_value, f"{sheet.title}!{sheet.cell(row, column + 1).coordinate}")
+                break
+        if ar_value is None:
+            raise ValueError(f"No Llama AR reference found for {nfe} NFE in row {row}")
+        series[nfe] = {
+            "label": str(label),
+            "points": points,
+            "llada_label": baseline_label,
+            "llada": baseline,
+            "ar_label": ar_label,
+            "ar": ar_value,
+        }
 
     if set(series) != {32, 64, 128}:
         raise ValueError(f"Expected progression rows for 32/64/128 NFE, found {sorted(series)}")
@@ -310,15 +328,11 @@ def _plot_progression_panel(
         values = [scale * point[value_name] for point in item["points"]]
         color = COLORS[nfe]
         ax.plot(steps, values, color=color, marker="o", linewidth=2, markersize=4.5, label=f"{nfe} NFE")
-        if all("ci95" in point for point in item["points"]):
-            lower = [scale * point["ci95"][0] for point in item["points"]]
-            upper = [scale * point["ci95"][1] for point in item["points"]]
-            ax.fill_between(steps, lower, upper, color=color, alpha=0.14, linewidth=0)
         baseline = scale * item["llada"]
         ax.axhline(baseline, color=color, linestyle=(0, (4, 3)), linewidth=1.4, alpha=0.9)
-        if "llada_ci95" in item:
-            lower, upper = (scale * bound for bound in item["llada_ci95"])
-            ax.axhspan(lower, upper, color=color, alpha=0.055, linewidth=0)
+
+    ar_reference = scale * data["series"][32]["ar"]
+    ax.axhline(ar_reference, color="#555555", linestyle=(0, (1, 2)), linewidth=1.7, alpha=0.95)
 
     ax.set_xlabel("BYOD-Llama training updates")
     ax.set_ylabel(ylabel)
@@ -334,6 +348,7 @@ def _plot_progression_panel(
     style_handles = [
         Line2D([0], [0], color="#333333", marker="o", linewidth=2, label="BYOD checkpoints"),
         Line2D([0], [0], color="#333333", linestyle=(0, (4, 3)), linewidth=1.4, label="LLaDA reference"),
+        Line2D([0], [0], color="#555555", linestyle=(0, (1, 2)), linewidth=1.7, label="Llama AR reference"),
     ]
     ax.legend(handles=style_handles, frameon=False, loc="upper center", fontsize=8)
 
@@ -344,6 +359,7 @@ def _plot_progression_panel(
             for point in item["points"]
         ]
         observed.extend(scale * item["llada"] for item in data["series"].values())
+        observed.append(ar_reference)
         ax.set_ylim(max(0.0, min(observed) - 10.0), min(100.0, max(observed) + 10.0))
 
 
@@ -501,6 +517,8 @@ def main() -> None:
                     "points": [],
                     "llada_label": progression["series"][nfe]["llada_label"],
                     "llada": 0.0,
+                    "ar_label": progression["series"][nfe]["ar_label"],
+                    "ar": 0.0,
                 }
                 for nfe in (32, 64, 128)
             },
@@ -540,7 +558,7 @@ def main() -> None:
             "Blank checkpoint cells are omitted; lines connect only recorded values.",
             "Dashed horizontal lines are the LLaDA values stored beside each NFE row.",
             "Both radar panels use 125 examples per task.",
-            "Shaded regions are prompt-level percentile-bootstrap 95% confidence intervals.",
+            "No uncertainty ribbons are displayed; horizontal dotted gray lines are the 100-prompt Llama AR reference.",
             "All radar spokes share the same absolute 0--100% scale; per-task min/max normalization is intentionally avoided.",
         ],
     }

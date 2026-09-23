@@ -18,6 +18,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 
 - Original source: `source_results/Results.xlsx`, copied from `results/Results.xlsx` on 2026-09-18.
 - Latest open-ended snapshot: `source_results/Results_open-ended-128t-32i-merged_20260918.xlsx`, copied from `results/Results_open-ended-128t-32i_20260918.xlsx` after importing the merge benchmark.
+- Latest progression workbook: `source_results/Results_training-progression-32i-64i_20260923.xlsx`, copied from `results/Results_training-progression-32i-64i_20260923.xlsx`. It preserves the existing result tables and adds the new checkpoint sweeps plus the in-progress long-run validation loss.
 - The workbook legend says red text is measured over 250 samples and black text over 50 samples.
 - Most diffusion values are present, but many autoregressive cells are unfinished.
 - The Ministral workbook average formula omits GPQA and three unfinished tasks; the paper therefore does not report a Ministral macro average.
@@ -26,11 +27,12 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 
 ## Automatically generated figures
 
-- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_accuracy-125-partial_20260921.xlsx`.
+- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_training-progression-32i-64i_20260923.xlsx`.
 - Install the spreadsheet dependency with `pip install -e '.[paper]'` if `openpyxl` is unavailable.
 - PDF and 300-DPI PNG outputs are written to `iclr2027_submission/figures/`; `figure_data.json` records the exact extracted values and source workbook.
 - `benchmark_radar_panels` contains the matched LLaDA/BYOD-Llama/Llama-AR comparison and the four-family BYOD comparison. The latter is provisional because the workbook currently combines task cells from runs with different sample counts.
-- `llama_training_diagnostics` reads the perplexity checkpoint block beginning at `Primary outcomes!C42`. Its second panel reads an equivalent optional Distinct-1 block beginning at `C49`; until that block is populated, it is explicitly marked as pending. Each block uses a header row, one subtitle row, then 32/64/128-NFE rows, with LLaDA labels and baselines in columns O/P. Blank checkpoint cells are omitted rather than imputed. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are the LLaDA values stored with each NFE row.
+- `llama_training_diagnostics` reads the perplexity checkpoint block beginning at `Primary outcomes!C42` and the Distinct-1 block at `C49`. The 32/64-NFE data come from completed runs `20260922T173055.842052Z--colab-validation` and `20260922T182255.239456Z--colab-validation`, respectively. Each checkpoint contains 100 scored open-ended prompts. Global steps 1k/10k/20k use `llama-3.1-8b-mask`; steps 30k/40k/50k use local 5k/15k/25k checkpoints from `llama-3.1-8b-mask-continued`. The 128-NFE progression is retained from the preceding workbook, and its Distinct-1 checkpoint series is still blank. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are LLaDA references.
+- The third diagnostics panel reads `Long validation loss`, imported from `outputs/llama-3.1-8b-mask-long/metrics.jsonl`. The current reproducible snapshot covers validation measurements every 500 updates through update 44,000. It belongs to the uninterrupted long run and must not yet replace the continued-run headline results.
 - Radar spokes deliberately retain a common absolute 0--100% accuracy scale. Per-benchmark min--max normalization would visually magnify narrow ranges and make equal radii and polygon areas incomparable across tasks.
 
 ## Earlier-draft statements corrected

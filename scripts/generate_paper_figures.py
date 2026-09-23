@@ -24,7 +24,7 @@ from openpyxl import load_workbook
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_WORKBOOK = ROOT / "results" / "Results_accuracy-125-partial_20260921.xlsx"
+DEFAULT_WORKBOOK = ROOT / "results" / "Results_training-progression-32i-64i_20260923.xlsx"
 DEFAULT_OUTPUT_DIR = ROOT / "iclr2027_submission" / "figures"
 
 TASK_LABELS = {
@@ -178,6 +178,42 @@ def load_progression_data(
     return {"all_steps": sorted(step_columns.values()), "series": series}
 
 
+def load_validation_loss_data(sheet: Any) -> dict[str, Any]:
+    """Read the uninterrupted long-run validation-loss snapshot."""
+    expected_headers = {
+        "Training update": "step",
+        "Weighted validation loss": "weighted_loss",
+        "Unweighted masked-token CE": "unweighted_masked_token_ce",
+    }
+    columns = {
+        str(cell.value): cell.column
+        for cell in sheet[1]
+        if cell.value is not None
+    }
+    missing = set(expected_headers) - set(columns)
+    if missing:
+        raise ValueError(f"Missing validation-loss columns in {sheet.title}: {sorted(missing)}")
+
+    points = []
+    for row in range(2, sheet.max_row + 1):
+        step_value = sheet.cell(row, columns["Training update"]).value
+        if step_value is None:
+            continue
+        point = {
+            output_name: _numeric(
+                sheet.cell(row, columns[header]).value,
+                f"{sheet.title}!{sheet.cell(row, columns[header]).coordinate}",
+            )
+            for header, output_name in expected_headers.items()
+        }
+        point["step"] = int(point["step"])
+        points.append(point)
+    if not points:
+        raise ValueError(f"No validation-loss rows found in {sheet.title}")
+    points.sort(key=lambda point: point["step"])
+    return {"source_sheet": sheet.title, "points": points}
+
+
 def _configure_radar(ax: Any, labels: list[str], title: str) -> np.ndarray:
     angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
     ax.set_theta_offset(np.pi / 2)
@@ -266,6 +302,15 @@ def _plot_progression_panel(
     ]
     ax.legend(handles=style_handles, frameon=False, loc="upper center", fontsize=8)
 
+    if value_name == "distinct_1":
+        observed = [
+            point[value_name]
+            for item in data["series"].values()
+            for point in item["points"]
+        ]
+        observed.extend(item["llada"] for item in data["series"].values())
+        ax.set_ylim(max(0.0, min(observed) - 0.1), min(1.0, max(observed) + 0.1))
+
 
 def _plot_pending_distinct_panel(ax: Any, all_steps: list[int]) -> None:
     ax.set_title("(b) Distinct-1 progression", fontsize=10, fontweight="bold")
@@ -289,9 +334,42 @@ def _plot_pending_distinct_panel(ax: Any, all_steps: list[int]) -> None:
     )
 
 
+def _plot_validation_loss_panel(ax: Any, data: dict[str, Any], *, title: str) -> None:
+    steps = [point["step"] for point in data["points"]]
+    losses = [point["weighted_loss"] for point in data["points"]]
+    ax.plot(steps, losses, color="#7B3294", linewidth=1.8, alpha=0.9)
+    ax.scatter(steps, losses, color="#7B3294", s=10, zorder=3)
+    ax.set_xlabel("Uninterrupted BYOD-Llama training updates")
+    ax.set_ylabel("Weighted validation loss (↓)")
+    ax.set_title(title, fontsize=10, fontweight="bold")
+    tick_stop = int(math.ceil(max(steps) / 10_000.0) * 10_000)
+    ticks = list(range(0, tick_stop + 1, 10_000))
+    ax.set_xticks(ticks)
+    ax.set_xticklabels(["0" if step == 0 else f"{step // 1000}k" for step in ticks], fontsize=8)
+    ax.set_xlim(0, max(steps) + 1_500)
+    loss_range = max(losses) - min(losses)
+    ax.set_ylim(
+        bottom=max(0.0, min(losses) - 0.1),
+        top=max(losses) + max(0.02, 0.05 * loss_range),
+    )
+    ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.text(
+        0.98,
+        0.97,
+        f"snapshot through {max(steps) // 1000:g}k",
+        ha="right",
+        va="top",
+        transform=ax.transAxes,
+        color="#555555",
+        fontsize=8,
+    )
+
+
 def plot_training_progression(
     perplexity_data: dict[str, Any],
     distinct_data: dict[str, Any] | None,
+    validation_loss_data: dict[str, Any],
     output_dir: Path,
 ) -> None:
     # Retain the original single-panel artifact for slides and backwards compatibility.
@@ -306,7 +384,15 @@ def plot_training_progression(
     fig.tight_layout()
     _save(fig, output_dir / "llama_training_perplexity")
 
-    fig, axes = plt.subplots(1, 2, figsize=(12.2, 4.25))
+    fig, ax = plt.subplots(figsize=(7.2, 4.3))
+    _plot_validation_loss_panel(ax, validation_loss_data, title="Validation-loss progression")
+    fig.tight_layout()
+    _save(fig, output_dir / "llama_training_validation_loss")
+
+    fig = plt.figure(figsize=(11.2, 8.0))
+    grid = fig.add_gridspec(2, 4, height_ratios=(1.0, 1.0), hspace=0.38, wspace=0.28)
+    axes = (fig.add_subplot(grid[0, 0:2]), fig.add_subplot(grid[0, 2:4]))
+    validation_ax = fig.add_subplot(grid[1, 1:3])
     _plot_progression_panel(
         axes[0],
         perplexity_data,
@@ -324,8 +410,12 @@ def plot_training_progression(
             ylabel="Mean sliding model-token Distinct-1 (↑)",
             title="(b) Distinct-1 progression",
         )
-        axes[1].set_ylim(0, 1)
-    fig.tight_layout(w_pad=2.2)
+    _plot_validation_loss_panel(
+        validation_ax,
+        validation_loss_data,
+        title="(c) Validation-loss progression",
+    )
+    fig.subplots_adjust(left=0.08, right=0.985, top=0.96, bottom=0.075)
     _save(fig, output_dir / "llama_training_diagnostics")
 
 
@@ -356,6 +446,7 @@ def main() -> None:
         value_name="distinct_1",
         required=False,
     )
+    validation_loss = load_validation_loss_data(wb["Long validation loss"])
 
     plt.rcParams.update({
         "font.family": "DejaVu Sans",
@@ -365,7 +456,7 @@ def main() -> None:
         "ps.fonttype": 42,
     })
     plot_radar_panels(radar, output_dir)
-    plot_training_progression(progression, distinct_progression, output_dir)
+    plot_training_progression(progression, distinct_progression, validation_loss, output_dir)
 
     manifest = {
         "source_workbook": str(workbook),
@@ -380,6 +471,7 @@ def main() -> None:
         "radar": radar,
         "training_progression": progression,
         "distinct_1_progression": distinct_progression,
+        "validation_loss": validation_loss,
         "notes": [
             "Blank checkpoint cells are omitted; lines connect only recorded values.",
             "Dashed horizontal lines are the LLaDA values stored beside each NFE row.",

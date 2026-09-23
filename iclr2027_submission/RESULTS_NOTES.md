@@ -18,7 +18,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 
 - Original source: `source_results/Results.xlsx`, copied from `results/Results.xlsx` on 2026-09-18.
 - Latest open-ended snapshot: `source_results/Results_open-ended-128t-32i-merged_20260918.xlsx`, copied from `results/Results_open-ended-128t-32i_20260918.xlsx` after importing the merge benchmark.
-- Latest progression workbook: `source_results/Results_training-progression-32i-64i_20260923.xlsx`, copied from `results/Results_training-progression-32i-64i_20260923.xlsx`. It preserves the existing result tables and adds the new checkpoint sweeps plus the in-progress long-run validation loss.
+- Latest progression workbook: `source_results/Results_training-progression-long32i-64i_20260923.xlsx`, copied from `results/Results_training-progression-long32i-64i_20260923.xlsx`. It preserves the existing result tables, replaces the 32-NFE progression with the uninterrupted long-run sweep, retains the earlier 64- and 128-NFE sweeps, and includes the completed long-run validation loss.
 - The workbook legend says red text is measured over 250 samples and black text over 50 samples.
 - Most diffusion values are present, but many autoregressive cells are unfinished.
 - The Ministral workbook average formula omits GPQA and three unfinished tasks; the paper therefore does not report a Ministral macro average.
@@ -27,12 +27,14 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 
 ## Automatically generated figures
 
-- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_training-progression-32i-64i_20260923.xlsx`.
+- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_training-progression-long32i-64i_20260923.xlsx`.
 - Install the spreadsheet dependency with `pip install -e '.[paper]'` if `openpyxl` is unavailable.
 - PDF and 300-DPI PNG outputs are written to `iclr2027_submission/figures/`; `figure_data.json` records the exact extracted values and source workbook.
-- `benchmark_radar_panels` contains the matched LLaDA/BYOD-Llama/Llama-AR comparison and the four-family BYOD comparison. The latter is provisional because the workbook currently combines task cells from runs with different sample counts.
-- `llama_training_diagnostics` reads the perplexity checkpoint block beginning at `Primary outcomes!C42` and the Distinct-1 block at `C49`. The 32/64-NFE data come from completed runs `20260922T173055.842052Z--colab-validation` and `20260922T182255.239456Z--colab-validation`, respectively. Each checkpoint contains 100 scored open-ended prompts. Global steps 1k/10k/20k use `llama-3.1-8b-mask`; steps 30k/40k/50k use local 5k/15k/25k checkpoints from `llama-3.1-8b-mask-continued`. The 128-NFE progression is retained from the preceding workbook, and its Distinct-1 checkpoint series is still blank. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are LLaDA references.
-- The third diagnostics panel reads `Long validation loss`, imported from `outputs/llama-3.1-8b-mask-long/metrics.jsonl`. The current reproducible snapshot covers validation measurements every 500 updates through update 44,000. It belongs to the uninterrupted long run and must not yet replace the continued-run headline results.
+- `benchmark_radar_panels` contains the matched LLaDA/BYOD-Llama/Llama-AR comparison and the four-family BYOD comparison, both using 125 examples per task.
+- `llama_training_diagnostics` uses raw per-prompt outputs from runs `20260923T134029.046940Z--colab-validation` (32 NFE, uninterrupted long run), `20260922T182255.239456Z--colab-validation` (64 NFE), and `20260907T120339.356550Z--colab-validation` (128 NFE). The 32-NFE series contains 100 prompts at every 1k/5k/.../50k checkpoint. The 64-NFE series contains 100 prompts at 1k/10k/20k from `llama-3.1-8b-mask` and effective 30k/40k/50k from the continued run; the retained 128-NFE series uses the same six checkpoints with 30 prompts. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are LLaDA references.
+- `scripts/calculate_open_ended_uncertainty.py` reconstructs prompt token counts with the Phi-4 tokenizer and writes 20,000-resample percentile-bootstrap 95% CIs to `source_results/open_ended_uncertainty.json`. Perplexity resamples preserve token weighting; Distinct-n resamples average prompt-level scores. `scripts/generate_paper_figures.py` reads this file to draw the ribbons in panels (a--b).
+- Table 4 currently uses 30 prompts. Most rows come from `20260918T135058.643507Z--colab-validation`; the corrected Ministral row comes from `20260921T131916.314780Z--colab-validation`.
+- The third diagnostics panel reads `Long validation loss`, imported from `outputs/llama-3.1-8b-mask-long/metrics.jsonl`. The reproducible snapshot covers validation measurements every 500 updates through update 50,000. The uninterrupted run now supplies the 32-NFE generation trajectory, but it does not replace the continued-run factual-benchmark results.
 - Radar spokes deliberately retain a common absolute 0--100% accuracy scale. Per-benchmark min--max normalization would visually magnify narrow ranges and make equal radii and polygon areas incomparable across tasks.
 
 ## Earlier-draft statements corrected
@@ -54,7 +56,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - Adapter-loaded: token-weighted PPL 19.381430; mean sliding model-token Distinct-1/2/3 = 0.495153/0.788446/0.898893.
 - Merged: token-weighted PPL 19.282753; mean sliding model-token Distinct-1/2/3 = 0.497539/0.806884/0.917994.
 - At 128 denoising steps, token-weighted PPL is 3.753 (adapter-loaded) versus 3.720 (merged).
-- Preliminary 50-example/task accuracies (adapter-loaded / merged): ARC-C 82.8/82.0, GPQA 28.0/30.0, GSM8K 65.2/58.0, HellaSwag 73.2/68.0, HumanEval 50.0/48.0, MATH 22.0/22.0, MBPP 46.0/44.0, MMLU 61.2/64.0, and MMLU-Pro 33.2/28.0. The unweighted means are 51.3 and 49.3.
+- Adapter-loaded / merged accuracies: ARC-C 82.8/82.0, GPQA 28.0/30.0, GSM8K 65.2/58.0, HellaSwag 73.2/68.0, HumanEval 50.0/48.0, MATH 22.0/22.0, MBPP 46.0/44.0, MMLU 61.2/64.0, and MMLU-Pro 33.2/28.0. The unweighted means are 51.3 and 49.3.
 - The merged safetensors index records 8,030,261,248 parameters and 16,060,522,496 bytes of BF16 weights. The adapter-loaded parameter audit records 8.466B total parameters, including 436.2M LoRA parameters. Phrase the conclusion as restoration of the base architecture's parameter count; on-disk size can vary with dtype, quantization, and serialization.
 
 ## Compute-estimate reproduction

@@ -15,16 +15,20 @@ from openpyxl.styles import Font, PatternFill
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = ROOT / "results" / "Results_accuracy-125-partial_20260921.xlsx"
-DEFAULT_OUTPUT = ROOT / "results" / "Results_training-progression-32i-64i_20260923.xlsx"
+DEFAULT_OUTPUT = ROOT / "results" / "Results_training-progression-long32i-64i_20260923.xlsx"
 DRIVE_ROOT = (
     Path.home()
     / "Library/CloudStorage/GoogleDrive-ruurd.kuiper@gmail.com/My Drive/lad-generic-results"
 )
 RUN_IDS = {
-    32: "20260922T173055.842052Z--colab-validation",
+    32: "20260923T134029.046940Z--colab-validation",
     64: "20260922T182255.239456Z--colab-validation",
 }
-SELECTED_GLOBAL_STEPS = (1_000, 10_000, 20_000, 30_000, 40_000, 50_000)
+ALL_GLOBAL_STEPS = (1_000, 5_000, 10_000, 15_000, 20_000, 25_000, 30_000, 35_000, 40_000, 45_000, 50_000)
+SELECTED_GLOBAL_STEPS = {
+    32: ALL_GLOBAL_STEPS,
+    64: (1_000, 10_000, 20_000, 30_000, 40_000, 50_000),
+}
 METRIC_FIELDS = {
     "perplexity": "perplexity",
     "distinct_1": "mean_distinct_1",
@@ -40,7 +44,7 @@ def _global_step(model: str) -> int | None:
         return None
     if model.startswith("llama-3.1-8b-mask-continued/"):
         return 25_000 + local_step
-    if model.startswith("llama-3.1-8b-mask/"):
+    if model.startswith(("llama-3.1-8b-mask/", "llama-3.1-8b-mask-long/")):
         return local_step
     return None
 
@@ -60,7 +64,7 @@ def _load_sweep(path: Path, expected_nfe: int) -> tuple[dict[int, dict[str, floa
             if result.get("task") != "open_ended" or result.get("method") != "diffusion":
                 continue
             step = _global_step(str(result["model"]))
-            if step not in SELECTED_GLOBAL_STEPS:
+            if step not in SELECTED_GLOBAL_STEPS[expected_nfe]:
                 continue
             if int(result["inference_settings"]["num_steps"]) != expected_nfe:
                 raise ValueError(f"Result NFE mismatch for {result['model']}")
@@ -68,7 +72,7 @@ def _load_sweep(path: Path, expected_nfe: int) -> tuple[dict[int, dict[str, floa
                 name: float(result[field]) for name, field in METRIC_FIELDS.items()
             }
             rows[step]["total"] = int(result["total"])
-    missing = set(SELECTED_GLOBAL_STEPS) - set(rows)
+    missing = set(SELECTED_GLOBAL_STEPS[expected_nfe]) - set(rows)
     if missing:
         raise ValueError(f"Missing {expected_nfe}-NFE checkpoints: {sorted(missing)}")
     return rows, {"run": run, "summary": summary, "path": path}
@@ -226,7 +230,7 @@ def main() -> None:
             (f"{nfe}-NFE progression run ID", run["run_id"]),
             (f"{nfe}-NFE progression completed UTC", run["completed_at"]),
             (f"{nfe}-NFE progression source", str(metadata[nfe]["path"] / "summary.json")),
-            (f"{nfe}-NFE imported global updates", "1k, 10k, 20k, 30k, 40k, 50k; continued 5k/15k/25k map to 30k/40k/50k"),
+            (f"{nfe}-NFE imported global updates", ", ".join(f"{step // 1000}k" for step in SELECTED_GLOBAL_STEPS[nfe])),
             (f"{nfe}-NFE scored prompts per checkpoint", sweeps[nfe][1_000]["total"]),
             (f"{nfe}-NFE imported metrics", "Token-weighted perplexity; mean sliding model-token Distinct-1/2/3"),
         ))

@@ -24,8 +24,9 @@ from openpyxl import load_workbook
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_WORKBOOK = ROOT / "results" / "Results_training-progression-32i-64i_20260923.xlsx"
+DEFAULT_WORKBOOK = ROOT / "results" / "Results_training-progression-long32i-64i_20260923.xlsx"
 DEFAULT_OUTPUT_DIR = ROOT / "iclr2027_submission" / "figures"
+DEFAULT_UNCERTAINTY = ROOT / "iclr2027_submission/source_results/open_ended_uncertainty.json"
 
 TASK_LABELS = {
     "arc_c": "ARC-C",
@@ -214,6 +215,31 @@ def load_validation_loss_data(sheet: Any) -> dict[str, Any]:
     return {"source_sheet": sheet.title, "points": points}
 
 
+def apply_progression_uncertainty(
+    data: dict[str, Any],
+    uncertainty: dict[str, Any],
+    *,
+    value_name: str,
+) -> None:
+    """Replace workbook placeholders with estimates and bootstrap CIs from raw records."""
+    for nfe in (32, 64, 128):
+        stats = uncertainty[str(nfe)]
+        points = []
+        for step_text, point_stats in sorted(stats["points"].items(), key=lambda item: int(item[0])):
+            metric = point_stats[value_name]
+            points.append({
+                "step": int(step_text),
+                value_name: float(metric["value"]),
+                "ci95": [float(bound) for bound in metric["ci95"]],
+                "n": int(point_stats["n"]),
+            })
+        baseline = stats["llada"][value_name]
+        data["series"][nfe]["points"] = points
+        data["series"][nfe]["llada"] = float(baseline["value"])
+        data["series"][nfe]["llada_ci95"] = [float(bound) for bound in baseline["ci95"]]
+        data["series"][nfe]["llada_n"] = int(stats["llada"]["n"])
+
+
 def _configure_radar(ax: Any, labels: list[str], title: str) -> np.ndarray:
     angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
     ax.set_theta_offset(np.pi / 2)
@@ -277,13 +303,22 @@ def _plot_progression_panel(
     ylabel: str,
     title: str,
 ) -> None:
+    scale = 100.0 if value_name.startswith("distinct_") else 1.0
     for nfe in (32, 64, 128):
         item = data["series"][nfe]
         steps = [point["step"] for point in item["points"]]
-        values = [point[value_name] for point in item["points"]]
+        values = [scale * point[value_name] for point in item["points"]]
         color = COLORS[nfe]
         ax.plot(steps, values, color=color, marker="o", linewidth=2, markersize=4.5, label=f"{nfe} NFE")
-        ax.axhline(item["llada"], color=color, linestyle=(0, (4, 3)), linewidth=1.4, alpha=0.9)
+        if all("ci95" in point for point in item["points"]):
+            lower = [scale * point["ci95"][0] for point in item["points"]]
+            upper = [scale * point["ci95"][1] for point in item["points"]]
+            ax.fill_between(steps, lower, upper, color=color, alpha=0.14, linewidth=0)
+        baseline = scale * item["llada"]
+        ax.axhline(baseline, color=color, linestyle=(0, (4, 3)), linewidth=1.4, alpha=0.9)
+        if "llada_ci95" in item:
+            lower, upper = (scale * bound for bound in item["llada_ci95"])
+            ax.axhspan(lower, upper, color=color, alpha=0.055, linewidth=0)
 
     ax.set_xlabel("BYOD-Llama training updates")
     ax.set_ylabel(ylabel)
@@ -304,12 +339,12 @@ def _plot_progression_panel(
 
     if value_name == "distinct_1":
         observed = [
-            point[value_name]
+            scale * point[value_name]
             for item in data["series"].values()
             for point in item["points"]
         ]
-        observed.extend(item["llada"] for item in data["series"].values())
-        ax.set_ylim(max(0.0, min(observed) - 0.1), min(1.0, max(observed) + 0.1))
+        observed.extend(scale * item["llada"] for item in data["series"].values())
+        ax.set_ylim(max(0.0, min(observed) - 10.0), min(100.0, max(observed) + 10.0))
 
 
 def _plot_pending_distinct_panel(ax: Any, all_steps: list[int]) -> None:
@@ -407,7 +442,7 @@ def plot_training_progression(
             axes[1],
             distinct_data,
             value_name="distinct_1",
-            ylabel="Mean sliding model-token Distinct-1 (↑)",
+            ylabel="Mean sliding model-token Distinct-1, % (↑)",
             title="(b) Distinct-1 progression",
         )
     _plot_validation_loss_panel(
@@ -423,6 +458,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workbook", type=Path, default=DEFAULT_WORKBOOK)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--uncertainty", type=Path, default=DEFAULT_UNCERTAINTY)
     parser.add_argument("--progression-header-row", type=int, default=42)
     parser.add_argument(
         "--distinct-progression-header-row",
@@ -447,6 +483,33 @@ def main() -> None:
         required=False,
     )
     validation_loss = load_validation_loss_data(wb["Long validation loss"])
+    uncertainty_path = args.uncertainty.expanduser().resolve()
+    if not uncertainty_path.is_file():
+        raise FileNotFoundError(uncertainty_path)
+    uncertainty = json.loads(uncertainty_path.read_text())
+    apply_progression_uncertainty(
+        progression,
+        uncertainty["figure_2"],
+        value_name="perplexity",
+    )
+    if distinct_progression is None:
+        distinct_progression = {
+            "all_steps": progression["all_steps"],
+            "series": {
+                nfe: {
+                    "label": progression["series"][nfe]["label"],
+                    "points": [],
+                    "llada_label": progression["series"][nfe]["llada_label"],
+                    "llada": 0.0,
+                }
+                for nfe in (32, 64, 128)
+            },
+        }
+    apply_progression_uncertainty(
+        distinct_progression,
+        uncertainty["figure_2"],
+        value_name="distinct_1",
+    )
 
     plt.rcParams.update({
         "font.family": "DejaVu Sans",
@@ -460,6 +523,7 @@ def main() -> None:
 
     manifest = {
         "source_workbook": str(workbook),
+        "uncertainty_source": str(uncertainty_path),
         "source_sheet": sheet.title,
         "accuracy_cells": "model names from row 5; tasks from rows 7--15",
         "progression_cells": f"rows {args.progression_header_row}--{args.progression_header_row + 4}",
@@ -475,7 +539,8 @@ def main() -> None:
         "notes": [
             "Blank checkpoint cells are omitted; lines connect only recorded values.",
             "Dashed horizontal lines are the LLaDA values stored beside each NFE row.",
-            "The four-family radar uses the currently populated workbook values, whose sample counts may differ; consult workbook provenance.",
+            "Both radar panels use 125 examples per task.",
+            "Shaded regions are prompt-level percentile-bootstrap 95% confidence intervals.",
             "All radar spokes share the same absolute 0--100% scale; per-task min/max normalization is intentionally avoided.",
         ],
     }

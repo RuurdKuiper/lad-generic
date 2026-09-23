@@ -1,9 +1,8 @@
 from types import SimpleNamespace
 
-import pytest
 import torch
 
-from diffusion_lm.infilling import score_bidirectional_example, score_causal_example, summarize_infilling
+from diffusion_lm.infilling import score_bidirectional_example, summarize_infilling
 
 
 class Tokenizer:
@@ -31,14 +30,14 @@ def example():
     )
 
 
-def test_bidirectional_score_reports_suffix_gain(monkeypatch):
+def test_bidirectional_score_reports_right_context_gain(monkeypatch):
     import diffusion_lm.infilling as module
 
     monkeypatch.setattr(module, "_prompt_ids", lambda *_args: [10])
 
     def forward(_session, input_ids, _padding):
         logits = torch.zeros((1, input_ids.shape[1], 8))
-        # Full context predicts target ID 2; the prefix-only control predicts 0.
+        # The later clue makes the model predict target ID 2; without it, it predicts 0.
         logits[0, 2, 2 if input_ids.shape[1] == 5 else 0] = 10.0
         return logits
 
@@ -51,43 +50,28 @@ def test_bidirectional_score_reports_suffix_gain(monkeypatch):
     result = score_bidirectional_example(session, example())
 
     assert result["exact_match"] is True
-    assert result["prefix_only_exact_match"] is False
-    summary = summarize_infilling([result], include_prefix_control=True)
+    assert result["without_clue_exact_match"] is False
+    summary = summarize_infilling([result])
     assert summary["exact_match"] == 1.0
-    assert summary["prefix_only_exact_match"] == 0.0
-    assert summary["suffix_gain_exact_match"] == 1.0
-    assert summary["suffix_nll_reduction"] > 0.0
-
-
-def test_causal_score_uses_shifted_teacher_forced_logits(monkeypatch):
-    import diffusion_lm.infilling as module
-
-    monkeypatch.setattr(module, "_encoded_example", lambda *_args: ([10, 1], [2, 3], [4]))
-
-    class Model:
-        def __call__(self, input_ids, use_cache=False):
-            logits = torch.zeros((1, input_ids.shape[1], 8))
-            logits[0, 1, 2] = 10.0
-            logits[0, 2, 3] = 10.0
-            return SimpleNamespace(logits=logits)
-
-    session = SimpleNamespace(model=Model(), tokenizer=Tokenizer(), device=torch.device("cpu"))
-    result = score_causal_example(session, example())
-
-    assert result["prediction_ids"] == [2, 3]
-    assert result["exact_match"] is True
-    assert result["correct_tokens"] == 2
+    assert summary["without_clue_exact_match"] == 0.0
+    assert summary["right_context_gain_exact_match"] == 1.0
 
 
 def test_infilling_summary_is_token_weighted():
     results = [
-        {"exact_match": True, "correct_tokens": 1, "target_tokens": 1, "nll": 1.0},
-        {"exact_match": False, "correct_tokens": 1, "target_tokens": 3, "nll": 7.0},
+        {
+            "exact_match": True, "correct_tokens": 1, "target_tokens": 1,
+            "without_clue_exact_match": False, "without_clue_correct_tokens": 0,
+        },
+        {
+            "exact_match": False, "correct_tokens": 1, "target_tokens": 3,
+            "without_clue_exact_match": False, "without_clue_correct_tokens": 0,
+        },
     ]
 
-    summary = summarize_infilling(results, include_prefix_control=False)
+    summary = summarize_infilling(results)
 
     assert summary["exact_match"] == 0.5
     assert summary["token_accuracy"] == 0.5
-    assert summary["mean_nll"] == 2.0
-    assert summary["perplexity"] == pytest.approx(torch.exp(torch.tensor(2.0)).item())
+    assert summary["without_clue_exact_match"] == 0.0
+    assert summary["right_context_gain_token_accuracy"] == 0.5

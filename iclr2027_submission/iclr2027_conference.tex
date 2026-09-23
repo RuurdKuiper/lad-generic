@@ -153,7 +153,7 @@ For Gemma, Llama, Qwen, and Ministral we compare the diffusion adapter with gree
 
 Our benchmark set contains the validation/test sets of MMLU, MMLU-Pro, HellaSwag, ARC-Challenge, GSM8K, MATH-500, GPQA-Main, HumanEval, and sanitized MBPP \citep{hendrycks2021mmlu,wang2024mmlupro,zellers2019hellaswag,clark2018arc,cobbe2021gsm8k,hendrycks2021math,rein2023gpqa,chen2021codex,austin2021mbpp}. We score multiple-choice tasks by option label, GSM8K by its final number, MATH by its normalized final boxed expression, and code tasks by whether the generated program passes the supplied tests in an isolated subprocess.
 
-We evaluate functional use of bidirectional context separately from these capability benchmarks with a deterministic in-place infilling diagnostic (Appendix~\ref{app:bidirectional-infilling}). Each example places a fully masked target span between an answer prefix and a suffix that contains the decisive target evidence. All target tokens are masked simultaneously, so the model cannot recover later target tokens from earlier target tokens. We compare the converted model's one-pass same-position predictions with the suffix present against a prefix-only pass of the same model. For unmerged adapters, we additionally score the untouched causal parent by conventional teacher forcing; this control is deliberately favorable to the AR model but cannot access the right-hand evidence. The diagnostic tests whether the attention intervention is functionally used, rather than measuring broad natural-language reasoning.
+We test bidirectional attention separately with a simple right-context copy task (Appendix~\ref{app:bidirectional-infilling}). An earlier word is masked and then shown explicitly later in the same response. We make one same-position prediction with that later clue present and repeat the prediction after removing it. A causal model cannot change its prediction at an earlier position when only later tokens change; an accuracy gain with the clue therefore directly demonstrates use of right-hand context.
 
 For 100 fixed open-ended prompts, Microsoft Phi-4 14B scores each generated answer autoregressively. Our primary aggregate is token-weighted perplexity, $\exp(\sum_j \mathrm{NLL}_j/\sum_j N_j)$, so each scored token contributes equally. Generative perplexity does not penalize loss of sample diversity \citep{turok2026duel}. We therefore also compute sliding model-token Distinct-1/2/3 after excluding special tokens. Higher Distinct-$n$ means a larger fraction of unique $n$-grams.
 
@@ -201,10 +201,10 @@ The provisional diffusion macro averages are 51.0\% for Gemma, 48.7\% for Llama-
 
 Figure~\ref{fig:benchmark-radars} makes the task profiles visible without collapsing them into a macro average. Panel~(a) is the cleanest comparison: all three curves use the same nine 125-example subsets and contrast BYOD-Llama with both its unchanged AR parent and LLaDA. The AR parent remains substantially stronger on generation-heavy mathematics and code tasks, whereas the two DLMs have broadly similar profiles. Panel~(b) shows that the relative strengths of the four BYOD backbones are task dependent, but remains provisional because the interrupted sweep leaves mixed sample counts across families.
 
-\subsection{Bidirectional infilling diagnostic}
+\subsection{Right-context copy test}
 \label{sec:bidirectional-infilling}
 
-The separate functional-attention diagnostic directly tests whether target tokens can use decisive evidence to their right (Appendix~\ref{app:bidirectional-infilling}). The final paper will summarize its principal result here: \xxx{report the number of converted diffusion models that recover the infill from the suffix, the corresponding prefix-only score, and the causal-parent result}. Detailed per-model exact-match and token-accuracy results are reserved for Appendix Table~\ref{tab:bidirectional-infilling} rather than mixed into the general capability benchmark.
+The right-context copy test asks only whether the converted model can copy a later visible word into an earlier masked position (Appendix~\ref{app:bidirectional-infilling}). The final paper will summarize its principal result here: \xxx{report, for each converted model, exact match with the later clue, exact match without it, and the resulting right-context gain}. Detailed per-model results remain separate from the general capability benchmark in Appendix Table~\ref{tab:bidirectional-infilling}.
 
 \subsection{Open-ended fluency and denoising budget}
 \label{sec:perplexity}
@@ -257,7 +257,7 @@ LLaDA scores 51.9\% on the nine-task unweighted average in our 125-example harne
 
 \section{Discussion}
 
-The central empirical result is that useful AR-to-diffusion conversion can be made an hours-scale, single-GPU procedure. High-rank attention-only LoRA is sufficient to turn four independently developed causal instruction models into generators that reconstruct answers from a fully masked block. Together with the bidirectional infilling diagnostic and the retained benchmark performance---on par with LLaDA in our preliminary common-harness macro average---this indicates that the models acquire functional bidirectional generation while preserving substantial knowledge from their AR parents. A capable paid cloud GPU is still required, so this is broader access rather than zero-cost access; nevertheless, the ability to repeat the same conversion across model families materially lowers the threshold for studying how different architectures support diffusion.
+The central empirical result is that useful AR-to-diffusion conversion can be made an hours-scale, single-GPU procedure. High-rank attention-only LoRA is sufficient to turn four independently developed causal instruction models into generators that reconstruct answers from a fully masked block. Together with the right-context copy test and the retained benchmark performance---on par with LLaDA in our preliminary common-harness macro average---this indicates that the models acquire functional bidirectional generation while preserving substantial knowledge from their AR parents. A capable paid cloud GPU is still required, so this is broader access rather than zero-cost access; nevertheless, the ability to repeat the same conversion across model families materially lowers the threshold for studying how different architectures support diffusion.
 
 Our public demos implement EOS-aware early stopping---halting when the pre-EOS answer is identical in two consecutive iterations, together with delayed EOS/EOT retention---which allows actual inference time to fall below the configured fixed-canvas budget; related EOS-led variable-length or early-stopping mechanisms are used by dLLM-Var, VoidPadding, and audio-conditioned diffusion ASR, while JoT instead detects convergence per token \citep{yang2025dllmvar,liu2026voidpadding,wang2026audioconditioned,kohut2026just}.
 
@@ -450,52 +450,28 @@ Figures~\ref{fig:demo-confidence-trajectories} and~\ref{fig:demo-remasking-traje
 
 \clearpage
 
-\section{Bidirectional infilling diagnostic}
+\section{Right-context copy test}
 \label{app:bidirectional-infilling}
 
-This diagnostic is designed to isolate access to right-hand evidence, which ordinary left-to-right generation benchmarks do not test directly. It is synthetic and deterministic: no external corpus is downloaded, and no model is fine-tuned on the evaluation examples. The suite contains 100 examples divided evenly between two mechanically generated templates. In the \emph{identifier-copy} subset, a response first leaves an access code blank and a later verification sentence states the code. In the \emph{ordered-relation} subset, a response leaves the label immediately preceding an anchor blank and a later sentence gives the complete local order. Targets are generated alphanumeric identifiers or nonce labels; they are absent from the instruction and answer prefix and occur in the visible suffix. The two templates test the same right-context dependency through different surface forms. They should be interpreted as a controlled functional test, not as a broad benchmark of reasoning, factual knowledge, poetry completion, or free-form infilling quality.
+This deterministic test contains 20 ordinary words. Each response has the form ``Earlier word: [MASK]. Later word to copy: apple.'', with a different target word in each example. The target is absent from the instruction and left context and appears explicitly after the mask. All model tokens belonging to the target word are masked simultaneously, and the converted model predicts them in one forward pass; no iterative sampling or generation settings are involved.
 
-For each model, the instruction is rendered with its native chat template. Let $l_k$ denote the tokenized chat context and answer prefix for example $k$, let $y_k=(y_k^1,\ldots,y_k^{m_k})$ be its target span, and let $r_k$ be the answer suffix. Target length $m_k$ is determined by the model's own tokenizer. Every target token is replaced simultaneously by the model's native mask token, producing the full-context input
-\begin{equation}
-    z_k^{\mathrm{full}} = [l_k,\underbrace{\mathtt{MASK},\ldots,\mathtt{MASK}}_{m_k},r_k].
-\end{equation}
-The converted model performs one bidirectional forward pass and predicts each target from the logits at the same position. There is no iterative sampler, denoising schedule, temperature, top-$k$ filter, or EOS heuristic in this test. Greedy predictions are used only to calculate exact match and token accuracy; target probabilities provide the likelihood diagnostics.
-
-We evaluate two controls. First, the \emph{prefix-only} condition removes $r_k$ while retaining the same prompt, masked target, model weights, and scoring code. The difference between full-context and prefix-only performance therefore measures the benefit obtained from the right-hand evidence within the converted model. Second, when an unmerged PEFT checkpoint is available, we disable its adapter, restore the parent normalization state, reinstate causal attention, and score the clean target with shifted next-token logits. This AR control does not receive the suffix. It is teacher-forced, so target token $y_k^j$ for $j>1$ may condition on the preceding gold target tokens $y_k^{<j}$; this makes the comparison favorable to the causal parent while preserving its structural inability to condition on $r_k$. A merged checkpoint cannot recover its untouched parent internally, so its AR control must come from the corresponding unmerged run and is deduplicated when several adapters share that parent.
-
-For condition $c$, exact match and token accuracy are
-\begin{align}
-    \mathrm{EM}_c &= \frac{1}{K}\sum_{k=1}^{K}
-    \mathbb{1}\!\left[\hat{y}_{k,c}=y_k\right], \\
-    \mathrm{TokAcc}_c &=
-    \frac{\sum_{k=1}^{K}\sum_{j=1}^{m_k}
-    \mathbb{1}\!\left[\hat{y}_{k,c}^{j}=y_k^j\right]}
-    {\sum_{k=1}^{K}m_k},
-\end{align}
-where $K=100$, $m_k$ is the target length in model tokens, $y_k$ is the gold target, and $\hat{y}_{k,c}$ is the condition's position-wise argmax prediction. We also report the token-weighted negative log-likelihood and perplexity,
-\begin{align}
-    \mathrm{NLL}_c &= -\frac{1}{\sum_k m_k}
-    \sum_{k=1}^{K}\sum_{j=1}^{m_k}
-    \log p_c(y_k^j), \\
-    \mathrm{PPL}_c &= \exp(\mathrm{NLL}_c).
-\end{align}
-Suffix gains are $\Delta\mathrm{EM}=\mathrm{EM}_{\mathrm{full}}-\mathrm{EM}_{\mathrm{prefix}}$ and $\Delta\mathrm{TokAcc}=\mathrm{TokAcc}_{\mathrm{full}}-\mathrm{TokAcc}_{\mathrm{prefix}}$; the likelihood gain is $\mathrm{NLL}_{\mathrm{prefix}}-\mathrm{NLL}_{\mathrm{full}}$, so a positive value always denotes useful right context. Aggregate and per-template summaries are retained, together with every tokenized target, prediction, and per-example loss, in the validation artifacts.
+We score the same masked position twice: once with the later copy clue and once after deleting that clue. We report exact match for both conditions and their difference, which we call the right-context gain. This within-model comparison is sufficient: under causal attention, changing or deleting tokens to the right cannot affect logits at an earlier position, so the gain must be zero. A positive gain therefore shows directly that the converted model uses bidirectional context. This is a functional attention check, not a benchmark of reasoning or general infilling quality.
 
 \begin{table}[h]
-\caption{Bidirectional infilling diagnostic on 100 deterministic examples. Full and prefix-only columns evaluate the converted model; $\Delta$ suffix is full-context minus prefix-only exact match. AR is the untouched causal parent under favorable teacher-forced scoring. EM: exact match; Tok.: token accuracy. All values are pending.}
+\caption{Right-context copy test on 20 deterministic words. ``With clue'' predicts the earlier mask while the word is visible later; ``without clue'' removes that later word. Gain is the exact-match difference. All values are pending.}
 \label{tab:bidirectional-infilling}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lccccc}
+\begin{tabular}{lccc}
 \toprule
-Model & Full EM & Full Tok. & Prefix EM & $\Delta$ suffix EM & AR EM \\
+Model & With clue EM & Without clue EM & Right-context gain \\
 \midrule
-Gemma 2 9B, 25k & XXX & XXX & XXX & XXX & XXX \\
-Llama 3.1 8B, 25k & XXX & XXX & XXX & XXX & XXX \\
-Llama 3.1 8B, 50k & XXX & XXX & XXX & XXX & XXX \\
-Qwen2.5 7B, 25k & XXX & XXX & XXX & XXX & XXX \\
-Ministral 8B, 25k & XXX & XXX & XXX & XXX & XXX \\
+Gemma 2 9B, 25k & XXX & XXX & XXX \\
+Llama 3.1 8B, 25k & XXX & XXX & XXX \\
+Llama 3.1 8B, 50k & XXX & XXX & XXX \\
+Qwen2.5 7B, 25k & XXX & XXX & XXX \\
+Ministral 8B, 25k & XXX & XXX & XXX \\
 \bottomrule
 \end{tabular}}
 \end{table}

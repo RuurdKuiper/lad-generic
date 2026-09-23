@@ -539,61 +539,29 @@ def _gsm8k_prompt(question: str) -> str:
 
 
 def _bidirectional_infilling_examples() -> list[BenchmarkExample]:
-    """Build a deterministic suffix-dependent, contamination-free diagnostic.
-
-    Targets are synthetic identifiers or nonce labels repeated only in the
-    visible suffix.  A bidirectional denoiser can recover them in place, while
-    a causal model scoring the same target positions cannot inspect that
-    suffix.  The two templates avoid reducing the benchmark to one surface
-    form while keeping its dependency mechanically auditable.
-    """
-    objects = [
-        "bronze compass", "cedar box", "glass astrolabe", "silver lantern", "linen map",
-        "marble key", "copper telescope", "porcelain seal", "leather folio", "ivory dial",
-    ]
-    nonce_labels = [
-        "velora", "tavren", "mirel", "sovik", "caldra",
-        "norven", "pelith", "darsen", "quorin", "zareph",
-    ]
-    anchors = [
-        "amber marker", "blue arch", "central gate", "delta stone", "eastern post",
-        "forest sign", "granite tower", "harbor bell", "iron column", "jade flag",
-    ]
-    examples: list[BenchmarkExample] = []
-    instruction = (
-        "Recover the missing span in the assistant response. Use the visible "
-        "text on both sides of the missing span."
+    """Build a minimal test of whether a masked word can use a later clue."""
+    words = (
+        "apple", "bridge", "candle", "dolphin", "engine",
+        "forest", "garden", "hammer", "island", "jacket",
+        "kettle", "lemon", "mirror", "needle", "orange",
+        "piano", "quartz", "rocket", "silver", "turtle",
     )
-    for index in range(50):
-        object_name = objects[index % len(objects)]
-        code = f"{chr(65 + (index * 7) % 26)}{(37 * index + 11) % 100:02d}{chr(65 + (index * 11 + 3) % 26)}"
-        target = f" {code}"
-        metadata = {
-            "subset": "identifier_copy",
-            "answer_prefix": f"The archive lists the access code for the {object_name} as",
-            "target_text": target,
-            "answer_suffix": f". A later verification note confirms that the {object_name}'s access code is {code}.",
-        }
-        examples.append(BenchmarkExample(
-            BIDIRECTIONAL_INFILLING_TASK, f"identifier-{index:03d}", instruction,
-            target.strip(), "bidirectional_infilling", metadata,
-        ))
-    for index in range(50):
-        target_label = nonce_labels[index % len(nonce_labels)] + str((index * 13 + 5) % 97)
-        anchor = anchors[index % len(anchors)]
-        final_label = nonce_labels[(index + 3) % len(nonce_labels)] + str((index * 17 + 9) % 97)
-        target = f" {target_label}"
-        metadata = {
-            "subset": "ordered_relation",
-            "answer_prefix": f"In the recorded sequence, the label immediately before the {anchor} is",
-            "target_text": target,
-            "answer_suffix": f". The complete left-to-right order is {target_label}, the {anchor}, then {final_label}.",
-        }
-        examples.append(BenchmarkExample(
-            BIDIRECTIONAL_INFILLING_TASK, f"relation-{index:03d}", instruction,
-            target.strip(), "bidirectional_infilling", metadata,
-        ))
-    return examples
+    instruction = "Fill the earlier missing word by copying the word shown later in the response."
+    return [
+        BenchmarkExample(
+            BIDIRECTIONAL_INFILLING_TASK,
+            f"copy-{index:03d}",
+            instruction,
+            word,
+            "bidirectional_infilling",
+            {
+                "answer_prefix": "Earlier word:",
+                "target_text": f" {word}",
+                "answer_suffix": f". Later word to copy: {word}.",
+            },
+        )
+        for index, word in enumerate(words)
+    ]
 
 
 def load_benchmark(name: str, split: str, limit: int | None, cache_dir: str, token: str | None, limit_fraction: float | None = None) -> list[BenchmarkExample]:

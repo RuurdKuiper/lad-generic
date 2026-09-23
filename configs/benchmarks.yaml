@@ -17,9 +17,8 @@ results_dir: outputs/benchmark_runs  # Each invocation creates its own timestamp
 # Shared AR parents are evaluated only once per task/settings combination, even
 # when multiple diffusion adapters or checkpoints use that same base model.
 include_autoregressive: false  # Options: true, false
-# The causal control is intrinsic to the infilling diagnostic and inexpensive,
-# so it has an independent switch that defaults to true in the evaluator.
-infilling_include_autoregressive: true
+# The bidirectional task compares the same model with and without a later copy
+# clue. A causal model cannot use that clue for an earlier position.
 # Independent greedy-decoding budgets for the original-base AR comparison.
 autoregressive_task_generation:
   open_ended: {max_new_tokens: 128}

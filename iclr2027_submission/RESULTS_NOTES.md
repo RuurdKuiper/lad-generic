@@ -41,8 +41,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - The selected runs use a 256-token maximum sequence length, not 1,024.
 - LoRA targets only `q_proj` and `v_proj`, not query/value/output projections.
 - Normalization layers are frozen (`train_normalization_layers: false`).
-- The selected runs use IID answer/EOS-padding masking; frontier masking belongs to later ablations that are not part of the final model set.
-- Preliminary frontier ablations lowered external Phi-4 generative perplexity but also substantially lowered sliding model-token Distinct-1/2/3 and visibly increased repetition. Preserve the matched run/checkpoint/NFE values and representative samples before replacing the manuscript placeholder.
+- The selected runs use IID answer/EOS-padding masking.
 - Repeated EOS batch padding is visible to bidirectional attention, can be masked, and participates in the loss because `eos_padding_loss: true`.
 - Each first-stage run uses 400,000 examples over 25,000 batch-16 updates. The continued Llama run skips the consumed 400,000-example prefix and uses the next 400,000 examples.
 - The continued run restores the adapter but not optimizer state; AdamW and the cosine schedule restart.
@@ -76,4 +75,3 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 7. Recompute Distinct-1/2/3 with the final sliding model-token implementation.
 8. Verify every external bibliographic entry and add model/dataset technical-report citations.
 9. Complete the checkpoint-by-NFE sweep needed to test whether continued training preferentially improves the parallel decoding regime ($\mathrm{NFE}<L$).
-10. Consolidate the frontier-versus-IID ablation metrics and blinded qualitative samples.

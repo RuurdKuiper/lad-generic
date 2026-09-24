@@ -540,13 +540,18 @@ def _gsm8k_prompt(question: str) -> str:
 
 def _bidirectional_infilling_examples() -> list[BenchmarkExample]:
     """Build a minimal test of whether a masked word can use a later clue."""
+    # Every target, including its leading-space boundary, is one token in the
+    # Gemma 2, Llama 3.1, Qwen2.5, and Ministral tokenizers used in this study.
     words = (
-        "apple", "bridge", "candle", "dolphin", "engine",
+        "apple", "bridge", "candle", "banana", "engine",
         "forest", "garden", "hammer", "island", "jacket",
-        "kettle", "lemon", "mirror", "needle", "orange",
+        "chair", "lemon", "mirror", "needle", "orange",
         "piano", "quartz", "rocket", "silver", "turtle",
     )
-    instruction = "Fill the earlier missing word by copying the word shown later in the response."
+    instruction = (
+        'Replace the masked token in the partial assistant response with exactly the word written '
+        'after "COPY:". Copy the spelling exactly. Do not use a synonym or a related word.'
+    )
     return [
         BenchmarkExample(
             BIDIRECTIONAL_INFILLING_TASK,
@@ -555,9 +560,10 @@ def _bidirectional_infilling_examples() -> list[BenchmarkExample]:
             word,
             "bidirectional_infilling",
             {
-                "answer_prefix": "Earlier word:",
+                "system_prompt": "You are a helpful assistant.",
+                "answer_prefix": "Answer:",
                 "target_text": f" {word}",
-                "answer_suffix": f". Later word to copy: {word}.",
+                "answer_suffix": f". COPY: {word}.",
             },
         )
         for index, word in enumerate(words)

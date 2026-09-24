@@ -15,7 +15,8 @@ def _encode(tokenizer: Any, text: str) -> list[int]:
 
 def _encoded_example(session: Any, example: Any) -> tuple[list[int], list[int], list[int]]:
     """Return chat/prefix IDs, clean target IDs, and visible suffix IDs."""
-    chat = _prompt_ids(session.tokenizer, example.prompt, "", session.prompt_format)
+    system_prompt = str(example.metadata.get("system_prompt", "You are a helpful assistant."))
+    chat = _prompt_ids(session.tokenizer, example.prompt, system_prompt, session.prompt_format)
     answer_prefix = _encode(session.tokenizer, str(example.metadata["answer_prefix"]))
     target = _encode(session.tokenizer, str(example.metadata["target_text"]))
     suffix = _encode(session.tokenizer, str(example.metadata["answer_suffix"]))
@@ -53,6 +54,7 @@ def score_bidirectional_example(session: Any, example: Any) -> dict[str, Any]:
         "without_clue_prediction": session.tokenizer.decode(without_clue_predicted, skip_special_tokens=True).strip(),
         "without_clue_correct_tokens": without_clue_correct,
         "without_clue_exact_match": without_clue_predicted == target,
+        "clue_changed_prediction": predicted != without_clue_predicted,
     }
 
 
@@ -64,6 +66,7 @@ def summarize_infilling(results: list[dict[str, Any]]) -> dict[str, Any]:
     token_accuracy = sum(int(result["correct_tokens"]) for result in results) / max(tokens, 1)
     without_clue_exact = sum(int(result["without_clue_exact_match"]) for result in results) / max(examples, 1)
     without_clue_token = sum(int(result["without_clue_correct_tokens"]) for result in results) / max(tokens, 1)
+    clue_changed = sum(int(result["clue_changed_prediction"]) for result in results) / max(examples, 1)
     summary = {
         "accuracy": exact_match,
         "exact_match": exact_match,
@@ -72,6 +75,7 @@ def summarize_infilling(results: list[dict[str, Any]]) -> dict[str, Any]:
         "without_clue_token_accuracy": without_clue_token,
         "right_context_gain_exact_match": exact_match - without_clue_exact,
         "right_context_gain_token_accuracy": token_accuracy - without_clue_token,
+        "clue_changed_prediction_rate": clue_changed,
         "correct": sum(int(result["exact_match"]) for result in results),
         "total": examples,
         "tokens": tokens,

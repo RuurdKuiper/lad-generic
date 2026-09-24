@@ -358,6 +358,8 @@ def main() -> None:
                 total = len(examples)
                 protocol = {
                     "type": "right_context_copy",
+                    "decoding": "single_forward_argmax",
+                    "system_prompt": "You are a helpful assistant.",
                     "with_clue": "predict the earlier mask while the copied word is visible later",
                     "without_clue": "predict the same mask after removing the later clue",
                     "seed": None,
@@ -377,7 +379,8 @@ def main() -> None:
                     f"{model_label} | {task} | with-clue exact={summary['exact_match']:.4f} "
                     f"| token accuracy={summary['token_accuracy']:.4f} "
                     f"| without-clue exact={summary['without_clue_exact_match']:.4f} "
-                    f"| right-context gain={summary['right_context_gain_exact_match']:+.4f}"
+                    f"| right-context gain={summary['right_context_gain_exact_match']:+.4f} "
+                    f"| clue-changed prediction={summary['clue_changed_prediction_rate']:.4f}"
                 )
                 print(message, flush=True)
                 continue

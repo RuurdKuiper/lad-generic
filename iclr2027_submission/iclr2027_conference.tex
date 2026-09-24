@@ -8,7 +8,6 @@
 \usepackage{microtype}
 \usepackage{url}
 \usepackage{xurl}
-\usepackage{xcolor}
 
 \title{BYOD: Build Your Own DLM - Efficient Autoregressive-to-Diffusion Language Model Conversion}
 
@@ -16,20 +15,19 @@
 \author{Anonymous authors}
 
 \newcommand{\method}{BYOD}
-\newcommand{\xxx}[1]{\textcolor{red}{\textbf{XXX: #1}}}
 \newcommand{\na}{--}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Diffusion language models (DLMs) permit parallel token updates and flexible generation orders, but leading systems rely on costly pretraining or continued full-model training. We ask how efficiently diffusion generation can instead be induced in existing instruction-tuned autoregressive models. Build Your Own DLM (BYOD) replaces causal attention with bidirectional attention and trains only query/value LoRA adapters under a masked denoising objective, leaving 94.2--95.9\% of parameters frozen. Without architecture-specific tuning, the same recipe converts Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, with each 25,000-update conversion processing at most 102.4M token positions in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences and retain substantial parent-model knowledge. On a nine-task evaluation, the strongest converted model reaches 52.2\% average accuracy, compared with 51.9\% for LLaDA 8B Instruct in the same harness. Fluency remains the principal limitation: at 64 NFE, converted-model perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents, with generally lower Distinct-$n$ scores as well. BYOD therefore establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
+Diffusion language models (DLMs) permit parallel token updates and flexible generation orders, but leading systems rely on costly pretraining or continued full-model training. We ask how efficiently diffusion generation can instead be induced in existing instruction-tuned autoregressive models. Build Your Own DLM (BYOD) replaces causal attention with bidirectional attention and trains only query/value LoRA adapters under a masked denoising objective, leaving 94.2--95.9\% of parameters frozen. Without architecture-specific tuning, the same recipe converts Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, with each 25,000-update conversion processing at most 102.4M token positions in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences and retain substantial parent-model knowledge. BYOD-Gemma is the strongest conversion on our nine-task evaluation, reaching 53.0\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Fluency remains the principal limitation: at 64 NFE, converted-model perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents, with generally lower Distinct-$n$ scores as well. BYOD therefore establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
 \end{abstract}
 
 \begin{figure*}[t!]
 \centering
 \includegraphics[width=\textwidth]{figures/benchmark_radar_panels.pdf}
-\caption{Task-level accuracy profiles from matched 125-example-per-task evaluations. (a) LLaDA, BYOD-Llama, and the unchanged Llama AR parent. (b) The four primary BYOD conversions. Every spoke uses the same absolute 0--100\% accuracy scale; benchmark-specific min--max scaling is deliberately avoided because it would make equal radial distances represent different accuracy changes. The polygon areas are descriptive visual summaries, not aggregate scores.}
+\caption{Task-level accuracy profiles from the matched evaluation. (a) LLaDA, BYOD-Llama, and the unchanged Llama AR parent. (b) The four primary BYOD conversions. Every spoke uses the same absolute 0--100\% accuracy scale; benchmark-specific min--max scaling is deliberately avoided because it would make equal radial distances represent different accuracy changes. The polygon areas are descriptive visual summaries, not aggregate scores.}
 \label{fig:benchmark-radars}
 \end{figure*}
 
@@ -108,7 +106,7 @@ The clean terminating EOS is included as a genuine answer token. To teach the fi
 
 \subsection{Bidirectional conversion and trainable parameters}
 
-We replace the causal mask with an all-zero four-dimensional additive attention mask, so every prompt, answer, and EOS-padding position can attend to every position. The architecture and output vocabulary remain unchanged. This intervention makes right-hand response evidence available to masked positions; Section~\ref{sec:bidirectional-infilling} tests whether the converted models use that access in practice. We attach LoRA adapters to every self-attention query and value projection, with rank $r=1024$, scaling $\alpha=1024$, and dropout zero. This high rank reflects the scale of the intervention: the adapters must learn a new conditional denoising process rather than a narrow downstream task. In LAD's rank study, increasing rank from 512 to 1024 at 3B improved every reported benchmark and perplexity, whereas increasing from 1024 to 2048 at 8B gave no consistent further gain; our preliminary rank experiments showed the same pattern. We therefore chose 1024 as a compromise between conversion capacity and training footprint \citep{kuiper2025lad}. Backbone weights, token embeddings, the language-model head, biases, and normalization layers are frozen. Each model reuses an existing single-token string from its tokenizer (\texttt{MASK} for Gemma, Llama, and Qwen; \texttt{<?>} for Ministral), avoiding vocabulary expansion.
+We replace the causal mask with an all-zero four-dimensional additive attention mask, so every prompt, answer, and EOS-padding position can attend to every position. The architecture and output vocabulary remain unchanged. This intervention makes right-hand response evidence available to masked positions; Section~\ref{sec:bidirectional-infilling} tests whether the converted models use that access in practice. We attach LoRA adapters to every self-attention query and value projection, with rank $r=1024$, scaling $\alpha=1024$, and dropout zero. This high rank reflects the scale of the intervention: the adapters must learn a new conditional denoising process rather than a narrow downstream task. In LAD's rank study, increasing rank from 512 to 1024 at 3B improved every reported benchmark and perplexity, whereas increasing from 1024 to 2048 at 8B gave no consistent further gain; our rank-selection experiments showed the same pattern. We therefore chose 1024 as a compromise between conversion capacity and training footprint \citep{kuiper2025lad}. Backbone weights, token embeddings, the language-model head, biases, and normalization layers are frozen. Each model reuses an existing single-token string from its tokenizer (\texttt{MASK} for Gemma, Llama, and Qwen; \texttt{<?>} for Ministral), avoiding vocabulary expansion.
 
 Table~\ref{tab:models} reports the total and trainable parameter counts and measured conversion times. We hold LoRA rank fixed rather than matching the aggregate trainable count or fraction. Rank is the dimension of each low-rank update, so fixing it gives every targeted Q/V projection the same adapter bottleneck and preserves one architecture-agnostic recipe. Matching total counts would instead require architecture-specific, potentially nonuniform integer ranks because models differ in layer count, projection width, attention organization, and non-attention parameterization; matching a fraction of total parameters would likewise not equalize adaptation capacity in the targeted modules. No convention makes these architectures fully apples-to-apples. Our choice avoids tuning the adapter budget separately for each backbone, but leaves 323.0--572.5M parameters (4.07--5.77\%) trainable and may therefore influence the cross-family results. Equal-count and equal-fraction controls remain useful future ablations.
 
@@ -142,29 +140,44 @@ The four primary models see the same dataset prefix. The continued Llama conditi
 We use AdamW with peak learning rate $10^{-5}$ and train with BF16 master weights plus Transformer Engine HYBRID FP8 execution. All reported conversions ran on a single NVIDIA RTX PRO 6000 Blackwell Server Edition in Google Colab, without multi-GPU or multi-node parallelism; the code, memory strategy, and adapter scope were explicitly designed around this constraint. Appendix~\ref{app:training-settings} gives the complete optimization, checkpointing, validation, and reproducibility configuration.
 
 \subsection{Diffusion generation}
-
-Generation begins from a fully masked answer block. At each reverse step the model predicts every masked position, after which the least-confident positions are retained for reconsideration according to the LLaDA fixed-transfer schedule; newly accepted positions become permanent context. The primary factual and code benchmarks use greedy token selection and low-confidence remasking. Open-ended evaluation instead samples at temperature 0.7 and delays acceptance of EOS/EOT predictions. Complete task-specific diffusion and AR budgets are reported separately from training details in Appendix~\ref{app:inference-settings}.
+Generation begins from a fully masked answer block. At each reverse step the model predicts every masked position, after which the least-confident positions are remasked for reconsideration; newly accepted positions become permanent unmasked.
 
 \section{Evaluation}
 \subsection{Paired models and baselines}
-For Gemma, Llama, Qwen, and Ministral we compare the diffusion adapter with greedy generation from its unchanged AR parent. LLaDA~8B Instruct is evaluated as an external diffusion baseline. We report two explicitly separated LLaDA comparisons: (i) LLaDA run through our prompts, sampling code, subsets, and scorers; and (ii) values transcribed from the LLaDA paper/evaluation suite. The latter are contextual references rather than directly matched measurements.
+For BYOD-Gemma, -Llama, -Qwen, and -Ministral we compare the diffusion version with greedy generation from its unchanged AR parent. We additionally compare the BYOD-Llama-50k longer-trained variant. LLaDA~8B Instruct is evaluated in the same evaluation harness as an external diffusion baseline. Additionally, we compare our results with values transcribed from the LLaDA paper/evaluation suite. The latter are contextual references rather than directly matched measurements. The primary factual and code benchmarks use greedy token selection and low-confidence remasking. Open-ended evaluation instead samples at temperature 0.7 and delays acceptance of EOS/EOT predictions. Complete task-specific diffusion and AR settings are reported in Appendix~\ref{app:inference-settings}.
 
-\subsection{Benchmarks and scoring}
+\subsection{Benchmarks}
+Our benchmark set contains the validation/test sets of MMLU, MMLU-Pro, HellaSwag, ARC-Challenge, GSM8K, MATH-500, GPQA-Main, HumanEval, and MBPP \citep{hendrycks2021mmlu,wang2024mmlupro,zellers2019hellaswag,clark2018arc,cobbe2021gsm8k,hendrycks2021math,rein2023gpqa,chen2021codex,austin2021mbpp}. We score multiple-choice tasks by option label, GSM8K by its final number, MATH by its normalized final boxed expression, and code tasks by whether the generated program passes the supplied tests in an isolated subprocess.
 
-Our benchmark set contains the validation/test sets of MMLU, MMLU-Pro, HellaSwag, ARC-Challenge, GSM8K, MATH-500, GPQA-Main, HumanEval, and sanitized MBPP \citep{hendrycks2021mmlu,wang2024mmlupro,zellers2019hellaswag,clark2018arc,cobbe2021gsm8k,hendrycks2021math,rein2023gpqa,chen2021codex,austin2021mbpp}. We score multiple-choice tasks by option label, GSM8K by its final number, MATH by its normalized final boxed expression, and code tasks by whether the generated program passes the supplied tests in an isolated subprocess.
+\subsection{Fluency}
+We use perplexity and distinct 1/2/3-gram percentages as a proxy for fluency. We calculate these based on the text generated by each diffusion model and its AR parent as answers on 100 open-ended questions. Perplexity is measured using the larger Microsoft Phi-4 14B model, which scores each generated answer. Our primary aggregate is token-weighted perplexity, $\exp(\sum_j \mathrm{NLL}_j/\sum_j N_j)$, so each scored token contributes equally. As perplexity does not penalize loss of sample diversity \citep{turok2026duel}, we also compute sliding model-token Distinct-1/2/3 after excluding special tokens and report them as percentages. Higher Distinct-$n$ means a larger fraction of unique $n$-grams, and thus a more diverse text.
 
-We test bidirectional attention separately with a simple right-context copy task (Appendix~\ref{app:bidirectional-infilling}). An earlier word is masked and then shown explicitly later in the same response. We make one same-position prediction with that later clue present and repeat the prediction after removing it. A causal model cannot change its prediction at an earlier position when only later tokens change; an accuracy gain with the clue therefore directly demonstrates use of right-hand context.
+\subsection{Bidirectional attention}
+We test whether the converted diffusion actually allow for bidirectional information flow with a simple right-context copy task (Appendix~\ref{app:bidirectional-infilling}). In this task, most of the response of the model is already pre-filled. Its task is to fill in the last missing word by copying the word shown later in the response. This would not be possible without bidirectional attention, as a causal model cannot change its prediction at an earlier position based on a token later in the sequence.
 
-For fixed open-ended prompts, Microsoft Phi-4 14B scores each generated answer autoregressively. Our primary aggregate is token-weighted perplexity, $\exp(\sum_j \mathrm{NLL}_j/\sum_j N_j)$, so each scored token contributes equally. Generative perplexity does not penalize loss of sample diversity \citep{turok2026duel}. We therefore also compute sliding model-token Distinct-1/2/3 after excluding special tokens and report them as percentages. Higher Distinct-$n$ means a larger fraction of unique $n$-grams.
+\begin{center}
+\fbox{\begin{minipage}{0.92\columnwidth}
+\small
+\textbf{Right-context copy example}\par\smallskip
+\textbf{System:} \emph{empty}\par
+\textbf{User:} Fill the earlier missing word by copying the word shown later in the response.\par\smallskip
+\textbf{Partially observed assistant response:}\par
+\textbf{Required prediction at [MASK]:} \texttt{ apple}\par
+\textbf{Reconstructed assistant response:}\par
+\texttt{Earlier word: apple. Later word to copy: apple.}
+\end{minipage}}
+\end{center}
+
+Here \texttt{[MASK]} denotes the model's tokenizer-native mask token. The model predicts only the masked position; the reconstructed response is shown to make the expected result explicit.
 
 \section{Results}
 
 \subsection{Benchmark accuracy and base-model dependence}
 
-Table~\ref{tab:accuracy} reports matched-harness evaluations using 125 examples per task for every model.
+Table~\ref{tab:accuracy} reports the matched-harness task results and their unweighted macro average.
 
 \begin{table*}[t]
-\caption{Exact-match/pass@1 accuracy in our matched 125-example-per-task harness. D: converted diffusion model; AR: unchanged parent. Llama-50k shares the Llama-25k AR parent. Among common-harness diffusion columns, bold marks the best result and underline the best converted \method{} result (ties retained); published LLaDA is protocol-separated and excluded from highlighting.}
+\caption{Exact-match/pass@1 accuracy in our matched harness. D: converted diffusion model; AR: unchanged parent. Llama-50k shares the Llama-25k AR parent. Among common-harness diffusion columns, bold marks the best result and underline the best converted \method{} result (ties retained); published LLaDA is protocol-separated and excluded from highlighting.}
 \label{tab:accuracy}
 \centering
 \scriptsize
@@ -177,36 +190,36 @@ Task & D & AR & D-25k & D-50k & AR & D & AR & D & AR & Ours & Published \\
 \multicolumn{12}{c}{\textit{General knowledge and reasoning (multiple choice)}} \\
 \midrule
 ARC-C      & \textbf{\underline{.864}} & .888 & .832 & .792 & .792 & .860 & .920 & .820 & .740 & \textbf{.864} & .885 \\
-GPQA       & .240 & .260 & .296 & .272 & .320 & \underline{.300} & .400 & .240 & .340 & \textbf{.312} & .333 \\
+GPQA       & \textbf{\underline{.320}} & .280 & .296 & .272 & .320 & .300 & .400 & .240 & .340 & .312 & .333 \\
 HellaSwag  & .752 & .696 & .704 & .688 & .608 & .740 & .780 & \textbf{\underline{.820}} & .700 & .696 & .746 \\
 MMLU       & \textbf{\underline{.688}} & .648 & .592 & .608 & .536 & .580 & .660 & .600 & .520 & .560 & .655 \\
 MMLU-Pro   & \underline{.368} & .448 & .304 & .304 & .416 & .280 & .400 & .360 & .320 & \textbf{.424} & .370 \\
 \midrule
 \multicolumn{12}{c}{\textit{Math (open ended)}} \\
 \midrule
-GSM8K      & .540 & .840 & \textbf{\underline{.656}} & .560 & .864 & .500 & .900 & .600 & .860 & .648 & .694 \\
-MATH-500   & \underline{.300} & .640 & .256 & .216 & .480 & .280 & .780 & .240 & .520 & \textbf{.344} & .319 \\
+GSM8K      & .640 & .872 & \textbf{\underline{.656}} & .560 & .864 & .500 & .900 & .600 & .860 & .648 & .694 \\
+MATH-500   & \underline{.296} & .600 & .256 & .216 & .480 & .280 & .780 & .240 & .520 & \textbf{.344} & .319 \\
 \midrule
 \multicolumn{12}{c}{\textit{Code generation (open ended)}} \\
 \midrule
 HumanEval  & .380 & .740 & .312 & .336 & .560 & .380 & .960 & \textbf{\underline{.500}} & .940 & .400 & .494 \\
 MBPP       & .460 & .740 & .432 & .512 & .712 & .500 & .820 & \textbf{\underline{.520}} & .720 & .424 & .410 \\
 \midrule
-Average    & .510 & .656 & .487 & .476 & .588 & .491 & .736 & \textbf{\underline{.522}} & .629 & .519 & .545 \\
+Average    & \textbf{\underline{.530}} & .662 & .487 & .476 & .588 & .491 & .736 & .522 & .629 & .519 & .545 \\
 \bottomrule
 \end{tabular}}
 \end{table*}
 
-The diffusion macro averages are 51.0\% for Gemma, 48.7\% for Llama-25k, 47.6\% for Llama-50k, 49.1\% for Qwen, 52.2\% for Ministral, and 51.9\% for LLaDA in our harness. The matched AR parents outperform their converted counterparts on average, although individual tasks differ. Notably, the earlier two-stage Llama run does not uniformly improve downstream accuracy, motivating checkpoint-wise evaluation rather than selecting solely by denoising loss. Section~\ref{sec:perplexity} separately examines fluency across an uninterrupted 50k-update run. Published values from other diffusion systems are provided separately in Appendix~\ref{app:published-results} because their protocols are not matched to ours.
+Gemma is the strongest converted backbone, with a 53.0\% macro average, followed by Ministral at 52.2\%; both exceed LLaDA's 51.9\% in the same harness. The matched AR parents nevertheless outperform their converted counterparts on average, although individual tasks differ. Gemma is also the largest parent and receives the largest absolute LoRA update budget, offering two plausible advantages in this comparison. Its AR parent is strong, but Qwen's higher AR macro average shows that parent accuracy alone does not determine conversion quality. Notably, the earlier two-stage Llama run does not uniformly improve downstream accuracy, motivating checkpoint-wise evaluation rather than selecting solely by denoising loss. Section~\ref{sec:perplexity} separately examines fluency across an uninterrupted 50k-update run. Published values from other diffusion systems are provided separately in Appendix~\ref{app:published-results} because their protocols are not matched to ours.
 
 Figure~\ref{fig:benchmark-radars} makes the task profiles visible without collapsing them into a macro average. Panel~(a) contrasts BYOD-Llama with both its unchanged AR parent and LLaDA. The AR parent remains substantially stronger on generation-heavy mathematics and code tasks, whereas the two DLMs have broadly similar profiles. Panel~(b) shows that the relative strengths of the four BYOD backbones are task dependent.
 
-LLaDA scores 51.9\% on the nine-task unweighted average in our 125-example harness, compared with its published average of 54.5\%. This is not an exact reproduction because prompts, subsets, generation settings, answer extraction, and code execution may differ. We therefore use the common-harness comparison as primary and report published results separately in Appendix~\ref{app:published-results}. LLaDA is our only directly tested external DLM because its response-masking objective and benchmark suite provide the cleanest comparison; Dream, iLLaDA, and Efficient-DLM introduce additional differences in data scale, masking, attention, and inference procedures.
+LLaDA scores 51.9\% on the nine-task unweighted average in our harness, compared with its published average of 54.5\%. This is not an exact reproduction because prompts, subsets, generation settings, answer extraction, and code execution may differ. We therefore use the common-harness comparison as primary and report published results separately in Appendix~\ref{app:published-results}. LLaDA is our only directly tested external DLM because its response-masking objective and benchmark suite provide the cleanest comparison; Dream, iLLaDA, and Efficient-DLM introduce additional differences in data scale, masking, attention, and inference procedures.
 
 \subsection{Right-context copy test}
 \label{sec:bidirectional-infilling}
 
-The right-context copy test asks only whether the converted model can copy a later visible word into an earlier masked position (Appendix~\ref{app:bidirectional-infilling}). The final paper will summarize its principal result here: \xxx{report, for each converted model, exact match with the later clue, exact match without it, and the resulting right-context gain}. Detailed per-model results remain separate from the general capability benchmark in Appendix Table~\ref{tab:bidirectional-infilling}.
+The right-context copy test asks whether a model can copy a later visible word into an earlier masked position (Appendix~\ref{app:bidirectional-infilling}). With the clue present, exact match is 95\% for Gemma, 75\% for each Llama checkpoint, 15\% for Qwen, 30\% for Ministral, and 90\% for LLaDA; every model scores 0\% after the clue is removed. Exact copying therefore varies substantially. However, the clue changes the greedy prediction in 100\% of Gemma, long-run Llama, Ministral, and LLaDA examples and 95\% for Llama-25k, showing strong right-context use even where instruction following is imperfect. Qwen changes its prediction in only 15\% of examples and is the clear exception.
 
 \subsection{Fluency with reduced denoising steps}
 \label{sec:perplexity}
@@ -215,7 +228,7 @@ The right-context copy test asks only whether the converted model can copy a lat
 % prose or float placement changes during later manuscript edits.
 \clearpage
 \begin{table*}[t]
-\caption{Open-ended generation at a 128-token output length and 64 NFE for diffusion models. Rows use 30 prompts, except the uninterrupted Llama 50k checkpoint, which uses the expanded 100-prompt evaluation. PPL is token-weighted Phi-4 perplexity (lower is better); D-1/2/3 are mean per-answer sliding Distinct-$n$ percentages over model-tokenizer tokens (higher is less repetitive). AR parents generate the same output length autoregressively.}
+\caption{Open-ended generation at a 128-token output length and 64 NFE for diffusion models. PPL is token-weighted Phi-4 perplexity (lower is better); D-1/2/3 are mean per-answer sliding Distinct-$n$ percentages over model-tokenizer tokens (higher is less repetitive). AR parents generate the same output length autoregressively.}
 \label{tab:ppl}
 \centering
 \scriptsize
@@ -242,18 +255,20 @@ We also benchmarked the saved Llama adapter before and after merging (Appendix~\
 
 \subsection{Further training}
 
-Figure~\ref{fig:llama-training-diagnostics} shows checkpoint-wise generation diagnostics. Improvements are not monotonic at every budget. In the uninterrupted 50k-update run, 32-NFE perplexity reaches its minimum of 16.593 at 40k and ends at 17.002, while Distinct-1 ends at 43.5\%. The 64-NFE sweep reaches its minimum of 9.089 at 35k and ends at 9.534 with 49.6\% Distinct-1; at 128 NFE, the corresponding values are 4.802 at 35k and 4.830 with 50.7\% Distinct-1 at 50k. Perplexity fluctuations are largest at low NFE despite the continuously decreasing validation loss in panel~(c). Checkpoints 30k and 45k terminate earlier under all three decoding budgets: their mean scored lengths are 75.3/74.5 tokens at 32 NFE, 77.6/78.4 at 64 NFE, and 85.7/81.5 at 128 NFE, whereas their respective neighboring checkpoints span 95.3--102.4, 101.1--102.3, and 104.9--110.7 tokens. A targeted 32-NFE replication with a second sampling seed produces the same behavior: 30k/45k obtain 21.417/20.678 perplexity and mean lengths of 72.6/73.8 tokens, close to 22.934/22.202 and 75.3/74.5 with the original seed. Recurrence across denoising budgets and sampling seeds therefore strongly supports checkpoint-specific termination behavior rather than a single anomalous generation. On the same 100-prompt, 128-token protocol, the unchanged AR parent obtains 2.639 perplexity and 62.1\% Distinct-1. The factual-task macro average of the earlier two-stage model changes only from 48.7\% at 25k to 47.6\% at 50k. Further uninterrupted training may therefore affect low-budget parallel decoding more strongly than factual capability, but does not yield monotonic gains. Missing checkpoint cells are omitted rather than imputed.
+Figure~\ref{fig:llama-training-diagnostics} shows checkpoint-wise generation diagnostics. Improvements are not monotonic at every budget. In the uninterrupted 50k-update run, 32-NFE perplexity reaches its minimum of 16.593 at 40k and ends at 17.002, while Distinct-1 ends at 43.5\%. The 64-NFE sweep reaches its minimum of 9.089 at 35k and ends at 9.534 with 49.6\% Distinct-1; at 128 NFE, the corresponding values are 4.802 at 35k and 4.830 with 50.7\% Distinct-1 at 50k. Perplexity fluctuations are largest at low NFE despite the continuously decreasing validation loss in panel~(c). Checkpoints 30k and 45k terminate earlier under all three decoding budgets: their mean scored lengths are 75.3/74.5 tokens at 32 NFE, 77.6/78.4 at 64 NFE, and 85.7/81.5 at 128 NFE, whereas their respective neighboring checkpoints span 95.3--102.4, 101.1--102.3, and 104.9--110.7 tokens. A targeted 32-NFE replication with a second sampling seed produces the same behavior: 30k/45k obtain 21.417/20.678 perplexity and mean lengths of 72.6/73.8 tokens, close to 22.934/22.202 and 75.3/74.5 with the original seed. Recurrence across denoising budgets and sampling seeds therefore strongly supports checkpoint-specific termination behavior rather than a single anomalous generation. Under the same generation protocol, the unchanged AR parent obtains 2.639 perplexity and 62.1\% Distinct-1. The factual-task macro average of the earlier two-stage model changes only from 48.7\% at 25k to 47.6\% at 50k. Further uninterrupted training may therefore affect low-budget parallel decoding more strongly than factual capability, but does not yield monotonic gains.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/llama_training_diagnostics.pdf}
-\caption{BYOD-Llama training diagnostics. (a) Token-weighted Phi-4 perplexity for 128-token generations, shown on a logarithmic y-axis. (b) Mean sliding model-token Distinct-1 for the same generations, reported as a percentage. Each NFE series contains 100 prompts at all eleven checkpoints from the uninterrupted \texttt{llama-3.1-8b-mask-long} run. Color-matched dashed lines are fixed LLaDA references; the dotted gray line is the unchanged Llama AR parent measured over the same 100 prompts. (c) Weighted validation loss from the uninterrupted run through 50k updates. Lower is better in (a,c), and higher is better in (b).}
+\caption{BYOD-Llama training diagnostics. (a) Token-weighted Phi-4 perplexity for 128-token generations, shown on a logarithmic y-axis. (b) Mean sliding model-token Distinct-1 for the same generations, reported as a percentage. Each NFE series covers all eleven checkpoints from the uninterrupted \texttt{llama-3.1-8b-mask-long} run. Color-matched dashed lines are fixed LLaDA references; the dotted gray line is the unchanged Llama AR parent. (c) Weighted validation loss from the uninterrupted run through 50k updates. Lower is better in (a,c), and higher is better in (b).}
 \label{fig:llama-training-diagnostics}
 \end{figure*}
 
 \section{Discussion}
 
 The central empirical result is that useful AR-to-diffusion conversion can be made an hours-scale, single-GPU procedure. High-rank attention-only LoRA is sufficient to turn four independently developed causal instruction models into generators that reconstruct answers from a fully masked block. Together with the right-context copy test and the retained benchmark performance---on par with LLaDA in our common-harness macro average---this indicates that the models acquire functional bidirectional generation while preserving substantial knowledge from their AR parents. A capable paid cloud GPU is still required, so this represents broader rather than zero-cost access.
+
+The backbone comparison also shows that conversion quality is not architecture independent. Gemma produces the strongest task average among the converted models. Its larger parent model and larger absolute LoRA parameter budget plausibly provide more capacity for learning the new denoising behavior, while its capable AR starting point supplies knowledge worth retaining. These factors cannot be disentangled here: Qwen has the strongest AR average but does not yield the strongest conversion, so parent capability is important but insufficient on its own.
 
 Accessibility here concerns evaluation as well as training. Our streamlined Google Colab workflow installs the required software, offers a choice of supported AR parents, and provides live training feedback, allowing the conversion to be reproduced or modified without a local accelerator cluster or bespoke training infrastructure. We also provide full-precision interactive demos for every converted model. These are part of the scientific evaluation rather than merely presentation artifacts: perplexity and Distinct-$n$ expose only narrow aspects of generation, whereas grammaticality, coherence, characteristic failures, and the denoising process are often easiest to assess through direct interaction. Releasing weights and source code without a working inference path leaves readers with substantial setup work and makes it less likely that they will qualitatively inspect each new model. The demos remove much of that friction and make such scrutiny an accessible part of the reproducibility package.
 
@@ -273,7 +288,7 @@ This is also why we do not claim that Appendix~\ref{app:published-results} is a 
 
 \section{Limitations}
 
-Only one training seed is available per model, so architecture and random-seed effects are not separated. The four backbones differ in tokenizer, pretraining data, alignment, attention implementation, and nominal parameter count; fixing LoRA rank consequently produces different trainable counts and fractions, which may also contribute to cross-family differences. Although chosen as the latest comparable text-only releases when the study was designed, they are not guaranteed to remain the latest checkpoints at publication time. Phi-4 perplexity favors text that its own AR distribution considers probable, ignores diversity, and is not a diffusion likelihood. Distinct-$n$ detects local repetition but not factuality, grammar, or global coherence. Published LLaDA numbers are not directly comparable to our harness. We also have not yet established wall-clock speedups: $\mathrm{NFE}<L$ reduces sequential model calls but does not automatically imply lower latency because each call processes the full answer block. Finally, we did not instrument the runs for energy consumption or carbon intensity. Single-GPU execution and lower incremental training volume support accessibility and compute-efficiency claims, not a quantified sustainability claim.
+Only one training seed is available per model, so architecture and random-seed effects are not separated. The four backbones differ in tokenizer, pretraining data, alignment, attention implementation, and nominal parameter count. We fixed LoRA rank rather than total trainable parameters or trainable fraction; consequently, Gemma is both the largest parent and the model with the largest absolute adapter budget. Its leading benchmark result therefore cannot be attributed cleanly to architecture, parent quality, model scale, or conversion efficiency. Although chosen as the latest comparable text-only releases when the study was designed, the backbones are not guaranteed to remain the latest checkpoints at publication time. Phi-4 perplexity favors text that its own AR distribution considers probable, ignores diversity, and is not a diffusion likelihood. Distinct-$n$ detects local repetition but not factuality, grammar, or global coherence. Published LLaDA numbers are not directly comparable to our harness. We do not report measured wall-clock inference speedups: $\mathrm{NFE}<L$ reduces sequential model calls but does not automatically imply lower latency because each call processes the full answer block. Finally, we did not instrument the runs for energy consumption or carbon intensity. Single-GPU execution and lower incremental training volume support accessibility and compute-efficiency claims, not a quantified sustainability claim.
 
 \section{Conclusion}
 
@@ -281,7 +296,7 @@ Only one training seed is available per model, so architecture and random-seed e
 
 \section*{Reproducibility Statement}
 
-Training and evaluation code is available at \url{https://github.com/RuurdKuiper/lad-generic}. Public model cards and interactive demos for all four conversions are available under \url{https://huggingface.co/Ruurd}; each model card links to its corresponding full-precision ZeroGPU demo. The main text specifies the objective, trainable modules, data volume, optimization, generation, benchmarks, and scoring. The accompanying artifacts include resolved configurations, parameter audits, checkpoint identifiers, loss logs, generated samples, and benchmark manifests; immutable dataset and software revisions will be recorded with the archival release.
+Training and evaluation code is available at \url{https://github.com/RuurdKuiper/lad-generic}. Public model cards and interactive demos for all four conversions are available under \url{https://huggingface.co/Ruurd}; each model card links to its corresponding full-precision ZeroGPU demo. The main text specifies the objective, trainable modules, data volume, optimization, generation, benchmarks, and scoring. The accompanying artifacts include resolved configurations, parameter audits, checkpoint identifiers, loss logs, generated samples, and benchmark manifests.
 
 \section*{Ethics Statement}
 
@@ -289,7 +304,7 @@ This study uses existing language models and public benchmark or instruction dat
 
 \section*{AI Use Statement}
 
-Generative AI tools were used to assist software development and debugging, design and review of experiments, creation of analysis scripts, interpretation of preliminary results, literature discovery and summarization, and drafting and editing this manuscript. The authors manually reviewed AI-assisted code and prose, checked numerical claims against saved experimental artifacts, and verified literature claims and citations against primary sources. No benchmark value was entered solely from an unsupported model response. The authors take responsibility for the final content, claims, code, and artifacts.
+Generative AI tools were used to assist software development and debugging, design and review of experiments, creation of analysis scripts, interpretation of results, literature discovery and summarization, and drafting and editing this manuscript. The authors manually reviewed AI-assisted code and prose, checked numerical claims against saved experimental artifacts, and verified literature claims and citations against primary sources. No benchmark value was entered solely from an unsupported model response. The authors take responsibility for the final content, claims, code, and artifacts.
 
 \bibliography{iclr2027_conference}
 \bibliographystyle{iclr2027_conference}
@@ -360,29 +375,32 @@ Data-loader workers & 4 & Prefetch factor & 4 \\
 \section{Complete inference configuration}
 \label{app:inference-settings}
 
-Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7 and 100 fixed prompts. Archived run manifests take precedence over mutable notebook defaults.
+Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7. Archived run manifests take precedence over mutable notebook defaults.
 
 \begin{table*}[h]
 \caption{Task-specific masked-diffusion inference settings in the validation notebook. NFE is the number of denoising network evaluations.}
 \label{tab:diffusion-inference}
 \centering
 \small
-\begin{tabular}{lrrrrl}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrlr}
 \toprule
-Task & Output tokens & NFE & Block length & Temperature & Terminator handling \\
+Task & Output tokens & NFE & Block length & Temperature & Terminator handling & Samples \\
 \midrule
-Open-ended & 128 & 128/64/32 & 128 & 0.7 & delayed retention \\
-MMLU & 64 & 64 & 64 & 0 & ordinary \\
-MMLU-Pro & 128 & 128 & 128 & 0 & delayed retention \\
-HellaSwag & 64 & 64 & 64 & 0 & ordinary \\
-ARC-Challenge & 64 & 64 & 64 & 0 & ordinary \\
-GSM8K & 256 & 256 & 256 & 0 & delayed retention \\
-MATH-500 & 256 & 256 & 256 & 0 & delayed retention \\
-GPQA-Main & 128 & 128 & 128 & 0 & delayed retention \\
-HumanEval & 256 & 256 & 256 & 0 & delayed retention \\
-MBPP & 128 & 128 & 128 & 0 & delayed retention \\
+Open-ended & 128 & 128/64/32 & 128 & 0.7 & delayed retention & 125 \\
+MMLU & 64 & 64 & 64 & 0 & ordinary & 125 \\
+MMLU-Pro & 128 & 128 & 128 & 0 & delayed retention & 125 \\
+HellaSwag & 64 & 64 & 64 & 0 & ordinary & 125 \\
+ARC-Challenge & 64 & 64 & 64 & 0 & ordinary & 125 \\
+GSM8K & 256 & 256 & 256 & 0 & delayed retention & 125 \\
+MATH-500 & 256 & 256 & 256 & 0 & delayed retention & 125 \\
+GPQA-Main & 128 & 128 & 128 & 0 & delayed retention & 125 \\
+HumanEval & 256 & 256 & 256 & 0 & delayed retention & 125 \\
+MBPP & 128 & 128 & 128 & 0 & delayed retention & 125 \\
+Right-context copy & 1 masked word & 1 & \na & 0 & \na & 20 \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence.
@@ -412,35 +430,25 @@ Figures~\ref{fig:demo-confidence-trajectories} and~\ref{fig:demo-remasking-traje
 
 \begin{figure*}[p]
 \centering
-\IfFileExists{figures/demo_gemma_confidence_64steps_64tokens_probability.png}{%
-  \includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_64steps_64tokens_probability.png}%
-}{\fbox{\parbox[c][2.2cm][c]{0.64\textwidth}{\centering Screenshot pending\\[3pt]\texttt{confidence, 64 NFE/64 tokens, probability color}}}}
+\includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_64steps_64tokens_probability.png}
 \\[-2pt]\small (a) 64 NFE and 64 tokens.
 
 \vspace{3pt}
-\IfFileExists{figures/demo_gemma_confidence_32steps_64tokens_probability.png}{%
-  \includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_32steps_64tokens_probability.png}%
-}{\fbox{\parbox[c][2.2cm][c]{0.64\textwidth}{\centering Screenshot pending\\[3pt]\texttt{confidence, 32 NFE/64 tokens, probability color}}}}
+\includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_32steps_64tokens_probability.png}
 \\[-2pt]\small (b) 32 NFE and 64 tokens.
 
 \vspace{3pt}
-\IfFileExists{figures/demo_gemma_confidence_16steps_64tokens_probability.png}{%
-  \includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_16steps_64tokens_probability.png}%
-}{\fbox{\parbox[c][2.2cm][c]{0.64\textwidth}{\centering Screenshot pending\\[3pt]\texttt{confidence, 16 NFE/64 tokens, probability color}}}}
+\includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_16steps_64tokens_probability.png}
 \\[-2pt]\small (c) 16 NFE and 64 tokens.
 \caption{Confidence-guided BYOD-Gemma-2-9B trajectories at decreasing inference budgets on a 64-token canvas. Red-to-green coloring records each retained token's sampling probability.}
 \label{fig:demo-confidence-trajectories}
 
 \vspace{6pt}
-\IfFileExists{figures/demo_gemma_random_64steps_64tokens_iteration.png}{%
-  \includegraphics[width=0.67\textwidth]{figures/demo_gemma_random_64steps_64tokens_iteration.png}%
-}{\fbox{\parbox[c][2.2cm][c]{0.64\textwidth}{\centering Screenshot pending\\[3pt]\texttt{random, 64 NFE/64 tokens, iteration color}}}}
+\includegraphics[width=0.67\textwidth]{figures/demo_gemma_random_64steps_64tokens_iteration.png}
 \\[-2pt]\small (a) Random remasking; prediction-iteration coloring.
 
 \vspace{3pt}
-\IfFileExists{figures/demo_gemma_confidence_64steps_64tokens_iteration.png}{%
-  \includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_64steps_64tokens_iteration.png}%
-}{\fbox{\parbox[c][2.2cm][c]{0.64\textwidth}{\centering Screenshot pending\\[3pt]\texttt{confidence, 64 NFE/64 tokens, iteration color}}}}
+\includegraphics[width=0.67\textwidth]{figures/demo_gemma_confidence_64steps_64tokens_iteration.png}
 \\[-2pt]\small (b) Confidence-guided remasking; prediction-iteration coloring.
 \caption{Remasking comparison for BYOD-Gemma-2-9B at 64 NFE on a 64-token canvas. Blue intensity records the iteration at which each retained token was predicted.}
 \label{fig:demo-remasking-trajectories}
@@ -451,25 +459,26 @@ Figures~\ref{fig:demo-confidence-trajectories} and~\ref{fig:demo-remasking-traje
 \section{Right-context copy test}
 \label{app:bidirectional-infilling}
 
-This deterministic test contains 20 ordinary words. Each response has the form ``Earlier word: [MASK]. Later word to copy: apple.'', with a different target word in each example. The target is absent from the instruction and left context and appears explicitly after the mask. All model tokens belonging to the target word are masked simultaneously, and the converted model predicts them in one forward pass; no iterative sampling or generation settings are involved.
+This deterministic test uses ordinary target words. Each response has the form ``Earlier word: [MASK]. Later word to copy: apple.'', with a different target word in each example. The target is absent from the instruction and left context and appears explicitly after the mask. All model tokens belonging to the target word are masked simultaneously, and the converted model predicts them in one forward pass; no iterative sampling or generation settings are involved.
 
-We score the same masked position twice: once with the later copy clue and once after deleting that clue. We report exact match for both conditions and their difference, which we call the right-context gain. This within-model comparison is sufficient: under causal attention, changing or deleting tokens to the right cannot affect logits at an earlier position, so the gain must be zero. A positive gain therefore shows directly that the converted model uses bidirectional context. This is a functional attention check, not a benchmark of reasoning or general infilling quality.
+We score the same masked position twice: once with the later copy clue and once after deleting that clue. We report exact match for both conditions, their difference, and whether adding the clue changes the greedy prediction at all. Under causal attention, changing or deleting tokens to the right cannot affect logits at an earlier position, so both the exact-match gain and prediction-change rate must be zero. The latter separates use of right context from the stricter ability to follow the exact-copy instruction. This is a functional attention check, not a benchmark of reasoning or general infilling quality.
 
 \begin{table}[h]
-\caption{Right-context copy test on 20 deterministic words. ``With clue'' predicts the earlier mask while the word is visible later; ``without clue'' removes that later word. Gain is the exact-match difference. All values are pending.}
+\caption{Right-context copy results. ``With clue'' predicts the earlier mask while the word is visible later; ``without clue'' removes that later word. Gain is the exact-match difference.}
 \label{tab:bidirectional-infilling}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-Model & With clue EM & Without clue EM & Right-context gain \\
+Model & With clue EM & Without clue EM & EM gain & Prediction changed \\
 \midrule
-Gemma 2 9B, 25k & XXX & XXX & XXX \\
-Llama 3.1 8B, 25k & XXX & XXX & XXX \\
-Llama 3.1 8B, 50k & XXX & XXX & XXX \\
-Qwen2.5 7B, 25k & XXX & XXX & XXX \\
-Ministral 8B, 25k & XXX & XXX & XXX \\
+Gemma 2 9B, 25k & 95\% & 0\% & +95 pp & 100\% \\
+Llama 3.1 8B, 25k & 75\% & 0\% & +75 pp & 95\% \\
+Llama 3.1 8B, long-run best & 75\% & 0\% & +75 pp & 100\% \\
+Qwen2.5 7B, 25k & 15\% & 0\% & +15 pp & 15\% \\
+Ministral 8B, 25k & 30\% & 0\% & +30 pp & 100\% \\
+LLaDA 8B Instruct & 90\% & 0\% & +90 pp & 100\% \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -528,7 +537,7 @@ Merged standalone & 8.030B & 19.283 & 3.720 & 49.8 & 80.7 & 91.8 \\
 \end{table}
 
 \begin{table}[h]
-\caption{Factual benchmark accuracy (\%) before and after merging on the matched 125-example-per-task subsets; the mean is unweighted across the nine tasks.}
+\caption{Factual benchmark accuracy (\%) before and after merging in the matched harness; the mean is unweighted across the nine tasks.}
 \centering
 \small
 \begin{tabular}{lrr@{\qquad}lrr}
@@ -544,6 +553,6 @@ HumanEval  & 50.0 & 48.0 & \textbf{Mean} & \textbf{51.3} & \textbf{49.3} \\
 \end{tabular}
 \end{table}
 
-Merging is an algebraic reparameterization rather than an additional training stage: each base projection $W$ is replaced by $W+(\alpha/r)BA$, where $A$ and $B$ are the trained rank-$r$ LoRA matrices and $\alpha$ is their scaling parameter. Subject to floating-point rounding, evaluating the folded projection is equivalent to evaluating the base and LoRA branches separately. The open-generation metrics are slightly better after merging, whereas the small factual subsets show mixed task differences and a 2.0-point lower macro mean. These reruns therefore support preservation of overall behavior, but are not precise enough to attribute task-level changes to merging; a logit-level deterministic parity test would isolate numerical merge error from generation and subset variance.
+Merging is an algebraic reparameterization rather than an additional training stage: each base projection $W$ is replaced by $W+(\alpha/r)BA$, where $A$ and $B$ are the trained rank-$r$ LoRA matrices and $\alpha$ is their scaling parameter. Subject to floating-point rounding, evaluating the folded projection is equivalent to evaluating the base and LoRA branches separately. The open-generation metrics are slightly better after merging, whereas the factual benchmarks show mixed task differences and a 2.0-point lower macro mean. These reruns therefore support preservation of overall behavior, but are not precise enough to attribute task-level changes to merging; a logit-level deterministic parity test would isolate numerical merge error from generation and benchmark variance.
 
 \end{document}

@@ -23,6 +23,7 @@ def example():
         example_id="example",
         prompt="instruction",
         metadata={
+            "system_prompt": "You are a helpful assistant.",
             "answer_prefix": "left",
             "target_text": " target",
             "answer_suffix": " suffix target",
@@ -51,10 +52,12 @@ def test_bidirectional_score_reports_right_context_gain(monkeypatch):
 
     assert result["exact_match"] is True
     assert result["without_clue_exact_match"] is False
+    assert result["clue_changed_prediction"] is True
     summary = summarize_infilling([result])
     assert summary["exact_match"] == 1.0
     assert summary["without_clue_exact_match"] == 0.0
     assert summary["right_context_gain_exact_match"] == 1.0
+    assert summary["clue_changed_prediction_rate"] == 1.0
 
 
 def test_infilling_summary_is_token_weighted():
@@ -62,10 +65,12 @@ def test_infilling_summary_is_token_weighted():
         {
             "exact_match": True, "correct_tokens": 1, "target_tokens": 1,
             "without_clue_exact_match": False, "without_clue_correct_tokens": 0,
+            "clue_changed_prediction": True,
         },
         {
             "exact_match": False, "correct_tokens": 1, "target_tokens": 3,
             "without_clue_exact_match": False, "without_clue_correct_tokens": 0,
+            "clue_changed_prediction": False,
         },
     ]
 
@@ -75,3 +80,4 @@ def test_infilling_summary_is_token_weighted():
     assert summary["token_accuracy"] == 0.5
     assert summary["without_clue_exact_match"] == 0.0
     assert summary["right_context_gain_token_accuracy"] == 0.5
+    assert summary["clue_changed_prediction_rate"] == 0.5

@@ -53,6 +53,10 @@ def test_bidirectional_infilling_benchmark_is_a_simple_right_context_copy_test()
     assert len({example.example_id for example in examples}) == 20
     assert all(example.metadata["target_text"].strip() in example.metadata["answer_suffix"] for example in examples)
     assert all(example.metadata["target_text"].strip() not in example.metadata["answer_prefix"] for example in examples)
+    assert all(example.metadata["system_prompt"] == "You are a helpful assistant." for example in examples)
+    assert all(example.metadata["answer_prefix"] == "Answer:" for example in examples)
+    assert all("COPY:" in example.metadata["answer_suffix"] for example in examples)
+    assert "exactly" in examples[0].prompt
 
 
 def test_bidirectional_infilling_benchmark_respects_limit():

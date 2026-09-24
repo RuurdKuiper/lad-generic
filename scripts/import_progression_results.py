@@ -23,11 +23,13 @@ DRIVE_ROOT = (
 RUN_IDS = {
     32: "20260923T134029.046940Z--colab-validation",
     64: "20260923T190517.263478Z--colab-validation",
+    128: "20260923T201036.622289Z--colab-validation",
 }
 ALL_GLOBAL_STEPS = (1_000, 5_000, 10_000, 15_000, 20_000, 25_000, 30_000, 35_000, 40_000, 45_000, 50_000)
 SELECTED_GLOBAL_STEPS = {
     32: ALL_GLOBAL_STEPS,
     64: ALL_GLOBAL_STEPS,
+    128: ALL_GLOBAL_STEPS,
 }
 METRIC_FIELDS = {
     "perplexity": "perplexity",
@@ -248,7 +250,7 @@ def main() -> None:
 
     provenance = workbook["Import provenance"]
     provenance_rows: list[tuple[str, object]] = []
-    for nfe in (32, 64):
+    for nfe in (32, 64, 128):
         run = metadata[nfe]["run"]
         provenance_rows.extend((
             (f"{nfe}-NFE progression run ID", run["run_id"]),

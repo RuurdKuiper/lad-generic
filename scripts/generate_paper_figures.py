@@ -398,8 +398,8 @@ def plot_open_generation_budget(data: dict[str, Any], output_dir: Path) -> None:
     ar_x = 3.35
     fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.5))
     metrics = (
-        ("perplexity", "Phi-4 token-weighted perplexity (↓)", "(a) Perplexity", True),
-        ("distinct_1", "Mean sliding model-token Distinct-1, % (↑)", "(b) Lexical diversity", False),
+        ("perplexity", "Perplexity (↓)", "(a) Perplexity", True),
+        ("distinct_1", "Distinct-1 (↑)", "(b) Distinct-1", False),
     )
     for ax, (metric, ylabel, title, log_scale) in zip(axes, metrics):
         observed = []

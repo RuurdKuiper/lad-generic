@@ -1,44 +1,44 @@
 {
-  "run_id": "20260924T075530.879202Z--colab-validation",
+  "run_id": "20260924T085113.502527Z--colab-validation",
   "task": "bidirectional_infilling",
   "test_type": "right_context_copy",
-  "protocol": "original prompt; results predate the clarified COPY prompt",
+  "protocol": "clarified COPY prompt with training-matched system message; single-forward greedy argmax",
   "total": 20,
   "results": {
     "gemma-2-9b-mask/best": {
-      "with_clue_exact_match": 0.95,
+      "with_clue_exact_match": 1.0,
       "without_clue_exact_match": 0.0,
-      "right_context_gain": 0.95,
+      "right_context_gain": 1.0,
       "clue_changed_prediction_rate": 1.0
     },
     "llama-3.1-8b-mask/best": {
-      "with_clue_exact_match": 0.75,
-      "without_clue_exact_match": 0.0,
-      "right_context_gain": 0.75,
-      "clue_changed_prediction_rate": 0.95
-    },
-    "llama-3.1-8b-mask-long/best": {
-      "with_clue_exact_match": 0.75,
-      "without_clue_exact_match": 0.0,
-      "right_context_gain": 0.75,
-      "clue_changed_prediction_rate": 1.0
-    },
-    "qwen-2.5-7b-mask/best": {
-      "with_clue_exact_match": 0.15,
-      "without_clue_exact_match": 0.0,
-      "right_context_gain": 0.15,
-      "clue_changed_prediction_rate": 0.15
-    },
-    "ministral-8b-mask/best": {
-      "with_clue_exact_match": 0.3,
-      "without_clue_exact_match": 0.0,
-      "right_context_gain": 0.3,
-      "clue_changed_prediction_rate": 1.0
-    },
-    "llada:GSAI-ML/LLaDA-8B-Instruct": {
       "with_clue_exact_match": 0.9,
       "without_clue_exact_match": 0.0,
       "right_context_gain": 0.9,
+      "clue_changed_prediction_rate": 1.0
+    },
+    "llama-3.1-8b-mask-long/best": {
+      "with_clue_exact_match": 0.7,
+      "without_clue_exact_match": 0.0,
+      "right_context_gain": 0.7,
+      "clue_changed_prediction_rate": 1.0
+    },
+    "qwen-2.5-7b-mask/best": {
+      "with_clue_exact_match": 0.2,
+      "without_clue_exact_match": 0.0,
+      "right_context_gain": 0.2,
+      "clue_changed_prediction_rate": 1.0
+    },
+    "ministral-8b-mask/best": {
+      "with_clue_exact_match": 1.0,
+      "without_clue_exact_match": 0.0,
+      "right_context_gain": 1.0,
+      "clue_changed_prediction_rate": 1.0
+    },
+    "llada:GSAI-ML/LLaDA-8B-Instruct": {
+      "with_clue_exact_match": 1.0,
+      "without_clue_exact_match": 0.0,
+      "right_context_gain": 1.0,
       "clue_changed_prediction_rate": 1.0
     }
   }

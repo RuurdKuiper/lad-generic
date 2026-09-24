@@ -259,7 +259,8 @@ Finally, the automatic generation metrics cover only part of text quality. Phi-4
 
 \section{Conclusion}
 
-\method{} provides a common, efficient route from instruction-tuned AR checkpoints to masked diffusion generators across Gemma, Llama, Qwen, and Ministral. The experiments establish that diffusive behavior, functional bidirectional conditioning, and substantial parent-model knowledge can be obtained in a few hours on one Google Colab GPU. They also expose the remaining challenge: fluency and diversity lag behind AR parents and LLaDA, especially when NFE is below output length. The next step is therefore not merely more compute, but determining whether longer training, larger effective batches, alternative objectives, or a broader adapter placement can close this gap without sacrificing BYOD's accessibility. In its present form, BYOD makes that experimentation feasible for researchers who cannot retrain a foundation model or provision a large accelerator cluster.
+\method{} provides a common, efficient route from instruction-tuned AR checkpoints to masked diffusion generators across Gemma, Llama, Qwen, and Ministral. The experiments show that diffusive generation with bidirectional attention can be obtained in a few hours on one Google Colab GPU, while retaining substantial parent-model knowledge. However, fluency and diversity still lag behind both their AR parents and other large DLMs, especially when NFE is below output length. A promising next step is to use the merged BYOD model to initialize further partial or full diffusion fine-tuning, testing whether generation quality can improve while retaining the parent's capabilities. In its present form, BYOD enables rapid, controlled diffusion experiments across a range of established model families using minimal compute infrastructure.
+
 
 \section*{Reproducibility Statement}
 

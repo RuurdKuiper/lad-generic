@@ -19,6 +19,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from matplotlib.ticker import FixedLocator, FuncFormatter
 import numpy as np
 from openpyxl import load_workbook
 
@@ -340,7 +341,27 @@ def _plot_progression_panel(
     ax.set_xticks(data["all_steps"])
     ax.set_xticklabels([f"{step // 1000}k" for step in data["all_steps"]], fontsize=8)
     ax.set_xlim(min(data["all_steps"]) - 1_500, max(data["all_steps"]) + 1_500)
-    ax.set_ylim(bottom=0)
+    if value_name == "perplexity":
+        observed = [
+            point[value_name]
+            for item in data["series"].values()
+            for point in item["points"]
+        ]
+        observed.extend(item["llada"] for item in data["series"].values())
+        observed.append(data["series"][32]["ar"])
+        ax.set_yscale("log")
+        ax.set_ylim(min(observed) * 0.85, max(observed) * 1.15)
+        ticks = [
+            tick
+            for tick in (3, 4, 5, 6, 8, 10, 15, 20, 25)
+            if ax.get_ylim()[0] <= tick <= ax.get_ylim()[1]
+        ]
+        ax.yaxis.set_major_locator(FixedLocator(ticks))
+        ax.yaxis.set_major_formatter(
+            FuncFormatter(lambda value, _position: f"{value:g}")
+        )
+    else:
+        ax.set_ylim(bottom=0)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
     ax.spines[["top", "right"]].set_visible(False)
     nfe_legend = ax.legend(title="BYOD-Llama", frameon=False, loc="upper right", fontsize=8, title_fontsize=8)

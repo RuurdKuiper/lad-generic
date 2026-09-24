@@ -27,6 +27,7 @@ DEFAULT_OUTPUT = ROOT / "iclr2027_submission/source_results/open_ended_uncertain
 RUNS = {
     "table": "20260918T135058.643507Z--colab-validation",
     "ministral_table": "20260921T131916.314780Z--colab-validation",
+    "llama_long_64": "20260923T190517.263478Z--colab-validation",
     "progression_32": "20260923T134029.046940Z--colab-validation",
     "progression_64": "20260923T190517.263478Z--colab-validation",
     "progression_128": "20260923T201036.622289Z--colab-validation",
@@ -40,7 +41,11 @@ TABLE_MODELS = {
     "Gemma 2 9B, 25k|autoregressive": ("table", "google-gemma-2-9b-it", "autoregressive"),
     "Llama 3.1 8B, 25k|diffusion": ("table", "llama-3.1-8b-mask-best", "diffusion"),
     "Llama 3.1 8B, 25k|autoregressive": ("table", "meta-llama-llama-3.1-8b-instruct", "autoregressive"),
-    "Llama 3.1 8B, 50k|diffusion": ("table", "llama-3.1-8b-mask-continued-best", "diffusion"),
+    "Llama 3.1 8B, 50k|diffusion": (
+        "llama_long_64",
+        "llama-3.1-8b-mask-long-checkpoint-50000",
+        "diffusion",
+    ),
     "Llama 3.1 8B, 50k|autoregressive": ("table", "meta-llama-llama-3.1-8b-instruct", "autoregressive"),
     "Qwen2.5 7B, 25k|diffusion": ("table", "qwen-2.5-7b-mask-best", "diffusion"),
     "Qwen2.5 7B, 25k|autoregressive": ("table", "qwen-qwen2.5-7b-instruct", "autoregressive"),

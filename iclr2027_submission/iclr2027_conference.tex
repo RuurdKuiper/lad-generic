@@ -197,7 +197,7 @@ Average    & .510 & .656 & .487 & .476 & .588 & .491 & .736 & \textbf{\underline
 \end{tabular}}
 \end{table*}
 
-The diffusion macro averages are 51.0\% for Gemma, 48.7\% for Llama-25k, 47.6\% for Llama-50k, 49.1\% for Qwen, 52.2\% for Ministral, and 51.9\% for LLaDA in our harness. The matched AR parents outperform their converted counterparts on average, although individual tasks differ. Notably, the second Llama stage does not uniformly improve downstream accuracy despite reducing its 64-step generation perplexity (Section~\ref{sec:perplexity}), motivating checkpoint-wise evaluation rather than selecting solely by denoising loss or fluency. Published values from other diffusion systems are provided separately in Appendix~\ref{app:published-results} because their protocols are not matched to ours.
+The diffusion macro averages are 51.0\% for Gemma, 48.7\% for Llama-25k, 47.6\% for Llama-50k, 49.1\% for Qwen, 52.2\% for Ministral, and 51.9\% for LLaDA in our harness. The matched AR parents outperform their converted counterparts on average, although individual tasks differ. Notably, the earlier two-stage Llama run does not uniformly improve downstream accuracy, motivating checkpoint-wise evaluation rather than selecting solely by denoising loss. Section~\ref{sec:perplexity} separately examines fluency across an uninterrupted 50k-update run. Published values from other diffusion systems are provided separately in Appendix~\ref{app:published-results} because their protocols are not matched to ours.
 
 Figure~\ref{fig:benchmark-radars} makes the task profiles visible without collapsing them into a macro average. Panel~(a) contrasts BYOD-Llama with both its unchanged AR parent and LLaDA. The AR parent remains substantially stronger on generation-heavy mathematics and code tasks, whereas the two DLMs have broadly similar profiles. Panel~(b) shows that the relative strengths of the four BYOD backbones are task dependent.
 
@@ -215,7 +215,7 @@ The right-context copy test asks only whether the converted model can copy a lat
 % prose or float placement changes during later manuscript edits.
 \clearpage
 \begin{table*}[t]
-\caption{Open-ended generation over 30 prompts at a 128-token output length and 64 NFE for diffusion models. PPL is token-weighted Phi-4 perplexity (lower is better); D-1/2/3 are mean per-answer sliding Distinct-$n$ percentages over model-tokenizer tokens (higher is less repetitive). AR parents generate the same output length autoregressively.}
+\caption{Open-ended generation at a 128-token output length and 64 NFE for diffusion models. Rows use 30 prompts, except the uninterrupted Llama 50k checkpoint, which uses the expanded 100-prompt evaluation. PPL is token-weighted Phi-4 perplexity (lower is better); D-1/2/3 are mean per-answer sliding Distinct-$n$ percentages over model-tokenizer tokens (higher is less repetitive). AR parents generate the same output length autoregressively.}
 \label{tab:ppl}
 \centering
 \scriptsize
@@ -228,7 +228,7 @@ Model family/checkpoint & PPL$\downarrow$ & D-1\%$\uparrow$ & D-2\%$\uparrow$ & 
 \midrule
 Gemma 2 9B, 25k & 8.27 & 45.5 & 75.2 & 85.8 & 3.01 & 63.4 & 89.3 & 95.8 \\
 Llama 3.1 8B, 25k & 10.50 & 52.7 & 80.2 & 90.5 & 2.49 & 61.0 & 89.0 & 94.8 \\
-Llama 3.1 8B, 50k & 8.71 & 43.8 & 74.1 & 87.4 & 2.49 & 61.0 & 89.0 & 94.8 \\
+Llama 3.1 8B, 50k & 9.53 & 49.6 & 79.1 & 89.2 & 2.49 & 61.0 & 89.0 & 94.8 \\
 Qwen2.5 7B, 25k & 11.12 & 50.9 & 80.4 & 90.4 & 2.23 & 69.5 & 94.0 & 98.6 \\
 Ministral 8B, 25k & 9.42 & 49.3 & 78.6 & 88.8 & 2.31 & 65.1 & 91.3 & 97.1 \\
 LLaDA 8B Instruct & 4.07 & 51.4 & 82.3 & 91.6 & \na & \na & \na & \na \\
@@ -247,7 +247,7 @@ Figure~\ref{fig:llama-training-diagnostics} shows checkpoint-wise generation dia
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/llama_training_diagnostics.pdf}
-\caption{BYOD-Llama training diagnostics. (a) Token-weighted Phi-4 perplexity for 128-token generations. (b) Mean sliding model-token Distinct-1 for the same generations, reported as a percentage. Each NFE series contains 100 prompts at all eleven checkpoints from the uninterrupted \texttt{llama-3.1-8b-mask-long} run. Color-matched dashed lines are fixed LLaDA references; the dotted gray line is the unchanged Llama AR parent measured over the same 100 prompts. (c) Weighted validation loss from the uninterrupted run through 50k updates. Lower is better in (a,c), and higher is better in (b).}
+\caption{BYOD-Llama training diagnostics. (a) Token-weighted Phi-4 perplexity for 128-token generations, shown on a logarithmic y-axis. (b) Mean sliding model-token Distinct-1 for the same generations, reported as a percentage. Each NFE series contains 100 prompts at all eleven checkpoints from the uninterrupted \texttt{llama-3.1-8b-mask-long} run. Color-matched dashed lines are fixed LLaDA references; the dotted gray line is the unchanged Llama AR parent measured over the same 100 prompts. (c) Weighted validation loss from the uninterrupted run through 50k updates. Lower is better in (a,c), and higher is better in (b).}
 \label{fig:llama-training-diagnostics}
 \end{figure*}
 

@@ -260,6 +260,10 @@ def main() -> None:
         raise SystemExit("No adapter directories found. Train at least one model to create outputs/<run>/best/.")
     if config.get("tasks") is None:
         config["tasks"] = ALL_TASKS
+    run_diffusion = bool(config.get("run_diffusion", True))
+    include_autoregressive = bool(config.get("include_autoregressive", False))
+    if not run_diffusion and not include_autoregressive:
+        raise ValueError("At least one of run_diffusion or include_autoregressive must be enabled")
     token = os.getenv("HF_TOKEN")
     cache = config.get("cache_dir", "data/huggingface")
     if "results_path" in config and "results_dir" not in config:
@@ -339,6 +343,11 @@ def main() -> None:
             session = load_session(selection, outputs, config.get("device", "auto"), config.get("quantization"))
             supports_autoregressive = True
         ar_model_name = str(run_config.get("model_name_or_path", run_config.get("repo_id", model_label)))
+        if not run_diffusion and not supports_autoregressive:
+            print(f"Skipping {model_label}: this selection has no recoverable autoregressive parent.", flush=True)
+            release_session(session)
+            del session
+            continue
         for task in config["tasks"]:
             examples = load_benchmark(task, config.get("split", "test"), config.get("limit"), cache, token, config.get("limit_fraction"))
             if session.llada:
@@ -355,6 +364,9 @@ def main() -> None:
             )
             autoregressive_already_run = autoregressive_key in completed_autoregressive
             if task == BIDIRECTIONAL_INFILLING_TASK:
+                if not run_diffusion:
+                    print(f"[{ar_model_name}] {task}: skipped because the test requires bidirectional masked prediction", flush=True)
+                    continue
                 total = len(examples)
                 protocol = {
                     "type": "right_context_copy",
@@ -385,23 +397,25 @@ def main() -> None:
                 print(message, flush=True)
                 continue
             if task == "open_ended":
-                print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
-                diffusion_texts = []
-                diffusion_progress = tqdm(examples, desc=f"{model_label}/{task} diffusion", unit="sample")
-                for index, example in enumerate(diffusion_progress, start=1):
-                    if show_open_ended_answers:
-                        print(f"\n[diffusion {index}/{len(examples)}] generating: {example.prompt}", flush=True)
-                    text = _generate_diffusion(session, example.prompt, task_settings, mode)
-                    diffusion_texts.append(text)
-                    if show_open_ended_answers:
-                        _show_open_ended_answer(diffusion_progress, "diffusion", index, len(examples), example.prompt, text)
-                diffusion_distinct = [
-                    {f"distinct_{n}": distinct_n(text, session.tokenizer, n) for n in (1, 2, 3)}
-                    for text in diffusion_texts
-                ]
-                open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "examples": examples, "texts": diffusion_texts, "distinct": diffusion_distinct, "inference_settings": task_settings})
-                message = f"{model_label} | {task} | diffusion generation complete; shared quality metrics will be scored at the end"
-                if config.get("include_autoregressive", False) and supports_autoregressive and not autoregressive_already_run:
+                messages = []
+                if run_diffusion:
+                    print(f"\n[{model_label}] {task}: {len(examples)} validation samples (diffusion)", flush=True)
+                    diffusion_texts = []
+                    diffusion_progress = tqdm(examples, desc=f"{model_label}/{task} diffusion", unit="sample")
+                    for index, example in enumerate(diffusion_progress, start=1):
+                        if show_open_ended_answers:
+                            print(f"\n[diffusion {index}/{len(examples)}] generating: {example.prompt}", flush=True)
+                        text = _generate_diffusion(session, example.prompt, task_settings, mode)
+                        diffusion_texts.append(text)
+                        if show_open_ended_answers:
+                            _show_open_ended_answer(diffusion_progress, "diffusion", index, len(examples), example.prompt, text)
+                    diffusion_distinct = [
+                        {f"distinct_{n}": distinct_n(text, session.tokenizer, n) for n in (1, 2, 3)}
+                        for text in diffusion_texts
+                    ]
+                    open_ended_pending.append({"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "examples": examples, "texts": diffusion_texts, "distinct": diffusion_distinct, "inference_settings": task_settings})
+                    messages.append(f"{model_label} | {task} | diffusion generation complete")
+                if include_autoregressive and supports_autoregressive and not autoregressive_already_run:
                     print(f"[{ar_model_name}] {task}: {len(examples)} validation samples (autoregressive base)", flush=True)
                     ar_texts = []
                     ar_progress = tqdm(examples, desc=f"{ar_model_name}/{task} autoregressive", unit="sample")
@@ -418,28 +432,29 @@ def main() -> None:
                     ]
                     open_ended_pending.append({"model": ar_model_name, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "examples": examples, "texts": ar_texts, "distinct": ar_distinct, "inference_settings": autoregressive_settings})
                     completed_autoregressive[autoregressive_key] = ar_model_name
-                    message += " | autoregressive generation complete"
-                if config.get("include_autoregressive", False) and supports_autoregressive and autoregressive_already_run:
-                    message += f" | duplicate autoregressive baseline skipped (already evaluated as {completed_autoregressive[autoregressive_key]})"
-                if config.get("include_autoregressive", False) and not supports_autoregressive:
-                    message += " | autoregressive comparison skipped"
-                print(message)
+                    messages.append(f"{ar_model_name} | {task} | autoregressive generation complete")
+                if include_autoregressive and supports_autoregressive and autoregressive_already_run:
+                    messages.append(f"duplicate autoregressive baseline skipped (already evaluated as {completed_autoregressive[autoregressive_key]})")
+                if include_autoregressive and not supports_autoregressive:
+                    messages.append("autoregressive comparison skipped")
+                print(" | ".join(messages))
                 continue
             correct = 0; ar_correct = 0
             total = len(examples)
-            print(f"\n[{model_label}] {task}: {total} validation samples (diffusion)", flush=True)
-            # Complete the diffusion pass before switching to the optional
-            # autoregressive baseline, avoiding per-example model switching.
-            diffusion_progress = tqdm(examples, desc=f"{model_label}/{task} diffusion", unit="sample")
-            for index, example in enumerate(diffusion_progress, start=1):
-                diffusion_text = _generate_diffusion(session, example.prompt, task_settings, mode)
-                diffusion_ok = score_prediction(example, diffusion_text)
-                record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "diffusion", "prompt": example.prompt, "prediction": diffusion_text, "target": example.answer, "correct": diffusion_ok, "inference_settings": task_settings}
-                if example.kind != "code":
-                    record.update(extracted_prediction=extract_answer(diffusion_text, example.kind, example.answer), extracted_target=extract_answer(example.answer, example.kind))
-                reporter.save_result(record); correct += int(diffusion_ok)
-                diffusion_progress.set_postfix(correct=f"{correct}/{index}", accuracy=f"{correct / index:.3f}")
-            if config.get("include_autoregressive", False) and supports_autoregressive and not autoregressive_already_run:
+            if run_diffusion:
+                print(f"\n[{model_label}] {task}: {total} validation samples (diffusion)", flush=True)
+                # Complete the diffusion pass before switching to the optional
+                # autoregressive baseline, avoiding per-example model switching.
+                diffusion_progress = tqdm(examples, desc=f"{model_label}/{task} diffusion", unit="sample")
+                for index, example in enumerate(diffusion_progress, start=1):
+                    diffusion_text = _generate_diffusion(session, example.prompt, task_settings, mode)
+                    diffusion_ok = score_prediction(example, diffusion_text)
+                    record = {"model": model_label, "corruption_mode": mode, "task": task, "example_id": example.example_id, "method": "diffusion", "prompt": example.prompt, "prediction": diffusion_text, "target": example.answer, "correct": diffusion_ok, "inference_settings": task_settings}
+                    if example.kind != "code":
+                        record.update(extracted_prediction=extract_answer(diffusion_text, example.kind, example.answer), extracted_target=extract_answer(example.answer, example.kind))
+                    reporter.save_result(record); correct += int(diffusion_ok)
+                    diffusion_progress.set_postfix(correct=f"{correct}/{index}", accuracy=f"{correct / index:.3f}")
+            if include_autoregressive and supports_autoregressive and not autoregressive_already_run:
                 print(f"[{ar_model_name}] {task}: {total} validation samples (autoregressive base)", flush=True)
                 ar_progress = tqdm(examples, desc=f"{ar_model_name}/{task} autoregressive", unit="sample")
                 for index, example in enumerate(ar_progress, start=1):
@@ -451,22 +466,24 @@ def main() -> None:
                     reporter.save_result(record)
                     ar_progress.set_postfix(correct=f"{ar_correct}/{index}", accuracy=f"{ar_correct / index:.3f}")
                 completed_autoregressive[autoregressive_key] = ar_model_name
-            summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "inference_settings": task_settings, "accuracy": correct / max(len(examples), 1), "correct": correct, "total": len(examples)}
-            reporter.save_summary(summary)
-            message = f"{model_label} | {task} | diffusion accuracy={summary['accuracy']:.4f} ({correct}/{len(examples)})"
-            if config.get("include_autoregressive", False):
+            messages = []
+            if run_diffusion:
+                summary = {"model": model_label, "corruption_mode": mode, "task": task, "method": "diffusion", "inference_settings": task_settings, "accuracy": correct / max(len(examples), 1), "correct": correct, "total": len(examples)}
+                reporter.save_summary(summary)
+                messages.append(f"{model_label} | {task} | diffusion accuracy={summary['accuracy']:.4f} ({correct}/{len(examples)})")
+            if include_autoregressive:
                 if not supports_autoregressive:
-                    message += " | autoregressive comparison skipped"
-                    print(message)
+                    messages.append("autoregressive comparison skipped")
+                    print(" | ".join(messages))
                     continue
                 if autoregressive_already_run:
-                    message += f" | duplicate autoregressive baseline skipped (already evaluated as {completed_autoregressive[autoregressive_key]})"
-                    print(message)
+                    messages.append(f"duplicate autoregressive baseline skipped (already evaluated as {completed_autoregressive[autoregressive_key]})")
+                    print(" | ".join(messages))
                     continue
                 ar_summary = {"model": ar_model_name, "evaluation_model": ar_model_name, "model_variant": "original_base", "corruption_mode": mode, "task": task, "method": "autoregressive", "inference_settings": autoregressive_settings, "accuracy": ar_correct / max(len(examples), 1), "correct": ar_correct, "total": len(examples)}
                 reporter.save_summary(ar_summary)
-                message += f" | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})"
-            print(message)
+                messages.append(f"{ar_model_name} | {task} | autoregressive accuracy={ar_summary['accuracy']:.4f} ({ar_correct}/{len(examples)})")
+            print(" | ".join(messages))
         print(f"Released generation model for {model_label}; clearing GPU memory before the next model.", flush=True)
         release_session(session)
         del session

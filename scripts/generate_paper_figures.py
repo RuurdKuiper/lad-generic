@@ -25,9 +25,8 @@ from openpyxl import load_workbook
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_WORKBOOK = ROOT / "results" / "Results_training-progression-long32i-64i_20260923.xlsx"
+DEFAULT_WORKBOOK = ROOT / "results" / "Results_training-20260924.xlsx"
 DEFAULT_OUTPUT_DIR = ROOT / "iclr2027_submission" / "figures"
-DEFAULT_UNCERTAINTY = ROOT / "iclr2027_submission/source_results/open_ended_uncertainty.json"
 
 TASK_LABELS = {
     "arc_c": "ARC-C",
@@ -337,31 +336,6 @@ def load_validation_loss_data(sheet: Any) -> dict[str, Any]:
     return {"source_sheet": sheet.title, "points": points}
 
 
-def apply_progression_uncertainty(
-    data: dict[str, Any],
-    uncertainty: dict[str, Any],
-    *,
-    value_name: str,
-) -> None:
-    """Replace workbook placeholders with estimates and bootstrap CIs from raw records."""
-    for nfe in (32, 64, 128):
-        stats = uncertainty[str(nfe)]
-        points = []
-        for step_text, point_stats in sorted(stats["points"].items(), key=lambda item: int(item[0])):
-            metric = point_stats[value_name]
-            points.append({
-                "step": int(step_text),
-                value_name: float(metric["value"]),
-                "ci95": [float(bound) for bound in metric["ci95"]],
-                "n": int(point_stats["n"]),
-            })
-        baseline = stats["llada"][value_name]
-        data["series"][nfe]["points"] = points
-        data["series"][nfe]["llada"] = float(baseline["value"])
-        data["series"][nfe]["llada_ci95"] = [float(bound) for bound in baseline["ci95"]]
-        data["series"][nfe]["llada_n"] = int(stats["llada"]["n"])
-
-
 def _configure_radar(ax: Any, labels: list[str], title: str) -> np.ndarray:
     angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
     ax.set_theta_offset(np.pi / 2)
@@ -442,7 +416,7 @@ def plot_open_generation_budget(data: dict[str, Any], output_dir: Path) -> None:
                 marker=marker,
                 linewidth=2.0,
                 markersize=5.0,
-                label=name,
+                label=f"{name} (dashed)" if name == "BYOD-Llama-50k" else name,
             )
             if item["ar"] is not None:
                 ar_value = scale * item["ar"][metric]
@@ -516,7 +490,7 @@ def _plot_progression_panel(
     ar_reference = scale * data["series"][32]["ar"]
     ax.axhline(ar_reference, color="#555555", linestyle=(0, (1, 2)), linewidth=1.7, alpha=0.95)
 
-    ax.set_xlabel("BYOD-Llama training updates")
+    ax.set_xlabel("Training iterations")
     ax.set_ylabel(ylabel)
     ax.set_title(title, fontsize=10, fontweight="bold")
     ax.set_xticks(data["all_steps"])
@@ -531,10 +505,10 @@ def _plot_progression_panel(
         observed.extend(item["llada"] for item in data["series"].values())
         observed.append(data["series"][32]["ar"])
         ax.set_yscale("log")
-        ax.set_ylim(min(observed) * 0.85, max(observed) * 1.15)
+        ax.set_ylim(min(observed) * 0.85, 35.0)
         ticks = [
             tick
-            for tick in (3, 4, 5, 6, 8, 10, 15, 20, 25)
+            for tick in (3, 4, 5, 6, 8, 10, 15, 20, 25, 30, 35)
             if ax.get_ylim()[0] <= tick <= ax.get_ylim()[1]
         ]
         ax.yaxis.set_major_locator(FixedLocator(ticks))
@@ -545,12 +519,12 @@ def _plot_progression_panel(
         ax.set_ylim(bottom=0)
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
     ax.spines[["top", "right"]].set_visible(False)
-    nfe_legend = ax.legend(title="BYOD-Llama", frameon=False, loc="upper right", fontsize=8, title_fontsize=8)
+    nfe_legend = ax.legend(frameon=False, loc="upper right", fontsize=8)
     ax.add_artist(nfe_legend)
     style_handles = [
-        Line2D([0], [0], color="#333333", marker="o", linewidth=2, label="BYOD checkpoints"),
-        Line2D([0], [0], color="#333333", linestyle=(0, (4, 3)), linewidth=1.4, label="LLaDA reference"),
-        Line2D([0], [0], color="#555555", linestyle=(0, (1, 2)), linewidth=1.7, label="Llama AR reference"),
+        Line2D([0], [0], color="#333333", marker="o", linewidth=2, label="BYOD-Llama"),
+        Line2D([0], [0], color="#333333", linestyle=(0, (4, 3)), linewidth=1.4, label="LLaDA"),
+        Line2D([0], [0], color="#555555", linestyle=(0, (1, 2)), linewidth=1.7, label="Llama"),
     ]
     ax.legend(handles=style_handles, frameon=False, loc="upper center", fontsize=8)
 
@@ -566,9 +540,9 @@ def _plot_progression_panel(
 
 
 def _plot_pending_distinct_panel(ax: Any, all_steps: list[int]) -> None:
-    ax.set_title("(b) Distinct-1 progression", fontsize=10, fontweight="bold")
-    ax.set_xlabel("BYOD-Llama training updates")
-    ax.set_ylabel("Mean sliding model-token Distinct-1 (↑)")
+    ax.set_title("(b) Distinct-1", fontsize=10, fontweight="bold")
+    ax.set_xlabel("Training iterations")
+    ax.set_ylabel("Distinct-1 (↑)")
     ax.set_xticks(all_steps)
     ax.set_xticklabels([f"{step // 1000}k" for step in all_steps], fontsize=8)
     ax.set_xlim(min(all_steps) - 1_500, max(all_steps) + 1_500)
@@ -592,8 +566,8 @@ def _plot_validation_loss_panel(ax: Any, data: dict[str, Any], *, title: str) ->
     losses = [point["weighted_loss"] for point in data["points"]]
     ax.plot(steps, losses, color="#7B3294", linewidth=1.8, alpha=0.9)
     ax.scatter(steps, losses, color="#7B3294", s=10, zorder=3)
-    ax.set_xlabel("Uninterrupted BYOD-Llama training updates")
-    ax.set_ylabel("Weighted validation loss (↓)")
+    ax.set_xlabel("Training iterations")
+    ax.set_ylabel("Validation loss (↓)")
     ax.set_title(title, fontsize=10, fontweight="bold")
     tick_stop = int(math.ceil(max(steps) / 10_000.0) * 10_000)
     ticks = list(range(0, tick_stop + 1, 10_000))
@@ -607,18 +581,6 @@ def _plot_validation_loss_panel(ax: Any, data: dict[str, Any], *, title: str) ->
     )
     ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
     ax.spines[["top", "right"]].set_visible(False)
-    ax.text(
-        0.98,
-        0.97,
-        f"snapshot through {max(steps) // 1000:g}k",
-        ha="right",
-        va="top",
-        transform=ax.transAxes,
-        color="#555555",
-        fontsize=8,
-    )
-
-
 def plot_training_progression(
     perplexity_data: dict[str, Any],
     distinct_data: dict[str, Any] | None,
@@ -631,14 +593,14 @@ def plot_training_progression(
         ax,
         perplexity_data,
         value_name="perplexity",
-        ylabel="Phi-4 token-weighted perplexity (↓)",
-        title="Perplexity progression",
+        ylabel="Perplexity (↓)",
+        title="Perplexity",
     )
     fig.tight_layout()
     _save(fig, output_dir / "llama_training_perplexity")
 
     fig, ax = plt.subplots(figsize=(7.2, 4.3))
-    _plot_validation_loss_panel(ax, validation_loss_data, title="Validation-loss progression")
+    _plot_validation_loss_panel(ax, validation_loss_data, title="Validation loss")
     fig.tight_layout()
     _save(fig, output_dir / "llama_training_validation_loss")
 
@@ -650,8 +612,8 @@ def plot_training_progression(
         axes[0],
         perplexity_data,
         value_name="perplexity",
-        ylabel="Phi-4 token-weighted perplexity (↓)",
-        title="(a) Perplexity progression",
+        ylabel="Perplexity (↓)",
+        title="(a) Perplexity",
     )
     if distinct_data is None:
         _plot_pending_distinct_panel(axes[1], perplexity_data["all_steps"])
@@ -660,13 +622,13 @@ def plot_training_progression(
             axes[1],
             distinct_data,
             value_name="distinct_1",
-            ylabel="Mean sliding model-token Distinct-1, % (↑)",
-            title="(b) Distinct-1 progression",
+            ylabel="Distinct-1 (↑)",
+            title="(b) Distinct-1",
         )
     _plot_validation_loss_panel(
         validation_ax,
         validation_loss_data,
-        title="(c) Validation-loss progression",
+        title="(c) Validation loss",
     )
     fig.subplots_adjust(left=0.08, right=0.985, top=0.96, bottom=0.075)
     _save(fig, output_dir / "llama_training_diagnostics")
@@ -676,7 +638,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workbook", type=Path, default=DEFAULT_WORKBOOK)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument("--uncertainty", type=Path, default=DEFAULT_UNCERTAINTY)
     parser.add_argument("--progression-header-row", type=int, default=42)
     parser.add_argument(
         "--distinct-progression-header-row",
@@ -702,15 +663,6 @@ def main() -> None:
         required=False,
     )
     validation_loss = load_validation_loss_data(wb["Long validation loss"])
-    uncertainty_path = args.uncertainty.expanduser().resolve()
-    if not uncertainty_path.is_file():
-        raise FileNotFoundError(uncertainty_path)
-    uncertainty = json.loads(uncertainty_path.read_text())
-    apply_progression_uncertainty(
-        progression,
-        uncertainty["figure_2"],
-        value_name="perplexity",
-    )
     if distinct_progression is None:
         distinct_progression = {
             "all_steps": progression["all_steps"],
@@ -726,12 +678,6 @@ def main() -> None:
                 for nfe in (32, 64, 128)
             },
         }
-    apply_progression_uncertainty(
-        distinct_progression,
-        uncertainty["figure_2"],
-        value_name="distinct_1",
-    )
-
     plt.rcParams.update({
         "font.family": "DejaVu Sans",
         "font.size": 9,
@@ -745,7 +691,6 @@ def main() -> None:
 
     manifest = {
         "source_workbook": str(workbook),
-        "uncertainty_source": str(uncertainty_path),
         "source_sheet": sheet.title,
         "accuracy_cells": "model names from row 5; tasks from rows 7--15",
         "progression_cells": f"rows {args.progression_header_row}--{args.progression_header_row + 4}",

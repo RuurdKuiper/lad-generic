@@ -8,7 +8,7 @@ This file records the assumptions used for the first manuscript pass. It is not 
 |---|---|---:|---:|---|
 | Gemma-25k | `gemma-2-9b-mask` | 25,000 | 400,000 | `google/gemma-2-9b-it` |
 | Llama-25k | `llama-3.1-8b-mask` | 25,000 | 400,000 | `meta-llama/Llama-3.1-8B-Instruct` |
-| Llama-50k | `llama-3.1-8b-mask-continued` | 25,000 additional | next 400,000 | Llama-25k final adapter |
+| Llama-50k | `llama-3.1-8b-mask-long` | 50,000 | 800,000 | `meta-llama/Llama-3.1-8B-Instruct` |
 | Qwen-25k | `qwen-2.5-7b-mask` | 25,000 | 400,000 | `Qwen/Qwen2.5-7B-Instruct` |
 | Ministral-25k | `ministral-8b-mask` | 25,000 | 400,000 | `mistralai/Ministral-8B-Instruct-2410` |
 
@@ -18,19 +18,18 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 
 - Original source: `source_results/Results.xlsx`, copied from `results/Results.xlsx` on 2026-09-18.
 - Latest open-ended snapshot: `source_results/Results_open-ended-128t-32i-merged_20260918.xlsx`, copied from `results/Results_open-ended-128t-32i_20260918.xlsx` after importing the merge benchmark.
-- Latest progression workbook: `source_results/Results_training-progression-long32i-64i_20260923.xlsx`, copied from `results/Results_training-progression-long32i-64i_20260923.xlsx`. It preserves the existing result tables, replaces the 32-NFE progression with the uninterrupted long-run sweep, retains the earlier 64- and 128-NFE sweeps, and includes the completed long-run validation loss.
-- Table 3 uses the populated task cells directly and computes an unweighted nine-task macro average. The current values give Gemma 53.0%, Ministral 52.2%, and LLaDA 51.9%.
+- Current paper workbook: `source_results/Results_training-20260924.xlsx`, copied from `results/Results_training-20260924.xlsx`. It contains the corrected 32/64/128-NFE long-run progression, completed validation loss, and the latest task-benchmark values.
+- Table 3 uses the populated task cells directly and computes an unweighted nine-task macro average. The current values give Gemma 53.0%, Ministral 52.1%, and LLaDA 51.9%. The average is recomputed from all nine tasks rather than trusting cached spreadsheet formulas.
 - The workbook row named `1-gram repetition` predates the final sliding model-token Distinct-n implementation. Those numbers are intentionally not presented as Distinct-1.
 - The manuscript treats published LLaDA results as protocol-separated context, not as directly matched measurements.
 
 ## Automatically generated figures
 
-- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_training-progression-long32i-64i_20260923.xlsx`.
+- Run `python scripts/generate_paper_figures.py` from the repository root to regenerate the paper figures from `results/Results_training-20260924.xlsx`.
 - Install the spreadsheet dependency with `pip install -e '.[paper]'` if `openpyxl` is unavailable.
 - PDF and 300-DPI PNG outputs are written to `iclr2027_submission/figures/`; `figure_data.json` records the exact extracted values and source workbook.
 - `benchmark_radar_panels` contains the matched LLaDA/BYOD-Llama/Llama-AR comparison and the four-family BYOD comparison, both using 125 examples per task.
-- `llama_training_diagnostics` uses raw per-prompt outputs from runs `20260923T134029.046940Z--colab-validation` (32 NFE), `20260923T190517.263478Z--colab-validation` (64 NFE), and `20260923T201036.622289Z--colab-validation` (128 NFE). All three series contain 100 prompts at every 1k/5k/.../50k checkpoint from the uninterrupted long run. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are LLaDA references. The dotted gray reference uses the 100-prompt AR-parent result from the 32-NFE run: 2.638598 perplexity and 0.620703 mean Distinct-1.
-- Targeted seed replication run `20260924T054952.632405Z--colab-validation` evaluates the long-run 30k and 45k checkpoints at 32 NFE with seed 5678 and 100 prompts. Perplexity is 21.416645/20.678444, mean Distinct-1 is 0.517077/0.505396, and reconstructed mean scored length is 72.57/73.84 tokens. The corresponding seed-1234 values are 22.933569/22.202084, 0.520791/0.512295, and 75.33/74.49 tokens.
+- `llama_training_diagnostics` reads the corrected 32/64/128-NFE progression directly from the current workbook. Solid marked lines are BYOD-Llama checkpoints; matching dashed horizontal lines are LLaDA references. The dotted gray line is the unchanged Llama AR parent.
 - `scripts/calculate_open_ended_uncertainty.py` reconstructs prompt token counts with the Phi-4 tokenizer and archives 20,000-resample percentile-bootstrap 95% CIs in `source_results/open_ended_uncertainty.json`. These intervals are retained for analysis but are not displayed in the paper figures or table.
 - Table 4 uses 30 prompts for most rows. The uninterrupted Llama-50k row uses 100 prompts from `20260923T190517.263478Z--colab-validation`; the other main rows come from `20260918T135058.643507Z--colab-validation`, with the corrected Ministral row from `20260921T131916.314780Z--colab-validation`.
 - Bidirectional-attention results come from `20260924T085113.502527Z--colab-validation` and are archived in `source_results/right_context_copy_results.json`. With-clue exact match for Gemma, Llama-25k, Llama-long-best, Qwen, Ministral, and LLaDA is 100/90/70/20/100/100%; all score 0% without the clue. The clue changes every model's greedy prediction in 100% of examples. This run uses the clarified `COPY:` prompt, a training-matched system message, and single-forward argmax decoding.

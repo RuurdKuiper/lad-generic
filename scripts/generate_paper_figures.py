@@ -69,6 +69,24 @@ COLORS = {
     128: "#009E73",
 }
 
+OPEN_GENERATION_MODELS = {
+    "BYOD-Gemma": ("gemma-2-9b-mask", "gemma-2-9b-autoregressive"),
+    "BYOD-Qwen": ("qwen-2.5-7b-mask", "qwen-2.5-7b-autoregressive"),
+    "BYOD-Ministral": ("ministral-mask", "ministral-autoregressive"),
+    "BYOD-Llama-25k": ("llama-3.1-8b-mask", "llama-3.1-8b-autoregressive"),
+    "BYOD-Llama-50k": ("llama-3.1-8b-mask-long", "llama-3.1-8b-autoregressive"),
+    "LLaDA 8B Instruct": ("LLaDA-8B-Instruct (own validation)", None),
+}
+
+OPEN_GENERATION_STYLES = {
+    "BYOD-Gemma": ("#E69F00", "-", "o"),
+    "BYOD-Qwen": ("#009E73", "-", "s"),
+    "BYOD-Ministral": ("#CC79A7", "-", "^"),
+    "BYOD-Llama-25k": ("#0072B2", "-", "D"),
+    "BYOD-Llama-50k": ("#004C7F", "--", "D"),
+    "LLaDA 8B Instruct": ("#666666", "-", "P"),
+}
+
 
 def _numeric(value: Any, location: str) -> float:
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)):
@@ -121,6 +139,91 @@ def load_radar_data(sheet: Any) -> dict[str, Any]:
         "task_labels": [TASK_LABELS[task] for task in TASK_ORDER],
         "groups": groups,
     }
+
+
+def load_open_generation_data(sheet: Any) -> dict[str, Any]:
+    """Read Table 4's PPL and Distinct-1 values by model name and NFE."""
+    model_row = next(
+        (row for row in range(1, sheet.max_row + 1) if sheet.cell(row, 2).value == "model"),
+        None,
+    )
+    if model_row is None:
+        raise ValueError(f"Could not find the model header in {sheet.title}")
+    model_columns = {
+        str(sheet.cell(model_row, column).value): column
+        for column in range(1, sheet.max_column + 1)
+        if sheet.cell(model_row, column).value is not None
+    }
+
+    ppl_start = next(
+        (
+            row
+            for row in range(model_row + 1, sheet.max_row + 1)
+            if str(sheet.cell(row, 1).value or "").startswith("Perplexity")
+        ),
+        None,
+    )
+    d1_header = next(
+        (
+            row
+            for row in range(model_row + 1, sheet.max_row + 1)
+            if str(sheet.cell(row, 2).value or "").startswith("Distinct-1")
+        ),
+        None,
+    )
+    if ppl_start is None or d1_header is None:
+        raise ValueError(f"Could not find open-generation metric blocks in {sheet.title}")
+
+    pattern = re.compile(r"128 tokens,\s*(32|64|128) iterations", re.IGNORECASE)
+
+    def metric_rows(start: int) -> dict[int, int]:
+        rows: dict[int, int] = {}
+        for row in range(start, start + 3):
+            match = pattern.search(str(sheet.cell(row, 2).value or ""))
+            if match:
+                rows[int(match.group(1))] = row
+        if set(rows) != {32, 64, 128}:
+            raise ValueError(f"Expected 32/64/128-NFE rows at {sheet.title}!B{start}:B{start + 2}")
+        return rows
+
+    ppl_rows = metric_rows(ppl_start)
+    d1_rows = metric_rows(d1_header + 1)
+    series: dict[str, Any] = {}
+    for display_name, (diffusion_name, ar_name) in OPEN_GENERATION_MODELS.items():
+        if diffusion_name not in model_columns:
+            raise ValueError(f"Workbook has no model column {diffusion_name!r}")
+        diffusion_column = model_columns[diffusion_name]
+        points = {
+            nfe: {
+                "perplexity": _numeric(
+                    sheet.cell(ppl_rows[nfe], diffusion_column).value,
+                    f"{sheet.title}!{sheet.cell(ppl_rows[nfe], diffusion_column).coordinate}",
+                ),
+                "distinct_1": _numeric(
+                    sheet.cell(d1_rows[nfe], diffusion_column).value,
+                    f"{sheet.title}!{sheet.cell(d1_rows[nfe], diffusion_column).coordinate}",
+                ),
+            }
+            for nfe in (32, 64, 128)
+        }
+        ar = None
+        if ar_name is not None:
+            if ar_name not in model_columns:
+                raise ValueError(f"Workbook has no AR model column {ar_name!r}")
+            ar_column = model_columns[ar_name]
+            ppl_values = [
+                _numeric(sheet.cell(ppl_rows[nfe], ar_column).value, f"{sheet.title}!{sheet.cell(ppl_rows[nfe], ar_column).coordinate}")
+                for nfe in (32, 64, 128)
+            ]
+            d1_values = [
+                _numeric(sheet.cell(d1_rows[nfe], ar_column).value, f"{sheet.title}!{sheet.cell(d1_rows[nfe], ar_column).coordinate}")
+                for nfe in (32, 64, 128)
+            ]
+            if not np.allclose(ppl_values, ppl_values[0]) or not np.allclose(d1_values, d1_values[0]):
+                raise ValueError(f"AR reference varies across NFE rows for {ar_name!r}")
+            ar = {"perplexity": ppl_values[0], "distinct_1": d1_values[0]}
+        series[display_name] = {"diffusion": points, "ar": ar}
+    return {"nfe": [32, 64, 128], "series": series}
 
 
 def load_progression_data(
@@ -312,6 +415,84 @@ def plot_radar_panels(data: dict[str, Any], output_dir: Path) -> None:
         ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.14), frameon=False, fontsize=8, ncol=2)
         fig.subplots_adjust(bottom=0.2, top=0.88)
         _save(fig, output_dir / filename)
+
+
+def plot_open_generation_budget(data: dict[str, Any], output_dir: Path) -> None:
+    """Plot Table 4 as inference-budget curves with separate AR reference markers."""
+    nfe = data["nfe"]
+    x = np.arange(len(nfe), dtype=float)
+    ar_x = 3.35
+    fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.5))
+    metrics = (
+        ("perplexity", "Phi-4 token-weighted perplexity (↓)", "(a) Perplexity", True),
+        ("distinct_1", "Mean sliding model-token Distinct-1, % (↑)", "(b) Lexical diversity", False),
+    )
+    for ax, (metric, ylabel, title, log_scale) in zip(axes, metrics):
+        observed = []
+        for name, item in data["series"].items():
+            color, linestyle, marker = OPEN_GENERATION_STYLES[name]
+            scale = 100.0 if metric == "distinct_1" else 1.0
+            values = [scale * item["diffusion"][step][metric] for step in nfe]
+            observed.extend(values)
+            ax.plot(
+                x,
+                values,
+                color=color,
+                linestyle=linestyle,
+                marker=marker,
+                linewidth=2.0,
+                markersize=5.0,
+                label=name,
+            )
+            if item["ar"] is not None:
+                ar_value = scale * item["ar"][metric]
+                observed.append(ar_value)
+                # Llama-25k and Llama-50k share one parent; avoid drawing its
+                # identical reference marker twice.
+                if name != "BYOD-Llama-50k":
+                    ax.scatter(
+                        [ar_x],
+                        [ar_value],
+                        color=color,
+                        marker="X",
+                        s=55,
+                        edgecolor="white",
+                        linewidth=0.6,
+                        zorder=5,
+                    )
+        ax.axvline(2.68, color="#B5B5B5", linewidth=0.8, linestyle=(0, (2, 3)))
+        ax.set_xticks([*x, ar_x], ["32", "64", "128", "AR parent"])
+        ax.set_xlim(-0.18, 3.62)
+        ax.set_xlabel("Denoising NFE (diffusion models)")
+        ax.set_ylabel(ylabel)
+        ax.set_title(title, fontsize=10, fontweight="bold")
+        ax.grid(axis="y", color="#D7D7D7", linewidth=0.6)
+        ax.spines[["top", "right"]].set_visible(False)
+        if log_scale:
+            ax.set_yscale("log")
+            ax.set_ylim(min(observed) * 0.84, max(observed) * 1.16)
+            ticks = [tick for tick in (2, 3, 4, 5, 6, 8, 10, 15, 20, 25) if ax.get_ylim()[0] <= tick <= ax.get_ylim()[1]]
+            ax.yaxis.set_major_locator(FixedLocator(ticks))
+            ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _position: f"{value:g}"))
+        else:
+            ax.set_ylim(max(0.0, min(observed) - 4.0), min(100.0, max(observed) + 4.0))
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    ar_handle = Line2D(
+        [0], [0], marker="X", color="none", markerfacecolor="#555555",
+        markeredgecolor="white", markersize=7, label="Paired AR parent",
+    )
+    fig.legend(
+        [*handles, ar_handle],
+        [*labels, "Paired AR parent"],
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.005),
+        frameon=False,
+        ncol=4,
+        fontsize=8,
+    )
+    fig.subplots_adjust(left=0.075, right=0.985, top=0.91, bottom=0.24, wspace=0.27)
+    _save(fig, output_dir / "open_generation_budget")
 
 
 def _plot_progression_panel(
@@ -512,6 +693,7 @@ def main() -> None:
     wb = load_workbook(workbook, data_only=True, read_only=True)
     sheet = wb["Primary outcomes"]
     radar = load_radar_data(sheet)
+    open_generation = load_open_generation_data(sheet)
     progression = load_progression_data(sheet, args.progression_header_row)
     distinct_progression = load_progression_data(
         sheet,
@@ -558,6 +740,7 @@ def main() -> None:
         "ps.fonttype": 42,
     })
     plot_radar_panels(radar, output_dir)
+    plot_open_generation_budget(open_generation, output_dir)
     plot_training_progression(progression, distinct_progression, validation_loss, output_dir)
 
     manifest = {
@@ -572,6 +755,7 @@ def main() -> None:
             else "pending: add an equivalent Training iterations block beginning at C49"
         ),
         "radar": radar,
+        "open_generation_budget": open_generation,
         "training_progression": progression,
         "distinct_1_progression": distinct_progression,
         "validation_loss": validation_loss,

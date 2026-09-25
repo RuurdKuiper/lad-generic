@@ -19,7 +19,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - Original source: `source_results/Results.xlsx`, copied from `results/Results.xlsx` on 2026-09-18.
 - Latest open-ended snapshot: `source_results/Results_open-ended-128t-32i-merged_20260918.xlsx`, copied from `results/Results_open-ended-128t-32i_20260918.xlsx` after importing the merge benchmark.
 - Current paper workbook: `source_results/Results_training-20260924.xlsx`, copied from `results/Results_training-20260924.xlsx`. It contains the corrected 32/64/128-NFE long-run progression, completed validation loss, and the latest task-benchmark values.
-- Table 3 uses the populated task cells directly and computes an unweighted nine-task macro average. The current values give Gemma 53.0%, Ministral 52.1%, and LLaDA 51.9%. The average is recomputed from all nine tasks rather than trusting cached spreadsheet formulas.
+- Table 3 uses the populated task cells directly and computes an unweighted nine-task macro average. The current matched-harness DLM averages are Gemma 50.6%, Qwen 49.0%, Ministral 49.9%, Llama-25k 48.7%, Llama-50k 49.2%, and LLaDA 51.9%. The average is recomputed from all nine tasks rather than trusting cached spreadsheet formulas.
 - The workbook row named `1-gram repetition` predates the final sliding model-token Distinct-n implementation. Those numbers are intentionally not presented as Distinct-1.
 - The manuscript treats published LLaDA results as protocol-separated context, not as directly matched measurements.
 
@@ -33,7 +33,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - `scripts/calculate_open_ended_uncertainty.py` reconstructs prompt token counts with the Phi-4 tokenizer and archives 20,000-resample percentile-bootstrap 95% CIs in `source_results/open_ended_uncertainty.json`. These intervals are retained for analysis but are not displayed in the paper figures or table.
 - Table 4 uses 30 prompts for most rows. The uninterrupted Llama-50k row uses 100 prompts from `20260923T190517.263478Z--colab-validation`; the other main rows come from `20260918T135058.643507Z--colab-validation`, with the corrected Ministral row from `20260921T131916.314780Z--colab-validation`.
 - Bidirectional-attention results come from `20260924T085113.502527Z--colab-validation` and are archived in `source_results/right_context_copy_results.json`. With-clue exact match for Gemma, Llama-25k, Llama-long-best, Qwen, Ministral, and LLaDA is 100/90/70/20/100/100%; all score 0% without the clue. The clue changes every model's greedy prediction in 100% of examples. This run uses the clarified `COPY:` prompt, a training-matched system message, and single-forward argmax decoding.
-- The third diagnostics panel reads `Long validation loss`, imported from `outputs/llama-3.1-8b-mask-long/metrics.jsonl`. The reproducible snapshot covers validation measurements every 500 updates through update 50,000. The uninterrupted run now supplies the 32-NFE generation trajectory, but it does not replace the continued-run factual-benchmark results.
+- The third diagnostics panel reads `Long validation loss`, imported from `outputs/llama-3.1-8b-mask-long/metrics.jsonl`. The reproducible snapshot covers validation measurements every 500 updates through update 50,000. The uninterrupted `llama-3.1-8b-mask-long` run supplies the Llama-50k factual benchmarks and the 32/64/128-NFE generation trajectories.
 - Radar spokes deliberately retain a common absolute 0--100% accuracy scale. Per-benchmark min--max normalization would visually magnify narrow ranges and make equal radii and polygon areas incomparable across tasks.
 
 ## Earlier-draft statements corrected
@@ -44,8 +44,7 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - Normalization layers are frozen (`train_normalization_layers: false`).
 - The selected runs use IID answer/EOS-padding masking.
 - Repeated EOS batch padding is visible to bidirectional attention, can be masked, and participates in the loss because `eos_padding_loss: true`.
-- Each first-stage run uses 400,000 examples over 25,000 batch-16 updates. The continued Llama run skips the consumed 400,000-example prefix and uses the next 400,000 examples.
-- The continued run restores the adapter but not optimizer state; AdamW and the cosine schedule restart.
+- Each 25k run uses 400,000 examples over 25,000 batch-16 updates. The uninterrupted Llama-50k run uses 800,000 examples over 50,000 updates.
 
 ## Llama merge ablation
 
@@ -54,8 +53,8 @@ The user's shorthand `ministral-mask` maps to the saved folder `ministral-8b-mas
 - Both use 30 prompts, 128 generated tokens, 32 denoising steps, seed 1234, temperature 0.7, the LLaDA-style sampler, and Phi-4 scoring.
 - Adapter-loaded: token-weighted PPL 19.381430; mean sliding model-token Distinct-1/2/3 = 0.495153/0.788446/0.898893.
 - Merged: token-weighted PPL 19.282753; mean sliding model-token Distinct-1/2/3 = 0.497539/0.806884/0.917994.
-- At 128 denoising steps, token-weighted PPL is 3.753 (adapter-loaded) versus 3.720 (merged).
-- Adapter-loaded / merged accuracies: ARC-C 82.8/82.0, GPQA 28.0/30.0, GSM8K 65.2/58.0, HellaSwag 73.2/68.0, HumanEval 50.0/48.0, MATH 22.0/22.0, MBPP 46.0/44.0, MMLU 61.2/64.0, and MMLU-Pro 33.2/28.0. The unweighted means are 51.3 and 49.3.
+- At 128 denoising steps, token-weighted PPL is 5.081 (adapter-loaded) versus 4.764 (merged).
+- Adapter-loaded / merged accuracies: ARC-C 83.2/84.0, GPQA 29.6/30.4, GSM8K 65.6/63.2, HellaSwag 70.4/69.6, HumanEval 31.2/29.6, MATH 25.6/24.8, MBPP 43.2/41.6, MMLU 59.2/60.8, and MMLU-Pro 30.4/30.4. The unweighted means are 48.7% and 48.3%.
 - The merged safetensors index records 8,030,261,248 parameters and 16,060,522,496 bytes of BF16 weights. The adapter-loaded parameter audit records 8.466B total parameters, including 436.2M LoRA parameters. Phrase the conclusion as restoration of the base architecture's parameter count; on-disk size can vary with dtype, quantization, and serialization.
 
 ## Compute-estimate reproduction

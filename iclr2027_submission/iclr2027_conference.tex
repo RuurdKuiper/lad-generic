@@ -21,7 +21,7 @@
 \maketitle
 
 \begin{abstract}
-Diffusion language models (DLMs) permit parallel token updates and flexible generation orders, but leading systems rely on costly pretraining or continued full-model training. We ask how efficiently diffusion generation can instead be induced in existing instruction-tuned autoregressive models. Build Your Own DLM (BYOD) replaces causal attention with bidirectional attention and trains only query/value LoRA adapters under a masked denoising objective, leaving 94.2--95.9\% of parameters frozen. Without architecture-specific tuning, the same recipe converts Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, with each 25,000-update conversion processing at most 102.4M token positions in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use right context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest conversion on our nine-task evaluation, reaching 53.0\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality remains the principal limitation: at 64 denoising network evaluations (NFE), converted-model perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents, with generally lower Distinct-$n$ scores as well. BYOD therefore establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
+Diffusion language models (DLMs) permit parallel token updates and flexible generation orders, but leading systems rely on costly pretraining or continued full-model training. We ask how efficiently diffusion generation can instead be induced in existing instruction-tuned autoregressive models. Build Your Own DLM (BYOD) replaces causal attention with bidirectional attention and trains only query/value LoRA adapters under a masked denoising objective, leaving 94.2--95.9\% of parameters frozen. Without architecture-specific tuning, the same recipe converts Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, with each 25,000-update conversion processing at most 102.4M token positions in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use right context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 50.6\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality remains the principal limitation: at 64 denoising network evaluations (NFE), converted-model perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents, with generally lower Distinct-$n$ scores as well. BYOD therefore establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
 \end{abstract}
 
 \section{Introduction}
@@ -183,28 +183,28 @@ Task & D & AR & D & AR & D & AR & D-25k & D-50k & AR & Ours & Published \\
 \midrule
 \multicolumn{12}{c}{\textit{General knowledge and reasoning (multiple choice)}} \\
 \midrule
-ARC-C      & \textbf{\underline{.864}} & .888 & .840 & .920 & .832 & .740 & .832 & .792 & .792 & \textbf{.864} & .885 \\
+ARC-C      & \textbf{\underline{.864}} & .888 & .840 & .920 & .832 & .740 & .832 & .824 & .792 & \textbf{.864} & .885 \\
 GPQA       & \textbf{\underline{.320}} & .280 & .288 & .400 & .272 & .340 & .296 & .272 & .320 & .312 & .333 \\
-HellaSwag  & .752 & .696 & .728 & .780 & \textbf{\underline{.768}} & .700 & .704 & .688 & .608 & .696 & .746 \\
-MMLU       & \textbf{\underline{.688}} & .648 & .568 & .660 & .576 & .520 & .592 & .608 & .536 & .560 & .655 \\
-MMLU-Pro   & \underline{.368} & .448 & .288 & .400 & .360 & .320 & .304 & .304 & .416 & \textbf{.424} & .370 \\
+HellaSwag  & .752 & .696 & .728 & .780 & \textbf{\underline{.768}} & .700 & .704 & .760 & .608 & .696 & .746 \\
+MMLU       & \textbf{\underline{.688}} & .648 & .568 & .660 & .576 & .520 & .592 & .616 & .536 & .560 & .655 \\
+MMLU-Pro   & \underline{.368} & .448 & .288 & .400 & .360 & .320 & .304 & .328 & .416 & \textbf{.424} & .370 \\
 \midrule
 \multicolumn{12}{c}{\textit{Math (open ended)}} \\
 \midrule
-GSM8K      & .640 & .872 & .608 & .900 & \textbf{\underline{.656}} & .860 & \textbf{\underline{.656}} & .560 & .864 & .648 & .694 \\
-MATH-500   & .296 & .600 & \textbf{\underline{.352}} & .780 & .208 & .520 & .256 & .216 & .480 & .344 & .319 \\
+GSM8K      & .640 & .872 & .608 & .900 & \textbf{\underline{.656}} & .860 & \textbf{\underline{.656}} & .616 & .864 & .648 & .694 \\
+MATH-500   & .296 & .600 & \textbf{\underline{.352}} & .780 & .208 & .520 & .256 & .296 & .480 & .344 & .319 \\
 \midrule
 \multicolumn{12}{c}{\textit{Code generation (open ended)}} \\
 \midrule
-HumanEval  & \underline{.380} & .740 & .296 & .960 & .352 & .940 & .312 & .336 & .560 & \textbf{.400} & .494 \\
-MBPP       & .460 & .740 & .440 & .820 & .464 & .720 & .432 & \textbf{\underline{.512}} & .712 & .424 & .410 \\
+HumanEval  & .256 & .740 & .296 & .960 & \underline{.352} & .940 & .312 & .280 & .560 & \textbf{.400} & .494 \\
+MBPP       & .368 & .740 & .440 & .820 & \textbf{\underline{.464}} & .720 & .432 & .440 & .712 & .424 & .410 \\
 \midrule
-Average    & \textbf{\underline{.530}} & .657 & .490 & .736 & .499 & .629 & .487 & .476 & .588 & .519 & .545 \\
+Average    & \underline{.506} & .657 & .490 & .736 & .499 & .629 & .487 & .492 & .588 & \textbf{.519} & .545 \\
 \bottomrule
 \end{tabular}}
 \end{table*}
 
-Table~\ref{tab:accuracy} shows that BYOD-Gemma has the highest diffusion model average, also exceeding LLaDA in the matched harness. The AR parents perform better on average, but the conversion gap varies by task and backbone. BYOD-Llama-50k benchmark results remain largely similar to BYOD-Llama-25k, so additional training does not improve factual accuracy uniformly.
+Table~\ref{tab:accuracy} shows that BYOD-Gemma has the highest BYOD average and comes within 1.3 points of LLaDA in the matched harness. The AR parents perform better on average, but the conversion gap varies by task and backbone. Extending BYOD-Llama from 25,000 to 50,000 updates raises its average by only 0.5 points, with gains on five tasks and declines on four.
 
 Figure~\ref{fig:benchmark-radars} shows that the AR advantage is largest in mathematics and code, while the relative strengths of the converted backbones are task dependent. LLaDA's score in our harness is 2.6 points below its published average, underscoring the importance of prompts, subsets, decoding, and answer extraction. We therefore treat the matched-harness result as primary and report further comparison to other external diffusion models separately in Appendix~\ref{app:published-results}. LLaDA is our only directly tested external DLM because its masking objective and benchmark coverage provide the cleanest comparison. Finally, the merged BYOD-Llama model remains broadly similar across factual and open-generation measures; Appendix~\ref{app:merge} reports the full ablation.
 
@@ -222,7 +222,7 @@ Figure~\ref{fig:open-generation-budget} shows that perplexity and Distinct-1 gen
 
 \subsection{Further training}
 
-Figure~\ref{fig:llama-training-diagnostics} shows that validation loss decreases almost monotonically and begins to plateau toward the end of 50,000 training updates. Perplexity also decreases across all NFE budgets, but with larger fluctuations between checkpoints. Distinct-1 changes comparatively little and remains broadly stable. BYOD-Llama perplexity remains well above LLaDA, whose perplexity is in turn above the Llama AR baseline. In contrast, BYOD-Llama and LLaDA have similar Distinct-1 scores, while the AR baseline remains higher.
+The benchmark results show small but uneven accuracy gain from further training. Figure~\ref{fig:llama-training-diagnostics} shows that validation loss decreases almost monotonically and begins to plateau toward the end of 50,000 training updates. Perplexity also decreases across all NFE budgets, but with larger fluctuations between checkpoints. Distinct-1 changes comparatively little and remains broadly stable. BYOD-Llama perplexity remains well above LLaDA, whose perplexity is in turn above the Llama AR baseline. In contrast, BYOD-Llama and LLaDA have similar Distinct-1 scores, while the AR baseline remains higher.
 
 \begin{figure*}[t]
 \centering
@@ -244,7 +244,7 @@ We only used one other DLM for direct comparison. This is because most large DLM
 
 The LoRA rank of 1024 is relatively high for task adaptation. We experienced that learning a new generation process requires a large change; an earlier study into diffusion adaptation also found rank 1024 preferable to smaller ranks \citep{kuiper2025lad}. A benefit of using LoRA for diffusion adaptation is that during the AR-to-DLM conversion, all original parameters remain frozen, preventing direct overwriting of pretrained weights and potentially reducing catastrophic forgetting \citep{luo2023catastrophic}. Once diffusion generation has been established, the adapters can be merged into the base projections, restoring the original model size while retaining broadly similar behavior (Appendix~\ref{app:merge}). Future work should study whether the merged diffusion model could then serve as the initialization for partial or full-model fine-tuning for diffusion generation. Because the new generation paradigm is learned before the original weights are exposed to optimization, this staged approach may require less disruptive updates and therefore reduce catastrophic forgetting.
 
-The main remaining weakness is linguistic fluency. Perplexity and Distinct-1/2/3 trail both the AR parents and LLaDA, especially when NFE is below output length, and this is also noticeable qualitatively when using the models through the demo interface. Extending Llama training from 25,000 to 50,000 updates also does not improve average factual benchmark accuracy. While validation loss still decreases almost monotonically during the longer run, these downstream results suggest that longer training alone may be insufficient; useful ablations would include larger effective batches, alternative denoising targets, EOS-padding supervision, and adapters in key/output projections, MLPs, or normalization layers.
+The main remaining weakness is linguistic fluency. Perplexity and Distinct-1/2/3 trail both the AR parents and LLaDA, especially when NFE is below output length, and this is also noticeable qualitatively when using the models through the demo interface. Extending Llama training from 25,000 to 50,000 updates yields a marginal average factual-accuracy gain, with improvements on some tasks offset by declines on others. While validation loss still decreases almost monotonically during the longer run, these downstream results suggest that longer training alone may be insufficient; useful ablations would include larger effective batches, alternative denoising targets, and adapters in key/output projections, MLPs, or normalization layers.
 
 Even though we used perplexity and distinct-1/2/3 as proxies for fluency, they are not sufficient to reliable predict human preference. For example, an external AR perplexity scoring model can favor repetitive high-probability text. while Distinct-$n$ captures this repetition, these metrics still do not measure factuality, grammar, or coherence \citep{gong2025diffullama,turok2026duel}. We therefore combine perplexity, Distinct-1/2/3, task accuracy, and include demos for qualitative inspection of generated samples, rather than treating any one metric as definitive.
 

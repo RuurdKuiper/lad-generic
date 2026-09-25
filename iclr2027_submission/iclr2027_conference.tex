@@ -21,9 +21,13 @@
 \maketitle
 
 \begin{abstract}
-Diffusion language models (DLMs) permit parallel token updates, flexible generation and bidirectional attention, contrasting autoregressive (AR) models, but leading systems rely on costly pretraining or full-model fine-tuning. We present a generalizable recipe for parameter-efficient AR-to-DLM conversion using only Low-Rank Adaptation (LoRA). Build Your Own DLM (BYOD) enables bidirectional attention and diffusion generation across Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, without architecture-specific tuning. The adapters comprise 4.1--5.8\% of final parameters while every base-model parameter remains frozen; each 25,000-iteration conversion needs at most 102.4M tokens, processed in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use bidirectional context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 50.6\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality at low network function evaluation (NFE) budgets remains the principal limitation: BYOD perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents when generating 128 tokens in 64 steps. To enable further experimentation and inspection, we release our training and evaluation code, converted models, and accessible interactive demos. BYOD thus establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
+Diffusion language models (DLMs) permit parallel token updates, flexible generation and bidirectional attention, contrasting autoregressive (AR) models, but leading systems rely on costly pretraining or full-model fine-tuning. We present a generalizable recipe for parameter-efficient AR-to-DLM conversion using only Low-Rank Adaptation (LoRA). Build Your Own DLM (BYOD) enables bidirectional attention and diffusion generation across Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, without architecture-specific tuning. The adapters comprise 4.1--5.8\% of final parameters while every base-model parameter remains frozen; each 25,000-iteration conversion needs at most 102.4M tokens, processed in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use bidirectional context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 50.6\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality at low network function evaluation (NFE) budgets remains the principal limitation: BYOD perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents when generating 128 tokens in 64 steps. Anonymous interactive demos support further experimentation and inspection; code and models will be released upon acceptance. BYOD thus establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
 
-\noindent\textbf{Code:} \href{https://github.com/RuurdKuiper/lad-generic}{GitHub}\quad\textbf{BYOD live demos:} \href{https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b}{Gemma} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b}{Qwen} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-ministral-8b}{Ministral} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b}{Llama}
+\noindent\textbf{Code:} After acceptance.\quad\textbf{BYOD demos:}
+\href{https://huggingface.co/spaces/Dovelove/byod-gemma-2-9b}{Gemma} $\mid$
+\href{https://huggingface.co/spaces/Dovelove/byod-llama-3.1-8b}{Llama} $\mid$
+\href{https://huggingface.co/spaces/Dovelove/byod-qwen2.5-7b}{Qwen} $\mid$
+\href{https://huggingface.co/spaces/Dovelove/byod-ministral-8b}{Ministral}
 \end{abstract}
 
 \section{Introduction}
@@ -46,7 +50,7 @@ Our contributions are:
     \item a compute-efficient recipe that converts four instruction-tuned AR model families to masked diffusion using only a few single-GPU hours and LoRA parameter updates;
     \item a paired evaluation of each diffusion model and its frozen AR parent across general knowledge, reasoning, mathematics, and code benchmarks;
     \item a controlled analysis of training duration, denoising-step count, validation loss, perplexity and distinct n-grams; and
-    \item Public training and inference code on Google Colab and GitHub, plus interactive demos for all four models, make DLM conversion and qualitative evaluation readily accessible.
+    \item anonymous interactive demos for all four models, with training and inference code released upon acceptance, support accessible DLM conversion and qualitative evaluation.
 \end{itemize}
 
 \section{Related work}
@@ -220,7 +224,7 @@ Figure~\ref{fig:benchmark-radars} shows the largest gaps with AR in mathematics 
 \label{fig:open-generation-budget}
 \end{figure*}
 
-Figure~\ref{fig:open-generation-budget} shows that perplexity and Distinct-1 generally improve with additional NFE. Appendix~\ref{app:open-generation-results} (Table~\ref{tab:ppl}) reports the exact values: across NFE budgets, converted models have 2.7--5.0 times their AR parents' perplexity and generally lower Distinct-$n$. LLaDA also has lower perplexity than every BYOD model. Representative samples are provided in Appendix~\ref{app:demo-trajectories} to illustrate iterative refinement under different remasking strategies and NFE budgets.
+Figure~\ref{fig:open-generation-budget} shows that perplexity and Distinct-1 generally improve with additional NFE. Appendix~\ref{app:open-generation-results} reports the exact values: across NFE budgets, converted models have 2.7--5.0 times their AR parents' perplexity and generally lower Distinct-$n$. For simplicity, we discuss Distinct-1 in the main text; appendix results for Distinct-1/2/3 show the same broad pattern. LLaDA also has lower perplexity than every BYOD model. Representative samples are provided in Appendix~\ref{app:demo-trajectories} to illustrate iterative refinement under different remasking strategies and NFE budgets.
 
 \subsection{Further training}
 
@@ -270,7 +274,7 @@ Finally, the automatic generation metrics cover only part of text quality. Phi-4
 
 \section*{Reproducibility Statement}
 
-Training and evaluation code is available at \url{https://github.com/RuurdKuiper/lad-generic}. Public model cards and interactive demos for all four conversions are available under \url{https://huggingface.co/Ruurd}; each model card links to its corresponding full-precision ZeroGPU demo. The main text specifies the objective, trainable modules, data volume, optimization, generation, benchmarks, and scoring. The accompanying artifacts include resolved configurations, parameter audits, checkpoint identifiers, loss logs, generated samples, and benchmark manifests.
+Training and evaluation code and model weights will be released upon acceptance. Anonymous full-precision ZeroGPU demos are provided for all four conversions. The main text specifies the objective, trainable modules, data volume, optimization, generation, benchmarks, and scoring; the archival release will include resolved configurations, parameter audits, checkpoint identifiers, loss logs, generated samples, and benchmark manifests.
 
 \section*{Ethics Statement}
 
@@ -312,7 +316,7 @@ Fast-dLLM v2 & 7B & 1.31B & 123 & 768 & 6.4\% \\
 \end{tabular}
 \end{table}
 
-We convert BYOD time to a rental-equivalent cost using the September 2026 AWS US-East on-demand price of \$3.36 per hour for a one-GPU \texttt{g7e.2xlarge}, which contains the same 96-GB NVIDIA RTX PRO Server 6000 accelerator used in our Colab run \citep{awsG7e2026}. For other systems we use one consistent current major-cloud proxy: \$5.191 per accelerator-hour for an AWS \texttt{p5.4xlarge} H100 Capacity Block in US East \citep{awsCapacity2026}. Thus these figures answer ``what would the stated or estimated accelerator-hours cost at a public contemporary rate?'', not what the original authors paid. They exclude storage, egress, idle reservation time, taxes, and discounts.
+We convert BYOD time to a rental-equivalent cost using the September 2026 AWS US-East on-demand price of \$3.36 per hour for a one-GPU \texttt{g7e.2xlarge}, obtained from the AWS Price List. AWS specifies that this instance contains the same 96-GB NVIDIA RTX PRO 6000 Blackwell Server Edition GPU used in our Colab run \citep{awsPriceListG7e2026,awsG7e2026}. For other systems we use one consistent current major-cloud proxy: \$5.191 per accelerator-hour for an AWS \texttt{p5.4xlarge} H100 Capacity Block in US East \citep{awsCapacity2026}. Thus these figures answer ``what would the stated or estimated accelerator-hours cost at a public contemporary rate?'', not what the original authors paid. They exclude storage, egress, idle reservation time, taxes, and discounts.
 
 Operational emissions are estimated as energy use multiplied by the data center's power usage effectiveness (PUE) and the grid carbon intensity \citep{lannelongue2021green,patterson2021carbon}:
 \begin{equation}
@@ -364,7 +368,7 @@ Merging is an algebraic reparameterization rather than an additional training st
 \section{Complete training configuration}
 \label{app:training-settings}
 
-Table~\ref{tab:training-settings} records the common resolved configuration of the four primary conversions, including optimization, precision, checkpointing, and validation. We use AdamW with BF16 master weights and Transformer Engine HYBRID FP8 execution.
+Table~\ref{tab:training-settings} records the common resolved configuration of the four primary conversions, including optimization, precision, checkpointing, and validation. We use AdamW with BF16 master weights and Transformer Engine HYBRID FP8 execution. The exact one-million-example training mixture is \href{https://huggingface.co/datasets/Dovelove/BYOD-training-1m-256}{available anonymously}, with row-level source provenance and upstream licensing terms.
 
 \begin{table*}[p]
 \caption{Full common training configuration. Model-specific parent checkpoints, mask strings, and parameter counts appear in Table~\ref{tab:models}.}
@@ -400,7 +404,7 @@ BYOD-Llama-50k keeps the same batch size and objective but processes 800,000 exa
 \section{Complete inference configuration}
 \label{app:inference-settings}
 
-Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7. Archived run manifests take precedence over mutable notebook defaults.
+Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. The fixed 100-question open-ended prompt set is \href{https://huggingface.co/datasets/Dovelove/BYOD-open-ended-questions}{available anonymously}. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late. The open-ended diagnostic uses temperature 0.7.
 
 \begin{table*}[h]
 \caption{Task-specific masked-diffusion inference settings in the validation notebook. NFE is the number of denoising network evaluations.}
@@ -446,7 +450,7 @@ HumanEval & 256 & MBPP & 128 \\
 \end{tabular}
 \end{table}
 
-Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence. For computational tractability, we evaluate all models on the same fixed subset of 125 examples from each benchmark, selected once using a fixed seed. Thus, comparisons within our harness are paired at the example level. This enables broad, paired comparison across multiple model families, training checkpoints, and inference settings, while avoiding the substantially greater computational cost that would result from full-benchmark evaluation on top of the extensive preliminary hyperparameter and configuration testing required to establish a stable conversion recipe.
+Table~\ref{tab:ar-inference} reports the corresponding maximum-new-token budgets for greedy AR evaluation. These are listed separately because an AR token budget is not an NFE budget and should not be read as computational equivalence. For computational tractability, we evaluate all models on the same fixed subset of 125 examples from each benchmark, selected once using a fixed seed. Thus, comparisons within our harness are paired at the example level. This enables broad, paired comparison across multiple model families, training checkpoints, and inference settings, while avoiding the substantially greater computational cost that would result from full-benchmark evaluation on top of the extensive preliminary hyperparameter and configuration testing required to establish a stable conversion recipe.
 
 \section{Qualitative code-error analysis}
 \label{app:code-errors}
@@ -489,14 +493,19 @@ MBPP/79 & \texttt{return set(num for for sublist in list\_of\_lists)} & Duplicat
 \end{tabular}
 \end{table*}
 
+\clearpage
 \section{Complete open-generation results}
 \label{app:open-generation-results}
 
+Table~\ref{tab:ppl} gives the exact perplexity and Distinct-1/2/3 values for the final checkpoints. Figure~\ref{fig:final-distinct-metrics} compares the diversity metrics across inference budgets, while Figure~\ref{fig:llama-distinct-progression} shows their development during BYOD-Llama-50k training.
+
 \begin{table*}[h]
-\caption{Open-ended generation on a 128-token canvas. PPL$_k$ is token-weighted Phi-4 perplexity and D-1$_k$ is mean per-answer sliding model-token Distinct-1 at $k$ NFE. Lower PPL and higher D-1 are better. AR parents generate autoregressively and therefore have no diffusion-NFE setting.}
+\caption{Open-ended generation on a 128-token canvas. PPL$_k$ is token-weighted Phi-4 perplexity; D-$n$ columns report mean per-answer sliding model-token Distinct-$n$ at $k$ NFE. Lower PPL and higher Distinct-$n$ are better. AR parents generate autoregressively and therefore have no diffusion-NFE setting.}
 \label{tab:ppl}
 \centering
 \scriptsize
+\par\noindent\textbf{(a) Perplexity and Distinct-1.}
+\vspace{0.3em}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrrrrr}
 \toprule
@@ -512,7 +521,24 @@ BYOD-Llama-50k & 17.00 & 43.5 & 9.53 & 49.6 & 4.83 & 50.7 & 2.49 & 61.0 \\
 LLaDA 8B Instruct & 5.33 & 45.2 & 4.07 & 51.4 & 2.79 & 53.4 & \na & \na \\
 \bottomrule
 \end{tabular}}
+\input{generated_distinct_results.tex}
 \end{table*}
+
+\clearpage
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=\textwidth]{figures/final_distinct_metrics.pdf}
+\caption{Sliding model-token Distinct-1/2/3 for the final models across diffusion inference budgets. Crosses show the paired AR parents; BYOD-Llama-25k and BYOD-Llama-50k share the same parent. Higher-order metrics show the same broad diversity pattern while compressing differences because longer $n$-grams are less likely to repeat exactly.}
+\label{fig:final-distinct-metrics}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/llama_distinct_progression.pdf}
+\caption{Sliding model-token Distinct-1/2/3 throughout BYOD-Llama-50k training. Solid colored lines are BYOD-Llama checkpoints at each NFE budget; matching dashed lines are fixed LLaDA references, and the dotted gray line is Llama AR. All three metrics fluctuate across checkpoints without a strong monotonic trend.}
+\label{fig:llama-distinct-progression}
+\end{figure*}
 \clearpage
 
 \section{Bidirectional attention test}
@@ -520,7 +546,7 @@ LLaDA 8B Instruct & 5.33 & 45.2 & 4.07 & 51.4 & 2.79 & 53.4 & \na & \na \\
 
 This deterministic test uses ordinary single-token target words. Each partial response has the form ``Answer:[MASK]. COPY: apple.'', with a different target in each example. The target is absent from the instruction and left context and appears explicitly after the mask. The converted model predicts the masked position by greedy argmax in one forward pass; no iterative sampling or generation settings are involved.
 
-We score the same masked position twice: once with the later copy clue and once after deleting that clue. We report exact match for both conditions, their difference, and whether adding the clue changes the greedy prediction at all. Under causal attention, changing or deleting tokens to the right cannot affect logits at an earlier position, so both the exact-match gain and prediction-change rate must be zero. The latter separates use of right context from the stricter ability to follow the exact-copy instruction. This is a functional attention check, not a benchmark of reasoning or general infilling quality.
+We score the same masked position twice: once with the later copy clue and once after deleting that clue. We report exact match for both conditions, their difference, and whether adding the clue changes the greedy prediction at all. Under causal attention, changing or deleting tokens to the right cannot affect logits at an earlier position, so both the exact-match gain and prediction-change rate must be zero. The latter separates use of right context from the stricter ability to follow the exact-copy instruction. This is a functional attention check, not a benchmark of reasoning or general infilling quality. Table~\ref{tab:bidirectional-infilling} reports the results for both conditions.
 
 \begin{table}[h]
 \caption{Bidirectional attention test results. ``With clue'' predicts the earlier mask while the word is visible later; ``without clue'' removes that later word. Gain is the exact-match difference.}

@@ -19,6 +19,8 @@ from diffusion_lm.inference import denoise_stream, load_hub_adapter_session
 SPACE = json.loads((Path(__file__).parent / "space_model.json").read_text())
 MODEL_REPO_ID = os.getenv("MODEL_REPO_ID", SPACE["model_repo_id"])
 DISPLAY_NAME = SPACE["display_name"]
+SHOW_REPOSITORY_LINKS = bool(SPACE.get("show_repository_links", True))
+SOURCE_URL = SPACE.get("source_url")
 
 # ZeroGPU recommends constructing and placing the root module on CUDA at module
 # scope. No quantization is used: all four demos run with the saved BF16 setup.
@@ -165,11 +167,12 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 label="Early stopping",
                 info="Stop after the visible answer is unchanged for two consecutive iterations.",
             )
-    gr.Markdown(
-        "The first request may take longer while the base model and adapter are loaded. "
-        f"[Model card](https://huggingface.co/{MODEL_REPO_ID}) · "
-        "[Source code](https://github.com/RuurdKuiper/lad-generic)"
-    )
+    footer = "The first request may take longer while the base model and adapter are loaded."
+    if SHOW_REPOSITORY_LINKS:
+        footer += f" [Model card](https://huggingface.co/{MODEL_REPO_ID})"
+        if SOURCE_URL:
+            footer += f" · [Source code]({SOURCE_URL})"
+    gr.Markdown(footer)
 
     inputs = [
         question,

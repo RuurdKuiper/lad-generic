@@ -27,6 +27,7 @@ from openpyxl import load_workbook
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_WORKBOOK = ROOT / "results" / "Results_training-20260924.xlsx"
 DEFAULT_OUTPUT_DIR = ROOT / "iclr2027_submission" / "figures"
+DEFAULT_DISTINCT_TABLE = ROOT / "iclr2027_submission" / "generated_distinct_results.tex"
 
 TASK_LABELS = {
     "arc_c": "ARC-C",
@@ -141,7 +142,7 @@ def load_radar_data(sheet: Any) -> dict[str, Any]:
 
 
 def load_open_generation_data(sheet: Any) -> dict[str, Any]:
-    """Read Table 4's PPL and Distinct-1 values by model name and NFE."""
+    """Read PPL and sliding model-token Distinct-1/2/3 by model and NFE."""
     model_row = next(
         (row for row in range(1, sheet.max_row + 1) if sheet.cell(row, 2).value == "model"),
         None,
@@ -162,15 +163,18 @@ def load_open_generation_data(sheet: Any) -> dict[str, Any]:
         ),
         None,
     )
-    d1_header = next(
-        (
-            row
-            for row in range(model_row + 1, sheet.max_row + 1)
-            if str(sheet.cell(row, 2).value or "").startswith("Distinct-1")
-        ),
-        None,
-    )
-    if ppl_start is None or d1_header is None:
+    distinct_headers = {
+        n: next(
+            (
+                row
+                for row in range(model_row + 1, sheet.max_row + 1)
+                if str(sheet.cell(row, 2).value or "").startswith(f"Distinct-{n}")
+            ),
+            None,
+        )
+        for n in (1, 2, 3)
+    }
+    if ppl_start is None or any(row is None for row in distinct_headers.values()):
         raise ValueError(f"Could not find open-generation metric blocks in {sheet.title}")
 
     pattern = re.compile(r"128 tokens,\s*(32|64|128) iterations", re.IGNORECASE)
@@ -186,7 +190,10 @@ def load_open_generation_data(sheet: Any) -> dict[str, Any]:
         return rows
 
     ppl_rows = metric_rows(ppl_start)
-    d1_rows = metric_rows(d1_header + 1)
+    distinct_rows = {
+        n: metric_rows(int(header) + 1)
+        for n, header in distinct_headers.items()
+    }
     series: dict[str, Any] = {}
     for display_name, (diffusion_name, ar_name) in OPEN_GENERATION_MODELS.items():
         if diffusion_name not in model_columns:
@@ -199,8 +206,16 @@ def load_open_generation_data(sheet: Any) -> dict[str, Any]:
                     f"{sheet.title}!{sheet.cell(ppl_rows[nfe], diffusion_column).coordinate}",
                 ),
                 "distinct_1": _numeric(
-                    sheet.cell(d1_rows[nfe], diffusion_column).value,
-                    f"{sheet.title}!{sheet.cell(d1_rows[nfe], diffusion_column).coordinate}",
+                    sheet.cell(distinct_rows[1][nfe], diffusion_column).value,
+                    f"{sheet.title}!{sheet.cell(distinct_rows[1][nfe], diffusion_column).coordinate}",
+                ),
+                "distinct_2": _numeric(
+                    sheet.cell(distinct_rows[2][nfe], diffusion_column).value,
+                    f"{sheet.title}!{sheet.cell(distinct_rows[2][nfe], diffusion_column).coordinate}",
+                ),
+                "distinct_3": _numeric(
+                    sheet.cell(distinct_rows[3][nfe], diffusion_column).value,
+                    f"{sheet.title}!{sheet.cell(distinct_rows[3][nfe], diffusion_column).coordinate}",
                 ),
             }
             for nfe in (32, 64, 128)
@@ -214,13 +229,24 @@ def load_open_generation_data(sheet: Any) -> dict[str, Any]:
                 _numeric(sheet.cell(ppl_rows[nfe], ar_column).value, f"{sheet.title}!{sheet.cell(ppl_rows[nfe], ar_column).coordinate}")
                 for nfe in (32, 64, 128)
             ]
-            d1_values = [
-                _numeric(sheet.cell(d1_rows[nfe], ar_column).value, f"{sheet.title}!{sheet.cell(d1_rows[nfe], ar_column).coordinate}")
-                for nfe in (32, 64, 128)
-            ]
-            if not np.allclose(ppl_values, ppl_values[0]) or not np.allclose(d1_values, d1_values[0]):
+            distinct_values = {
+                n: [
+                    _numeric(
+                        sheet.cell(distinct_rows[n][nfe], ar_column).value,
+                        f"{sheet.title}!{sheet.cell(distinct_rows[n][nfe], ar_column).coordinate}",
+                    )
+                    for nfe in (32, 64, 128)
+                ]
+                for n in (1, 2, 3)
+            }
+            if not np.allclose(ppl_values, ppl_values[0]) or any(
+                not np.allclose(values, values[0]) for values in distinct_values.values()
+            ):
                 raise ValueError(f"AR reference varies across NFE rows for {ar_name!r}")
-            ar = {"perplexity": ppl_values[0], "distinct_1": d1_values[0]}
+            ar = {
+                "perplexity": ppl_values[0],
+                **{f"distinct_{n}": values[0] for n, values in distinct_values.items()},
+            }
         series[display_name] = {"diffusion": points, "ar": ar}
     return {"nfe": [32, 64, 128], "series": series}
 
@@ -469,6 +495,140 @@ def plot_open_generation_budget(data: dict[str, Any], output_dir: Path) -> None:
     _save(fig, output_dir / "open_generation_budget")
 
 
+def plot_final_distinct_metrics(data: dict[str, Any], output_dir: Path) -> None:
+    """Show final-model Distinct-1/2/3 across NFE with paired AR markers."""
+    nfe = data["nfe"]
+    x = np.arange(len(nfe), dtype=float)
+    ar_x = 3.35
+    fig, axes = plt.subplots(1, 3, figsize=(11.2, 3.9))
+    for n, ax in enumerate(axes, start=1):
+        metric = f"distinct_{n}"
+        observed = []
+        for name, item in data["series"].items():
+            color, linestyle, marker = OPEN_GENERATION_STYLES[name]
+            values = [100.0 * item["diffusion"][step][metric] for step in nfe]
+            observed.extend(values)
+            ax.plot(
+                x, values, color=color, linestyle=linestyle, marker=marker,
+                linewidth=1.8, markersize=4.5,
+                label=f"{name} (dashed)" if name == "BYOD-Llama-50k" else name,
+            )
+            if item["ar"] is not None and name != "BYOD-Llama-50k":
+                ar_value = 100.0 * item["ar"][metric]
+                observed.append(ar_value)
+                ax.scatter(
+                    [ar_x], [ar_value], color=color, marker="X", s=48,
+                    edgecolor="white", linewidth=0.6, zorder=5,
+                )
+        ax.axvline(2.68, color="#B5B5B5", linewidth=0.8, linestyle=(0, (2, 3)))
+        ax.set_xticks([*x, ar_x], ["32", "64", "128", "AR"], fontsize=8)
+        ax.set_xlim(-0.18, 3.62)
+        ax.set_xlabel("NFE")
+        ax.set_ylabel(f"Distinct-{n} (%) ↑")
+        ax.set_title(f"({chr(96 + n)}) Distinct-{n}", fontsize=10, fontweight="bold")
+        ax.set_ylim(max(0.0, min(observed) - 4.0), min(100.0, max(observed) + 4.0))
+        ax.grid(axis="y", color="#D7D7D7", linewidth=0.6)
+        ax.spines[["top", "right"]].set_visible(False)
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    ar_handle = Line2D(
+        [0], [0], marker="X", color="none", markerfacecolor="#555555",
+        markeredgecolor="white", markersize=7, label="Paired AR parent",
+    )
+    fig.legend(
+        [*handles, ar_handle], [*labels, "Paired AR parent"],
+        loc="lower center", bbox_to_anchor=(0.5, -0.02), frameon=False,
+        ncol=4, fontsize=7.5,
+    )
+    fig.subplots_adjust(left=0.065, right=0.992, top=0.91, bottom=0.28, wspace=0.31)
+    _save(fig, output_dir / "final_distinct_metrics")
+
+
+def plot_distinct_progression(progressions: dict[int, dict[str, Any]], output_dir: Path) -> None:
+    """Plot D-1/2/3 over the 50k BYOD-Llama run for all NFE budgets."""
+    fig, axes = plt.subplots(3, 1, figsize=(8.2, 7.6), sharex=True)
+    for n, ax in enumerate(axes, start=1):
+        data = progressions[n]
+        value_name = f"distinct_{n}"
+        for nfe in (32, 64, 128):
+            item = data["series"][nfe]
+            steps = [point["step"] for point in item["points"]]
+            values = [100.0 * point[value_name] for point in item["points"]]
+            color = COLORS[nfe]
+            ax.plot(steps, values, color=color, marker="o", linewidth=1.7, markersize=3.5, label=f"{nfe} NFE")
+            ax.axhline(100.0 * item["llada"], color=color, linestyle=(0, (4, 3)), linewidth=1.1)
+        ax.axhline(
+            100.0 * data["series"][32]["ar"], color="#555555",
+            linestyle=(0, (1, 2)), linewidth=1.5,
+        )
+        observed = [
+            100.0 * point[value_name]
+            for item in data["series"].values()
+            for point in item["points"]
+        ]
+        observed.extend(100.0 * item["llada"] for item in data["series"].values())
+        observed.append(100.0 * data["series"][32]["ar"])
+        ax.set_ylim(max(0.0, min(observed) - 5.0), min(100.0, max(observed) + 5.0))
+        ax.set_ylabel(f"Distinct-{n} (%) ↑")
+        ax.set_title(f"({chr(96 + n)}) Distinct-{n}", fontsize=9.5, fontweight="bold")
+        ax.grid(axis="y", color="#D0D0D0", linewidth=0.6)
+        ax.spines[["top", "right"]].set_visible(False)
+    steps = progressions[1]["all_steps"]
+    axes[-1].set_xticks(steps)
+    axes[-1].set_xticklabels([f"{step // 1000}k" for step in steps], fontsize=8)
+    axes[-1].set_xlim(min(steps) - 1_500, max(steps) + 1_500)
+    axes[-1].set_xlabel("Training iterations")
+    nfe_handles = [
+        Line2D([0], [0], color=COLORS[nfe], marker="o", linewidth=1.7, label=f"{nfe} NFE")
+        for nfe in (32, 64, 128)
+    ]
+    style_handles = [
+        Line2D([0], [0], color="#333333", linewidth=1.7, label="BYOD-Llama"),
+        Line2D([0], [0], color="#333333", linestyle=(0, (4, 3)), linewidth=1.1, label="LLaDA"),
+        Line2D([0], [0], color="#555555", linestyle=(0, (1, 2)), linewidth=1.5, label="Llama AR"),
+    ]
+    fig.legend(
+        [*nfe_handles, *style_handles],
+        [handle.get_label() for handle in [*nfe_handles, *style_handles]],
+        loc="lower center", bbox_to_anchor=(0.5, 0.005), frameon=False, ncol=6, fontsize=8,
+    )
+    fig.subplots_adjust(left=0.105, right=0.985, top=0.97, bottom=0.11, hspace=0.34)
+    _save(fig, output_dir / "llama_distinct_progression")
+
+
+def write_higher_order_distinct_table(data: dict[str, Any], destination: Path) -> None:
+    """Write exact D-2/D-3 values; D-1 remains in the PPL table."""
+    lines = [
+        r"\vspace{0.8em}",
+        r"\par\noindent\textbf{(b) Higher-order diversity.} D-2 and D-3 are mean per-answer sliding model-token Distinct-2 and Distinct-3, in percent.",
+        r"\vspace{0.3em}",
+        r"\resizebox{\textwidth}{!}{%",
+        r"\begin{tabular}{lrrrrrrrr}",
+        r"\toprule",
+        r"& \multicolumn{6}{c}{Diffusion} & \multicolumn{2}{c}{AR parent} \\",
+        r"\cmidrule(lr){2-7}\cmidrule(lr){8-9}",
+        r"Model/checkpoint & D-2$_{32}$ & D-3$_{32}$ & D-2$_{64}$ & D-3$_{64}$ & D-2$_{128}$ & D-3$_{128}$ & D-2 & D-3 \\",
+        r"\midrule",
+    ]
+    for name, item in data["series"].items():
+        diffusion = item["diffusion"]
+        values = [
+            100.0 * diffusion[nfe][f"distinct_{n}"]
+            for nfe in (32, 64, 128)
+            for n in (2, 3)
+        ]
+        ar_values = (
+            [100.0 * item["ar"]["distinct_2"], 100.0 * item["ar"]["distinct_3"]]
+            if item["ar"] is not None else None
+        )
+        cells = [name, *(f"{value:.1f}" for value in values)]
+        cells.extend((f"{value:.1f}" for value in ar_values) if ar_values is not None else (r"\na", r"\na"))
+        lines.append(" & ".join(cells) + r" \\")
+    lines.extend([r"\bottomrule", r"\end{tabular}}", ""])
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text("\n".join(lines), encoding="utf-8")
+
+
 def _plot_progression_panel(
     ax: Any,
     data: dict[str, Any],
@@ -528,7 +688,7 @@ def _plot_progression_panel(
     ]
     ax.legend(handles=style_handles, frameon=False, loc="upper center", fontsize=8)
 
-    if value_name == "distinct_1":
+    if value_name.startswith("distinct_"):
         observed = [
             scale * point[value_name]
             for item in data["series"].values()
@@ -638,13 +798,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workbook", type=Path, default=DEFAULT_WORKBOOK)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--distinct-table-output", type=Path, default=DEFAULT_DISTINCT_TABLE)
     parser.add_argument("--progression-header-row", type=int, default=42)
     parser.add_argument(
         "--distinct-progression-header-row",
         type=int,
         default=49,
-        help="Optional Distinct-1 checkpoint block; a missing block produces a clearly marked placeholder panel.",
+        help="Distinct-1 checkpoint block header row.",
     )
+    parser.add_argument("--distinct-2-progression-header-row", type=int, default=56)
+    parser.add_argument("--distinct-3-progression-header-row", type=int, default=63)
     args = parser.parse_args()
 
     workbook = args.workbook.expanduser().resolve()
@@ -660,24 +823,18 @@ def main() -> None:
         sheet,
         args.distinct_progression_header_row,
         value_name="distinct_1",
-        required=False,
+    )
+    distinct_2_progression = load_progression_data(
+        sheet,
+        args.distinct_2_progression_header_row,
+        value_name="distinct_2",
+    )
+    distinct_3_progression = load_progression_data(
+        sheet,
+        args.distinct_3_progression_header_row,
+        value_name="distinct_3",
     )
     validation_loss = load_validation_loss_data(wb["Long validation loss"])
-    if distinct_progression is None:
-        distinct_progression = {
-            "all_steps": progression["all_steps"],
-            "series": {
-                nfe: {
-                    "label": progression["series"][nfe]["label"],
-                    "points": [],
-                    "llada_label": progression["series"][nfe]["llada_label"],
-                    "llada": 0.0,
-                    "ar_label": progression["series"][nfe]["ar_label"],
-                    "ar": 0.0,
-                }
-                for nfe in (32, 64, 128)
-            },
-        }
     plt.rcParams.update({
         "font.family": "DejaVu Sans",
         "font.size": 9,
@@ -688,6 +845,12 @@ def main() -> None:
     plot_radar_panels(radar, output_dir)
     plot_open_generation_budget(open_generation, output_dir)
     plot_training_progression(progression, distinct_progression, validation_loss, output_dir)
+    plot_final_distinct_metrics(open_generation, output_dir)
+    plot_distinct_progression(
+        {1: distinct_progression, 2: distinct_2_progression, 3: distinct_3_progression},
+        output_dir,
+    )
+    write_higher_order_distinct_table(open_generation, args.distinct_table_output.expanduser().resolve())
 
     manifest = {
         "source_workbook": str(workbook),
@@ -696,13 +859,15 @@ def main() -> None:
         "progression_cells": f"rows {args.progression_header_row}--{args.progression_header_row + 4}",
         "distinct_progression_cells": (
             f"rows {args.distinct_progression_header_row}--{args.distinct_progression_header_row + 4}"
-            if distinct_progression is not None
-            else "pending: add an equivalent Training iterations block beginning at C49"
         ),
+        "distinct_2_progression_cells": f"rows {args.distinct_2_progression_header_row}--{args.distinct_2_progression_header_row + 4}",
+        "distinct_3_progression_cells": f"rows {args.distinct_3_progression_header_row}--{args.distinct_3_progression_header_row + 4}",
         "radar": radar,
         "open_generation_budget": open_generation,
         "training_progression": progression,
         "distinct_1_progression": distinct_progression,
+        "distinct_2_progression": distinct_2_progression,
+        "distinct_3_progression": distinct_3_progression,
         "validation_loss": validation_loss,
         "notes": [
             "Blank checkpoint cells are omitted; lines connect only recorded values.",

@@ -39,7 +39,7 @@ Autoregressive (AR) language models generate a sequence from left to right. This
 
 Our primary aim is therefore to devise a recipe optimized foremost for compute efficiency and reproducibility when converting AR models into DLMs, rather than to pretrain a new diffusion foundation model for every architecture. Efficiency matters for three connected reasons. First, full diffusion pretraining is financially and environmentally costly: under our standardized rental and electricity scenario, the reported LLaDA run corresponds to approximately \$675,000 and 44,100 kg CO$_2$e (Table~\ref{tab:compute}). These are not the authors' bill or measured emissions---operational carbon depends strongly on utilization, datacenter efficiency, location, and energy supply---but they illustrate the scale of the barrier \citep{strubell2019energy,patterson2021carbon}. Second, a conversion that completes in hours on one widely available cloud instance makes hands-on DLM research accessible beyond laboratories with multi-node clusters. Third, applying the same inexpensive intervention to multiple existing model families makes it feasible to study how architecture and parent-model choice affect diffusion generation without repeating foundation-model pretraining for every comparison.
 
-We study this question with \method{}, a generalizable conversion and evaluation pipeline for four instruction-tuned decoder families: Gemma~2~9B, Llama~3.1~8B, Qwen2.5~7B, and Ministral~8B. We selected the latest text-only instruction checkpoint from each family with a comparable parameter count. Multimodal variants are not used to avoid modality-specific training as an additional confounder. Every backbone receives the same bidirectional attention intervention, LoRA target modules, and masked-diffusion objective. This paired design separates conversion quality from the strength of the starting checkpoint. We directly compare our models against LLaDA~8B Instruct because its standard masked-diffusion objective, instruction-tuning setup, and overlapping benchmark suite make it the cleanest external reference baseline. We additionally report published DiffuLLaMA, Dream-Instruct, iLLaDA-Instruct, and Efficient-DLM values, but keep them protocol-separated: their additional attention, masking, scheduling, data, and inference techniques would confound a controlled comparison.
+We study this question with \method{}, a generalizable conversion and evaluation pipeline for four instruction-tuned decoder families: Gemma~2~9B, Llama~3.1~8B, Qwen2.5~7B, and Ministral~8B. We selected the latest text-only instruction checkpoint from each family with a comparable parameter count. Multimodal variants are not used to avoid modality-specific training as an additional confounder. Every backbone receives the same bidirectional attention intervention, LoRA target modules, and masked-diffusion objective. This paired design separates conversion quality from the strength of the starting checkpoint. We directly compare our models against LLaDA~8B Instruct because its standard masked-diffusion objective, instruction-tuning setup, and overlapping benchmark suite make it the cleanest external reference baseline. We additionally report published DiffuLLaMA, Dream-Instruct, iLLaDA-Instruct, and Efficient-DLM values, but keep them protocol-separated: their additional attention, masking, scheduling, data, and inference techniques would confound a controlled comparison. 
 
 Our contributions are:
 \begin{itemize}
@@ -250,7 +250,7 @@ Even though we used perplexity and Distinct-1/2/3 as proxies for fluency, they a
 
 In the bidirectionality test, every converted model changed its prediction on every item when the later clue was added, demonstrating bidirectional attention across all four families. Some models did not always copy the token correctly, indicating a failure to use the clue rather than an absence of information flow. The public demos enable quick experimentation with NFE, output length, remasking, and blockwise generation, while exposing grammaticality, coherence, and denoising errors that aggregate metrics cannot capture.
 
-LoRA keeps all original parameters frozen during conversion, preventing their direct overwriting and potentially reducing catastrophic forgetting \citep{luo2023catastrophic}. Although rank 1024 is high for task adaptation, learning a new generation process requires a large change; prior diffusion adaptation work also favored this rank over smaller ones \citep{kuiper2025lad}. The adapters can then be merged into the base projections, removing their temporary parameter and inference overhead while restoring the original model size with broadly similar behavior (Appendix~\ref{app:merge}). Future work could study whethere merged models could subsequently initialize partial or full diffusion fine-tuning; establishing diffusion generation before exposing the original weights to optimization may make these updates less disruptive.
+LoRA keeps all original parameters frozen during conversion, preventing their direct overwriting and potentially reducing catastrophic forgetting \citep{luo2023catastrophic}. We adopt \(r=1024\) as a fixed transfer setting rather than claiming that it is minimal or optimal; systematically characterizing the rank–quality–compute trade-off remains future work. However, prior diffusion adaptation work also favored higher ranks over smaller ones \citep{kuiper2025lad}. The adapters can subsequently be merged into the base projections, removing their temporary parameter and inference overhead while restoring the original model size with broadly similar behavior (Appendix~\ref{app:merge}). Future work could study whether merged models could subsequently initialize partial or full diffusion fine-tuning; establishing diffusion generation before exposing the original weights to optimization may make these updates less disruptive.
 
 Finally, although one conversion takes only a few hours, development and evaluation across models, configurations, ablations, and validation runs required hundreds of GPU-hours. Nevertheless, BYOD reuses an AR checkpoint and processes orders of magnitude fewer token positions than the full-model systems in Table~\ref{tab:compute}, enabling repeatable cross-architecture experiments without repeated pretraining. This does not erase the original pretraining cost or establish a proportional reduction in emissions.
 
@@ -405,27 +405,27 @@ Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets fr
 \centering
 \small
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lrrrrlr}
+\begin{tabular}{lrrrrl}
 \toprule
-Task & Output tokens & NFE & Block length & Temperature & Terminator handling & Samples \\
+Task & Output tokens & NFE & Block length & Temperature & Terminator handling\\
 \midrule
-Open-ended & 128 & 128/64/32 & 128 & 0.7 & delayed retention & 125 \\
-MMLU & 64 & 64 & 64 & 0 & ordinary & 125 \\
-MMLU-Pro & 128 & 128 & 128 & 0 & delayed retention & 125 \\
-HellaSwag & 64 & 64 & 64 & 0 & ordinary & 125 \\
-ARC-Challenge & 64 & 64 & 64 & 0 & ordinary & 125 \\
-GSM8K & 256 & 256 & 256 & 0 & delayed retention & 125 \\
-MATH-500 & 256 & 256 & 256 & 0 & delayed retention & 125 \\
-GPQA-Main & 128 & 128 & 128 & 0 & delayed retention & 125 \\
-HumanEval & 256 & 256 & 256 & 0 & delayed retention & 125 \\
-MBPP & 128 & 128 & 128 & 0 & delayed retention & 125 \\
-Bidirectional attention & 1 masked word & 1 & \na & 0 & \na & 20 \\
+Open-ended & 128 & 128/64/32 & 128 & 0.7 & delayed retention\\
+MMLU & 64 & 64 & 64 & 0 & ordinary\\
+MMLU-Pro & 128 & 128 & 128 & 0 & delayed retention\\
+HellaSwag & 64 & 64 & 64 & 0 & ordinary\\
+ARC-Challenge & 64 & 64 & 64 & 0 & ordinary\\
+GSM8K & 256 & 256 & 256 & 0 & delayed retention\\
+MATH-500 & 256 & 256 & 256 & 0 & delayed retention\\
+GPQA-Main & 128 & 128 & 128 & 0 & delayed retention\\
+HumanEval & 256 & 256 & 256 & 0 & delayed retention\\
+MBPP & 128 & 128 & 128 & 0 & delayed retention\\
+Bidirectional attention & 1 masked word & 1 & \na & 0 & \na\\
 \bottomrule
 \end{tabular}
 }
 \end{table*}
 
-Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence.
+Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence. For computational tractability, we evaluate all models on the same fixed subset of 125 examples from each benchmark, selected once using a fixed seed. Thus, comparisons within our harness are paired at the example level. This enables broad, paired comparison across multiple model families, training checkpoints, and inference settings, while avoiding the substantially greater computational cost that would result from full-benchmark evaluation on top of the extensive preliminary hyperparameter and configuration testing required to establish a stable conversion recipe.
 
 \begin{table}[h]
 \caption{Maximum new tokens for paired greedy AR evaluation.}

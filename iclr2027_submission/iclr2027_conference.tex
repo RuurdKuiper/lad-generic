@@ -220,7 +220,7 @@ Figure~\ref{fig:benchmark-radars} shows the largest gaps with AR in mathematics 
 \label{fig:open-generation-budget}
 \end{figure*}
 
-Figure~\ref{fig:open-generation-budget} shows that perplexity and Distinct-1 generally improve with additional NFE. Appendix Table~\ref{tab:ppl} reports exact perplexity and Distinct-1/2/3 at 32, 64, and 128 NFE, which shows that the converted models have 2.7--5.0 times the perplexity of their AR parents for different NFE budgets, and generally lower Distinct-$n$ scores (Appendix Table~\ref{tab:ppl}). LLaDA also has lower perplexity than every BYOD model. Representative samples are provided in Appendix~\ref{app:demo-trajectories} to illustrate iterative refinement under different remasking strategies and NFE budgets.
+Figure~\ref{fig:open-generation-budget} shows that perplexity and Distinct-1 generally improve with additional NFE. Appendix~\ref{app:open-generation-results} (Table~\ref{tab:ppl}) reports the exact values: across NFE budgets, converted models have 2.7--5.0 times their AR parents' perplexity and generally lower Distinct-$n$. LLaDA also has lower perplexity than every BYOD model. Representative samples are provided in Appendix~\ref{app:demo-trajectories} to illustrate iterative refinement under different remasking strategies and NFE budgets.
 
 \subsection{Further training}
 
@@ -278,7 +278,7 @@ This study uses existing language models and public benchmark or instruction dat
 
 \section*{AI Use Statement}
 
-Generative AI tools were used to assist software development and debugging, creation of analysis scripts, interpretation of results, literature discovery and summarization, and drafting and editing this manuscript. The authors manually reviewed AI-assisted code and prose, and verified literature claims and citations against primary sources. No benchmark value was entered solely from an unsupported model response. The authors take responsibility for the final content, claims, code, and artifacts.
+Generative AI tools were used to assist software development and debugging, creation of analysis scripts, literature discovery and summarization, and drafting and editing this manuscript. The authors manually reviewed AI-assisted code and prose, and verified literature claims and citations against primary sources. No benchmark value was entered solely from an unsupported model response. The authors take responsibility for the final content, claims, code, and artifacts.
 
 \bibliography{iclr2027_conference}
 \bibliographystyle{iclr2027_conference}
@@ -320,6 +320,11 @@ Operational emissions are estimated as energy use multiplied by the data center'
 \end{equation}
 Here $\widehat{E}_{\mathrm{CO_2e}}$ is estimated operational emissions in kg CO$_2$e, $G$ is aggregate GPU-hours, $P_{\mathrm{GPU}}$ is assumed per-GPU power draw in kW, PUE is the dimensionless data-center power usage effectiveness, and $I_{\mathrm{grid}}$ is grid carbon intensity in kg CO$_2$e/kWh. We use 0.60 kW for RTX PRO 6000 runs, matching NVIDIA's stated maximum board power \citep{nvidiaRTXPro6000}, and a 0.70-kW H100-class proxy for all other entries except the reported A100 run, for which we use 0.40 kW \citep{nvidiaH100,nvidiaA100}. We assume PUE 1.09, Google's reported fleet-wide value \citep{googlePUE2025}, and the IEA's 2024 global-average generation intensity of 0.445 kg CO$_2$e/kWh \citep{ieaElectricity2025}. For example, one BYOD stage gives $3.2\times0.60\times1.09\times0.445=0.93$ kg CO$_2$e. These are location-independent GPU-only operating scenarios: they assume full rated GPU power, omit host CPU/memory/network energy and embodied hardware emissions, and do not account for renewable-energy procurement. Direct power telemetry and the datacenter's time- and location-specific marginal carbon intensity would be required for a measured footprint.
 
+\section{Adapter-merging ablation}
+\label{app:merge}
+
+High-rank LoRA increases the parameter count only while the adapter remains separate. To test whether removing this overhead changes behavior, we evaluate the same BYOD-Llama-25k checkpoint with the adapter loaded and after its weights are folded into the base projections. Tables~\ref{tab:merge-open-generation} and~\ref{tab:merge-benchmarks} report open-generation and factual results, respectively.
+
 \begin{table}[h]
 \caption{Open-generation comparison of the adapter-loaded and merged Llama checkpoints. PPL is token-weighted; Distinct-$n$ is averaged over answers and reported as a percentage. Both use 128 generated tokens; D-1/2/3 use 32 NFE.}
 \label{tab:merge-open-generation}
@@ -335,11 +340,6 @@ Merged standalone & 8.030B & 19.283 & 4.764 & 49.8 & 80.7 & 91.8 \\
 \end{tabular}
 \end{table}
 
-
-\section{Adapter-merging ablation}
-\label{app:merge}
-
-High-rank LoRA increases the parameter count only while the adapter remains separate. To test whether removing this overhead changes behavior, we evaluate the same BYOD-Llama-25k checkpoint with the adapter loaded and after its weights are folded into the base projections. Tables~\ref{tab:merge-open-generation} and~\ref{tab:merge-benchmarks} report open-generation and factual results, respectively.
 
 \begin{table}[h]
 \caption{Factual benchmark accuracy (\%) before and after merging in the matched harness; the mean is unweighted across the nine tasks.}
@@ -397,6 +397,11 @@ Data-loader workers & 4 & Prefetch factor & 4 \\
 
 BYOD-Llama-50k keeps the same batch size and objective but processes 800,000 examples over 50,000 updates, validates every 500 updates, and uses a linear learning-rate decay from $10^{-5}$ to $10^{-6}$. This run supplies the BYOD-Llama-50k results and the diagnostics in Figure~\ref{fig:llama-training-diagnostics}.
 
+\section{Complete inference configuration}
+\label{app:inference-settings}
+
+Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7. Archived run manifests take precedence over mutable notebook defaults.
+
 \begin{table*}[h]
 \caption{Task-specific masked-diffusion inference settings in the validation notebook. NFE is the number of denoising network evaluations.}
 \label{tab:diffusion-inference}
@@ -440,11 +445,6 @@ HumanEval & 256 & MBPP & 128 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\section{Complete inference configuration}
-\label{app:inference-settings}
-
-Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7. Archived run manifests take precedence over mutable notebook defaults.
 
 Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence. For computational tractability, we evaluate all models on the same fixed subset of 125 examples from each benchmark, selected once using a fixed seed. Thus, comparisons within our harness are paired at the example level. This enables broad, paired comparison across multiple model families, training checkpoints, and inference settings, while avoiding the substantially greater computational cost that would result from full-benchmark evaluation on top of the extensive preliminary hyperparameter and configuration testing required to establish a stable conversion recipe.
 

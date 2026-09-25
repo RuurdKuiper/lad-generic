@@ -21,9 +21,9 @@
 \maketitle
 
 \begin{abstract}
-Diffusion language models (DLMs) permit parallel token updates and flexible generation orders, but leading systems rely on costly pretraining or continued full-model training. We ask how efficiently diffusion generation can instead be induced in existing instruction-tuned autoregressive models. Build Your Own DLM (BYOD) replaces causal attention with bidirectional attention and trains only query/value LoRA adapters under a masked denoising objective, leaving 94.2--95.9\% of parameters frozen. Without architecture-specific tuning, the same recipe converts Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, with each 25,000-update conversion processing at most 102.4M token positions in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use right context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 50.6\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality remains the principal limitation: at 64 denoising network evaluations (NFE), converted-model perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents, with generally lower Distinct-$n$ scores as well. BYOD therefore establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
+Diffusion language models (DLMs) permit parallel token updates, flexible generation and bidirectional attention, contrasting autoregressive (AR) models, but leading systems rely on costly pretraining or full-model fine-tuning. We present a generalizable recipe for parameter-efficient AR-to-DLM conversion using only Low-Rank Adaptation (LoRA). Build Your Own DLM (BYOD) enables bidirectional attention and diffusion generation across Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B, without architecture-specific tuning. The adapters comprise 4.1--5.8\% of final parameters while every base-model parameter remains frozen; each 25,000-iteration conversion needs at most 102.4M tokens, processed in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use bidirectional context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 50.6\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality at low network function evaluation (NFE) budgets remains the principal limitation: BYOD perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents when generating 128 tokens in 64 steps. To enable further experimentation and inspection, we release our training and evaluation code, converted models, and accessible interactive demos. BYOD thus establishes a practical, reproducible route for broad experimentation with diffusion generation while identifying the quality gap that efficient conversion must next close.
 
-\noindent\textbf{Code:} \href{https://github.com/RuurdKuiper/lad-generic}{GitHub}\quad\textbf{Live demos:} \href{https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b}{Gemma} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b}{Qwen} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-ministral-8b}{Ministral} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b}{Llama}
+\noindent\textbf{Code:} \href{https://github.com/RuurdKuiper/lad-generic}{GitHub}\quad\textbf{BYOD live demos:} \href{https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b}{Gemma} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b}{Qwen} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-ministral-8b}{Ministral} $\mid$ \href{https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b}{Llama}
 \end{abstract}
 
 \section{Introduction}
@@ -39,14 +39,14 @@ Autoregressive (AR) language models generate a sequence from left to right. This
 
 Our primary aim is therefore to devise a recipe optimized foremost for compute efficiency and reproducibility when converting AR models into DLMs, rather than to pretrain a new diffusion foundation model for every architecture. Efficiency matters for three connected reasons. First, full diffusion pretraining is financially and environmentally costly: under our standardized rental and electricity scenario, the reported LLaDA run corresponds to approximately \$675,000 and 44,100 kg CO$_2$e (Table~\ref{tab:compute}). These are not the authors' bill or measured emissions---operational carbon depends strongly on utilization, datacenter efficiency, location, and energy supply---but they illustrate the scale of the barrier \citep{strubell2019energy,patterson2021carbon}. Second, a conversion that completes in hours on one widely available cloud instance makes hands-on DLM research accessible beyond laboratories with multi-node clusters. Third, applying the same inexpensive intervention to multiple existing model families makes it feasible to study how architecture and parent-model choice affect diffusion generation without repeating foundation-model pretraining for every comparison.
 
-We study this question with \method{}, a generalizable conversion and evaluation pipeline for four instruction-tuned decoder families: Gemma~2~9B, Llama~3.1~8B, Qwen2.5~7B, and Ministral~8B. We selected the latest text-only instruction checkpoint from each family with a comparable parameter count. Multimodal variants are not used to avoid modality-specific training as an additional confounder. Every backbone receives the same bidirectional attention intervention, LoRA target modules, and masked-diffusion objective. This paired design separates conversion quality from the strength of the starting checkpoint. We directly compare our models against LLaDA~8B Instruct because its standard masked-diffusion objective, instruction-tuning setup, and overlapping benchmark suite make it the cleanest external reference baseline. We additionally report published DiffuLLaMA, Dream-Instruct, iLLaDA-Instruct, and Efficient-DLM values, but keep them protocol-separated: their additional attention, masking, scheduling, data, and inference techniques would confound a controlled comparison. 
+We study this question with \method{}, a generalizable conversion and evaluation pipeline for four instruction-tuned decoder families: Gemma~2~9B, Llama~3.1~8B, Qwen2.5~7B, and Ministral~8B. We selected the latest, comparably sized text-only instruction checkpoints to avoid modality-specific confounding. Every backbone receives the same bidirectional attention intervention, LoRA target modules, and masked-diffusion objective. This paired design separates conversion quality from the strength of the starting checkpoint. We directly compare our models against LLaDA~8B Instruct because its standard masked-diffusion objective, instruction-tuning setup, and overlapping benchmark suite make it the cleanest external reference baseline. We additionally report published DiffuLLaMA, Dream-Instruct, iLLaDA-Instruct, and Efficient-DLM values, but keep them protocol-separated: their additional attention, masking, scheduling, data, and inference techniques would confound a controlled comparison. 
 
 Our contributions are:
 \begin{itemize}
     \item a compute-efficient recipe that converts four instruction-tuned AR model families to masked diffusion using only a few single-GPU hours and LoRA parameter updates;
     \item a paired evaluation of each diffusion model and its frozen AR parent across general knowledge, reasoning, mathematics, and code benchmarks;
     \item a controlled analysis of training duration, denoising-step count, validation loss, perplexity and distinct n-grams; and
-    \item publicly available training and inference code directly available through Google Colab and Github, and interactive demos for all four models, making DLM conversion and qualitative evaluation easily accessible.
+    \item Public training and inference code on Google Colab and GitHub, plus interactive demos for all four models, make DLM conversion and qualitative evaluation readily accessible.
 \end{itemize}
 
 \section{Related work}
@@ -81,7 +81,7 @@ Hybrid and blockwise models offer a different compromise between bidirectionalit
 
 LAD first showed that LoRA can induce diffusion generation, using a hybrid objective that combines masking with token swaps, duplications, and span shifts \citep{kuiper2025lad,hu2022lora}. However, \method{} instead tests whether a simpler IID absorbing-mask objective can transfer reliably across model families. Other LoRA-based diffusion work addresses different goals: Uno learns diffusion-draft adapters while retaining the AR model as verifier, the dLLM framework uses LoRA to fine-tune already-diffusive checkpoints rather than for its Tiny-A2D conversion, and NaRA adapts existing diffusion models with noise-conditioned LoRA \citep{sahoo2026uno,zhou2026dllm,wang2026nara}. Thus, their LoRA components augment already diffusively generating models, rather than converting AR model families into standalone diffusion models.
 
-Table~\ref{tab:compute} places (estimates of) the training budgets of models of comparable size to our intended conversion targets side by side. For AR-to-diffusion conversion methods, these budgets exclude the substantial earlier cost of training the AR parent; for from-scratch methods they include diffusion pretraining. Dollar and operational-emissions columns are rental-equivalent estimates under one documented pricing and energy scenario, not the authors' actual bills or measured footprints; Appendix~\ref{app:cost} gives the complete calculation and its limitations.
+Table~\ref{tab:compute} compares training budgets for similarly sized diffusion models. For AR-to-diffusion conversion methods, these budgets exclude the substantial earlier cost of training the AR parent; for from-scratch methods they include diffusion pretraining. Dollar and operational-emissions columns are rental-equivalent estimates under one documented pricing and energy scenario, not the authors' actual bills or measured footprints; Appendix~\ref{app:cost} gives the complete calculation and its limitations.
 
 Our study has explicitly chosen to hold the adaptation mechanism as constant as the architectures permit, repeat it across four families, and benchmark each converted model against the exact AR checkpoint from which it originated. This paired comparison is essential because it allows us to compare our results directly with the prior capability of the parent model.
 
@@ -157,13 +157,13 @@ Inference begins from a fixed-length, fully masked answer block. At each denoisi
 
 \section{Evaluation}
 \subsection{Paired models and baselines}
-We refer to the four conversions as BYOD-Gemma, BYOD-Qwen, BYOD-Ministral, and BYOD-Llama. For Llama, we distinguish the primary and longer-trained checkpoints as BYOD-Llama-25k and BYOD-Llama-50k. We compare each model with its unchanged AR parent. LLaDA~8B Instruct serves as an external diffusion baseline in the same harness; results reported by other papers are presented separately because their protocols differ. We use Llama for the longer run and checkpoint-wise analysis because DiffuLLaMA, LLaDA, and iLLaDA use Llama or closely related Llama-style architectures, making it the clearest basis for comparison with prominent general-purpose DLMs \citep{gong2025diffullama,nie2025llada,nie2026illada}. We also compare BYOD-Llama-25k before and after folding its LoRA weights into the base model. The nine standard task benchmarks use greedy token selection and low-confidence remasking, while open-ended generation uses temperature 0.7 and delayed EOS/EOT acceptance. Complete settings are reported in Appendix~\ref{app:inference-settings}.
+We refer to the four conversions as BYOD-Gemma, BYOD-Qwen, BYOD-Ministral, and BYOD-Llama. For Llama, we distinguish the primary and longer-trained checkpoints as BYOD-Llama-25k and BYOD-Llama-50k. We also compare each model with its unchanged AR parent. LLaDA~8B Instruct serves as an external diffusion baseline in the same harness; results reported by other papers are presented separately because their protocols differ. We specifically use BYOD-Llama for the longer run and checkpoint-wise analysis because DiffuLLaMA, LLaDA, and iLLaDA use Llama or closely related Llama-style architectures, making it the clearest basis for comparison with prominent general-purpose DLMs \citep{gong2025diffullama,nie2025llada,nie2026illada}. We also compare BYOD-Llama-25k before and after folding its LoRA weights into the base model, to see if merging deteriorates the results. The nine standard task benchmarks use greedy token selection and low-confidence remasking, while open-ended generation uses temperature 0.7 and delayed EOS/EOT acceptance. Complete settings are reported in Appendix~\ref{app:inference-settings}.
 
 \subsection{Task benchmarks}
 Our benchmark set contains the validation/test sets of MMLU, MMLU-Pro, HellaSwag, ARC-Challenge, GSM8K, MATH-500, GPQA-Main, HumanEval, and MBPP \citep{hendrycks2021mmlu,wang2024mmlupro,zellers2019hellaswag,clark2018arc,cobbe2021gsm8k,hendrycks2021math,rein2023gpqa,chen2021codex,austin2021mbpp}. We score multiple-choice tasks by option label, GSM8K by its final number, MATH by its normalized final boxed expression, and code tasks by whether the generated program passes the supplied tests in an isolated subprocess.
 
 \subsection{Open-ended generation}
-We assess open-ended generation with perplexity and Distinct-1/2/3. Standard masked diffusion does not directly provide the left-to-right sequence likelihood used for AR perplexity, and its usual evidence lower bound is not a proper test-time likelihood \citep{turok2026duel}. We therefore follow prior DLM work and use frozen Microsoft Phi-4 14B as an external perplexity scorer \citep{gong2025diffullama}. We pool negative log-likelihoods across all non-padding tokens of all generated answers before exponentiating, so every token has equal weight. Because this score does not measure diversity, we also report sliding model-token Distinct-1/2/3 percentages after removing special tokens. Higher Distinct-$n$ indicates less local repetition \citep{li2016diversity}; in our experiments, it exposed cases where perplexity improved because output became more repetitive rather than better.
+We assess output fluency with perplexity and Distinct-1/2/3 calculated over answers on 100 open-ended questions. Standard masked diffusion does not directly provide the left-to-right sequence likelihood used for AR perplexity, and its usual evidence lower bound is not a proper test-time likelihood \citep{turok2026duel}. We therefore follow prior DLM work and use frozen Microsoft Phi-4 14B as an external perplexity scorer \citep{gong2025diffullama}. We pool negative log-likelihoods across all non-padding tokens of all generated answers before exponentiating, so every token has equal weight. Because this score does not measure diversity, we also report sliding model-token Distinct-1/2/3 percentages after removing special tokens. Higher Distinct-$n$ indicates less local repetition \citep{li2016diversity}; in our experiments, it exposed cases where perplexity improved because output became more repetitive rather than better.
 
 \subsection{Bidirectional attention test}
 We test whether the converted diffusion models allow bidirectional information flow with a simple right-context copy task (Appendix~\ref{app:bidirectional-infilling}). Most of the response is pre-filled, and the model must fill an earlier masked position by copying a word shown later in the response. A causal model cannot change its prediction at an earlier position based on a later token, so sensitivity to this clue directly tests functional bidirectional attention. Figure~\ref{fig:bidirectional-example} shows one test item and its expected reconstruction.
@@ -206,9 +206,9 @@ Average    & \underline{.506} & .657 & .490 & .736 & .499 & .629 & .487 & .492 &
 \end{tabular}}
 \end{table*}
 
-Table~\ref{tab:accuracy} shows that BYOD-Gemma has the highest BYOD average and comes within 1.3 points of LLaDA in the matched harness. The AR parents perform better on average, but the conversion gap varies by task and backbone. Extending BYOD-Llama from 25,000 to 50,000 updates raises its average by only 0.5 points, with gains on five tasks and declines on four.
+Table~\ref{tab:accuracy} shows that BYOD-Gemma has the highest BYOD average and comes within 1.3 points of LLaDA in the matched harness. The AR parents perform better on average, but the conversion gap varies by task and backbone. Extending BYOD-Llama from 25,000 to 50,000 updates raises its average by 0.5 points, with gains on five tasks and declines on four.
 
-Figure~\ref{fig:benchmark-radars} shows that the AR advantage is largest in mathematics and code, while the relative strengths of the converted backbones are task dependent. LLaDA's score in our harness is 2.6 points below its published average, underscoring the importance of prompts, subsets, decoding, and answer extraction. We therefore treat the matched-harness result as primary and report further comparison to other external diffusion models separately in Appendix~\ref{app:published-results}. LLaDA is our only directly tested external DLM because its masking objective and benchmark coverage provide the cleanest comparison. Finally, the merged BYOD-Llama model remains broadly similar across factual and open-generation measures; Appendix~\ref{app:merge} reports the full ablation.
+Figure~\ref{fig:benchmark-radars} shows the largest gaps with AR in mathematics and code. On paired HumanEval/MBPP subsets, parsing failed for 28.0\%/8.8\% of BYOD-Llama-50k outputs versus 0\%/0\% for Llama AR (Appendix~\ref{app:code-errors}). LLaDA scores 2.6 points below its published average in our harness, illustrating protocol sensitivity; other external comparisons appear in Appendix~\ref{app:published-results}. The merged BYOD-Llama remains broadly similar across factual and open-generation measures (Appendix~\ref{app:merge}).
 
 \subsection{Open-ended generation}
 \label{sec:perplexity}
@@ -242,7 +242,7 @@ Adding the later clue changed the greedy prediction on 100\% of test items for e
 
 The central result is that high-rank attention-only LoRA can convert four causal instruction models into bidirectional masked generators in a few hours on one GPU. The converted models do not surpass their AR parents on average, but do approach another DLM, LLaDA, on benchmark accuracy. This demonstrates that the conversion is feasible and effective, even if it does not fully close the performance gap. Several aspects of these findings warrant closer examination, and are discussed below.
 
-Conversion quality varies by backbone: BYOD-Gemma performs best despite Qwen having the strongest AR parent, so parent capability alone does not determine conversion quality. Gemma's larger model and adapter budget may contribute, but cannot be separated here. The largest benchmark deficits relative to the AR parents occur in mathematics and code, where qualitative inspection suggests that many failures arose from small syntactic errors. This is consistent with prior work showing that independent parallel token prediction in DLMs can produce syntactic inconsistencies and break multi-token structures \citep{hersche2026codila}.
+Conversion quality varies by backbone: BYOD-Gemma performs best on benchmark tasks despite Qwen having the strongest AR parent, so parent capability alone does not determine conversion quality. Gemma's larger model and adapter budget may contribute, but cannot be separated here. The largest benchmark deficits relative to the AR parents occur in mathematics and code. In code, paired parser checks and qualitative inspection reveal syntactic errors such as duplicated tokens and mismatched delimiters, which do not occur in AR answers (Appendix~\ref{app:code-errors}). This is consistent with prior work showing that independent parallel token prediction in DLMs can produce syntactic inconsistencies \citep{hersche2026codila}.
 
 Although generation under full NFE budgets generally produces coherent sentences, perplexity and Distinct-1/2/3 still trail both the AR parents and LLaDA, especially when NFE is below output length. This is also noticeable qualitatively when using the models through the demo interface. Extending Llama training from 25,000 to 50,000 updates yields a marginal average factual-accuracy gain, with improvements on some tasks offset by declines on others. While validation loss still decreases almost monotonically during the longer run, these downstream results suggest that longer training alone may be insufficient; useful ablations would include larger effective batches, alternative denoising targets, and adapters in key/output projections, MLPs, or normalization layers.
 
@@ -250,7 +250,9 @@ Even though we used perplexity and Distinct-1/2/3 as proxies for fluency, they a
 
 In the bidirectionality test, every converted model changed its prediction on every item when the later clue was added, demonstrating bidirectional attention across all four families. Some models did not always copy the token correctly, indicating a failure to use the clue rather than an absence of information flow. The public demos enable quick experimentation with NFE, output length, remasking, and blockwise generation, while exposing grammaticality, coherence, and denoising errors that aggregate metrics cannot capture.
 
-LoRA keeps all original parameters frozen during conversion, preventing their direct overwriting and potentially reducing catastrophic forgetting \citep{luo2023catastrophic}. We adopt \(r=1024\) as a fixed transfer setting rather than claiming that it is minimal or optimal; systematically characterizing the rank–quality–compute trade-off remains future work. However, prior diffusion adaptation work also favored higher ranks over smaller ones \citep{kuiper2025lad}. The adapters can subsequently be merged into the base projections, removing their temporary parameter and inference overhead while restoring the original model size with broadly similar behavior (Appendix~\ref{app:merge}). Future work could study whether merged models could subsequently initialize partial or full diffusion fine-tuning; establishing diffusion generation before exposing the original weights to optimization may make these updates less disruptive.
+LoRA keeps all original parameters frozen during conversion, preventing their direct overwriting and potentially reducing catastrophic forgetting \citep{luo2023catastrophic}. We adopt \(r=1024\) as a fixed transfer setting rather than claiming that it is minimal or optimal; systematically characterizing the rank–quality–compute trade-off remains future work. However, prior diffusion adaptation work also favored higher ranks over smaller ones \citep{kuiper2025lad}.
+
+It should be noted that the high-rank adapters can subsequently be merged into the base projections. This removes their temporary parameter and inference overhead while restoring the original model size with broadly similar behavior, as shown by our experiments (Appendix~\ref{app:merge}). Future work could study whether merged models could subsequently initialize partial or full diffusion fine-tuning; establishing diffusion generation before exposing the original weights to optimization may make these updates less disruptive.
 
 Finally, although one conversion takes only a few hours, development and evaluation across models, configurations, ablations, and validation runs required hundreds of GPU-hours. Nevertheless, BYOD reuses an AR checkpoint and processes orders of magnitude fewer token positions than the full-model systems in Table~\ref{tab:compute}, enabling repeatable cross-architecture experiments without repeated pretraining. This does not erase the original pretraining cost or establish a proportional reduction in emissions.
 
@@ -318,11 +320,6 @@ Operational emissions are estimated as energy use multiplied by the data center'
 \end{equation}
 Here $\widehat{E}_{\mathrm{CO_2e}}$ is estimated operational emissions in kg CO$_2$e, $G$ is aggregate GPU-hours, $P_{\mathrm{GPU}}$ is assumed per-GPU power draw in kW, PUE is the dimensionless data-center power usage effectiveness, and $I_{\mathrm{grid}}$ is grid carbon intensity in kg CO$_2$e/kWh. We use 0.60 kW for RTX PRO 6000 runs, matching NVIDIA's stated maximum board power \citep{nvidiaRTXPro6000}, and a 0.70-kW H100-class proxy for all other entries except the reported A100 run, for which we use 0.40 kW \citep{nvidiaH100,nvidiaA100}. We assume PUE 1.09, Google's reported fleet-wide value \citep{googlePUE2025}, and the IEA's 2024 global-average generation intensity of 0.445 kg CO$_2$e/kWh \citep{ieaElectricity2025}. For example, one BYOD stage gives $3.2\times0.60\times1.09\times0.445=0.93$ kg CO$_2$e. These are location-independent GPU-only operating scenarios: they assume full rated GPU power, omit host CPU/memory/network energy and embodied hardware emissions, and do not account for renewable-energy procurement. Direct power telemetry and the datacenter's time- and location-specific marginal carbon intensity would be required for a measured footprint.
 
-\section{Adapter-merging ablation}
-\label{app:merge}
-
-High-rank LoRA increases the parameter count only while the adapter remains separate. To test whether removing this overhead changes behavior, we evaluate the same BYOD-Llama-25k checkpoint with the adapter loaded and after its weights are folded into the base projections. Tables~\ref{tab:merge-open-generation} and~\ref{tab:merge-benchmarks} report open-generation and factual results, respectively.
-
 \begin{table}[h]
 \caption{Open-generation comparison of the adapter-loaded and merged Llama checkpoints. PPL is token-weighted; Distinct-$n$ is averaged over answers and reported as a percentage. Both use 128 generated tokens; D-1/2/3 use 32 NFE.}
 \label{tab:merge-open-generation}
@@ -337,6 +334,12 @@ Merged standalone & 8.030B & 19.283 & 4.764 & 49.8 & 80.7 & 91.8 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+
+\section{Adapter-merging ablation}
+\label{app:merge}
+
+High-rank LoRA increases the parameter count only while the adapter remains separate. To test whether removing this overhead changes behavior, we evaluate the same BYOD-Llama-25k checkpoint with the adapter loaded and after its weights are folded into the base projections. Tables~\ref{tab:merge-open-generation} and~\ref{tab:merge-benchmarks} report open-generation and factual results, respectively.
 
 \begin{table}[h]
 \caption{Factual benchmark accuracy (\%) before and after merging in the matched harness; the mean is unweighted across the nine tasks.}
@@ -394,11 +397,6 @@ Data-loader workers & 4 & Prefetch factor & 4 \\
 
 BYOD-Llama-50k keeps the same batch size and objective but processes 800,000 examples over 50,000 updates, validates every 500 updates, and uses a linear learning-rate decay from $10^{-5}$ to $10^{-6}$. This run supplies the BYOD-Llama-50k results and the diagnostics in Figure~\ref{fig:llama-training-diagnostics}.
 
-\section{Complete inference configuration}
-\label{app:inference-settings}
-
-Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7. Archived run manifests take precedence over mutable notebook defaults.
-
 \begin{table*}[h]
 \caption{Task-specific masked-diffusion inference settings in the validation notebook. NFE is the number of denoising network evaluations.}
 \label{tab:diffusion-inference}
@@ -425,8 +423,6 @@ Bidirectional attention & 1 masked word & 1 & \na & 0 & \na\\
 }
 \end{table*}
 
-Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence. For computational tractability, we evaluate all models on the same fixed subset of 125 examples from each benchmark, selected once using a fixed seed. Thus, comparisons within our harness are paired at the example level. This enables broad, paired comparison across multiple model families, training checkpoints, and inference settings, while avoiding the substantially greater computational cost that would result from full-benchmark evaluation on top of the extensive preliminary hyperparameter and configuration testing required to establish a stable conversion recipe.
-
 \begin{table}[h]
 \caption{Maximum new tokens for paired greedy AR evaluation.}
 \label{tab:ar-inference}
@@ -444,6 +440,54 @@ HumanEval & 256 & MBPP & 128 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{Complete inference configuration}
+\label{app:inference-settings}
+
+Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late; HumanEval instead suppresses terminator logits. The open-ended diagnostic uses temperature 0.7. Archived run manifests take precedence over mutable notebook defaults.
+
+Autoregressive parents are decoded greedily. Their maximum-new-token budgets are reported separately because an AR token budget is not an NFE budget and should not be read as computational equivalence. For computational tractability, we evaluate all models on the same fixed subset of 125 examples from each benchmark, selected once using a fixed seed. Thus, comparisons within our harness are paired at the example level. This enables broad, paired comparison across multiple model families, training checkpoints, and inference settings, while avoiding the substantially greater computational cost that would result from full-benchmark evaluation on top of the extensive preliminary hyperparameter and configuration testing required to establish a stable conversion recipe.
+
+\section{Qualitative code-error analysis}
+\label{app:code-errors}
+
+We reanalyzed the saved BYOD-Llama-50k and Llama-AR outputs underlying Table~\ref{tab:accuracy}. After applying the benchmark harness's ordinary Markdown-code extraction, we passed each resulting program to Python's \texttt{ast.parse} before executing tests. Table~\ref{tab:syntax-errors} therefore counts only syntax-invalid programs; syntactically valid but incorrect programs are not included.
+
+\begin{table}[h]
+\caption{Parser failures on paired code-generation outputs.}
+\label{tab:syntax-errors}
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Model & Benchmark & Invalid / 125 & Rate \\
+\midrule
+BYOD-Llama-50k & HumanEval & 35 & 28.0\% \\
+Llama AR & HumanEval & 0 & 0.0\% \\
+BYOD-Llama-50k & MBPP & 11 & 8.8\% \\
+Llama AR & MBPP & 0 & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:syntax-examples} shows verbatim fragments from four parser-invalid BYOD-Llama-50k generations. The intended program structure is recognizable, but a local omission, duplication, or delimiter error makes each output unexecutable and therefore a pass@1 failure. A local syntax repair would not necessarily make the complete program semantically correct. These examples and rates establish that syntax errors materially contribute to the observed code gap; they are consistent with local-consistency failures under parallel prediction, but do not by themselves establish the decoding mechanism as their cause.
+
+\begin{table*}[t]
+\caption{Representative local syntax errors in saved BYOD-Llama-50k outputs. Fragments are reproduced verbatim after the same code extraction used for evaluation.}
+\label{tab:syntax-examples}
+\centering
+\small
+\begin{tabular}{p{0.14\textwidth}p{0.50\textwidth}p{0.25\textwidth}}
+\toprule
+Item & Generated fragment & Parser-level failure \\
+\midrule
+HumanEval/10 & \texttt{defdef make\_palindrome(string: str) -> str:} & Duplicated \texttt{def} keyword. \\
+HumanEval/2 & \texttt{return number - int(number} & Missing closing parenthesis. \\
+MBPP/25 & \texttt{return [t for t in tuples if all(x \% k == 0 for x in t]} & Square bracket closes an open parenthesis. \\
+MBPP/79 & \texttt{return set(num for for sublist in list\_of\_lists)} & Duplicated \texttt{for} keyword. \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \section{Complete open-generation results}
 \label{app:open-generation-results}

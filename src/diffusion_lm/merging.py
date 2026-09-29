@@ -11,7 +11,7 @@ import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from .modeling import forward_bidirectional
+from .modeling import forward_bidirectional, load_trainable_base_state
 
 
 DTYPES = {
@@ -127,6 +127,7 @@ def merge_adapter(
         adapter_path,
         is_trainable=False,
     ).eval()
+    load_trainable_base_state(model, adapter_path)
     normalization_tensors = _load_normalization_state(model, adapter_path)
 
     tokenizer = AutoTokenizer.from_pretrained(

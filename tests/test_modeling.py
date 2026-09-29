@@ -1,8 +1,15 @@
 import torch
 from types import SimpleNamespace
 from transformers import LlamaConfig, LlamaForCausalLM, MistralConfig, MistralForCausalLM
-from peft import LoraConfig, get_peft_model
-from diffusion_lm.modeling import bidirectional_attention_mask, parameter_audit
+from peft import LoraConfig, PeftModel, get_peft_model
+from diffusion_lm.modeling import (
+    TRAINABLE_BASE_STATE_FILENAME,
+    _unfreeze_last_transformer_layers,
+    _unfreeze_output_head,
+    bidirectional_attention_mask,
+    load_trainable_base_state,
+    parameter_audit,
+)
 
 
 def test_4d_mask_is_noncausal_and_padding_is_visible():
@@ -104,3 +111,116 @@ def test_only_lora_and_norms_are_trainable():
     audit = parameter_audit(model)
     assert audit["lora_parameters"] > 0 and audit["normalization_parameters"] > 0
     assert audit["other_trainable_parameters"] == 0
+
+
+def test_final_transformer_layers_can_be_trained_with_lora():
+    base = LlamaForCausalLM(LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=3,
+        num_attention_heads=2,
+        num_key_value_heads=2,
+    ))
+    for parameter in base.parameters():
+        parameter.requires_grad = False
+    model = get_peft_model(base, LoraConfig(r=2, target_modules=["q_proj", "v_proj"], bias="none"))
+
+    assert _unfreeze_last_transformer_layers(model, 2) == [1, 2]
+    audit = parameter_audit(model, train_last_n_layers=2)
+
+    assert audit["trainable_transformer_layer_indices"] == [1, 2]
+    assert audit["transformer_layer_parameters"] > 0
+    assert audit["other_trainable_parameters"] == 0
+    assert not model.base_model.model.model.layers[0].self_attn.o_proj.weight.requires_grad
+    assert model.base_model.model.model.layers[1].self_attn.o_proj.weight.requires_grad
+    assert model.base_model.model.model.layers[2].mlp.down_proj.weight.requires_grad
+    assert not model.base_model.model.model.embed_tokens.weight.requires_grad
+    assert not model.base_model.model.lm_head.weight.requires_grad
+
+
+def test_trainable_base_state_is_restored(tmp_path):
+    base = LlamaForCausalLM(LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=2,
+        num_attention_heads=2,
+        num_key_value_heads=2,
+    ))
+    for parameter in base.parameters():
+        parameter.requires_grad = False
+    model = get_peft_model(base, LoraConfig(r=2, target_modules=["q_proj"], bias="none"))
+    _unfreeze_last_transformer_layers(model, 1)
+    name, parameter = next(
+        (name, parameter)
+        for name, parameter in model.named_parameters()
+        if "layers.1.mlp.down_proj.weight" in name
+    )
+    expected = torch.full_like(parameter, 0.25)
+    torch.save({name: expected}, tmp_path / TRAINABLE_BASE_STATE_FILENAME)
+    parameter.data.zero_()
+
+    assert load_trainable_base_state(model, tmp_path) == 1
+    assert torch.equal(parameter, expected)
+
+
+def test_output_head_can_be_trained_while_embeddings_stay_frozen():
+    base = LlamaForCausalLM(LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=1,
+        num_attention_heads=2,
+        num_key_value_heads=2,
+        tie_word_embeddings=False,
+    ))
+    for parameter in base.parameters():
+        parameter.requires_grad = False
+    model = get_peft_model(base, LoraConfig(r=2, target_modules=["q_proj"], bias="none"))
+
+    assert _unfreeze_output_head(model, True) == 32 * 16
+    audit = parameter_audit(model, train_lm_head=True)
+
+    assert audit["lm_head_parameters"] == 32 * 16
+    assert model.base_model.model.lm_head.weight.requires_grad
+    assert not model.base_model.model.model.embed_tokens.weight.requires_grad
+    assert audit["other_trainable_parameters"] == 0
+
+
+def test_output_head_lora_keeps_base_head_frozen_and_survives_reload(tmp_path):
+    config = LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=1,
+        num_attention_heads=2,
+        num_key_value_heads=2,
+        tie_word_embeddings=False,
+    )
+    base = LlamaForCausalLM(config)
+    for parameter in base.parameters():
+        parameter.requires_grad = False
+    model = get_peft_model(
+        base,
+        LoraConfig(r=2, target_modules=["q_proj", "v_proj", "lm_head"], bias="none"),
+    )
+
+    audit = parameter_audit(model)
+    assert audit["lm_head_parameters"] == 0
+    assert audit["lora_parameters"] > 0
+    assert not model.base_model.model.lm_head.base_layer.weight.requires_grad
+    output_lora = {
+        name: parameter.detach().clone()
+        for name, parameter in model.named_parameters()
+        if "lm_head.lora_" in name
+    }
+    assert output_lora
+
+    model.save_pretrained(tmp_path, safe_serialization=True, save_embedding_layers=False)
+    reloaded_base = LlamaForCausalLM(config)
+    reloaded = PeftModel.from_pretrained(reloaded_base, tmp_path)
+    reloaded_parameters = dict(reloaded.named_parameters())
+    for name, expected in output_lora.items():
+        assert name in reloaded_parameters
+        assert torch.equal(reloaded_parameters[name], expected)

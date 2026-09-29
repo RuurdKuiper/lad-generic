@@ -16,7 +16,7 @@ from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 
 from .data import validate_mask_token
 from .legacy_compat import install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
-from .modeling import forward_bidirectional
+from .modeling import TRAINABLE_BASE_STATE_FILENAME, forward_bidirectional, load_trainable_base_state
 
 
 def find_adapters(outputs_dir: str | Path = "outputs") -> list[str]:
@@ -106,6 +106,11 @@ def _load_adapter_path(
     if resolved_quantization not in {"none", "off", "false", "4bit"}:
         raise ValueError("Inference quantization must be 'auto', 'none', or '4bit'.")
     use_4bit = resolved_quantization == "4bit"
+    if use_4bit and (adapter_path / TRAINABLE_BASE_STATE_FILENAME).is_file():
+        raise ValueError(
+            "4-bit adapter loading is unsupported for checkpoints with fully trained base layers; "
+            "load this experiment with quantization='none' or merge it first"
+        )
     compute_dtype = dtype
     cache_dir = run_config.get("base_model_cache_dir", "base_models")
     token = os.getenv("HF_TOKEN")
@@ -159,6 +164,7 @@ def _load_adapter_path(
         is_trainable=False,
         **adapter_load_kwargs,
     )
+    load_trainable_base_state(model, adapter_path)
     norm_path = adapter_path / "normalization_state.pt"
     if norm_path.is_file():
         model.load_state_dict(torch.load(norm_path, map_location="cpu", weights_only=True), strict=False)

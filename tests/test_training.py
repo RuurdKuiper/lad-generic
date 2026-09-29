@@ -382,3 +382,21 @@ def test_shipped_training_and_benchmark_configs_share_open_ended_settings():
         resolve_mask_only_generation_settings(benchmark, "open_ended"),
     ):
         assert {key: actual[key] for key in keys} == {key: expected[key] for key in keys}
+
+
+def test_last_layer_and_lm_head_experiment_matches_long_run_except_for_declared_changes():
+    from pathlib import Path
+    import yaml
+
+    root = Path(__file__).resolve().parents[1]
+    original = yaml.safe_load((root / "configs/llama3_8b_mask_colab.yaml").read_text())
+    experiment = yaml.safe_load((root / "configs/llama3_8b_mask_colab_lastlayer_lmhead.yaml").read_text())
+
+    assert experiment.pop("train_last_n_layers") == 1
+    assert experiment.pop("lora_targets") == ["q_proj", "v_proj", "lm_head"]
+    assert experiment.pop("checkpoint_steps") == 5000
+    assert experiment.pop("output_dir") == "outputs/llama-3.1-8b-mask-long-lastlayer-lmhead"
+    original.pop("lora_targets")
+    original.pop("output_dir")
+    original.pop("checkpoint_steps")
+    assert experiment == original

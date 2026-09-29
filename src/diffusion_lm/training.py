@@ -19,7 +19,7 @@ from transformers import AutoTokenizer, get_polynomial_decay_schedule_with_warmu
 
 from .data import DenoisingCollator, llama_stored_ids_compatible, prepare_mask_only_cache_record, stored_example_usable
 from .loss import masked_denoising_loss, selected_denoising_loss
-from .modeling import forward_bidirectional, forward_bidirectional_selected, load_denoising_model, parameter_audit
+from .modeling import TRAINABLE_BASE_STATE_FILENAME, forward_bidirectional, forward_bidirectional_selected, load_denoising_model, parameter_audit
 from .inference import InferenceSession, _native_eot_token_id, llada_generate
 from .generation_prompts import DEFAULT_GENERATION_PROMPTS, _load_generation_prompts
 from .metrics import distinct_n
@@ -37,10 +37,17 @@ def _append_jsonl(path: Path, value: Any) -> None:
 
 
 def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.Tensor] | None = None) -> None:
-    """Save LoRA plus independently-unfrozen norm parameters for inference."""
+    """Save LoRA plus any independently trainable base-model parameters."""
     model.save_pretrained(path, safe_serialization=True, save_embedding_layers=False)
     norm_state = {name: parameter.detach().cpu() for name, parameter in model.named_parameters() if "norm" in name.lower()}
     torch.save(norm_state, path / "normalization_state.pt")
+    trainable_base_state = {
+        name: parameter.detach().cpu()
+        for name, parameter in model.named_parameters()
+        if parameter.requires_grad and "lora_" not in name
+    }
+    if trainable_base_state:
+        torch.save(trainable_base_state, path / TRAINABLE_BASE_STATE_FILENAME)
     if initial_norms is not None:
         torch.save(initial_norms, path / "normalization_initial_state.pt")
     tokenizer.save_pretrained(path)
@@ -70,8 +77,26 @@ def _load_normalization_state(model: torch.nn.Module, state: dict[str, torch.Ten
             current[name].data.copy_(value.to(current[name].device, dtype=current[name].dtype))
 
 
+def _trainable_base_state(model: torch.nn.Module) -> dict[str, torch.Tensor]:
+    """Clone trainable non-LoRA weights for temporary base-model restoration."""
+    return {
+        name: parameter.detach().cpu().clone()
+        for name, parameter in model.named_parameters()
+        if parameter.requires_grad and "lora_" not in name
+    }
+
+
+def _load_parameter_state(model: torch.nn.Module, state: dict[str, torch.Tensor]) -> None:
+    """Restore a parameter subset previously returned by ``_trainable_base_state``."""
+    current = dict(model.named_parameters())
+    for name, value in state.items():
+        if name not in current:
+            raise ValueError(f"Saved parameter is absent from the current model: {name}")
+        current[name].data.copy_(value.to(current[name].device, dtype=current[name].dtype))
+
+
 @torch.no_grad()
-def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], initial_norms: dict[str, torch.Tensor], device: torch.device) -> dict[str, Any]:
+def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], initial_norms: dict[str, torch.Tensor], device: torch.device, initial_trainable_base: dict[str, torch.Tensor] | None = None) -> dict[str, Any]:
     """Score generated texts with the original base model, excluding LoRA and trained norms.
 
     The aggregate metrics are token-weighted across all texts.  Individual
@@ -79,11 +104,14 @@ def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], i
     corresponding generated text.
     """
     trained_norms = _normalization_state(model)
+    trained_base = _trainable_base_state(model) if initial_trainable_base else {}
     model.eval()
     total_nll = 0.0
     total_tokens = 0
     per_text_perplexities: list[float | None] = []
     try:
+        if initial_trainable_base:
+            _load_parameter_state(model, initial_trainable_base)
         _load_normalization_state(model, initial_norms)
         with model.disable_adapter():
             for text in texts:
@@ -102,6 +130,8 @@ def _base_perplexity(model: torch.nn.Module, tokenizer: Any, texts: list[str], i
                 total_tokens += text_tokens
                 per_text_perplexities.append(float(torch.exp(torch.tensor(text_nll / text_tokens))))
     finally:
+        if trained_base:
+            _load_parameter_state(model, trained_base)
         _load_normalization_state(model, trained_norms)
     mean_nll = total_nll / max(total_tokens, 1)
     return {
@@ -286,7 +316,7 @@ def _available_output_dir(path: Path) -> Path:
         suffix += 1
 
 
-def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int) -> dict[str, float]:
+def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int, initial_trainable_base: dict[str, torch.Tensor] | None = None) -> dict[str, float]:
     """Generate fixed prompts, save final answers, and calculate base perplexity."""
     settings = _generation_inference_settings(config)
     prompts = settings.get("prompts", DEFAULT_GENERATION_PROMPTS)
@@ -309,7 +339,10 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
         )
         finals.append(final_text)
         records.append({"step": step, "prompt_index": prompt_index, "distinct_1": distinct_n(final_text, tokenizer, 1), "distinct_2": distinct_n(final_text, tokenizer, 2), "distinct_3": distinct_n(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
-    generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
+    if initial_trainable_base:
+        generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device, initial_trainable_base)
+    else:
+        generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
     per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
     valid_perplexities = [value for value in per_text_perplexities if value is not None]
     generation_metrics["generation_mean_perplexity"] = (
@@ -642,6 +675,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)), prefetch_factor)
     model, audit = load_denoising_model(config)
     initial_norms = _normalization_state(model)
+    initial_trainable_base = _trainable_base_state(model) or None
     resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
     resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["frontier_padding_mode"] = train_collator.frontier_padding_mode; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}; resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate; resolved["fp8_requested"] = fp8_resolution["requested"]; resolved["fp8_active"] = fp8_resolution["active"]; resolved["fp8_device_name"] = fp8_resolution["device_name"]; resolved["fp8_compute_capability"] = fp8_resolution["capability"]; resolved["resolved_training_precision"] = fp8_resolution["mixed_precision"] or "fp32"
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
@@ -695,7 +729,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             raise RuntimeError(
                 "Transformer Engine conversion changed parameter names; refusing to train with an incorrect trainable set."
             )
-        post_fp8_audit = parameter_audit(unwrapped)
+        post_fp8_audit = parameter_audit(
+            unwrapped,
+            train_last_n_layers=int(config.get("train_last_n_layers", 0) or 0),
+            train_lm_head=bool(config.get("train_lm_head", False)),
+        )
         audit.update({key: value for key, value in post_fp8_audit.items() if key != "trainable_names"})
         audit["fp8_transformer_engine"] = True
         _write_json(output / "parameter_audit.json", audit)
@@ -802,7 +840,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                 generation_due = generation_interval is not None and (update_step % generation_interval == 0 or update_step == max_updates)
                 if generation_due:
                     unwrapped = accelerator.unwrap_model(model)
-                    metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
+                    metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step, initial_trainable_base))
                 metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
                 generation_note = "".join(
                     f" | {label}={metrics[key]:.4f}"

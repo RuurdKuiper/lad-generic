@@ -12,6 +12,7 @@ from transformers import AutoModelForCausalLM
 
 _ATTENTION_MASK_CACHE: OrderedDict[tuple[Any, ...], torch.Tensor] = OrderedDict()
 _ATTENTION_MASK_CACHE_SIZE = 4
+TRAINABLE_BASE_STATE_FILENAME = "trainable_base_state.pt"
 
 
 def bidirectional_attention_mask(padding_mask: torch.Tensor, dtype: torch.dtype) -> torch.Tensor:
@@ -55,31 +56,148 @@ def _target_modules(model: torch.nn.Module, requested: list[str]) -> list[str]:
     return requested
 
 
-def parameter_audit(model: torch.nn.Module) -> dict[str, Any]:
+def _transformer_layers(model: torch.nn.Module) -> torch.nn.ModuleList:
+    """Return the ordered decoder blocks from a supported CausalLM/PEFT wrapper."""
+    base = model.get_base_model() if hasattr(model, "get_base_model") else model
+    candidates = (
+        ("model", "layers"),
+        ("transformer", "h"),
+        ("gpt_neox", "layers"),
+        ("model", "decoder", "layers"),
+    )
+    for path in candidates:
+        value: Any = base
+        for component in path:
+            value = getattr(value, component, None)
+            if value is None:
+                break
+        if isinstance(value, torch.nn.ModuleList):
+            return value
+    raise TypeError(
+        f"Could not locate ordered transformer layers in {type(base).__name__}; "
+        "train_last_n_layers is unsupported for this architecture"
+    )
+
+
+def _unfreeze_last_transformer_layers(model: torch.nn.Module, count: int) -> list[int]:
+    """Unfreeze the final ``count`` complete decoder blocks."""
+    if count < 0:
+        raise ValueError("train_last_n_layers must be non-negative")
+    if count == 0:
+        return []
+    layers = _transformer_layers(model)
+    if count > len(layers):
+        raise ValueError(
+            f"train_last_n_layers={count} exceeds the model's {len(layers)} transformer layers"
+        )
+    indices = list(range(len(layers) - count, len(layers)))
+    for index in indices:
+        for parameter in layers[index].parameters():
+            parameter.requires_grad = True
+    return indices
+
+
+def _unfreeze_output_head(model: torch.nn.Module, enabled: bool) -> int:
+    """Optionally unfreeze the untied language-model output projection."""
+    if not enabled:
+        return 0
+    base = model.get_base_model() if hasattr(model, "get_base_model") else model
+    if not hasattr(base, "get_output_embeddings"):
+        raise TypeError(f"{type(base).__name__} does not expose an output head")
+    output_head = base.get_output_embeddings()
+    input_embeddings = base.get_input_embeddings() if hasattr(base, "get_input_embeddings") else None
+    if output_head is None:
+        raise TypeError(f"{type(base).__name__} has no output head")
+    input_parameter_ids = {id(parameter) for parameter in input_embeddings.parameters()} if input_embeddings else set()
+    output_parameters = list(output_head.parameters())
+    if any(id(parameter) in input_parameter_ids for parameter in output_parameters):
+        raise ValueError("train_lm_head requires untied input and output embeddings")
+    for parameter in output_parameters:
+        parameter.requires_grad = True
+    return sum(parameter.numel() for parameter in output_parameters)
+
+
+def load_trainable_base_state(model: torch.nn.Module, adapter_path: str | Path) -> int:
+    """Restore separately saved, non-LoRA trainable base parameters."""
+    state_path = Path(adapter_path) / TRAINABLE_BASE_STATE_FILENAME
+    if not state_path.is_file():
+        return 0
+    state = torch.load(state_path, map_location="cpu", weights_only=True)
+    parameters = dict(model.named_parameters())
+    missing = sorted(name for name in state if name not in parameters)
+    mismatched = sorted(
+        name for name, value in state.items()
+        if name in parameters and parameters[name].shape != value.shape
+    )
+    if missing or mismatched:
+        raise ValueError(
+            "The saved trainable base state does not match the adapter/base model: "
+            f"missing={missing[:5]}, shape_mismatch={mismatched[:5]}"
+        )
+    for name, value in state.items():
+        parameter = parameters[name]
+        parameter.data.copy_(value.to(parameter.device, dtype=parameter.dtype))
+    return len(state)
+
+
+def parameter_audit(model: torch.nn.Module, train_last_n_layers: int = 0, train_lm_head: bool = False) -> dict[str, Any]:
     """Assert the intended trainable set and return parameter-count diagnostics."""
     named = list(model.named_parameters())
     trainable = [(name, p) for name, p in named if p.requires_grad]
     total = sum(p.numel() for _, p in named)
+    selected_layers = list(_transformer_layers(model)[-train_last_n_layers:]) if train_last_n_layers else []
+    parameter_names = {id(parameter): name for name, parameter in named}
+    selected_parameter_ids = {
+        id(parameter)
+        for layer in selected_layers
+        for parameter in layer.parameters()
+        if "lora_" not in parameter_names.get(id(parameter), "")
+    }
+    base = model.get_base_model() if hasattr(model, "get_base_model") else model
+    output_head = base.get_output_embeddings() if hasattr(base, "get_output_embeddings") else None
+    output_head_parameter_ids = {id(parameter) for parameter in output_head.parameters()} if output_head else set()
     categories = Counter()
     unexpected = []
     for name, p in trainable:
         if "lora_" in name:
             categories["lora"] += p.numel()
+        elif id(p) in output_head_parameter_ids and train_lm_head:
+            categories["lm_head"] += p.numel()
+        elif id(p) in selected_parameter_ids:
+            categories["transformer_layers"] += p.numel()
         elif "norm" in name.lower():
             categories["norm"] += p.numel()
         else:
             categories["other"] += p.numel()
             unexpected.append(name)
     frozen_embedding = all(not p.requires_grad for n, p in named if any(x in n.lower() for x in ("embed_tokens", "embed_tokens", "wte")))
-    frozen_lm_head = all(not p.requires_grad for n, p in named if "lm_head" in n)
-    if not frozen_embedding or not frozen_lm_head or unexpected:
-        raise AssertionError({"embeddings_frozen": frozen_embedding, "lm_head_frozen": frozen_lm_head, "unexpected_trainable": unexpected})
+    # An output head targeted by LoRA contains trainable adapter parameters even
+    # when its original projection remains frozen. Only enforce the requested
+    # state on non-LoRA parameters belonging to the head.
+    non_lora_output_parameters = [
+        parameter
+        for name, parameter in named
+        if id(parameter) in output_head_parameter_ids and "lora_" not in name
+    ]
+    lm_head_trainability_correct = bool(non_lora_output_parameters) and all(
+        parameter.requires_grad == train_lm_head
+        for parameter in non_lora_output_parameters
+    )
+    if not frozen_embedding or not lm_head_trainability_correct or unexpected:
+        raise AssertionError({"embeddings_frozen": frozen_embedding, "lm_head_trainability_correct": lm_head_trainability_correct, "unexpected_trainable": unexpected})
+    frozen_selected = [
+        name for name, parameter in named
+        if id(parameter) in selected_parameter_ids and not parameter.requires_grad
+    ]
+    if frozen_selected:
+        raise AssertionError({"unexpected_frozen_last_layer_parameters": frozen_selected[:20]})
     trainable_count = sum(p.numel() for _, p in trainable)
-    return {"lora_parameters": categories["lora"], "normalization_parameters": categories["norm"], "other_trainable_parameters": categories["other"], "total_trainable_parameters": trainable_count, "total_model_parameters": total, "trainable_percentage": 100 * trainable_count / total, "trainable_names": [n for n, _ in trainable]}
+    layer_count = len(_transformer_layers(model)) if train_last_n_layers else 0
+    return {"lora_parameters": categories["lora"], "normalization_parameters": categories["norm"], "transformer_layer_parameters": categories["transformer_layers"], "lm_head_parameters": categories["lm_head"], "other_trainable_parameters": categories["other"], "train_last_n_layers": train_last_n_layers, "train_lm_head": train_lm_head, "trainable_transformer_layer_indices": list(range(layer_count - train_last_n_layers, layer_count)) if train_last_n_layers else [], "total_trainable_parameters": trainable_count, "total_model_parameters": total, "trainable_percentage": 100 * trainable_count / total, "trainable_names": [n for n, _ in trainable]}
 
 
 def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[str, Any]]:
-    """Load a base CausalLM, attach LoRA, unfreeze norms, and audit it."""
+    """Load a base CausalLM, attach LoRA, unfreeze configured weights, and audit it."""
     checkpoint = config["model_name_or_path"]
     precision = config.get("precision", "bf16")
     dtype = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}.get(precision)
@@ -88,6 +206,12 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
     # No device_map: accelerate owns device placement in distributed runs.
     model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
     quantization = str(config.get("quantization", "none")).lower()
+    train_last_n_layers = int(config.get("train_last_n_layers", 0) or 0)
+    train_lm_head = bool(config.get("train_lm_head", False))
+    if train_last_n_layers < 0:
+        raise ValueError("train_last_n_layers must be non-negative")
+    if (train_last_n_layers or train_lm_head) and quantization not in {"none", "off", "false"}:
+        raise ValueError("training full base-model layers or the LM head requires an unquantized base model")
     load_kwargs = dict(dtype=dtype, trust_remote_code=False, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache))
     if quantization in {"4bit", "4-bit", "qlora"}:
         try:
@@ -121,6 +245,7 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
         if not (adapter_path / "adapter_config.json").is_file():
             raise ValueError(f"resume_from_adapter is not a saved adapter directory: {adapter_path}")
         model = PeftModel.from_pretrained(model, adapter_path, is_trainable=True)
+        load_trainable_base_state(model, adapter_path)
         norm_state_path = adapter_path / "normalization_state.pt"
         if norm_state_path.is_file():
             norm_state = torch.load(norm_state_path, map_location="cpu", weights_only=True)
@@ -140,11 +265,13 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
                 # in the configured compute dtype.
                 if precision == "fp16" and parameter.dtype == torch.float16:
                     parameter.data = parameter.data.float()
+    trained_layer_indices = _unfreeze_last_transformer_layers(model, train_last_n_layers)
+    _unfreeze_output_head(model, train_lm_head)
     if config.get("gradient_checkpointing", False):
         model.gradient_checkpointing_enable()
         model.enable_input_require_grads()
-    audit = parameter_audit(model)
-    audit.update({"model_name": checkpoint, "resolved_lora_targets": targets})
+    audit = parameter_audit(model, train_last_n_layers=train_last_n_layers, train_lm_head=train_lm_head)
+    audit.update({"model_name": checkpoint, "resolved_lora_targets": targets, "trainable_transformer_layer_indices": trained_layer_indices})
     return model, audit
 
 

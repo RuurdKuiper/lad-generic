@@ -1,3 +1,4 @@
+import pytest
 import torch
 from types import SimpleNamespace
 from transformers import LlamaConfig, LlamaForCausalLM, MistralConfig, MistralForCausalLM
@@ -8,6 +9,7 @@ from diffusion_lm.modeling import (
     _unfreeze_output_head,
     bidirectional_attention_mask,
     load_trainable_base_state,
+    load_denoising_model,
     parameter_audit,
 )
 
@@ -111,6 +113,54 @@ def test_only_lora_and_norms_are_trainable():
     audit = parameter_audit(model)
     assert audit["lora_parameters"] > 0 and audit["normalization_parameters"] > 0
     assert audit["other_trainable_parameters"] == 0
+
+
+def test_full_finetuning_audit_requires_every_parameter_trainable():
+    model = LlamaForCausalLM(LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=1,
+        num_attention_heads=2,
+        num_key_value_heads=2,
+    ))
+
+    audit = parameter_audit(model, full_finetuning=True)
+    assert audit["full_finetuning"] is True
+    assert audit["trainable_percentage"] == 100.0
+    assert audit["total_trainable_parameters"] == audit["total_model_parameters"]
+
+    next(model.parameters()).requires_grad = False
+    with pytest.raises(AssertionError, match="unexpected_frozen_full_model_parameters"):
+        parameter_audit(model, full_finetuning=True)
+
+
+def test_full_finetuning_loader_does_not_attach_lora(monkeypatch, tmp_path):
+    import diffusion_lm.modeling as modeling
+
+    model = LlamaForCausalLM(LlamaConfig(
+        vocab_size=32,
+        hidden_size=16,
+        intermediate_size=32,
+        num_hidden_layers=1,
+        num_attention_heads=2,
+        num_key_value_heads=2,
+    ))
+    monkeypatch.setattr(modeling.AutoModelForCausalLM, "from_pretrained", lambda *args, **kwargs: model)
+
+    loaded, audit = load_denoising_model({
+        "model_name_or_path": "merged-model",
+        "base_model_cache_dir": str(tmp_path / "models"),
+        "precision": "bf16",
+        "quantization": "none",
+        "full_finetuning": True,
+        "gradient_checkpointing": False,
+    })
+
+    assert loaded is model
+    assert not isinstance(loaded, PeftModel)
+    assert all(parameter.requires_grad for parameter in loaded.parameters())
+    assert audit["resolved_lora_targets"] == []
 
 
 def test_final_transformer_layers_can_be_trained_with_lora():

@@ -1,0 +1,98 @@
+# Experimental full-parameter continuation of the merged 25k BYOD-Llama model.
+# This is intentionally separate from the public byod-reproducible workflow.
+# "Full" refers to training every model parameter; weights/gradients use BF16
+# (and FP8 compute where supported) to make the run fit on one 80-GB GPU.
+
+# Starting checkpoint
+# This merged model contains the original 25k LoRA conversion folded into the
+# Llama weights. It is a complete Hugging Face model, not a PEFT adapter.
+model_name_or_path: /content/drive/MyDrive/lad-generic-results/merged/llama-3.1-8b-mask
+tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+full_finetuning: true
+
+# Dataset
+dataset_name: Ruurd/LAD-training-1m-256
+splits: {train: train, validation: validation, test: test}
+# The merged checkpoint has already seen 25,000 x 16 = 400,000 examples.
+# Prepare 800,000 examples in the same seeded order, discard that prefix, and
+# train on the following 400,000 examples for another 25,000 updates.
+resume_data_updates: 25000
+
+# File paths
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+output_dir: outputs/llama-3.1-8b-mask-merged-full-finetune
+validation_samples: 200
+
+# Match the original conversion objective: IID absorbing-mask corruption over
+# answer tokens and repeated EOS padding, with loss only at corrupted targets.
+corruption_mode: mask_only
+structured_loss_behavior: corrupted_answer_tokens
+eos_padding_loss: true
+answer_padding_loss:
+  enabled: false
+  answer_weight: 0.9
+  padding_weight: 0.1
+t_min: 0.001
+frontier_masking_probability: 0.0
+frontier_masking_epsilon: 0.03
+frontier_masking_tau: 3.0
+frontier_padding_mode: iid
+include_answer_eos: true
+multi_turn_prob: 0.0
+max_history_turns: 2
+seed: 42
+
+# Full-model optimization. AdamW8bit quantizes optimizer moments only; model
+# weights themselves remain unquantized. No paging or CPU offload is enabled.
+learning_rate: 1.0e-6
+end_learning_rate: 1.0e-7
+learning_rate_scaling:
+  enabled: false
+  mode: sqrt
+  reference_batch_size: 16
+scheduler: linear
+warmup_steps: 500
+optimizer: adamw8bit
+weight_decay: 0.01
+max_grad_norm: 0.5
+epochs: 1
+max_updates: 25000
+
+# Minimum-memory single-GPU layout: one sequence at a time, with accumulation
+# preserving the original effective batch size of 16.
+max_sequence_length: 256
+pad_to_multiple_of: 8
+batch_size: 1
+eval_batch_size: 1
+gradient_accumulation_steps: 16
+gradient_checkpointing: true
+selected_logit_optimization: true
+num_workers: 4
+prefetch_factor: 4
+
+# Full 8B snapshots are large. Save loadable model-only snapshots every 5k
+# updates, but do not rewrite a 16-GB "best" model after every validation gain.
+# These snapshots do not include optimizer state and therefore warm-start rather
+# than exactly resume; use every_checkpoint only if exact resume is worth the
+# substantially larger Drive usage.
+logging_steps: 100
+validation_steps: 500
+checkpoint_steps: 5000
+checkpoint_mode: every_model
+save_best_model: false
+
+# Disabled because the in-training perplexity scorer temporarily restores the
+# frozen AR base in LoRA runs. Full fine-tuning has no frozen base to restore;
+# benchmark the saved checkpoints separately with the validation notebook.
+generation_perplexity:
+  enabled: false
+
+# BF16 model weights and gradients plus native FP8 matrix compute where the GPU
+# supports Transformer Engine. This is not 4-bit/QLoRA weight quantization.
+precision: bf16
+fp8:
+  enabled: true
+  backend: transformer_engine
+  format: HYBRID
+quantization: none

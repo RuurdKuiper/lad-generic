@@ -140,11 +140,36 @@ def load_trainable_base_state(model: torch.nn.Module, adapter_path: str | Path) 
     return len(state)
 
 
-def parameter_audit(model: torch.nn.Module, train_last_n_layers: int = 0, train_lm_head: bool = False) -> dict[str, Any]:
+def parameter_audit(
+    model: torch.nn.Module,
+    train_last_n_layers: int = 0,
+    train_lm_head: bool = False,
+    full_finetuning: bool = False,
+) -> dict[str, Any]:
     """Assert the intended trainable set and return parameter-count diagnostics."""
     named = list(model.named_parameters())
     trainable = [(name, p) for name, p in named if p.requires_grad]
     total = sum(p.numel() for _, p in named)
+    if full_finetuning:
+        frozen = [name for name, parameter in named if not parameter.requires_grad]
+        if frozen:
+            raise AssertionError({"unexpected_frozen_full_model_parameters": frozen[:20]})
+        return {
+            "full_finetuning": True,
+            "full_model_parameters": total,
+            "lora_parameters": 0,
+            "normalization_parameters": 0,
+            "transformer_layer_parameters": 0,
+            "lm_head_parameters": 0,
+            "other_trainable_parameters": 0,
+            "train_last_n_layers": 0,
+            "train_lm_head": False,
+            "trainable_transformer_layer_indices": [],
+            "total_trainable_parameters": total,
+            "total_model_parameters": total,
+            "trainable_percentage": 100.0,
+            "trainable_names": [name for name, _ in trainable],
+        }
     selected_layers = list(_transformer_layers(model)[-train_last_n_layers:]) if train_last_n_layers else []
     parameter_names = {id(parameter): name for name, parameter in named}
     selected_parameter_ids = {
@@ -197,7 +222,7 @@ def parameter_audit(model: torch.nn.Module, train_last_n_layers: int = 0, train_
 
 
 def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[str, Any]]:
-    """Load a base CausalLM, attach LoRA, unfreeze configured weights, and audit it."""
+    """Load either a full model or a LoRA-adapted CausalLM and audit it."""
     checkpoint = config["model_name_or_path"]
     precision = config.get("precision", "bf16")
     dtype = {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}.get(precision)
@@ -206,12 +231,17 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
     # No device_map: accelerate owns device placement in distributed runs.
     model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
     quantization = str(config.get("quantization", "none")).lower()
+    full_finetuning = bool(config.get("full_finetuning", False))
     train_last_n_layers = int(config.get("train_last_n_layers", 0) or 0)
     train_lm_head = bool(config.get("train_lm_head", False))
     if train_last_n_layers < 0:
         raise ValueError("train_last_n_layers must be non-negative")
-    if (train_last_n_layers or train_lm_head) and quantization not in {"none", "off", "false"}:
+    if (full_finetuning or train_last_n_layers or train_lm_head) and quantization not in {"none", "off", "false"}:
         raise ValueError("training full base-model layers or the LM head requires an unquantized base model")
+    if full_finetuning and config.get("resume_from_adapter"):
+        raise ValueError("full_finetuning starts from model_name_or_path and cannot use resume_from_adapter")
+    if full_finetuning and (train_last_n_layers or train_lm_head):
+        raise ValueError("train_last_n_layers/train_lm_head are redundant with full_finetuning")
     load_kwargs = dict(dtype=dtype, trust_remote_code=False, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache))
     if quantization in {"4bit", "4-bit", "qlora"}:
         try:
@@ -233,6 +263,15 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
     model.config.is_causal = False
     if hasattr(model.config, "use_bidirectional_attention"):
         model.config.use_bidirectional_attention = True
+    if full_finetuning:
+        for parameter in model.parameters():
+            parameter.requires_grad = True
+        if config.get("gradient_checkpointing", False):
+            model.gradient_checkpointing_enable()
+            model.enable_input_require_grads()
+        audit = parameter_audit(model, full_finetuning=True)
+        audit.update({"model_name": checkpoint, "resolved_lora_targets": []})
+        return model, audit
     if quantization in {"4bit", "4-bit", "qlora"}:
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=bool(config.get("gradient_checkpointing", False)))
     for parameter in model.parameters():

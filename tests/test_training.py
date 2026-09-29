@@ -184,6 +184,31 @@ def test_llama_colab_long_run_uses_800k_samples_and_nonzero_linear_endpoint():
     assert config["generation_perplexity"]["interval_steps"] % config["validation_steps"] == 0
 
 
+def test_merged_full_finetuning_config_uses_low_memory_continuation():
+    from pathlib import Path
+    import yaml
+
+    config = yaml.safe_load(
+        (Path(__file__).resolve().parents[1] / "configs/llama3_8b_mask_colab_merged_full_finetune.yaml").read_text()
+    )
+
+    assert config["model_name_or_path"].endswith("/merged/llama-3.1-8b-mask")
+    assert config["full_finetuning"] is True
+    assert config["optimizer"] == "adamw8bit"
+    assert config["quantization"] == "none"
+    assert config["batch_size"] == 1
+    assert config["gradient_accumulation_steps"] == 16
+    assert config["gradient_checkpointing"] is True
+    assert config["batch_size"] * config["gradient_accumulation_steps"] == 16
+    assert config["resume_data_updates"] == 25000
+    assert config["max_updates"] == 25000
+    assert (config["resume_data_updates"] + config["max_updates"]) * 16 == 800_000
+    assert config["checkpoint_steps"] == 5000
+    assert config["save_best_model"] is False
+    assert config["generation_perplexity"]["enabled"] is False
+    assert "lora_r" not in config
+
+
 @pytest.mark.parametrize("capability", [(8, 9), (9, 0), (10, 0), (12, 0)])
 def test_fp8_is_enabled_only_on_supported_native_hardware(capability):
     resolved = _resolve_fp8(

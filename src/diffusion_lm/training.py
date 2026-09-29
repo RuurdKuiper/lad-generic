@@ -53,6 +53,29 @@ def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.T
     tokenizer.save_pretrained(path)
 
 
+def _save_training_model(
+    model,
+    tokenizer,
+    path: Path,
+    initial_norms: dict[str, torch.Tensor] | None,
+    config: dict[str, Any],
+    accelerator: Accelerator,
+) -> None:
+    """Save an adapter run as before, or one loadable full-model checkpoint."""
+    if not bool(config.get("full_finetuning", False)):
+        _save_adapter(accelerator.unwrap_model(model), tokenizer, path, initial_norms)
+        return
+    path.mkdir(parents=True, exist_ok=True)
+    # Accelerator handles mixed-precision/Transformer-Engine state dicts and
+    # shards the 8B checkpoint without constructing a second trainable-state
+    # copy. Save the HF config separately so AutoModel can load the directory.
+    accelerator.save_model(model, path, max_shard_size="5GB", safe_serialization=True)
+    unwrapped = accelerator.unwrap_model(model)
+    unwrapped.config.save_pretrained(path)
+    tokenizer.save_pretrained(path)
+    _write_json(path / "lad_run_config.json", config)
+
+
 def _loader(dataset, collator, batch_size, shuffle, seed, workers, prefetch_factor=4):
     """Build a reproducibly shuffled DataLoader using the supplied collator."""
     generator = torch.Generator().manual_seed(seed)
@@ -480,8 +503,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     resume_data_updates = int(config.get("resume_data_updates", 0) or 0)
     if resume_data_updates < 0:
         raise ValueError("resume_data_updates must be non-negative")
-    if resume_data_updates and not config.get("resume_from_adapter"):
-        raise ValueError("resume_data_updates is only supported with resume_from_adapter")
+    if resume_data_updates and not (config.get("resume_from_adapter") or config.get("full_finetuning")):
+        raise ValueError("resume_data_updates requires resume_from_adapter or full_finetuning")
     if configured_updates_hint is not None:
         configured_updates_hint = int(configured_updates_hint)
         if configured_updates_hint < 1:
@@ -534,6 +557,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     if checkpoint_mode not in {"only_best_model", "every_checkpoint", "every_model"}:
         raise ValueError("checkpoint_mode must be 'only_best_model', 'every_model', or 'every_checkpoint'")
     generation_settings = config.get("generation_perplexity", {})
+    if config.get("full_finetuning") and generation_settings.get("enabled", False):
+        raise ValueError(
+            "generation_perplexity must be disabled during full_finetuning: its AR scorer requires "
+            "the frozen pre-conversion base model, which would add a second 8B model to memory"
+        )
     generation_interval = _generation_perplexity_interval(config) if generation_settings.get("enabled", False) else None
     from datasets import load_dataset
     cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
@@ -674,8 +702,14 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)), prefetch_factor)
     test_loader = _loader(test_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)), prefetch_factor)
     model, audit = load_denoising_model(config)
-    initial_norms = _normalization_state(model)
-    initial_trainable_base = _trainable_base_state(model) or None
+    if config.get("full_finetuning"):
+        # Do not clone all 8B trainable weights to CPU. That snapshot only
+        # exists to restore an adapter run's frozen AR base for PPL scoring.
+        initial_norms = {}
+        initial_trainable_base = None
+    else:
+        initial_norms = _normalization_state(model)
+        initial_trainable_base = _trainable_base_state(model) or None
     resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
     resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["frontier_padding_mode"] = train_collator.frontier_padding_mode; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}; resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate; resolved["fp8_requested"] = fp8_resolution["requested"]; resolved["fp8_active"] = fp8_resolution["active"]; resolved["fp8_device_name"] = fp8_resolution["device_name"]; resolved["fp8_compute_capability"] = fp8_resolution["capability"]; resolved["resolved_training_precision"] = fp8_resolution["mixed_precision"] or "fp32"
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
@@ -733,6 +767,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             unwrapped,
             train_last_n_layers=int(config.get("train_last_n_layers", 0) or 0),
             train_lm_head=bool(config.get("train_lm_head", False)),
+            full_finetuning=bool(config.get("full_finetuning", False)),
         )
         audit.update({key: value for key, value in post_fp8_audit.items() if key != "trainable_names"})
         audit["fp8_transformer_engine"] = True
@@ -864,7 +899,9 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                 for total in interval_component_sums.values():
                     total.zero_()
                 if metrics["weighted_loss"] < best:
-                    best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
+                    best = metrics["weighted_loss"]
+                    if bool(config.get("save_best_model", True)):
+                        _save_training_model(model, tokenizer, output / "best", initial_norms, config, accelerator)
             accelerator.wait_for_everyone()
             model.train()
         if checkpoint_mode in {"every_checkpoint", "every_model"} and (update_step % int(config.get("checkpoint_steps", 500)) == 0 or update_step == max_updates):
@@ -875,14 +912,16 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
             elif accelerator.is_main_process:
                 # Inference-ready snapshot without optimizer/scheduler/RNG
-                # state; it can also warm-start through resume_from_adapter.
-                _save_adapter(accelerator.unwrap_model(model), tokenizer, checkpoint, initial_norms)
+                # state. Adapter snapshots can warm-start through
+                # resume_from_adapter; full-model snapshots through
+                # model_name_or_path with full_finetuning=true.
+                _save_training_model(model, tokenizer, checkpoint, initial_norms, config, accelerator)
     progress.close()
     accelerator.wait_for_everyone()
     if accelerator.is_main_process and checkpoint_mode == "every_checkpoint":
-        unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
+        _save_training_model(model, tokenizer, output / "final", initial_norms, config, accelerator)
     elif accelerator.is_main_process and checkpoint_mode == "every_model":
-        unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)
+        _save_training_model(model, tokenizer, output / "final", initial_norms, config, accelerator)
     # Test is deliberately after best-model selection/finalization.
     test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
     if accelerator.is_main_process: _write_json(output / "test_metrics.json", test_metrics)

@@ -6,7 +6,7 @@ language model on one GPU. The same training entry point supports:
 - Llama 3.1 8B Instruct
 - Gemma 2 9B IT
 - Qwen2.5 7B Instruct
-- Ministral 8B Instruct 2410 (text-only)
+- Ministral 8B Instruct 2410
 
 [![Open the training notebook in Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb)
 
@@ -15,11 +15,17 @@ mode, and watch the training and validation losses update while training runs.
 Its source is also available at
 [`notebooks/train_diffusion.ipynb`](notebooks/train_diffusion.ipynb).
 
+Try the converted models directly in the full-precision demos:
+[Gemma](https://huggingface.co/spaces/Dovelove/byod-gemma-2-9b),
+[Llama](https://huggingface.co/spaces/Dovelove/byod-llama-3.1-8b),
+[Qwen](https://huggingface.co/spaces/Dovelove/byod-qwen2.5-7b), and
+[Ministral](https://huggingface.co/spaces/Dovelove/byod-ministral-8b).
+
 ## Two run modes
 
 | Mode | Purpose | Important settings |
 |---|---|---|
-| `quick` | Try the complete pipeline on a common Colab GPU | 50 updates, rank-128 LoRA, small held-out splits and smaller base models |
+| `quick` | Train the full recipe with a smaller backbone | 25,000 updates, rank-128 LoRA, smaller base model |
 | `paper` | Reproduce the original reported conversion | 25,000 updates, rank-1024 LoRA, batch 16, no quantization |
 
 Quick mode uses Llama 3.2 1B, Gemma 3 1B, or Qwen2.5 1.5B in full FP16.
@@ -27,7 +33,7 @@ There is no comparable official text-only ~1B Ministral checkpoint, so
 Ministral is intentionally not offered in quick mode. The original Ministral
 8B checkpoint remains available for paper reproduction.
 
-| Family | Quick demo | Paper reproduction |
+| Family | Quick model | Paper reproduction |
 |---|---|---|
 | Llama | Llama 3.2 1B Instruct | Llama 3.1 8B Instruct |
 | Gemma | Gemma 3 1B IT | Gemma 2 9B IT |
@@ -37,7 +43,11 @@ Ministral is intentionally not offered in quick mode. The original Ministral
 `paper` is the configuration used for the original `llama-3.1-8b-mask/best`
 training and its Gemma, Qwen, and Ministral counterparts. It requires a
 high-memory NVIDIA GPU; the original runs used one 96 GB GPU. `quick` is an
-educational smoke run and is not expected to reproduce the paper scores.
+accessible full-length conversion, but it is not expected to reproduce the
+paper scores because it changes both the backbone and adapter rank. All other
+objective, data, validation, and optimization settings are retained; it uses
+FP16 instead of BF16/FP8 for compatibility with common Colab GPUs.
+Here, “quick” refers to the smaller memory requirement, not a shortened run.
 
 ## Local use
 
@@ -50,7 +60,7 @@ pip install -e '.[colab]'
 cp .env.example .env  # then add a read-only Hugging Face token
 ```
 
-Run a small demonstration:
+Run the smaller-model configuration:
 
 ```bash
 python train.py --model llama --mode quick

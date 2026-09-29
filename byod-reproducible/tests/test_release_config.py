@@ -24,11 +24,25 @@ def test_paper_presets_keep_the_original_recipe(model):
 def test_quick_mode_is_explicitly_smaller():
     config = load_training_config("llama", "quick")
     assert config["run_mode"] == "quick"
-    assert config["max_updates"] == 50
+    assert config["max_updates"] == 25_000
     assert config["lora_r"] == config["lora_alpha"] == 128
     assert config["model_name_or_path"] == "meta-llama/Llama-3.2-1B-Instruct"
     assert config["quantization"] == "none"
-    assert config["generation_perplexity"]["enabled"] is False
+    assert config["generation_perplexity"]["enabled"] is True
+
+
+@pytest.mark.parametrize("model", ["llama", "gemma", "qwen"])
+def test_quick_mode_preserves_the_full_recipe_except_model_rank_and_precision(model):
+    paper = load_training_config(model, "paper")
+    quick = load_training_config(model, "quick")
+    allowed_differences = {
+        "display_name", "fp8", "lora_alpha", "lora_r", "model_name_or_path",
+        "model_revision", "output_dir", "precision", "run_mode",
+        "tokenizer_name_or_path",
+    }
+    assert {
+        key for key in paper | quick if paper.get(key) != quick.get(key)
+    } == allowed_differences
 
 
 @pytest.mark.parametrize(
@@ -44,6 +58,11 @@ def test_quick_mode_selects_smaller_compatible_models(model, expected_model, qua
     assert config["model_name_or_path"] == expected_model
     assert config["quantization"] == quantization
     assert config["lora_r"] == config["lora_alpha"] == 128
+    assert config["output_dir"].endswith({
+        "llama": "llama-3.2-1b-mask",
+        "gemma": "gemma-3-1b-mask",
+        "qwen": "qwen-2.5-1.5b-mask",
+    }[model])
 
 
 def test_ministral_is_available_only_for_paper_reproduction():
@@ -83,3 +102,30 @@ def test_every_external_input_is_revision_pinned():
         for preset in models.values()
         if "quick" in preset
     )
+
+
+def test_public_notebook_exposes_every_paper_model_and_has_no_saved_outputs():
+    root = Path(__file__).parents[1]
+    notebook = json.loads((root / "notebooks/train_diffusion.ipynb").read_text())
+    source = "\n".join(
+        "".join(cell.get("source", [])) for cell in notebook["cells"]
+    )
+    for model in ("llama", "gemma", "qwen", "ministral"):
+        assert f'"{model}"' in source
+    assert "25,000-update recipe" in source
+    assert "Dovelove/byod-llama-3.1-8b" in source
+    assert all(
+        not cell.get("outputs") and cell.get("execution_count") is None
+        for cell in notebook["cells"]
+        if cell["cell_type"] == "code"
+    )
+
+
+def test_readme_links_colab_and_all_live_demos():
+    readme = (Path(__file__).parents[1] / "README.md").read_text()
+    assert "colab.research.google.com/github/RuurdKuiper/BYOD" in readme
+    for slug in (
+        "byod-gemma-2-9b", "byod-llama-3.1-8b",
+        "byod-qwen2.5-7b", "byod-ministral-8b",
+    ):
+        assert f"huggingface.co/spaces/Dovelove/{slug}" in readme

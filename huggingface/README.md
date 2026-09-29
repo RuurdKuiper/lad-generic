@@ -1,8 +1,10 @@
 # Publishing the BYOD models and demos
 
-This directory packages the four original `best` checkpoints as public Hugging
-Face adapter repositories and creates one fixed-model ZeroGPU Space per model.
-Inference is BF16/unquantized; no 4-bit fallback is configured.
+This directory packages the selected checkpoints as Hugging Face adapter
+repositories and creates one fixed-model ZeroGPU Space per model. Gemma, Qwen,
+and Ministral use their original `best` checkpoints; Llama uses the final
+checkpoint of its uninterrupted 50k-update run. Inference is BF16/unquantized;
+no 4-bit fallback is configured.
 
 ## Repositories
 
@@ -41,6 +43,13 @@ To update only the demo code without re-uploading the model repositories:
 
 ```bash
 python huggingface/publish_byod.py --spaces-only --execute
+```
+
+To replace only the Llama adapter without redeploying the Space:
+
+```bash
+python huggingface/publish_byod.py --namespace Dovelove --anonymous-review \
+  --models-only --only BYOD-Llama-3.1-8B --execute
 ```
 
 The four Spaces request the Hugging Face `zero-a10g` hardware tier (ZeroGPU).

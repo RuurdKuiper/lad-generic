@@ -22,7 +22,7 @@ def load_training_config(
     output_dir: str | None = None,
     max_updates: int | None = None,
 ) -> dict:
-    """Resolve the paper recipe or a small hardware-friendly demonstration."""
+    """Resolve the paper recipe or its smaller-model, rank-128 variant."""
     config = yaml.safe_load((ROOT / "configs" / "paper.yaml").read_text())
     models = yaml.safe_load((ROOT / "configs" / "models.yaml").read_text())
     if model not in models:
@@ -42,26 +42,18 @@ def load_training_config(
                 f"{model!r} has no quick preset; choose llama, gemma, or qwen, "
                 "or use --mode paper for Ministral 8B"
             )
-        # This demonstrates the complete conversion on common Colab GPUs. It
-        # intentionally does not claim to reproduce the paper checkpoint.
+        # Keep the complete 25k-update recipe and dataset budget. Quick mode
+        # reduces memory through the smaller backbone and rank-128 adapters;
+        # FP16 is used because common Colab T4 GPUs do not support BF16/FP8.
+        quick_output_name = quick_preset.pop("output_name")
         config.update({
-            "max_updates": 50,
-            "gradient_accumulation_steps": 1,
-            "gradient_checkpointing": True,
             "lora_r": 128,
             "lora_alpha": 128,
             "precision": "fp16",
             "fp8": {"enabled": False},
-            "validation_samples": 32,
-            "splits": {"train": "train", "validation": "validation[:32]", "test": "test[:32]"},
-            "logging_steps": 1,
-            "validation_steps": 10,
-            "checkpoint_steps": 50,
-            "checkpoint_mode": "only_best_model",
-            "generation_perplexity": {"enabled": False},
         })
         config.update(quick_preset)
-        output_name += "-quick"
+        output_name = quick_output_name
     elif mode != "paper":
         raise ValueError("mode must be 'quick' or 'paper'")
 

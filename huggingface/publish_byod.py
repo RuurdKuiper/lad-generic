@@ -33,6 +33,7 @@ class ByodModel:
     license_id: str
     license_name: str | None = None
     license_link: str | None = None
+    source_checkpoint: str = "best"
 
 
 MODELS = (
@@ -45,12 +46,13 @@ MODELS = (
         "gemma",
     ),
     ByodModel(
-        "llama-3.1-8b-mask",
+        "llama-3.1-8b-mask-long",
         "BYOD-Llama-3.1-8B",
         "byod-llama-3.1-8b",
         "BYOD-Llama-3.1-8B",
         "meta-llama/Llama-3.1-8B-Instruct",
         "llama3.1",
+        source_checkpoint="final",
     ),
     ByodModel(
         "qwen-2.5-7b-mask",
@@ -117,8 +119,9 @@ license: {spec.license_id}
 
 {spec.display_name} is a masked discrete-diffusion language model created by
 converting [{spec.base_model}](https://huggingface.co/{spec.base_model}) with
-LoRA. This repository contains the exact `best` checkpoint from the
-`{spec.source_run}` experiment, not a 4-bit or otherwise quantized variant.
+LoRA. This repository contains the exact `{spec.source_checkpoint}` checkpoint
+from the `{spec.source_run}` experiment, not a 4-bit or otherwise quantized
+variant.
 
 Try the [full-precision ZeroGPU demo](https://huggingface.co/spaces/{space_repo_id}).
 
@@ -150,7 +153,7 @@ verification. It inherits the limitations of the base model and its datasets.
 
 def validate_source(spec: ByodModel, outputs_root: Path) -> tuple[Path, Path, dict]:
     run_dir = outputs_root / spec.source_run
-    adapter_dir = run_dir / "best"
+    adapter_dir = run_dir / spec.source_checkpoint
     adapter_config_path = adapter_dir / "adapter_config.json"
     run_config_path = run_dir / "resolved_config.json"
     missing = [path for path in (adapter_config_path, run_config_path, adapter_dir / "adapter_model.safetensors") if not path.is_file()]
@@ -286,6 +289,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--spaces-only", action="store_true", help="Update only the four demo Spaces; do not re-upload model repositories.")
     parser.add_argument("--models-only", action="store_true", help="Update only the four model repositories; do not update demo Spaces.")
     parser.add_argument(
+        "--only",
+        action="append",
+        choices=[spec.model_name for spec in MODELS],
+        help="Publish only the named model/Space. May be supplied more than once.",
+    )
+    parser.add_argument(
         "--anonymous-review",
         action="store_true",
         help="Keep model repositories and Spaces private while staging an anonymous review deployment.",
@@ -302,8 +311,11 @@ def main() -> None:
     args = parse_args()
     if args.spaces_only and args.models_only:
         raise ValueError("--spaces-only and --models-only are mutually exclusive")
+    selected_models = tuple(
+        spec for spec in MODELS if not args.only or spec.model_name in args.only
+    )
     artifacts = []
-    for spec in MODELS:
+    for spec in selected_models:
         adapter_dir, config_path, run_config = validate_source(spec, args.outputs_root)
         artifacts.append((spec, adapter_dir, config_path, run_config))
         print(
@@ -349,7 +361,7 @@ def main() -> None:
     if args.activate_protected:
         if not space_read_token:
             raise RuntimeError("Set BYOD_SPACE_HF_TOKEN to a read-only token before protected activation.")
-        for spec in MODELS:
+        for spec in selected_models:
             api.update_repo_settings(
                 f"{args.namespace}/{spec.space_name}",
                 repo_type="space",

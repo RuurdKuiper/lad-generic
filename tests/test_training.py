@@ -195,6 +195,8 @@ def test_merged_full_finetuning_config_uses_low_memory_continuation():
     assert config["model_name_or_path"].endswith("/merged/llama-3.1-8b-mask")
     assert config["full_finetuning"] is True
     assert config["optimizer"] == "adamw8bit"
+    assert config["learning_rate"] == pytest.approx(1e-5)
+    assert config["end_learning_rate"] == pytest.approx(1e-6)
     assert config["quantization"] == "none"
     assert config["batch_size"] == 1
     assert config["gradient_accumulation_steps"] == 16
@@ -205,7 +207,9 @@ def test_merged_full_finetuning_config_uses_low_memory_continuation():
     assert (config["resume_data_updates"] + config["max_updates"]) * 16 == 800_000
     assert config["checkpoint_steps"] == 5000
     assert config["save_best_model"] is False
-    assert config["generation_perplexity"]["enabled"] is False
+    assert config["generation_perplexity"]["enabled"] is True
+    assert config["generation_perplexity"]["score_perplexity"] is False
+    assert config["generation_perplexity"]["interval_steps"] == 1000
     assert "lora_r" not in config
 
 
@@ -337,6 +341,38 @@ def test_generation_metrics_store_only_the_final_output(tmp_path, monkeypatch):
     assert metrics["generation_perplexity"] == 2.0
     assert metrics["generation_mean_perplexity"] == 2.0
     assert metrics["generation_median_perplexity"] == 2.0
+    assert metrics["generation_mean_distinct_1"] == 1.0
+
+
+def test_generation_can_save_samples_without_running_perplexity(tmp_path, monkeypatch):
+    class Model:
+        def eval(self):
+            return self
+
+    class Tokenizer:
+        all_special_ids = []
+
+        def encode(self, text, add_special_tokens=False):
+            return list(range(len(text.split())))
+
+    monkeypatch.setattr("diffusion_lm.training.llada_generate", lambda *args, **kwargs: "saved answer")
+    monkeypatch.setattr(
+        "diffusion_lm.training._base_perplexity",
+        lambda *args, **kwargs: pytest.fail("perplexity scorer should not run"),
+    )
+
+    metrics = generation_validation(
+        Model(), Tokenizer(), 99,
+        {"quantization": "none", "generation_perplexity": {
+            "prompts": ["Prompt"], "num_prompts": 1, "score_perplexity": False,
+        }},
+        {}, torch.device("cpu"), tmp_path, 1000,
+    )
+
+    record = json.loads((tmp_path / "generation_metrics.jsonl").read_text())
+    assert record["final"] == "saved answer"
+    assert record["generation_perplexity"] is None
+    assert "generation_perplexity" not in metrics
     assert metrics["generation_mean_distinct_1"] == 1.0
 
 

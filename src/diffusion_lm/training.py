@@ -340,7 +340,7 @@ def _available_output_dir(path: Path) -> Path:
 
 
 def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id: int, config: dict[str, Any], initial_norms: dict[str, torch.Tensor], device: torch.device, output: Path, step: int, initial_trainable_base: dict[str, torch.Tensor] | None = None) -> dict[str, float]:
-    """Generate fixed prompts, save final answers, and calculate base perplexity."""
+    """Generate fixed prompts and optionally calculate frozen-base perplexity."""
     settings = _generation_inference_settings(config)
     prompts = settings.get("prompts", DEFAULT_GENERATION_PROMPTS)
     session = InferenceSession(model, tokenizer, device, output, config, mask_token_id, str(config.get("quantization", "none")))
@@ -362,11 +362,15 @@ def generation_validation(model: torch.nn.Module, tokenizer: Any, mask_token_id:
         )
         finals.append(final_text)
         records.append({"step": step, "prompt_index": prompt_index, "distinct_1": distinct_n(final_text, tokenizer, 1), "distinct_2": distinct_n(final_text, tokenizer, 2), "distinct_3": distinct_n(final_text, tokenizer, 3), "prompt": prompt, "final": final_text})
-    if initial_trainable_base:
+    if bool(settings.get("score_perplexity", True)) and initial_trainable_base:
         generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device, initial_trainable_base)
-    else:
+    elif bool(settings.get("score_perplexity", True)):
         generation_metrics = _base_perplexity(model, tokenizer, finals, initial_norms, device)
-    per_text_perplexities = generation_metrics.pop("_per_text_perplexities")
+    else:
+        # Keep the generated text and deterministic distinct-n diagnostics, but
+        # defer scoring to a separate process that can load the AR scorer.
+        generation_metrics = {}
+    per_text_perplexities = generation_metrics.pop("_per_text_perplexities", [None] * len(records))
     valid_perplexities = [value for value in per_text_perplexities if value is not None]
     generation_metrics["generation_mean_perplexity"] = (
         float(sum(valid_perplexities) / len(valid_perplexities)) if valid_perplexities else None
@@ -557,10 +561,14 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     if checkpoint_mode not in {"only_best_model", "every_checkpoint", "every_model"}:
         raise ValueError("checkpoint_mode must be 'only_best_model', 'every_model', or 'every_checkpoint'")
     generation_settings = config.get("generation_perplexity", {})
-    if config.get("full_finetuning") and generation_settings.get("enabled", False):
+    if (
+        config.get("full_finetuning")
+        and generation_settings.get("enabled", False)
+        and generation_settings.get("score_perplexity", True)
+    ):
         raise ValueError(
-            "generation_perplexity must be disabled during full_finetuning: its AR scorer requires "
-            "the frozen pre-conversion base model, which would add a second 8B model to memory"
+            "generation_perplexity.score_perplexity must be false during full_finetuning: its AR "
+            "scorer requires the frozen pre-conversion base model, which would add a second 8B model to memory"
         )
     generation_interval = _generation_perplexity_interval(config) if generation_settings.get("enabled", False) else None
     from datasets import load_dataset

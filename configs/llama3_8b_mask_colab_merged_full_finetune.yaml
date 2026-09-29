@@ -45,8 +45,8 @@ seed: 42
 
 # Full-model optimization. AdamW8bit quantizes optimizer moments only; model
 # weights themselves remain unquantized. No paging or CPU offload is enabled.
-learning_rate: 1.0e-6
-end_learning_rate: 1.0e-7
+learning_rate: 1.0e-5
+end_learning_rate: 1.0e-6
 learning_rate_scaling:
   enabled: false
   mode: sqrt
@@ -63,9 +63,9 @@ max_updates: 25000
 # preserving the original effective batch size of 16.
 max_sequence_length: 256
 pad_to_multiple_of: 8
-batch_size: 1
+batch_size: 2
 eval_batch_size: 1
-gradient_accumulation_steps: 16
+gradient_accumulation_steps: 8
 gradient_checkpointing: true
 selected_logit_optimization: true
 num_workers: 4
@@ -82,11 +82,24 @@ checkpoint_steps: 5000
 checkpoint_mode: every_model
 save_best_model: false
 
-# Disabled because the in-training perplexity scorer temporarily restores the
-# frozen AR base in LoRA runs. Full fine-tuning has no frozen base to restore;
-# benchmark the saved checkpoints separately with the validation notebook.
+# Generate the standard 30 samples every 1,000 updates and write them directly
+# to generation_metrics.jsonl. Perplexity scoring is deferred because loading a
+# frozen AR scorer during full fine-tuning would add another 8B model to memory.
 generation_perplexity:
-  enabled: false
+  enabled: true
+  score_perplexity: false
+  interval_steps: 1000
+  sampler: llada_official
+  num_prompts: 30
+  num_steps: 64
+  max_new_tokens: 128
+  block_length: 128
+  temperature: 0.7
+  confidence_eos_eot_inf: true
+  permanent_unmask: true
+  confidence_guided: true
+  proportional_unmask: false
+  seed: 1234
 
 # BF16 model weights and gradients plus native FP8 matrix compute where the GPU
 # supports Transformer Engine. This is not 4-bit/QLoRA weight quantization.

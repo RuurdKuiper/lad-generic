@@ -57,7 +57,7 @@ optimizer: adamw8bit
 weight_decay: 0.01
 max_grad_norm: 0.5
 epochs: 1
-max_updates: 25000
+max_updates: 50000
 
 # Minimum-memory single-GPU layout: one sequence at a time, with accumulation
 # preserving the original effective batch size of 16.

@@ -114,10 +114,10 @@ lora_alpha: 1024
 train_normalization_layers: false
 
 # Optimization
-learning_rate: 1.0e-5
+learning_rate: 1.0e-4
 # With scheduler=linear, this uses a power-1 polynomial schedule so the decay
 # ends at this nonzero rate instead of Transformers' usual zero endpoint.
-end_learning_rate: 1.0e-6
+end_learning_rate: 1.0e-5
 
 # Treat learning_rate as the rate for the reference effective batch size.
 learning_rate_scaling:

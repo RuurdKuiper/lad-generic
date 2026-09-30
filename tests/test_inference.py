@@ -1,11 +1,12 @@
 import json
+from contextlib import contextmanager, nullcontext
 from pathlib import Path
 
 import pytest
 import torch
 
 import diffusion_lm.inference as inference_module
-from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _block_step_plan, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session, render_denoising_step
+from diffusion_lm.inference import InferenceSession, _apply_eos_eot_prediction_penalty, _apply_repetition_penalty, _autoregressive_token_confidence, _block_step_plan, _llada_transfer_schedule, _precision_dtype, _prompt_ids, _remask_offsets, _safe_adapter_path, _sampling_token_confidence, decode_denoising_state, denoise_stream, find_adapters, forward_denoising, llada_generate, load_local_legacy_session, preflight_session, render_denoising_step
 from diffusion_lm.legacy_compat import LegacyCustomTransformerConfig, LegacyCustomTransformerModel, install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 
 
@@ -19,6 +20,56 @@ def test_adapter_discovery_only_lists_valid_saved_adapters(tmp_path):
     assert _safe_adapter_path(tmp_path, "run-a/best") == valid.resolve()
     with pytest.raises(ValueError):
         _safe_adapter_path(tmp_path, "../outside")
+
+
+def test_sampling_confidence_scores_existing_tokens_under_top_k_distribution():
+    logits = torch.tensor([[1.0, 3.0, 2.0], [4.0, 2.0, 1.0]])
+    confidence = _sampling_token_confidence(
+        logits,
+        torch.tensor([2, 2]),
+        temperature=1.0,
+        top_k=2,
+    )
+
+    expected = torch.tensor([
+        torch.exp(torch.tensor(2.0)) / (torch.exp(torch.tensor(3.0)) + torch.exp(torch.tensor(2.0))),
+        0.0,  # Token 2 is outside the second position's top-2 set.
+    ])
+    assert torch.allclose(confidence, expected)
+
+
+def test_autoregressive_confidence_uses_shifted_logits_with_adapter_disabled():
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.adapter_disabled = False
+
+        @contextmanager
+        def disable_adapter(self):
+            self.adapter_disabled = True
+            try:
+                yield
+            finally:
+                self.adapter_disabled = False
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            assert self.adapter_disabled
+            assert attention_mask.tolist() == [[1, 1, 1]]
+            assert use_cache is False
+            logits = torch.zeros((*input_ids.shape, 6))
+            logits[:, 0, 3] = torch.log(torch.tensor(3.0))
+            logits[:, 1, 4] = torch.log(torch.tensor(7.0))
+            return type("Output", (), {"logits": logits})()
+
+    session = InferenceSession(Model(), object(), torch.device("cpu"), Path("."), {}, 5)
+    confidence = _autoregressive_token_confidence(
+        session,
+        torch.tensor([[1, 3, 4]]),
+        answer_start=1,
+    )
+
+    assert torch.allclose(confidence, torch.tensor([3 / 8, 7 / 12]))
 
 
 def test_hub_adapter_loader_downloads_then_uses_shared_loader(monkeypatch, tmp_path):
@@ -732,6 +783,200 @@ def test_retained_positions_can_remain_editable_or_lock_their_token_values():
     assert locked_states[-1][0].startswith("3 ")
     assert "retained 1 tokens" in locked_states[-1][1]
     assert "locked" not in locked_states[-1][1]
+
+
+def test_autoregressive_confidence_controls_progressive_retention(monkeypatch):
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.inputs = []
+
+        def disable_adapter(self):
+            return nullcontext()
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.inputs.append(input_ids.detach().clone())
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[:, -2, 3] = 8.0
+            logits[:, -1, 4] = 10.0  # Diffusion confidence prefers offset 1.
+            return type("Output", (), {"logits": logits})()
+
+    monkeypatch.setattr(
+        inference_module,
+        "_autoregressive_token_confidence",
+        lambda *_args, **_kwargs: torch.tensor([0.9, 0.1]),
+    )
+    model = Model()
+    session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    states = list(denoise_stream(
+        session,
+        "Question",
+        "System",
+        2,
+        3,
+        1.0,
+        0.0,
+        1,
+        1234,
+        permanent_unmask=True,
+        autoregressive_guided=True,
+    ))
+
+    assert model.inputs[1].tolist() == [[1, 3, 5]]
+    assert "AR-guided remasking" in states[-1][1]
+
+
+def test_revisable_ar_guidance_can_remask_a_previously_visible_token(monkeypatch):
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.inputs = []
+
+        def disable_adapter(self):
+            return nullcontext()
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            self.inputs.append(input_ids.detach().clone())
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[:, -2, 3] = 10.0
+            logits[:, -1, 4] = 10.0
+            return type("Output", (), {"logits": logits})()
+
+    scores = iter((torch.tensor([0.9, 0.1]), torch.tensor([0.1, 0.9])))
+    monkeypatch.setattr(
+        inference_module,
+        "_autoregressive_token_confidence",
+        lambda *_args, **_kwargs: next(scores),
+    )
+    model = Model()
+    session = InferenceSession(model, Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    states = list(denoise_stream(
+        session,
+        "Question",
+        "System",
+        2,
+        3,
+        1.0,
+        0.0,
+        1,
+        1234,
+        permanent_unmask=False,
+        autoregressive_guided=True,
+        revisable_tokens=True,
+    ))
+
+    assert model.inputs[1].tolist() == [[1, 3, 5]]
+    # Offset 0 was visible on step 2, then became the lower-confidence token
+    # and was selected for re-masking before step 3.
+    assert model.inputs[2].tolist() == [[1, 5, 4]]
+    assert "revisable tokens" in states[-1][1]
+
+
+def test_revisable_tokens_require_autoregressive_guidance():
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+    session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    with pytest.raises(ValueError, match="only with autoregressive-confidence"):
+        list(denoise_stream(
+            session,
+            "Question",
+            "System",
+            2,
+            2,
+            1.0,
+            0.0,
+            1,
+            1234,
+            confidence_guided=True,
+            revisable_tokens=True,
+        ))
+
+
+def test_autoregressive_check_interval_uses_diffusion_confidence_between_checks(monkeypatch):
+    class Tokenizer:
+        eos_token_id = 2
+        chat_template = "template"
+        name_or_path = "toy"
+
+        def apply_chat_template(self, *_args, **_kwargs):
+            return [1]
+
+        def decode(self, token_ids, **_kwargs):
+            return " ".join(map(str, token_ids))
+
+    class Model(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+
+        def disable_adapter(self):
+            return nullcontext()
+
+        def forward(self, input_ids, attention_mask, use_cache):
+            logits = torch.full((*input_ids.shape, 6), -10.0)
+            logits[..., 3] = 10.0
+            return type("Output", (), {"logits": logits})()
+
+    calls = []
+
+    def score(*_args, **_kwargs):
+        calls.append(True)
+        return torch.tensor([0.9, 0.1])
+
+    monkeypatch.setattr(inference_module, "_autoregressive_token_confidence", score)
+    session = InferenceSession(Model(), Tokenizer(), torch.device("cpu"), Path("."), {}, 5)
+    states = list(denoise_stream(
+        session,
+        "Question",
+        "System",
+        2,
+        5,
+        1.0,
+        0.0,
+        1,
+        1234,
+        permanent_unmask=True,
+        autoregressive_guided=True,
+        autoregressive_check_interval=2,
+    ))
+
+    assert len(calls) == 2
+    assert "every 2 step(s)" in states[-1][1]
 
 
 def test_official_llada_sampler_delays_eos_when_configured():

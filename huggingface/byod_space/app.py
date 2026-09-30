@@ -40,10 +40,15 @@ def _duration(*args) -> int:
     try:
         steps = int(args[3])
         pause_per_step = float(args[7])
+        remasking_strategy = str(args[9])
+        ar_check_interval = max(1, int(args[11]))
     except (IndexError, TypeError, ValueError):
         steps = 64
         pause_per_step = 0.0
-    return min(300, max(30, round(steps * (2.0 + pause_per_step))))
+        remasking_strategy = "Confidence-guided"
+        ar_check_interval = 1
+    seconds_per_step = 2.0 + (2.0 / ar_check_interval if remasking_strategy == "Autoregressive-confidence" else 0.0)
+    return min(300, max(30, round(steps * (seconds_per_step + pause_per_step))))
 
 
 @spaces.GPU(size="large", duration=_duration)
@@ -58,6 +63,8 @@ def generate(
     pause_per_step: float,
     trajectory_color_mode: str,
     remasking_strategy: str,
+    revisable_tokens: bool,
+    ar_check_interval: int,
     delay_eos_eot: bool,
     early_stopping: bool,
 ):
@@ -76,7 +83,7 @@ def generate(
         temperature=float(temperature),
         top_k=int(top_k),
         seed=int(seed),
-        permanent_unmask=True,
+        permanent_unmask=not bool(revisable_tokens),
         confidence_guided=remasking_strategy == "Confidence-guided",
         proportional_unmask=False,
         early_stopping=bool(early_stopping),
@@ -89,6 +96,9 @@ def generate(
         include_pre_remask_prediction=False,
         block_length=block_length,
         trajectory_color_mode=trajectory_color_mode,
+        autoregressive_guided=remasking_strategy == "Autoregressive-confidence",
+        revisable_tokens=bool(revisable_tokens),
+        autoregressive_check_interval=int(ar_check_interval),
     ):
         if not first_step and float(pause_per_step) > 0:
             # The sleep occurs inside this one decorated generator invocation,
@@ -152,10 +162,25 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 info="Hover over any token to see its position, prediction iteration, and probability.",
             )
             remasking_strategy = gr.Radio(
-                choices=["Confidence-guided", "Random"],
+                choices=["Confidence-guided", "Autoregressive-confidence", "Random"],
                 value="Confidence-guided",
                 label="Remasking strategy",
-                info="Confidence-guided retains the most confident predictions; random selects ordinary token positions randomly.",
+                info="Rank tokens with diffusion confidence, the original causal model, or random selection.",
+            )
+            revisable_tokens = gr.Checkbox(
+                value=False,
+                label="Allow revising retained tokens",
+                info="When enabled, previously visible tokens can be re-masked on later iterations.",
+                interactive=False,
+            )
+            ar_check_interval = gr.Slider(
+                1,
+                16,
+                value=4,
+                step=1,
+                label="AR check interval",
+                info="Use the original causal model every N denoising steps; diffusion confidence is used between checks.",
+                interactive=False,
             )
             delay_eos_eot = gr.Checkbox(
                 value=True,
@@ -185,9 +210,22 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         pause_per_step,
         trajectory_color_mode,
         remasking_strategy,
+        revisable_tokens,
+        ar_check_interval,
         delay_eos_eot,
         early_stopping,
     ]
+    def update_ar_controls(strategy):
+        """Expose AR-only controls and clear revision when another strategy is selected."""
+        enabled = strategy == "Autoregressive-confidence"
+        return gr.update(interactive=enabled, value=False), gr.update(interactive=enabled)
+
+    remasking_strategy.change(
+        update_ar_controls,
+        inputs=[remasking_strategy],
+        outputs=[revisable_tokens, ar_check_interval],
+        queue=False,
+    )
     run_event = run.click(show_loading, outputs=[status, trajectory], queue=False)
     run_event.then(generate, inputs=inputs, outputs=[status, trajectory])
     submit_event = question.submit(show_loading, outputs=[status, trajectory], queue=False)

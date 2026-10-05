@@ -7,6 +7,7 @@ import secrets
 import sys
 import time
 from pathlib import Path
+from urllib.parse import urlencode
 
 import gradio as gr
 import spaces
@@ -21,6 +22,22 @@ MODEL_REPO_ID = os.getenv("MODEL_REPO_ID", SPACE["model_repo_id"])
 DISPLAY_NAME = SPACE["display_name"]
 SHOW_REPOSITORY_LINKS = bool(SPACE.get("show_repository_links", True))
 SOURCE_URL = SPACE.get("source_url")
+VISITOR_COUNTER_ID = SPACE.get("visitor_counter_id")
+
+
+def _visitor_badge(counter_id: str | None) -> str:
+    """Return a persistent, client-loaded visit counter for this Space."""
+    if not counter_id:
+        return ""
+    query = urlencode(
+        {
+            "page_id": counter_id,
+            "left_text": "visitors",
+            "left_color": "#4b5563",
+            "right_color": "#6d28d9",
+        }
+    )
+    return f"![Visitor count](https://visitor-badge.laobi.icu/badge?{query})"
 
 # ZeroGPU recommends constructing and placing the root module on CUDA at module
 # scope. No quantization is used: all four demos run with the saved BF16 setup.
@@ -197,6 +214,9 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         footer += f" [Model card](https://huggingface.co/{MODEL_REPO_ID})"
         if SOURCE_URL:
             footer += f" · [Source code]({SOURCE_URL})"
+    visitor_badge = _visitor_badge(VISITOR_COUNTER_ID)
+    if visitor_badge:
+        footer += f"\n\n{visitor_badge}"
     gr.Markdown(footer)
 
     inputs = [

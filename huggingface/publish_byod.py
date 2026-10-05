@@ -184,6 +184,9 @@ def make_space_bundle(spec: ByodModel, namespace: str, destination: Path, anonym
                 "model_repo_id": f"{namespace}/{spec.model_name}",
                 "show_repository_links": not anonymous_review,
                 "source_url": None if anonymous_review else "https://github.com/RuurdKuiper/lad-generic",
+                # The namespace keeps public and anonymous-review deployments
+                # separate; the Space slug gives every demo its own counter.
+                "visitor_counter_id": f"{namespace}.{spec.space_name}",
             },
             indent=2,
         )

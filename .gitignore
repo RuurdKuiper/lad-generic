@@ -47,6 +47,8 @@ dist/
 # Downloaded models, datasets, checkpoints, and run outputs
 data/huggingface/
 data/prepared/
+data/byod-prepared/
+data/byod-tokenized-publication.json
 base_models/
 outputs/
 results/

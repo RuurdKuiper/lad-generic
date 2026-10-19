@@ -1,11 +1,17 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "byod-diffusion"
 version = "0.1.0"
 description = "Build Your Own DLM: single-GPU conversion of instruction LMs into masked diffusion models"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Ruurd J. A. Kuiper", email = "r.j.a.kuiper@umcutrecht.nl"},
+  {name = "Robert A. Bagheri"},
+]
 requires-python = ">=3.10"
 dependencies = [
   "torch>=2.5",
@@ -22,10 +28,18 @@ dependencies = [
 
 [project.optional-dependencies]
 colab = [
-  "bitsandbytes>=0.45",
-  "transformer-engine[pytorch]==2.13.0",
+  "ipywidgets>=8",
+  "gradio>=6,<7",
 ]
-test = ["pytest>=8"]
+cuda = ["bitsandbytes>=0.45"]
+test = ["pytest>=8", "ipython>=8", "gradio>=6,<7"]
+evaluation = ["math-verify[antlr4_13_2]>=0.8", "openai>=1.68"]
+
+[project.urls]
+Repository = "https://github.com/RuurdKuiper/BYOD"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
 diffusion_lm = ["generation_prompts.txt"]

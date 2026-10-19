@@ -1,0 +1,24 @@
+{
+  "title": "BYOD: Build Your Own DLM - Efficient Autoregressive-to-Diffusion Language Model Conversion",
+  "authors": [
+    {
+      "name": "Ruurd J. A. Kuiper",
+      "affiliation": "Julius Center for Health Sciences and Primary Care, University Medical Center Utrecht",
+      "email": "r.j.a.kuiper@umcutrecht.nl"
+    },
+    {
+      "name": "Robert A. Bagheri",
+      "affiliation": "Department of Methodology and Statistics, Utrecht University, The Netherlands"
+    }
+  ],
+  "primary_category_recommended": "cs.LG",
+  "cross_list_category_suggested": "cs.CL",
+  "abstract_file": "ABSTRACT.txt",
+  "comments": "Preprint. Code and interactive demos available.",
+  "code_url": "https://github.com/RuurdKuiper/BYOD",
+  "main_tex_file": "paper.tex",
+  "compiler": "pdflatex",
+  "journal_reference": null,
+  "doi": null,
+  "paper_license": "Select during submission; separate from the software MIT license."
+}

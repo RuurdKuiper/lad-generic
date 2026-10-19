@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 from copy import deepcopy
 from pathlib import Path
 
 from dotenv import load_dotenv
 import yaml
-
-from diffusion_lm.training import run_training
-
 
 ROOT = Path(__file__).resolve().parent
 
@@ -19,8 +17,11 @@ def load_training_config(
     model: str,
     mode: str = "paper",
     *,
+    config_path: str | None = None,
     output_dir: str | None = None,
     max_updates: int | None = None,
+    prepared_data_cache_dir: str | None = None,
+    prepared_data_persistent_cache_dir: str | None = None,
 ) -> dict:
     """Resolve the paper recipe or its smaller-model, rank-128 variant."""
     config = yaml.safe_load((ROOT / "configs" / "paper.yaml").read_text())
@@ -44,24 +45,38 @@ def load_training_config(
             )
         # Keep the complete 25k-update recipe and dataset budget. Quick mode
         # reduces memory through the smaller backbone and rank-128 adapters;
-        # FP16 is used because common Colab T4 GPUs do not support BF16/FP8.
+        # FP16 is used because common Colab T4 GPUs do not support BF16.
         quick_output_name = quick_preset.pop("output_name")
-        config.update({
-            "lora_r": 128,
-            "lora_alpha": 128,
-            "precision": "fp16",
-            "fp8": {"enabled": False},
-        })
+        config.update(yaml.safe_load((ROOT / "configs" / "quick.yaml").read_text()))
         config.update(quick_preset)
         output_name = quick_output_name
     elif mode != "paper":
         raise ValueError("mode must be 'quick' or 'paper'")
 
+    if config_path:
+        overrides = yaml.safe_load(Path(config_path).read_text()) or {}
+        if not isinstance(overrides, dict):
+            raise ValueError("The override config must be a YAML mapping")
+        def merge(base, update):
+            for key, value in update.items():
+                if isinstance(value, dict) and isinstance(base.get(key), dict):
+                    merge(base[key], value)
+                else:
+                    base[key] = value
+        merge(config, overrides)
+        if "dataset_name" in overrides and "prepared_dataset_name" not in overrides:
+            config["prepared_dataset_name"] = None
+            config["dataset_revision"] = overrides.get("dataset_revision")
+
     if max_updates is not None:
         if max_updates < 1:
             raise ValueError("max_updates must be positive")
         config["max_updates"] = int(max_updates)
-    config["output_dir"] = output_dir or f"outputs/{output_name}"
+    config["output_dir"] = output_dir or config.get("output_dir", f"outputs/{output_name}")
+    if prepared_data_cache_dir is not None:
+        config["prepared_data_cache_dir"] = prepared_data_cache_dir
+    if prepared_data_persistent_cache_dir is not None:
+        config["prepared_data_persistent_cache_dir"] = prepared_data_persistent_cache_dir
     return config
 
 
@@ -69,9 +84,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", required=True, choices=["llama", "gemma", "qwen", "ministral"])
     parser.add_argument("--mode", choices=["quick", "paper"], default="paper")
+    parser.add_argument("--config", help="YAML overrides applied after the selected preset")
     parser.add_argument("--output-dir")
     parser.add_argument("--max-updates", type=int, help="Optional run-length override")
     parser.add_argument("--print-config", action="store_true")
+    parser.add_argument("--logging-steps", type=int, help="Loss logging interval in optimizer updates")
+    parser.add_argument("--prepared-data-cache-dir", help="Local tokenized-data cache")
+    parser.add_argument("--prepared-data-persistent-cache-dir", help="Persistent backup restored into the local tokenized cache")
     return parser.parse_args()
 
 
@@ -81,9 +100,16 @@ def main() -> None:
     config = load_training_config(
         args.model,
         args.mode,
+        config_path=args.config,
         output_dir=args.output_dir,
         max_updates=args.max_updates,
+        prepared_data_cache_dir=args.prepared_data_cache_dir,
+        prepared_data_persistent_cache_dir=args.prepared_data_persistent_cache_dir,
     )
+    if args.logging_steps is not None:
+        if args.logging_steps < 1:
+            raise ValueError("logging_steps must be positive")
+        config["logging_steps"] = args.logging_steps
     print(
         f"Training {config['display_name']} in {args.mode!r} mode for "
         f"{config['max_updates']:,} updates -> {config['output_dir']}",
@@ -91,6 +117,12 @@ def main() -> None:
     )
     if args.print_config:
         print(yaml.safe_dump(config, sort_keys=False), flush=True)
+        return
+    # This trainer uses PyTorch; avoid importing Colab's unrelated TensorFlow install.
+    os.environ["USE_TF"] = "0"
+    os.environ["USE_TORCH"] = "1"
+    from diffusion_lm.training import run_training
+
     run_training(config)
 
 

@@ -19,4 +19,3 @@ def _load_generation_prompts(path: str | Path = GENERATION_PROMPTS_PATH) -> tupl
 
 # Resolve once so every validation checkpoint in a run uses the exact same set.
 DEFAULT_GENERATION_PROMPTS = _load_generation_prompts()
-

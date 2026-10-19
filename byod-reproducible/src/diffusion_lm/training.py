@@ -2,8 +2,6 @@
 from __future__ import annotations
 import json
 import atexit
-import hashlib
-import importlib.util
 import math
 import os
 from pathlib import Path
@@ -17,7 +15,7 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, get_polynomial_decay_schedule_with_warmup, get_scheduler
 
-from .data import DenoisingCollator, llama_stored_ids_compatible, prepare_mask_only_cache_record, stored_example_usable
+from .data import DenoisingCollator
 from .loss import masked_denoising_loss, selected_denoising_loss
 from .modeling import forward_bidirectional, forward_bidirectional_selected, load_denoising_model, parameter_audit
 from .inference import InferenceSession, _native_eot_token_id, llada_generate
@@ -34,6 +32,8 @@ def _append_jsonl(path: Path, value: Any) -> None:
     """Append one metrics record to a JSON Lines file."""
     with path.open("a") as f:
         f.write(json.dumps(value, default=float) + "\n")
+    if path.name == "metrics.jsonl" and os.getenv("BYOD_NOTEBOOK") == "1":
+        print("__BYOD_METRIC__" + json.dumps(value, default=float), flush=True)
 
 
 def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.Tensor] | None = None) -> None:
@@ -44,6 +44,17 @@ def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.T
     if initial_norms is not None:
         torch.save(initial_norms, path / "normalization_initial_state.pt")
     tokenizer.save_pretrained(path)
+
+
+def _worker_count(requested: int) -> int:
+    """Respect the CPUs assigned to this runtime, including Colab affinity limits."""
+    if requested < 0:
+        raise ValueError("num_workers must be non-negative")
+    try:
+        available = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError, NotImplementedError):
+        available = os.cpu_count() or 1
+    return min(requested, max(1, available))
 
 
 def _loader(dataset, collator, batch_size, shuffle, seed, workers, prefetch_factor=4):
@@ -119,13 +130,18 @@ def _generation_inference_settings(config: dict[str, Any]) -> dict[str, Any]:
         "num_prompts": len(DEFAULT_GENERATION_PROMPTS),
         "max_new_tokens": 128,
         "num_steps": 64,
-        "block_length": 128,
         "temperature": 0.7,
         "confidence_eos_eot_inf": True,
         "system_prompt": "",
         "seed": 1234,
     }
     settings.update(config.get("generation_perplexity", {}))
+    if settings.get("block_length") is None:
+        settings["block_length"] = settings["max_new_tokens"]
+    length, block, steps = (int(settings[key]) for key in ("max_new_tokens", "block_length", "num_steps"))
+    if min(length, block, steps) < 1 or length % block or steps % (length // block):
+        raise ValueError("Generation requires positive budgets, max_new_tokens divisible by block_length, "
+                         "and num_steps divisible by the number of blocks")
     if settings["sampler"] != "llada_official":
         raise ValueError("Training generation validation requires sampler=llada_official")
     # These behaviors are intrinsic to the official low-confidence sampler.
@@ -197,79 +213,6 @@ def _build_learning_rate_scheduler(
         lr_end=end_learning_rate,
         power=1.0,
     )
-
-
-def _native_fp8_capability(capability: tuple[int, int]) -> bool:
-    """Return whether NVIDIA Transformer Engine supports native FP8 on this GPU."""
-    major, minor = capability
-    return (major, minor) == (8, 9) or major >= 9
-
-
-def _resolve_fp8(
-    config: dict[str, Any],
-    *,
-    cuda_available: bool | None = None,
-    capability: tuple[int, int] | None = None,
-    device_name: str | None = None,
-    transformer_engine_available: bool | None = None,
-) -> dict[str, Any]:
-    """Resolve hardware-gated Transformer Engine FP8 or a BF16 fallback."""
-    settings = config.get("fp8", {}) or {}
-    if not isinstance(settings, dict):
-        raise ValueError("fp8 must be a mapping")
-    enabled = settings.get("enabled", False)
-    if not isinstance(enabled, bool):
-        raise ValueError("fp8.enabled must be true or false")
-    base_precision = str(config.get("precision", "bf16")).lower()
-    if not enabled:
-        return {
-            "requested": False,
-            "active": False,
-            "model_precision": base_precision,
-            "mixed_precision": None if base_precision == "fp32" else base_precision,
-            "device_name": None,
-            "capability": None,
-            "notice": None,
-        }
-
-    backend = str(settings.get("backend", "transformer_engine")).lower()
-    if backend not in {"transformer_engine", "te"}:
-        raise ValueError("fp8.backend must be 'transformer_engine'")
-    cuda_available = torch.cuda.is_available() if cuda_available is None else cuda_available
-    if cuda_available:
-        capability = torch.cuda.get_device_capability() if capability is None else capability
-        device_name = torch.cuda.get_device_name() if device_name is None else device_name
-    supported = bool(cuda_available and capability is not None and _native_fp8_capability(capability))
-    if not supported:
-        description = "no CUDA GPU" if not cuda_available else f"{device_name or 'CUDA GPU'} (compute capability {capability[0]}.{capability[1]})"
-        return {
-            "requested": True,
-            "active": False,
-            "model_precision": "bf16",
-            "mixed_precision": "bf16",
-            "device_name": device_name,
-            "capability": capability,
-            "notice": f"FP8 requested, but {description} does not provide supported native FP8 training; falling back to BF16.",
-        }
-
-    if base_precision not in {"fp16", "bf16"}:
-        raise ValueError("FP8 training requires precision to be fp16 or bf16 for master weights")
-    if transformer_engine_available is None:
-        transformer_engine_available = importlib.util.find_spec("transformer_engine") is not None
-    if not transformer_engine_available:
-        raise ImportError(
-            "FP8-capable GPU detected, but NVIDIA Transformer Engine is not installed. "
-            "Install it with `pip install -e '.[fp8]'`."
-        )
-    return {
-        "requested": True,
-        "active": True,
-        "model_precision": base_precision,
-        "mixed_precision": "fp8",
-        "device_name": device_name,
-        "capability": capability,
-        "notice": None,
-    }
 
 
 def _available_output_dir(path: Path) -> Path:
@@ -405,6 +348,44 @@ def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eo
     return d
 
 
+def load_training_data(config: dict[str, Any], train_sample_limit: int | None, accelerator=None):
+    """Download matching clean tokens once and reuse the local/Drive cache."""
+    from contextlib import nullcontext
+    from datasets import load_from_disk
+    from .prepared_cache import (
+        preparation_metadata, preparation_key, load_published_prepared_data,
+        restore_prepared_cache, persist_prepared_cache,
+    )
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        config.get("tokenizer_name_or_path", config["model_name_or_path"]),
+        revision=config.get("model_revision"), use_fast=True,
+        token=os.getenv("HF_TOKEN"), cache_dir=config.get("base_model_cache_dir", "base_models"),
+        clean_up_tokenization_spaces=False,
+    )
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    torch.manual_seed(int(config.get("seed", 42)))
+    key = preparation_key(preparation_metadata(config, tokenizer, train_sample_limit))
+    local = Path(config.get("prepared_data_cache_dir", "data/prepared")) / key
+    persistent_dir = config.get("prepared_data_persistent_cache_dir")
+    persistent = Path(persistent_dir) / key if persistent_dir else None
+    main_process_first = accelerator.main_process_first if accelerator is not None else nullcontext
+    with main_process_first():
+        if restore_prepared_cache(local, persistent):
+            print(f"Reusing tokenized data: {local}", flush=True)
+            data = {split: load_from_disk(str(local / split)) for split in ("train", "validation", "test")}
+        else:
+            data = load_published_prepared_data(config, tokenizer, train_sample_limit)
+            if data is None:
+                from .custom_data import tokenize_dataset
+                data = tokenize_dataset(config, tokenizer, train_sample_limit)
+            for split, dataset in data.items():
+                dataset.save_to_disk(str(local / split))
+        persist_prepared_cache(local, persistent)
+    return tokenizer, data["train"], data["validation"], data["test"]
+
+
 def run_training(config: dict[str, Any]) -> dict[str, Any]:
     """Execute model setup, training, validation, selection, and final testing."""
     answer_padding_weights = _resolve_answer_padding_weights(config)
@@ -452,40 +433,13 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         if configured_updates_hint < 1:
             raise ValueError("max_updates must be a positive number of gradient updates")
         train_sample_limit = (configured_updates_hint + resume_data_updates) * int(config.get("gradient_accumulation_steps", 1)) * int(config.get("batch_size", 1))
-    fp8_resolution = _resolve_fp8(config)
-    config["precision"] = fp8_resolution["model_precision"]
-    if fp8_resolution["notice"] and int(os.getenv("LOCAL_RANK", "0")) == 0:
-        print(f"WARNING: {fp8_resolution['notice']}", flush=True)
-    accelerator_handlers = []
-    if fp8_resolution["active"]:
-        from accelerate.utils import TERecipeKwargs
-
-        fp8_settings = config.get("fp8", {})
-        override_linear_precision = tuple(fp8_settings.get("override_linear_precision", (False, False, False)))
-        if len(override_linear_precision) != 3 or not all(isinstance(value, bool) for value in override_linear_precision):
-            raise ValueError("fp8.override_linear_precision must contain three booleans")
-        accelerator_handlers.append(TERecipeKwargs(
-            use_autocast_during_eval=False,
-            margin=int(fp8_settings.get("margin", 0)),
-            interval=int(fp8_settings.get("interval", 1)),
-            fp8_format=str(fp8_settings.get("format", "HYBRID")).upper(),
-            amax_history_len=int(fp8_settings.get("amax_history_len", 1024)),
-            amax_compute_algo=str(fp8_settings.get("amax_compute_algo", "max")).lower(),
-            override_linear_precision=override_linear_precision,
-        ))
-        if int(os.getenv("LOCAL_RANK", "0")) == 0:
-            capability = fp8_resolution["capability"]
-            print(
-                f"FP8 enabled with NVIDIA Transformer Engine on {fp8_resolution['device_name']} "
-                f"(compute capability {capability[0]}.{capability[1]}); "
-                f"validation remains {fp8_resolution['model_precision'].upper()}.",
-                flush=True,
-            )
+    precision = str(config.get("precision", "bf16")).lower()
+    if precision not in {"fp16", "bf16", "fp32"}:
+        raise ValueError("precision must be fp16, bf16, or fp32")
     accelerator = Accelerator(
         gradient_accumulation_steps=int(config.get("gradient_accumulation_steps", 1)),
-        mixed_precision=fp8_resolution["mixed_precision"],
+        mixed_precision="no" if precision == "fp32" else precision,
         dataloader_config=DataLoaderConfiguration(non_blocking=torch.cuda.is_available()),
-        kwargs_handlers=accelerator_handlers,
     )
     # Ensure NCCL process groups are released when a worker is interrupted
     # (for example with Ctrl-C or a scheduler pre-emption signal).
@@ -498,136 +452,18 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
     if checkpoint_mode not in {"only_best_model", "every_checkpoint", "every_model"}:
         raise ValueError("checkpoint_mode must be 'only_best_model', 'every_model', or 'every_checkpoint'")
+    validation_steps = int(config.get("validation_steps", 100))
+    checkpoint_steps = int(config.get("checkpoint_steps", 500))
+    if min(validation_steps, checkpoint_steps) < 1:
+        raise ValueError("validation_steps and checkpoint_steps must be positive")
     generation_settings = config.get("generation_perplexity", {})
     generation_interval = _generation_perplexity_interval(config) if generation_settings.get("enabled", False) else None
-    from datasets import load_dataset
-    cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
-    hf_token = os.getenv("HF_TOKEN")
-    # Serialize the initial dataset download/cache population so distributed
-    # workers do not all perform the expensive preparation concurrently.
-    with accelerator.main_process_first():
-        raw = load_dataset(
-            config["dataset_name"],
-            config.get("dataset_config"),
-            revision=config.get("dataset_revision"),
-            cache_dir=str(cache_dir),
-            token=hf_token,
-        )
-    split_names = config.get("splits", {"train": "train", "validation": "validation", "test": "test"})
-    token_name = config.get("tokenizer_name_or_path", config["model_name_or_path"])
-    model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
-    tokenizer = AutoTokenizer.from_pretrained(
-        token_name,
-        revision=config.get("model_revision"),
-        use_fast=True,
-        token=os.getenv("HF_TOKEN"),
-        cache_dir=str(model_cache),
-        clean_up_tokenization_spaces=False,
+    if generation_interval is not None:
+        _generation_inference_settings(config)  # Fail before model loading, rather than at the first diagnostic.
+    tokenizer, train_data, val_data, test_data = load_training_data(
+        config, train_sample_limit, accelerator,
     )
-    if tokenizer.pad_token_id is None: tokenizer.pad_token = tokenizer.eos_token
-    seed = int(config.get("seed", 42)); torch.manual_seed(seed)
-    def indexed(ds):
-        """Attach stable original indices for deterministic evaluation corruption."""
-        return ds.map(lambda _, index: {"_index": index}, with_indices=True)
-    def get_split(spec):
-        """Resolve either a named split or a Hugging Face split expression."""
-        if spec in raw:
-            return raw[spec]
-        # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
-        return load_dataset(
-            config["dataset_name"],
-            config.get("dataset_config"),
-            revision=config.get("dataset_revision"),
-            split=spec,
-            cache_dir=str(cache_dir),
-            token=hf_token,
-        )
-    def bounded_filter(dataset, predicate, limit: int | None):
-        """Filter only as many source rows as needed for a capped run."""
-        if limit is None or len(dataset) <= limit:
-            return dataset.filter(predicate)
-        from datasets import concatenate_datasets
-        chunks = []
-        kept = 0
-        chunk_size = 2048
-        for start in range(0, len(dataset), chunk_size):
-            chunk = dataset.select(range(start, min(start + chunk_size, len(dataset))))
-            filtered = chunk.filter(predicate)
-            if len(filtered):
-                chunks.append(filtered)
-                kept += len(filtered)
-            if kept >= limit:
-                break
-        if not chunks:
-            return dataset.select([])
-        result = concatenate_datasets(chunks)
-        return result.select(range(min(limit, len(result))))
-
-    prep_key = hashlib.sha256(json.dumps({"format": 2, "dataset": config["dataset_name"], "dataset_revision": config.get("dataset_revision"), "config": config.get("dataset_config"), "splits": split_names, "tokenizer": token_name, "model_revision": config.get("model_revision"), "chat_template": getattr(tokenizer, "chat_template", None), "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True)), "train_sample_limit": train_sample_limit, "seed": seed}, sort_keys=True).encode()).hexdigest()[:16]
-    prep_root = Path(config.get("prepared_data_cache_dir", "data/prepared")) / prep_key
-    prepared_cache_loaded = False
-    with accelerator.main_process_first():
-        if all((prep_root / split).is_dir() for split in ("train", "validation", "test")):
-            from datasets import load_from_disk
-            train_data, val_data, test_data = (load_from_disk(str(prep_root / split)) for split in ("train", "validation", "test"))
-            prepared_cache_loaded = True
-        else:
-            train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
-    if config["corruption_mode"] == "structured" and prepared_cache_loaded and train_sample_limit is not None and len(train_data) > train_sample_limit:
-        train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
-    if config["corruption_mode"] != "structured" and not prepared_cache_loaded:
-        # The published dataset contains a small number of rows with missing
-        # or empty outputs. Remove them before collation, otherwise a worker
-        # would fail mid-epoch instead of skipping malformed examples.
-        has_output = lambda row: bool((row.get("output") or "").strip())
-        train_data = bounded_filter(train_data.shuffle(seed=int(config.get("seed", 42))), has_output, train_sample_limit)
-        val_data = val_data.filter(has_output)
-        test_data = test_data.filter(has_output)
-        preprocessing_workers = int(config.get("preprocessing_num_workers", config.get("num_workers", 1)))
-        if preprocessing_workers < 1:
-            raise ValueError("preprocessing_num_workers must be positive")
-        with accelerator.main_process_first():
-            for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
-                original_columns = dataset.column_names
-                dataset = dataset.map(
-                    lambda row: prepare_mask_only_cache_record(
-                        row,
-                        tokenizer,
-                        int(config["max_sequence_length"]),
-                        bool(config.get("include_answer_eos", True)),
-                    ),
-                    remove_columns=original_columns,
-                    num_proc=preprocessing_workers if preprocessing_workers > 1 else None,
-                    desc=f"Tokenizing {key} split",
-                )
-                if key == "train": train_data = dataset
-                elif key == "validation": val_data = dataset
-                else: test_data = dataset
-            prep_root.mkdir(parents=True, exist_ok=True)
-            train_data.save_to_disk(str(prep_root / "train"))
-            val_data.save_to_disk(str(prep_root / "validation"))
-            test_data.save_to_disk(str(prep_root / "test"))
-    marker_dropped = {}
-    if config["corruption_mode"] == "structured" and not prepared_cache_loaded:
-        model_name = token_name.lower()
-        if not any(name in model_name for name in ("llama", "meta-llama")):
-            raise ValueError("structured mode is supported only for Llama-tokenized data; use mask_only for Qwen/Gemma")
-        marker_dropped = {}
-        with accelerator.main_process_first():
-            if train_sample_limit is not None and len(train_data) > train_sample_limit:
-                train_data = train_data.shuffle(seed=int(config.get("seed", 42)))
-            for key, dataset in (("train", train_data), ("validation", val_data), ("test", test_data)):
-                before = len(dataset)
-                limit = train_sample_limit if key == "train" else None
-                dataset = bounded_filter(dataset, lambda row: llama_stored_ids_compatible(row, tokenizer) and stored_example_usable(row, tokenizer, int(config["max_sequence_length"]), bool(config.get("include_answer_eos", True))), limit)
-                marker_dropped[key] = before - len(dataset)
-                if key == "train": train_data = dataset
-                elif key == "validation": val_data = dataset
-                else: test_data = dataset
-            prep_root.mkdir(parents=True, exist_ok=True)
-            train_data.save_to_disk(str(prep_root / "train"))
-            val_data.save_to_disk(str(prep_root / "validation"))
-            test_data.save_to_disk(str(prep_root / "test"))
+    seed = int(config.get("seed", 42))
     validation_limit = config.get("validation_samples", 200)
     if validation_limit is not None:
         validation_limit = min(int(validation_limit), len(val_data))
@@ -654,6 +490,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         # original run before constructing the new dataloader; the dataloader
         # may reshuffle the remaining examples freely without reusing them.
         train_data = train_data.select(range(already_seen_examples, len(train_data)))
+    config["num_workers"] = _worker_count(int(config.get("num_workers", 0)))
     prefetch_factor = int(config.get("prefetch_factor", 4))
     train_loader = _loader(train_data.shuffle(seed=seed), train_collator, int(config["batch_size"]), True, seed, int(config.get("num_workers", 0)), prefetch_factor)
     val_loader = _loader(val_data, eval_collator, int(config.get("eval_batch_size", config["batch_size"])), False, seed, int(config.get("num_workers", 0)), prefetch_factor)
@@ -661,9 +498,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     model, audit = load_denoising_model(config)
     initial_norms = _normalization_state(model)
     resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
-    resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["frontier_padding_mode"] = train_collator.frontier_padding_mode; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}; resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate; resolved["fp8_requested"] = fp8_resolution["requested"]; resolved["fp8_active"] = fp8_resolution["active"]; resolved["fp8_device_name"] = fp8_resolution["device_name"]; resolved["fp8_compute_capability"] = fp8_resolution["capability"]; resolved["resolved_training_precision"] = fp8_resolution["mixed_precision"] or "fp32"
+    resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["frontier_padding_mode"] = train_collator.frontier_padding_mode; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate; resolved["resolved_training_precision"] = precision
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
-    trainable_parameter_names = {name for name, parameter in model.named_parameters() if parameter.requires_grad}
     trainable_parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer_name = str(config.get("optimizer", "adamw")).lower()
     if optimizer_name in {"adamw8bit", "8bit_adamw", "paged_adamw8bit"}:
@@ -701,22 +537,6 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     max_steps = max_updates * grad_accumulation
     scheduler = _build_learning_rate_scheduler(config, optimizer, max_updates, resolved_learning_rate)
     model, optimizer, train_loader, val_loader, test_loader, scheduler = accelerator.prepare(model, optimizer, train_loader, val_loader, test_loader, scheduler)
-    if fp8_resolution["active"]:
-        # Accelerate replaces nn.Linear modules with Transformer Engine modules.
-        # Restore the pre-conversion trainable set so frozen base weights do not
-        # unexpectedly receive gradients after replacement.
-        unwrapped = accelerator.unwrap_model(model)
-        for name, parameter in unwrapped.named_parameters():
-            parameter.requires_grad_(name in trainable_parameter_names)
-        converted_trainable_names = {name for name, parameter in unwrapped.named_parameters() if parameter.requires_grad}
-        if converted_trainable_names != trainable_parameter_names:
-            raise RuntimeError(
-                "Transformer Engine conversion changed parameter names; refusing to train with an incorrect trainable set."
-            )
-        post_fp8_audit = parameter_audit(unwrapped)
-        audit.update({key: value for key, value in post_fp8_audit.items() if key != "trainable_names"})
-        audit["fp8_transformer_engine"] = True
-        _write_json(output / "parameter_audit.json", audit)
     start_step = 0
     if resume := config.get("resume_from_checkpoint"):
         accelerator.load_state(resume)
@@ -735,129 +555,137 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         for name in (("answer_loss", "padding_loss") if answer_padding_weights is not None else ())
     }
     update_step = start_step
-    for microstep, batch in enumerate(train_loader, start=start_step * grad_accumulation + 1):
-        step = microstep
-        if step > max_steps: break
-        with accelerator.accumulate(model):
-            use_t_weighting = config["corruption_mode"] == "mask_only" and config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
-            normalization_mask = batch["answer_mask"] | batch["padding_mask"] if bool(config.get("eos_padding_loss", False)) else batch["answer_mask"]
-            sparse_positions = config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
-            use_selected_logits = (
-                sparse_positions
-                and accelerator.num_processes == 1
-                and bool(config.get("selected_logit_optimization", False))
-                and not fp8_resolution["active"]
-            )
-            if use_selected_logits:
-                # Calling the transformer backbone directly bypasses
-                # Accelerate's model.forward wrapper, so reproduce its autocast
-                # context and FP32 output conversion explicitly.
-                with accelerator.autocast():
-                    selected_logits, example_ids, token_ids = forward_bidirectional_selected(
-                        model, batch["input_ids"], batch["padding_mask"], batch["loss_mask"]
+    try:
+        for microstep, batch in enumerate(train_loader, start=start_step * grad_accumulation + 1):
+            step = microstep
+            if step > max_steps: break
+            with accelerator.accumulate(model):
+                use_t_weighting = config["corruption_mode"] == "mask_only" and config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
+                normalization_mask = batch["answer_mask"] | batch["padding_mask"] if bool(config.get("eos_padding_loss", False)) else batch["answer_mask"]
+                sparse_positions = config.get("structured_loss_behavior", "all_answer_tokens") != "all_tokens"
+                use_selected_logits = (
+                    sparse_positions
+                    and accelerator.num_processes == 1
+                    and bool(config.get("selected_logit_optimization", False))
+                )
+                if use_selected_logits:
+                    # Calling the transformer backbone directly bypasses
+                    # Accelerate's model.forward wrapper, so reproduce its autocast
+                    # context and FP32 output conversion explicitly.
+                    with accelerator.autocast():
+                        selected_logits, example_ids, token_ids = forward_bidirectional_selected(
+                            model, batch["input_ids"], batch["padding_mask"], batch["loss_mask"]
+                        )
+                    selected_logits = selected_logits.float()
+                    loss, info = selected_denoising_loss(
+                        selected_logits,
+                        batch["labels"][example_ids, token_ids],
+                        example_ids,
+                        batch["loss_mask"].sum(dim=1),
+                        batch["sampled_t"] if use_t_weighting else None,
+                        normalization_mask,
+                        compute_unweighted_metric=False,
+                        token_weights=(batch["token_loss_weights"][example_ids, token_ids]
+                                       if use_t_weighting and "token_loss_weights" in batch else None),
+                        answer_padding_weights=answer_padding_weights,
+                        selected_answer_mask=(batch["answer_mask"] & ~batch["padding_mask"])[example_ids, token_ids]
+                        if answer_padding_weights is not None else None,
+                        selected_padding_mask=batch["padding_mask"][example_ids, token_ids]
+                        if answer_padding_weights is not None else None,
+                        answer_lengths=(batch["answer_mask"] & ~batch["padding_mask"]).sum(dim=1)
+                        if answer_padding_weights is not None else None,
+                        padding_lengths=batch["padding_mask"].sum(dim=1)
+                        if answer_padding_weights is not None else None,
                     )
-                selected_logits = selected_logits.float()
-                loss, info = selected_denoising_loss(
-                    selected_logits,
-                    batch["labels"][example_ids, token_ids],
-                    example_ids,
-                    batch["loss_mask"].sum(dim=1),
-                    batch["sampled_t"] if use_t_weighting else None,
-                    normalization_mask,
-                    compute_unweighted_metric=False,
-                    token_weights=(batch["token_loss_weights"][example_ids, token_ids]
-                                   if use_t_weighting and "token_loss_weights" in batch else None),
-                    answer_padding_weights=answer_padding_weights,
-                    selected_answer_mask=(batch["answer_mask"] & ~batch["padding_mask"])[example_ids, token_ids]
-                    if answer_padding_weights is not None else None,
-                    selected_padding_mask=batch["padding_mask"][example_ids, token_ids]
-                    if answer_padding_weights is not None else None,
-                    answer_lengths=(batch["answer_mask"] & ~batch["padding_mask"]).sum(dim=1)
-                    if answer_padding_weights is not None else None,
-                    padding_lengths=batch["padding_mask"].sum(dim=1)
-                    if answer_padding_weights is not None else None,
-                )
-            else:
-                logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
-                loss, info = masked_denoising_loss(
-                    logits,
-                    batch["labels"],
-                    batch["loss_mask"],
-                    batch["sampled_t"] if use_t_weighting else None,
-                    normalization_mask,
-                    compute_unweighted_metric=False,
-                    sparse_positions=sparse_positions,
-                    token_weights=batch.get("token_loss_weights") if use_t_weighting else None,
-                    answer_padding_weights=answer_padding_weights,
-                    answer_mask=batch["answer_mask"], padding_mask=batch["padding_mask"],
-                )
-            accelerator.backward(loss)
-            # Clip only after all gradient-accumulation microbatches have
-            # contributed, matching Trainer's max_grad_norm behavior.
-            if accelerator.sync_gradients and max_grad_norm is not None:
-                accelerator.clip_grad_norm_(model.parameters(), float(max_grad_norm))
-            optimizer.step(); scheduler.step(); optimizer.zero_grad()
-        interval_loss_sum += loss.detach().to(torch.float64) * info["valid_examples"]
-        interval_examples += info["valid_examples"]
-        for name, total in interval_component_sums.items():
-            total.add_(info[name].to(torch.float64) * info["valid_examples"])
-        if accelerator.sync_gradients:
-            update_step += 1
-            progress.update(1)
-        if not accelerator.sync_gradients:
-            continue
-        if accelerator.is_main_process and step % int(config.get("logging_steps", 10)) == 0:
-            loss_value = loss.detach().item()
-            supervised_tokens = info["supervised_tokens"].item()
-            train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
-            progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{train_avg:.4f}")
-            _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value,
-                                        "supervised_tokens": supervised_tokens,
-                                        **{name: info[name].item() for name in interval_component_sums}})
-        if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
-            metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
-            if accelerator.is_main_process:
-                generation_due = generation_interval is not None and (update_step % generation_interval == 0 or update_step == max_updates)
-                if generation_due:
-                    unwrapped = accelerator.unwrap_model(model)
-                    metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
-                metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
-                generation_note = "".join(
-                    f" | {label}={metrics[key]:.4f}"
-                    for key, label in (
-                        ("generation_median_perplexity", "generation_median_ppl"),
-                        ("generation_perplexity", "generation_pooled_ppl"),
-                        ("generation_mean_distinct_1", "generation_distinct_1"),
+                else:
+                    logits = forward_bidirectional(model, batch["input_ids"], batch["padding_mask"])
+                    loss, info = masked_denoising_loss(
+                        logits,
+                        batch["labels"],
+                        batch["loss_mask"],
+                        batch["sampled_t"] if use_t_weighting else None,
+                        normalization_mask,
+                        compute_unweighted_metric=False,
+                        sparse_positions=sparse_positions,
+                        token_weights=batch.get("token_loss_weights") if use_t_weighting else None,
+                        answer_padding_weights=answer_padding_weights,
+                        answer_mask=batch["answer_mask"], padding_mask=batch["padding_mask"],
                     )
-                    if metrics.get(key) is not None
-                )
+                accelerator.backward(loss)
+                # Clip only after all gradient-accumulation microbatches have
+                # contributed, matching Trainer's max_grad_norm behavior.
+                if accelerator.sync_gradients and max_grad_norm is not None:
+                    accelerator.clip_grad_norm_(model.parameters(), float(max_grad_norm))
+                optimizer.step(); scheduler.step(); optimizer.zero_grad()
+            interval_loss_sum += loss.detach().to(torch.float64) * info["valid_examples"]
+            interval_examples += info["valid_examples"]
+            for name, total in interval_component_sums.items():
+                total.add_(info[name].to(torch.float64) * info["valid_examples"])
+            if accelerator.sync_gradients:
+                update_step += 1
+                progress.update(1)
+            if not accelerator.sync_gradients:
+                continue
+            if accelerator.is_main_process and update_step % int(config.get("logging_steps", 10)) == 0:
+                loss_value = loss.detach().item()
+                supervised_tokens = info["supervised_tokens"].item()
                 train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
-                interval_example_count = interval_examples.item()
-                progress.write(f"step {update_step}/{max_updates} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
+                progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{train_avg:.4f}")
+                _append_jsonl(metrics_path, {"split": "train", "step": update_step, "weighted_loss": loss_value,
+                                            "supervised_tokens": supervised_tokens,
+                                            **{name: info[name].item() for name in interval_component_sums}})
+            if update_step % validation_steps == 0 or update_step % checkpoint_steps == 0 or update_step == max_updates:
+                metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
                 if accelerator.is_main_process:
-                    _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step,
-                                                "weighted_loss": train_avg, "examples": interval_example_count,
-                                                **{name: (total / interval_examples.clamp_min(1)).item()
-                                                   for name, total in interval_component_sums.items()}})
-                interval_loss_sum.zero_()
-                interval_examples.zero_()
-                for total in interval_component_sums.values():
-                    total.zero_()
-                if metrics["weighted_loss"] < best:
-                    best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
-            accelerator.wait_for_everyone()
-            model.train()
-        if checkpoint_mode in {"every_checkpoint", "every_model"} and (update_step % int(config.get("checkpoint_steps", 500)) == 0 or update_step == max_updates):
-            checkpoint = output / f"checkpoint-{update_step}"
-            if checkpoint_mode == "every_checkpoint":
-                accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
-                if accelerator.is_main_process:
-                    _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
-            elif accelerator.is_main_process:
-                # Inference-ready snapshot without optimizer/scheduler/RNG
-                # state; it can also warm-start through resume_from_adapter.
-                _save_adapter(accelerator.unwrap_model(model), tokenizer, checkpoint, initial_norms)
-    progress.close()
+                    generation_due = generation_interval is not None and (update_step % generation_interval == 0 or update_step == max_updates)
+                    if generation_due:
+                        unwrapped = accelerator.unwrap_model(model)
+                        metrics.update(generation_validation(unwrapped, tokenizer, train_collator.mask_info["mask_token_id"], config, initial_norms, accelerator.device, output, update_step))
+                    metrics.update({"split": "validation", "step": update_step}); _append_jsonl(metrics_path, metrics)
+                    generation_note = "".join(
+                        f" | {label}={metrics[key]:.4f}"
+                        for key, label in (
+                            ("generation_median_perplexity", "generation_median_ppl"),
+                            ("generation_perplexity", "generation_pooled_ppl"),
+                            ("generation_mean_distinct_1", "generation_distinct_1"),
+                        )
+                        if metrics.get(key) is not None
+                    )
+                    train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
+                    interval_example_count = interval_examples.item()
+                    progress.write(f"step {update_step}/{max_updates} | train_loss_avg={train_avg:.4f} | validation_loss={metrics['weighted_loss']:.4f}{generation_note}")
+                    if accelerator.is_main_process:
+                        _append_jsonl(metrics_path, {"split": "train_interval", "step": update_step,
+                                                    "weighted_loss": train_avg, "examples": interval_example_count,
+                                                    **{name: (total / interval_examples.clamp_min(1)).item()
+                                                       for name, total in interval_component_sums.items()}})
+                    interval_loss_sum.zero_()
+                    interval_examples.zero_()
+                    for total in interval_component_sums.values():
+                        total.zero_()
+                    if metrics["weighted_loss"] < best:
+                        best = metrics["weighted_loss"]; unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "best", initial_norms)
+                accelerator.wait_for_everyone()
+                model.train()
+            if checkpoint_mode in {"every_checkpoint", "every_model"} and (update_step % checkpoint_steps == 0 or update_step == max_updates):
+                checkpoint = output / f"checkpoint-{update_step}"
+                if checkpoint_mode == "every_checkpoint":
+                    accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
+                    if accelerator.is_main_process:
+                        _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
+                elif accelerator.is_main_process:
+                    # Inference-ready snapshot without optimizer/scheduler/RNG
+                    # state; it can also warm-start through resume_from_adapter.
+                    _save_adapter(accelerator.unwrap_model(model), tokenizer, checkpoint, initial_norms)
+    except KeyboardInterrupt:
+        if accelerator.is_main_process and update_step > start_step:
+            interrupted = output / "interrupted"
+            _save_adapter(accelerator.unwrap_model(model), tokenizer, interrupted, initial_norms)
+            _write_json(interrupted / "state.json", {"step": update_step})
+            print(f"\nInterrupted at update {update_step}; adapter saved to {interrupted}", flush=True)
+        raise
+    finally:
+        progress.close()
     accelerator.wait_for_everyone()
     if accelerator.is_main_process and checkpoint_mode == "every_checkpoint":
         unwrapped = accelerator.unwrap_model(model); _save_adapter(unwrapped, tokenizer, output / "final", initial_norms)

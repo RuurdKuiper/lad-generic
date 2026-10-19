@@ -1,0 +1,18 @@
+\vspace{0.8em}
+\par\noindent\textbf{(b) Higher-order diversity.} D-2 and D-3 are mean per-answer sliding model-token Distinct-2 and Distinct-3, in percent.
+\vspace{0.3em}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+& \multicolumn{6}{c}{Diffusion} & \multicolumn{2}{c}{AR parent} \\
+\cmidrule(lr){2-7}\cmidrule(lr){8-9}
+Model/checkpoint & D-2$_{32}$ & D-3$_{32}$ & D-2$_{64}$ & D-3$_{64}$ & D-2$_{128}$ & D-3$_{128}$ & D-2 & D-3 \\
+\midrule
+BYOD-Gemma & 76.0 & 87.6 & 75.2 & 85.8 & 79.0 & 88.6 & 89.3 & 95.8 \\
+BYOD-Qwen & 72.8 & 86.2 & 80.4 & 90.4 & 84.3 & 92.1 & 94.0 & 98.6 \\
+BYOD-Ministral & 75.4 & 89.5 & 78.6 & 88.8 & 83.4 & 92.3 & 91.3 & 97.1 \\
+BYOD-Llama-25k & 78.8 & 89.9 & 80.2 & 90.5 & 80.0 & 89.2 & 89.0 & 94.8 \\
+BYOD-Llama-50k & 75.3 & 88.9 & 79.1 & 89.2 & 79.2 & 88.6 & 89.0 & 94.8 \\
+LLaDA 8B Instruct & 74.6 & 84.5 & 82.3 & 91.6 & 84.9 & 93.3 & \na & \na \\
+\bottomrule
+\end{tabular}}

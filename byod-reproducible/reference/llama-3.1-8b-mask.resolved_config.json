@@ -62,7 +62,7 @@
   "multi_turn_prob": 0.0,
   "num_workers": 4,
   "optimizer": "adamw",
-  "output_dir": "/content/drive/MyDrive/lad-generic-results/outputs/llama-3.1-8b-mask_1",
+  "output_dir": "outputs/llama-3.1-8b-mask_1",
   "pad_to_multiple_of": 8,
   "precision": "bf16",
   "prefetch_factor": 4,

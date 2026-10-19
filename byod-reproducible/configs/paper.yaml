@@ -1,7 +1,10 @@
-# Exact training recipe used by the original 25k-update models. Model-specific
-# identifiers and tokenizer details are selected from configs/models.yaml.
+# Paper recipe, including the author-confirmed 0.9/0.1 loss weighting.
+# The historical Llama reference predates this weighting; see REPRODUCIBILITY.md.
+# Model identifiers and tokenizer details are selected from configs/models.yaml.
 dataset_name: Ruurd/LAD-training-1m-256
 dataset_revision: 6041513b684d6ca627879ffdb547b8629bb8b8de
+prepared_dataset_name: Ruurd/BYOD-tokenized-256
+prepared_dataset_revision: 2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3
 splits: {train: train, validation: validation, test: test}
 
 cache_dir: data/huggingface
@@ -12,7 +15,7 @@ validation_samples: 200
 corruption_mode: mask_only
 structured_loss_behavior: corrupted_answer_tokens
 eos_padding_loss: true
-answer_padding_loss: {enabled: false}
+answer_padding_loss: {enabled: true, answer_weight: 0.9, padding_weight: 0.1}
 include_answer_eos: true
 t_min: 0.001
 # The original run predates frontier masking and therefore used IID masking.
@@ -50,7 +53,7 @@ prefetch_factor: 4
 logging_steps: 100
 validation_steps: 250
 checkpoint_steps: 1000
-checkpoint_mode: every_model
+checkpoint_mode: only_best_model
 
 generation_perplexity:
   enabled: true
@@ -67,6 +70,5 @@ generation_perplexity:
   seed: 1234
 
 precision: bf16
-fp8: {enabled: true, backend: transformer_engine, format: HYBRID}
 quantization: none
 optimizer: adamw

@@ -1,0 +1,26 @@
+{
+  "checked_date": "2026-10-15",
+  "pdf_pages": 21,
+  "authors": [
+    "Ruurd J. A. Kuiper",
+    "Robert A. Bagheri"
+  ],
+  "arxiv_archive_files": 20,
+  "arxiv_archive_sha256": "123147ac1f975f5d45f7959bd5c4b0329a3455f3f5b979d22046717c84bc7294",
+  "arxiv_archive_clean_compile": "passed: three PDFLaTeX runs, bundled bibliography, no shell escape",
+  "tex_environment": "TeX Live 2026 locally; not run on the arXiv server",
+  "latex_warnings_after_final_pass": 0,
+  "engine_note": "epstopdf reports shell escape disabled during the clean test; no figure conversions are used or needed",
+  "unresolved_references": 0,
+  "overfull_boxes": 0,
+  "standalone_tests": "187 passed",
+  "python_wheel_build": "passed",
+  "software_license": "MIT",
+  "gpu_training_validation": "not performed",
+  "public_datasets": "verified; five training Parquet hashes match across original and mirror",
+  "public_open_ended_questions": "100 prompts match bundled order",
+  "public_demos": "all four public and RUNNING during link check",
+  "github_url": "https://github.com/RuurdKuiper/BYOD",
+  "github_public_status": "unauthenticated API returned 404; publish before arXiv submission",
+  "publication_status": "prepared locally; nothing committed, submitted, or pushed"
+}

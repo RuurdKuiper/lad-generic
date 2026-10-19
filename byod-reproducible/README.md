@@ -1,119 +1,97 @@
 # BYOD: Build Your Own DLM
 
-Convert a pretrained instruction model into a bidirectional masked-diffusion
-language model on one GPU. The same training entry point supports:
+Convert an instruction model into a bidirectional masked-diffusion language
+model on one GPU.
 
-- Llama 3.1 8B Instruct
-- Gemma 2 9B IT
-- Qwen2.5 7B Instruct
-- Ministral 8B Instruct 2410
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb)
 
-[![Open the training notebook in Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb)
-
-The notebook is the recommended starting point: select a model, choose a run
-mode, and watch the training and validation losses update while training runs.
-Its source is also available at
-[`notebooks/train_diffusion.ipynb`](notebooks/train_diffusion.ipynb).
-
-Try the converted models directly in the full-precision demos:
-[Gemma](https://huggingface.co/spaces/Dovelove/byod-gemma-2-9b),
+Start with the notebook to select a model, train, and watch the loss curves.
+Step 6 opens an interactive inference page with generation settings and live
+denoising updates, including from a saved interrupted run.
+Try the trained models in the hosted demos:
 [Llama](https://huggingface.co/spaces/Dovelove/byod-llama-3.1-8b),
-[Qwen](https://huggingface.co/spaces/Dovelove/byod-qwen2.5-7b), and
+[Gemma](https://huggingface.co/spaces/Dovelove/byod-gemma-2-9b),
+[Qwen](https://huggingface.co/spaces/Dovelove/byod-qwen2.5-7b),
 [Ministral](https://huggingface.co/spaces/Dovelove/byod-ministral-8b).
 
-## Two run modes
-
-| Mode | Purpose | Important settings |
-|---|---|---|
-| `quick` | Train the full recipe with a smaller backbone | 25,000 updates, rank-128 LoRA, smaller base model |
-| `paper` | Reproduce the original reported conversion | 25,000 updates, rank-1024 LoRA, batch 16, no quantization |
-
-Quick mode uses Llama 3.2 1B, Gemma 3 1B, or Qwen2.5 1.5B in full FP16.
-There is no comparable official text-only ~1B Ministral checkpoint, so
-Ministral is intentionally not offered in quick mode. The original Ministral
-8B checkpoint remains available for paper reproduction.
-
-| Family | Quick model | Paper reproduction |
-|---|---|---|
-| Llama | Llama 3.2 1B Instruct | Llama 3.1 8B Instruct |
-| Gemma | Gemma 3 1B IT | Gemma 2 9B IT |
-| Qwen | Qwen2.5 1.5B Instruct | Qwen2.5 7B Instruct |
-| Ministral | — | Ministral 8B Instruct 2410 |
-
-`paper` is the configuration used for the original `llama-3.1-8b-mask/best`
-training and its Gemma, Qwen, and Ministral counterparts. It requires a
-high-memory NVIDIA GPU; the original runs used one 96 GB GPU. `quick` is an
-accessible full-length conversion, but it is not expected to reproduce the
-paper scores because it changes both the backbone and adapter rank. All other
-objective, data, validation, and optimization settings are retained; it uses
-FP16 instead of BF16/FP8 for compatibility with common Colab GPUs.
-Here, “quick” refers to the smaller memory requirement, not a shortened run.
-
-## Local use
+## Train locally
 
 ```bash
-git clone https://github.com/RuurdKuiper/BYOD.git
-cd BYOD
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e '.[colab]'
-cp .env.example .env  # then add a read-only Hugging Face token
-```
-
-Run the smaller-model configuration:
-
-```bash
+pip install -e .
+cp .env.example .env  # add your Hugging Face read token
 python train.py --model llama --mode quick
 ```
 
-Run the paper configuration:
+Accept the parent model's Hugging Face terms before downloading gated models.
+Training requires an NVIDIA GPU. Use `--max-updates 2` for a short smoke run.
+
+| Model | `quick` | `paper` |
+| --- | --- | --- |
+| `llama` | Llama 3.2 1B Instruct | Llama 3.1 8B Instruct |
+| `gemma` | Gemma 3 1B IT | Gemma 2 9B IT |
+| `qwen` | Qwen2.5 1.5B Instruct | Qwen2.5 7B Instruct |
+| `ministral` | — | Ministral 8B Instruct 2410 |
+
+Both modes default to 25,000 updates. Quick mode uses smaller models and
+rank-128 LoRA; paper mode uses rank-1024 LoRA and needs a high-memory GPU
+(the original runs used 96 GB). Quick mode does not reproduce the paper scores.
+This version uses FP16/BF16 training without FP8.
+
+Training downloads the matching [pretokenized dataset](https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256)
+automatically. Each profile covers the default 400,000-example training budget.
+Random masking is sampled online, with answer/padding losses weighted 0.9/0.1.
+See [reproducibility notes](REPRODUCIBILITY.md) for provenance and validation limits.
+
+Runs evaluate at each checkpoint and keep only `best/` under `outputs/`.
+Stopping training manually also saves `interrupted/`.
+Merge an adapter into its base model with:
 
 ```bash
-python train.py --model llama --mode paper
+python merge_adapter.py outputs/llama-3.1-8b-mask/best merged/llama
 ```
 
-For quick mode, replace `llama` with `gemma` or `qwen`. Paper mode additionally
-accepts `ministral`. Outputs contain the resolved configuration, metrics,
-inference-ready checkpoints, and the adapter with the best validation loss
-under `best/`.
+## Change settings or data
 
-To fold that adapter into a standalone model of the original base-model size:
+Edit [`configs/paper.yaml`](configs/paper.yaml) for shared hyperparameters,
+[`configs/quick.yaml`](configs/quick.yaml) for quick-mode overrides, and
+[`configs/models.yaml`](configs/models.yaml) for model choices. To override a
+preset without editing it, copy and edit [`configs/custom.example.yaml`](configs/custom.example.yaml):
 
 ```bash
-python merge_adapter.py outputs/llama-3.1-8b-mask/best merged/llama-3.1-8b-mask
+python train.py --model llama --mode quick --config configs/my_run.yaml
 ```
 
-## What the paper configuration does
+In Colab, enter the file path in **Config YAML**. Overrides apply after the
+selected preset; CLI flags take precedence. Set `dataset_name` to your Hugging
+Face dataset; it needs text columns `instruction` and `output` (`input` is optional).
+Use `dataset_columns: {instruction: question, output: answer}` for other names.
+Missing validation/test splits are reserved from train using seed 42. Custom
+data is tokenized once using the selected model and cached, including on Drive
+when enabled. Random training masking is still sampled online.
 
-The source prompt remains visible and only response/EOS-padding positions are
-eligible for masking. At every presentation of an example, an IID mask ratio
-is sampled and a fresh corrupted response is constructed. Loss is calculated
-only at corrupted answer and eligible padding positions. A rank-1024 LoRA is
-trained on the query and value projections; base weights and normalization
-layers remain frozen.
+## Evaluate
 
-The exact common recipe is in [`configs/paper.yaml`](configs/paper.yaml), and
-the four pinned model revisions are in
-[`configs/models.yaml`](configs/models.yaml). The training dataset is pinned to
-revision `6041513b684d6ca627879ffdb547b8629bb8b8de` of
-[`Ruurd/LAD-training-1m-256`](https://huggingface.co/datasets/Ruurd/LAD-training-1m-256).
-The saved configuration from the original Llama run is retained in
-[`reference/`](reference/) for auditing.
+Set your adapter paths in the evaluation configs, then run:
 
-Llama, Gemma, and Ministral are gated on Hugging Face. Accept their model
-licenses and use a read-only token. Never commit that token.
+```bash
+pip install -e '.[evaluation]'
+python evaluate_benchmarks.py --config configs/evaluation.yaml
+python evaluate_benchmarks.py --config configs/open_ended.yaml
+```
 
-## Reproducibility notes
+The open-ended profile's 4-bit Phi-4 scorer also needs `pip install -e '.[cuda]'`.
+Code benchmarks execute generated Python; use a disposable environment.
 
-- Dataset, tokenizer, and base-model revisions are pinned.
-- Training data is shuffled deterministically with seed 42.
-- Training corruption is resampled online; held-out corruption is deterministic.
-- Every run writes `resolved_config.json`, `metrics.jsonl`, and test metrics.
-- CUDA kernels and hardware can still introduce small numerical differences.
+## Development
 
-Run the lightweight repository checks with:
+Core code is in [`src/diffusion_lm/`](src/diffusion_lm/): `training.py` runs
+optimization, `data.py` and `corruption.py` handle batches and masking, `loss.py`
+defines the objective, and `inference.py` implements denoising generation.
 
 ```bash
 pip install -e '.[test]'
 pytest -q
 ```
+
+[MIT license](LICENSE) for the software; upstream model and dataset terms apply.
+Citation metadata is in [CITATION.cff](CITATION.cff).

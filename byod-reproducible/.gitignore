@@ -1,4 +1,6 @@
 .env
+.env.*
+!.env.example
 .venv/
 __pycache__/
 *.py[cod]
@@ -9,6 +11,12 @@ dist/
 base_models/
 data/
 outputs/
+results/
+merged/
+checkpoints/
+*.safetensors
+*.pt
+*.pth
+*.bin
 *.log
 .DS_Store
-

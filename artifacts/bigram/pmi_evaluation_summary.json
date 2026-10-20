@@ -1,0 +1,56 @@
+{
+  "runs": 54,
+  "seed_outputs_identical": true,
+  "settings": {
+    "steps": 16,
+    "seeds": [
+      42,
+      1234
+    ],
+    "min_count": 5,
+    "pmi_clip": 5.0,
+    "weight": 0.5
+  },
+  "results": [
+    {
+      "configuration": "Independent argmax",
+      "runs": 18,
+      "same_logit_changed_fraction": 0.0,
+      "selector_ms_per_step": 1.3896563371721034,
+      "overhead_vs_argmax_ms_per_step": 0.0,
+      "mean_adjacent_repeated_words": 1,
+      "mean_end_to_end_seconds": 2.2231849422221583,
+      "math_exact_correct": 6,
+      "math_runs": 6
+    },
+    {
+      "configuration": "Conditional bigram",
+      "runs": 18,
+      "same_logit_changed_fraction": 0.23699095022624433,
+      "selector_ms_per_step": 12.462222279282287,
+      "overhead_vs_argmax_ms_per_step": 11.072565942110183,
+      "mean_adjacent_repeated_words": 0,
+      "mean_end_to_end_seconds": 1.9643738358334102,
+      "math_exact_correct": 6,
+      "math_runs": 6
+    },
+    {
+      "configuration": "PMI bigram",
+      "runs": 18,
+      "same_logit_changed_fraction": 0.2182315233785822,
+      "selector_ms_per_step": 12.160225806938898,
+      "overhead_vs_argmax_ms_per_step": 10.770569469766794,
+      "mean_adjacent_repeated_words": 0.3333333333333333,
+      "mean_end_to_end_seconds": 2.0277796711115013,
+      "math_exact_correct": 6,
+      "math_runs": 6
+    }
+  ],
+  "quality_observations": [
+    "Conditional scoring was more fluent than argmax and PMI on the Amsterdam samples, although repeated phrases remained at B=256.",
+    "PMI did not consistently improve generation quality: at B=256 it repeated blue light in the sky explanation.",
+    "All modes produced incomplete or malformed scientific explanations in this small test; repetition alone is not a semantic quality measure.",
+    "Every mode returned exactly 4 on all six arithmetic cases.",
+    "The two seeds produced identical content for these deterministic decoding settings; these are not 54 independent quality samples."
+  ]
+}

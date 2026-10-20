@@ -1,0 +1,706 @@
+{
+  "tokenizer": "GSAI-ML/LLaDA-8B-Instruct",
+  "revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+  "results": {
+    "open_01/8/confidence": {
+      "tokens": 10,
+      "unique_tokens": 9,
+      "distinct_1": 0.9,
+      "distinct_2": 1.0,
+      "distinct_3": 1.0
+    },
+    "open_01/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 63,
+      "distinct_1": 0.5,
+      "distinct_2": 0.808,
+      "distinct_3": 0.9354838709677419
+    },
+    "open_01/16/confidence": {
+      "tokens": 120,
+      "unique_tokens": 22,
+      "distinct_1": 0.18333333333333332,
+      "distinct_2": 0.2689075630252101,
+      "distinct_3": 0.3135593220338983
+    },
+    "open_01/16/pmi_diffusion": {
+      "tokens": 125,
+      "unique_tokens": 69,
+      "distinct_1": 0.552,
+      "distinct_2": 0.7903225806451613,
+      "distinct_3": 0.9105691056910569
+    },
+    "open_01/32/confidence": {
+      "tokens": 124,
+      "unique_tokens": 67,
+      "distinct_1": 0.5403225806451613,
+      "distinct_2": 0.8292682926829268,
+      "distinct_3": 0.9344262295081968
+    },
+    "open_01/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 76,
+      "distinct_1": 0.6031746031746031,
+      "distinct_2": 0.872,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_01/64/confidence": {
+      "tokens": 125,
+      "unique_tokens": 62,
+      "distinct_1": 0.496,
+      "distinct_2": 0.782258064516129,
+      "distinct_3": 0.8861788617886179
+    },
+    "open_01/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 69,
+      "distinct_1": 0.5476190476190477,
+      "distinct_2": 0.864,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_01/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 73,
+      "distinct_1": 0.5793650793650794,
+      "distinct_2": 0.896,
+      "distinct_3": 0.9758064516129032
+    },
+    "open_01/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 69,
+      "distinct_1": 0.5476190476190477,
+      "distinct_2": 0.84,
+      "distinct_3": 0.9354838709677419
+    },
+    "open_02/8/confidence": {
+      "tokens": 125,
+      "unique_tokens": 21,
+      "distinct_1": 0.168,
+      "distinct_2": 0.25,
+      "distinct_3": 0.2682926829268293
+    },
+    "open_02/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 55,
+      "distinct_1": 0.4365079365079365,
+      "distinct_2": 0.664,
+      "distinct_3": 0.7338709677419355
+    },
+    "open_02/16/confidence": {
+      "tokens": 126,
+      "unique_tokens": 63,
+      "distinct_1": 0.5,
+      "distinct_2": 0.872,
+      "distinct_3": 0.9838709677419355
+    },
+    "open_02/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 64,
+      "distinct_1": 0.5079365079365079,
+      "distinct_2": 0.848,
+      "distinct_3": 0.9193548387096774
+    },
+    "open_02/32/confidence": {
+      "tokens": 125,
+      "unique_tokens": 64,
+      "distinct_1": 0.512,
+      "distinct_2": 0.8790322580645161,
+      "distinct_3": 0.9512195121951219
+    },
+    "open_02/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 70,
+      "distinct_1": 0.5555555555555556,
+      "distinct_2": 0.896,
+      "distinct_3": 0.9919354838709677
+    },
+    "open_02/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 66,
+      "distinct_1": 0.5238095238095238,
+      "distinct_2": 0.88,
+      "distinct_3": 0.9758064516129032
+    },
+    "open_02/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 65,
+      "distinct_1": 0.5158730158730159,
+      "distinct_2": 0.912,
+      "distinct_3": 0.9838709677419355
+    },
+    "open_02/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 68,
+      "distinct_1": 0.5396825396825397,
+      "distinct_2": 0.928,
+      "distinct_3": 1.0
+    },
+    "open_02/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 69,
+      "distinct_1": 0.5476190476190477,
+      "distinct_2": 0.896,
+      "distinct_3": 0.9838709677419355
+    },
+    "open_03/8/confidence": {
+      "tokens": 124,
+      "unique_tokens": 22,
+      "distinct_1": 0.1774193548387097,
+      "distinct_2": 0.21138211382113822,
+      "distinct_3": 0.22950819672131148
+    },
+    "open_03/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 55,
+      "distinct_1": 0.4365079365079365,
+      "distinct_2": 0.784,
+      "distinct_3": 0.9032258064516129
+    },
+    "open_03/16/confidence": {
+      "tokens": 125,
+      "unique_tokens": 47,
+      "distinct_1": 0.376,
+      "distinct_2": 0.6129032258064516,
+      "distinct_3": 0.6829268292682927
+    },
+    "open_03/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 68,
+      "distinct_1": 0.5396825396825397,
+      "distinct_2": 0.888,
+      "distinct_3": 0.9596774193548387
+    },
+    "open_03/32/confidence": {
+      "tokens": 125,
+      "unique_tokens": 68,
+      "distinct_1": 0.544,
+      "distinct_2": 0.9112903225806451,
+      "distinct_3": 0.991869918699187
+    },
+    "open_03/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 67,
+      "distinct_1": 0.5317460317460317,
+      "distinct_2": 0.864,
+      "distinct_3": 0.9435483870967742
+    },
+    "open_03/64/confidence": {
+      "tokens": 81,
+      "unique_tokens": 47,
+      "distinct_1": 0.5802469135802469,
+      "distinct_2": 0.9375,
+      "distinct_3": 1.0
+    },
+    "open_03/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 68,
+      "distinct_1": 0.5396825396825397,
+      "distinct_2": 0.904,
+      "distinct_3": 0.9919354838709677
+    },
+    "open_03/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 67,
+      "distinct_1": 0.5317460317460317,
+      "distinct_2": 0.936,
+      "distinct_3": 0.9838709677419355
+    },
+    "open_03/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 70,
+      "distinct_1": 0.5555555555555556,
+      "distinct_2": 0.912,
+      "distinct_3": 0.9838709677419355
+    },
+    "open_04/8/confidence": {
+      "tokens": 113,
+      "unique_tokens": 12,
+      "distinct_1": 0.10619469026548672,
+      "distinct_2": 0.13392857142857142,
+      "distinct_3": 0.17117117117117117
+    },
+    "open_04/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 16,
+      "distinct_1": 0.12698412698412698,
+      "distinct_2": 0.184,
+      "distinct_3": 0.22580645161290322
+    },
+    "open_04/16/confidence": {
+      "tokens": 118,
+      "unique_tokens": 17,
+      "distinct_1": 0.1440677966101695,
+      "distinct_2": 0.1794871794871795,
+      "distinct_3": 0.21551724137931033
+    },
+    "open_04/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 46,
+      "distinct_1": 0.36507936507936506,
+      "distinct_2": 0.568,
+      "distinct_3": 0.6532258064516129
+    },
+    "open_04/32/confidence": {
+      "tokens": 124,
+      "unique_tokens": 11,
+      "distinct_1": 0.08870967741935484,
+      "distinct_2": 0.12195121951219512,
+      "distinct_3": 0.13934426229508196
+    },
+    "open_04/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 44,
+      "distinct_1": 0.3492063492063492,
+      "distinct_2": 0.552,
+      "distinct_3": 0.6532258064516129
+    },
+    "open_04/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 60,
+      "distinct_1": 0.47619047619047616,
+      "distinct_2": 0.784,
+      "distinct_3": 0.8790322580645161
+    },
+    "open_04/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 69,
+      "distinct_1": 0.5476190476190477,
+      "distinct_2": 0.824,
+      "distinct_3": 0.9112903225806451
+    },
+    "open_04/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 62,
+      "distinct_1": 0.49206349206349204,
+      "distinct_2": 0.76,
+      "distinct_3": 0.8709677419354839
+    },
+    "open_04/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 63,
+      "distinct_1": 0.5,
+      "distinct_2": 0.736,
+      "distinct_3": 0.8145161290322581
+    },
+    "open_05/8/confidence": {
+      "tokens": 126,
+      "unique_tokens": 12,
+      "distinct_1": 0.09523809523809523,
+      "distinct_2": 0.096,
+      "distinct_3": 0.0967741935483871
+    },
+    "open_05/8/pmi_diffusion": {
+      "tokens": 125,
+      "unique_tokens": 36,
+      "distinct_1": 0.288,
+      "distinct_2": 0.46774193548387094,
+      "distinct_3": 0.5447154471544715
+    },
+    "open_05/16/confidence": {
+      "tokens": 118,
+      "unique_tokens": 11,
+      "distinct_1": 0.09322033898305085,
+      "distinct_2": 0.10256410256410256,
+      "distinct_3": 0.11206896551724138
+    },
+    "open_05/16/pmi_diffusion": {
+      "tokens": 125,
+      "unique_tokens": 52,
+      "distinct_1": 0.416,
+      "distinct_2": 0.6935483870967742,
+      "distinct_3": 0.7886178861788617
+    },
+    "open_05/32/confidence": {
+      "tokens": 126,
+      "unique_tokens": 50,
+      "distinct_1": 0.3968253968253968,
+      "distinct_2": 0.672,
+      "distinct_3": 0.7983870967741935
+    },
+    "open_05/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 64,
+      "distinct_1": 0.5079365079365079,
+      "distinct_2": 0.848,
+      "distinct_3": 0.9435483870967742
+    },
+    "open_05/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 58,
+      "distinct_1": 0.4603174603174603,
+      "distinct_2": 0.776,
+      "distinct_3": 0.8709677419354839
+    },
+    "open_05/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 59,
+      "distinct_1": 0.46825396825396826,
+      "distinct_2": 0.824,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_05/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 16,
+      "distinct_1": 0.12698412698412698,
+      "distinct_2": 0.144,
+      "distinct_3": 0.1532258064516129
+    },
+    "open_05/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 66,
+      "distinct_1": 0.5238095238095238,
+      "distinct_2": 0.784,
+      "distinct_3": 0.8709677419354839
+    },
+    "open_06/8/confidence": {
+      "tokens": 117,
+      "unique_tokens": 7,
+      "distinct_1": 0.05982905982905983,
+      "distinct_2": 0.06896551724137931,
+      "distinct_3": 0.06956521739130435
+    },
+    "open_06/8/pmi_diffusion": {
+      "tokens": 125,
+      "unique_tokens": 53,
+      "distinct_1": 0.424,
+      "distinct_2": 0.7338709677419355,
+      "distinct_3": 0.8617886178861789
+    },
+    "open_06/16/confidence": {
+      "tokens": 91,
+      "unique_tokens": 8,
+      "distinct_1": 0.08791208791208792,
+      "distinct_2": 0.13333333333333333,
+      "distinct_3": 0.15730337078651685
+    },
+    "open_06/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 56,
+      "distinct_1": 0.4444444444444444,
+      "distinct_2": 0.72,
+      "distinct_3": 0.8225806451612904
+    },
+    "open_06/32/confidence": {
+      "tokens": 125,
+      "unique_tokens": 51,
+      "distinct_1": 0.408,
+      "distinct_2": 0.7096774193548387,
+      "distinct_3": 0.8211382113821138
+    },
+    "open_06/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 66,
+      "distinct_1": 0.5238095238095238,
+      "distinct_2": 0.84,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_06/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 68,
+      "distinct_1": 0.5396825396825397,
+      "distinct_2": 0.872,
+      "distinct_3": 0.967741935483871
+    },
+    "open_06/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 66,
+      "distinct_1": 0.5238095238095238,
+      "distinct_2": 0.784,
+      "distinct_3": 0.8951612903225806
+    },
+    "open_06/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 65,
+      "distinct_1": 0.5158730158730159,
+      "distinct_2": 0.864,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_06/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 68,
+      "distinct_1": 0.5396825396825397,
+      "distinct_2": 0.808,
+      "distinct_3": 0.8790322580645161
+    },
+    "open_07/8/confidence": {
+      "tokens": 124,
+      "unique_tokens": 64,
+      "distinct_1": 0.5161290322580645,
+      "distinct_2": 0.8292682926829268,
+      "distinct_3": 0.9426229508196722
+    },
+    "open_07/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 66,
+      "distinct_1": 0.5238095238095238,
+      "distinct_2": 0.832,
+      "distinct_3": 0.9274193548387096
+    },
+    "open_07/16/confidence": {
+      "tokens": 109,
+      "unique_tokens": 31,
+      "distinct_1": 0.28440366972477066,
+      "distinct_2": 0.48148148148148145,
+      "distinct_3": 0.5700934579439252
+    },
+    "open_07/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 65,
+      "distinct_1": 0.5158730158730159,
+      "distinct_2": 0.832,
+      "distinct_3": 0.9274193548387096
+    },
+    "open_07/32/confidence": {
+      "tokens": 126,
+      "unique_tokens": 75,
+      "distinct_1": 0.5952380952380952,
+      "distinct_2": 0.888,
+      "distinct_3": 0.967741935483871
+    },
+    "open_07/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 75,
+      "distinct_1": 0.5952380952380952,
+      "distinct_2": 0.896,
+      "distinct_3": 0.9435483870967742
+    },
+    "open_07/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 73,
+      "distinct_1": 0.5793650793650794,
+      "distinct_2": 0.888,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_07/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 72,
+      "distinct_1": 0.5714285714285714,
+      "distinct_2": 0.864,
+      "distinct_3": 0.9435483870967742
+    },
+    "open_07/128/confidence": {
+      "tokens": 109,
+      "unique_tokens": 69,
+      "distinct_1": 0.6330275229357798,
+      "distinct_2": 0.9444444444444444,
+      "distinct_3": 0.9813084112149533
+    },
+    "open_07/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 74,
+      "distinct_1": 0.5873015873015873,
+      "distinct_2": 0.88,
+      "distinct_3": 0.9516129032258065
+    },
+    "open_08/8/confidence": {
+      "tokens": 16,
+      "unique_tokens": 16,
+      "distinct_1": 1.0,
+      "distinct_2": 1.0,
+      "distinct_3": 1.0
+    },
+    "open_08/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 52,
+      "distinct_1": 0.4126984126984127,
+      "distinct_2": 0.632,
+      "distinct_3": 0.717741935483871
+    },
+    "open_08/16/confidence": {
+      "tokens": 25,
+      "unique_tokens": 19,
+      "distinct_1": 0.76,
+      "distinct_2": 0.9583333333333334,
+      "distinct_3": 1.0
+    },
+    "open_08/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 64,
+      "distinct_1": 0.5079365079365079,
+      "distinct_2": 0.816,
+      "distinct_3": 0.9274193548387096
+    },
+    "open_08/32/confidence": {
+      "tokens": 125,
+      "unique_tokens": 57,
+      "distinct_1": 0.456,
+      "distinct_2": 0.7419354838709677,
+      "distinct_3": 0.8292682926829268
+    },
+    "open_08/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 58,
+      "distinct_1": 0.4603174603174603,
+      "distinct_2": 0.72,
+      "distinct_3": 0.8306451612903226
+    },
+    "open_08/64/confidence": {
+      "tokens": 125,
+      "unique_tokens": 71,
+      "distinct_1": 0.568,
+      "distinct_2": 0.8870967741935484,
+      "distinct_3": 0.959349593495935
+    },
+    "open_08/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 69,
+      "distinct_1": 0.5476190476190477,
+      "distinct_2": 0.832,
+      "distinct_3": 0.9354838709677419
+    },
+    "open_08/128/confidence": {
+      "tokens": 104,
+      "unique_tokens": 56,
+      "distinct_1": 0.5384615384615384,
+      "distinct_2": 0.8349514563106796,
+      "distinct_3": 0.9411764705882353
+    },
+    "open_08/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 61,
+      "distinct_1": 0.48412698412698413,
+      "distinct_2": 0.808,
+      "distinct_3": 0.9112903225806451
+    },
+    "open_09/8/confidence": {
+      "tokens": 126,
+      "unique_tokens": 19,
+      "distinct_1": 0.15079365079365079,
+      "distinct_2": 0.272,
+      "distinct_3": 0.3387096774193548
+    },
+    "open_09/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 40,
+      "distinct_1": 0.31746031746031744,
+      "distinct_2": 0.464,
+      "distinct_3": 0.5403225806451613
+    },
+    "open_09/16/confidence": {
+      "tokens": 126,
+      "unique_tokens": 45,
+      "distinct_1": 0.35714285714285715,
+      "distinct_2": 0.648,
+      "distinct_3": 0.75
+    },
+    "open_09/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 48,
+      "distinct_1": 0.38095238095238093,
+      "distinct_2": 0.68,
+      "distinct_3": 0.7661290322580645
+    },
+    "open_09/32/confidence": {
+      "tokens": 126,
+      "unique_tokens": 45,
+      "distinct_1": 0.35714285714285715,
+      "distinct_2": 0.648,
+      "distinct_3": 0.7580645161290323
+    },
+    "open_09/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 50,
+      "distinct_1": 0.3968253968253968,
+      "distinct_2": 0.648,
+      "distinct_3": 0.75
+    },
+    "open_09/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 51,
+      "distinct_1": 0.40476190476190477,
+      "distinct_2": 0.64,
+      "distinct_3": 0.7338709677419355
+    },
+    "open_09/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 57,
+      "distinct_1": 0.4523809523809524,
+      "distinct_2": 0.768,
+      "distinct_3": 0.8709677419354839
+    },
+    "open_09/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 54,
+      "distinct_1": 0.42857142857142855,
+      "distinct_2": 0.68,
+      "distinct_3": 0.7661290322580645
+    },
+    "open_09/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 53,
+      "distinct_1": 0.42063492063492064,
+      "distinct_2": 0.712,
+      "distinct_3": 0.7903225806451613
+    },
+    "open_10/8/confidence": {
+      "tokens": 126,
+      "unique_tokens": 14,
+      "distinct_1": 0.1111111111111111,
+      "distinct_2": 0.128,
+      "distinct_3": 0.13709677419354838
+    },
+    "open_10/8/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 15,
+      "distinct_1": 0.11904761904761904,
+      "distinct_2": 0.184,
+      "distinct_3": 0.23387096774193547
+    },
+    "open_10/16/confidence": {
+      "tokens": 126,
+      "unique_tokens": 23,
+      "distinct_1": 0.18253968253968253,
+      "distinct_2": 0.288,
+      "distinct_3": 0.33064516129032256
+    },
+    "open_10/16/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 56,
+      "distinct_1": 0.4444444444444444,
+      "distinct_2": 0.768,
+      "distinct_3": 0.9032258064516129
+    },
+    "open_10/32/confidence": {
+      "tokens": 126,
+      "unique_tokens": 54,
+      "distinct_1": 0.42857142857142855,
+      "distinct_2": 0.72,
+      "distinct_3": 0.8709677419354839
+    },
+    "open_10/32/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 67,
+      "distinct_1": 0.5317460317460317,
+      "distinct_2": 0.856,
+      "distinct_3": 0.967741935483871
+    },
+    "open_10/64/confidence": {
+      "tokens": 126,
+      "unique_tokens": 58,
+      "distinct_1": 0.4603174603174603,
+      "distinct_2": 0.8,
+      "distinct_3": 0.9032258064516129
+    },
+    "open_10/64/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 58,
+      "distinct_1": 0.4603174603174603,
+      "distinct_2": 0.816,
+      "distinct_3": 0.9435483870967742
+    },
+    "open_10/128/confidence": {
+      "tokens": 126,
+      "unique_tokens": 64,
+      "distinct_1": 0.5079365079365079,
+      "distinct_2": 0.848,
+      "distinct_3": 0.967741935483871
+    },
+    "open_10/128/pmi_diffusion": {
+      "tokens": 126,
+      "unique_tokens": 59,
+      "distinct_1": 0.46825396825396826,
+      "distinct_2": 0.808,
+      "distinct_3": 0.8951612903225806
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "public_publication": "blocked_by_automatic_approval_review",
+  "reason": "Explicit approval is required to publicly disclose the training-corpus-derived bigram scorer.",
+  "safer_alternative": "Deploy the new Space privately for the Ruurd account."
+}

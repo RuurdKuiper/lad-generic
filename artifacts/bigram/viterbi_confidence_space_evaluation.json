@@ -1,0 +1,387 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "seed": 42,
+  "weight": 0.5,
+  "results": [
+    {
+      "method": "Conditional bigram",
+      "mode": "Diffusion probability",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital of the Netherlands. It is known for its canals, museums, and vibrant culture. It is one of the most popular cities in the world",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.046 \u00b7 retained 30 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 172, \"changed_fraction\": 0.6323529411764706, \"selector_ms\": 47.46589157730341, \"mean_selector_ms\": 2.966618223581463}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 172,
+        "changed_fraction": 0.6323529411764706,
+        "selector_ms": 47.46589157730341,
+        "mean_selector_ms": 2.966618223581463
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Diffusion probability",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital city of the Netherlands and is the Netherlands. It is known for the number of its canals, and its historic architecture. It is a city, and culture, and culture, and, and, and culture, and culture, and the city. It is also for the number of its museums, and the number.",
+      "status": "Denoising step 16/16 \u00b7 67 output tokens \u00b7 mean confidence 0.229 \u00b7 retained 120 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 462, \"changed_fraction\": 0.42463235294117646, \"selector_ms\": 193.0677047930658, \"mean_selector_ms\": 12.066731549566612}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 462,
+        "changed_fraction": 0.42463235294117646,
+        "selector_ms": 193.0677047930658,
+        "mean_selector_ms": 12.066731549566612
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Diffusion probability",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue due to a phenomenon known as Rayleigh scattering. When sunlight enters through the Earth's atmosphere, it is scattered by the tiny particles in the",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.030 \u00b7 retained 30 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 172, \"changed_fraction\": 0.6323529411764706, \"selector_ms\": 54.45467680692673, \"mean_selector_ms\": 3.4034173004329205}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 172,
+        "changed_fraction": 0.6323529411764706,
+        "selector_ms": 54.45467680692673,
+        "mean_selector_ms": 3.4034173004329205
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Diffusion probability",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue is due to the phenomenon called Rayleigh scattering. It occurs when the sun's light enters the atmosphere and the molecules of the atmosphere scatter the light. The amount of the light is greater than the amount in the sky, increasing the amount of the light scattered in the sky, making the sky, which is the sum of the sky, blue.",
+      "status": "Denoising step 16/16 \u00b7 73 output tokens \u00b7 mean confidence 0.430 \u00b7 retained 120 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 400, \"changed_fraction\": 0.36764705882352944, \"selector_ms\": 190.1306575164199, \"mean_selector_ms\": 11.883166094776243}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 400,
+        "changed_fraction": 0.36764705882352944,
+        "selector_ms": 190.1306575164199,
+        "mean_selector_ms": 11.883166094776243
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Diffusion probability",
+      "prompt": "What is 2 + 2? Answer with only the number.",
+      "tokens": 64,
+      "block": 16,
+      "early": true,
+      "steps": 16,
+      "text": "4.",
+      "status": "Denoising step 1/16 \u00b7 2 output tokens \u00b7 mean confidence 0.940 \u00b7 block 1/4 \u00b7 retained 4 tokens \u00b7 answer finished (EOS) \u00b7 remaining blocks skipped\n\nDecoding metrics: {\"selector_calls\": 1, \"editable_predictions\": 16, \"changed_predictions\": 1, \"changed_fraction\": 0.0625, \"selector_ms\": 2.468803897500038, \"mean_selector_ms\": 2.468803897500038}",
+      "decoding": {
+        "selector_calls": 1,
+        "editable_predictions": 16,
+        "changed_predictions": 1,
+        "changed_fraction": 0.0625,
+        "selector_ms": 2.468803897500038,
+        "mean_selector_ms": 2.468803897500038
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital of the Netherlands, and is known for its picturesque canals, historic architecture, and art. It has rich history, vibrant culture, and the",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.048 \u00b7 retained 30 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 178, \"changed_fraction\": 0.6544117647058824, \"selector_ms\": 134.87425446510315, \"mean_selector_ms\": 8.429640904068947}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 178,
+        "changed_fraction": 0.6544117647058824,
+        "selector_ms": 134.87425446510315,
+        "mean_selector_ms": 8.429640904068947
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital city of the Netherlands, and is one of the most popular in the world. It is a, and is known for its history.",
+      "status": "Denoising step 16/16 \u00b7 31 output tokens \u00b7 mean confidence 0.363 \u00b7 retained 120 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 366, \"changed_fraction\": 0.33639705882352944, \"selector_ms\": 434.36076026409864, \"mean_selector_ms\": 27.147547516506165}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 366,
+        "changed_fraction": 0.33639705882352944,
+        "selector_ms": 434.36076026409864,
+        "mean_selector_ms": 27.147547516506165
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue due to the scattering of blue light present in the atmosphere. When sunlight passes through the atmosphere of the atmosphere, it is scattered, and the",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.049 \u00b7 retained 30 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 153, \"changed_fraction\": 0.5625, \"selector_ms\": 113.27187390998006, \"mean_selector_ms\": 7.079492119373754}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 153,
+        "changed_fraction": 0.5625,
+        "selector_ms": 113.27187390998006,
+        "mean_selector_ms": 7.079492119373754
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "The sky looks blue is due to the scattering of the sun's the atmosphere. The atmosphere is the sky, and the amount of the light is scattered in, in the sky, which is why the sky blue.",
+      "status": "Denoising step 16/16 \u00b7 44 output tokens \u00b7 mean confidence 0.649 \u00b7 retained 120 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 288, \"changed_fraction\": 0.2647058823529412, \"selector_ms\": 460.14122013002634, \"mean_selector_ms\": 28.758826258126646}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 288,
+        "changed_fraction": 0.2647058823529412,
+        "selector_ms": 460.14122013002634,
+        "mean_selector_ms": 28.758826258126646
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "What is 2 + 2? Answer with only the number.",
+      "tokens": 64,
+      "block": 16,
+      "early": true,
+      "steps": 16,
+      "text": "4.",
+      "status": "Denoising step 1/16 \u00b7 2 output tokens \u00b7 mean confidence 0.940 \u00b7 block 1/4 \u00b7 retained 4 tokens \u00b7 Viterbi-margin remasking \u00b7 answer finished (EOS) \u00b7 remaining blocks skipped\n\nDecoding metrics: {\"selector_calls\": 1, \"editable_predictions\": 16, \"changed_predictions\": 1, \"changed_fraction\": 0.0625, \"selector_ms\": 4.4578127562999725, \"mean_selector_ms\": 4.4578127562999725}",
+      "decoding": {
+        "selector_calls": 1,
+        "editable_predictions": 16,
+        "changed_predictions": 1,
+        "changed_fraction": 0.0625,
+        "selector_ms": 4.4578127562999725,
+        "mean_selector_ms": 4.4578127562999725
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Diffusion probability",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital city of the Netherlands. It is known for its canals canals, historic architecture, and vibrant cultural scene. It is also popular for its nightlife",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.035 \u00b7 retained 30 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 149, \"changed_fraction\": 0.5477941176470589, \"selector_ms\": 58.85933293029666, \"mean_selector_ms\": 3.678708308143541}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 149,
+        "changed_fraction": 0.5477941176470589,
+        "selector_ms": 58.85933293029666,
+        "mean_selector_ms": 3.678708308143541
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Diffusion probability",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital city of the Netherlands and the Netherlands. It is known for the Dutch Golden, the Netherlands, and tulips, and the Netherlands, known for its canals, and its vibrant art history and culture.. It is a major hub of art history, and culture, and the Netherlands Netherlands, and the center of art history and vibrant culture.",
+      "status": "Denoising step 16/16 \u00b7 71 output tokens \u00b7 mean confidence 0.448 \u00b7 retained 120 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 283, \"changed_fraction\": 0.2601102941176471, \"selector_ms\": 191.08392531052232, \"mean_selector_ms\": 11.942745331907645}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 283,
+        "changed_fraction": 0.2601102941176471,
+        "selector_ms": 191.08392531052232,
+        "mean_selector_ms": 11.942745331907645
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Diffusion probability",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue due to a phenomenon known as Rayleigh scattering. When sunlight enters into the Earth's atmosphere, it is scattered by the tiny particles in the",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.026 \u00b7 retained 30 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 195, \"changed_fraction\": 0.7169117647058824, \"selector_ms\": 58.71396139264107, \"mean_selector_ms\": 3.6696225870400667}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 195,
+        "changed_fraction": 0.7169117647058824,
+        "selector_ms": 58.71396139264107,
+        "mean_selector_ms": 3.6696225870400667
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Diffusion probability",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue blue due to the phenomenon called Rayleigh scattering.. When sunlight enters the Earth's atmosphere, it is scattered by the gas molecules in the atmosphere. The blue wavelengths of the sky are scattered more than more than other wavelengths of wavelengths. This means the scattering of the blue wavelengths of the sky. As the blue wavelengths of the sky increases the amount of the blue wavelengths of the sky appears in the sky. This scattering of the blue wavelengths of the sky is what makes the sky appear blue. This is the blue color of the sky.",
+      "status": "Denoising step 16/16 \u00b7 111 output tokens \u00b7 mean confidence 0.140 \u00b7 retained 120 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 693, \"changed_fraction\": 0.6369485294117647, \"selector_ms\": 200.65193949267268, \"mean_selector_ms\": 12.540746218292043}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 693,
+        "changed_fraction": 0.6369485294117647,
+        "selector_ms": 200.65193949267268,
+        "mean_selector_ms": 12.540746218292043
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Diffusion probability",
+      "prompt": "What is 2 + 2? Answer with only the number.",
+      "tokens": 64,
+      "block": 16,
+      "early": true,
+      "steps": 16,
+      "text": "4.",
+      "status": "Denoising step 1/16 \u00b7 2 output tokens \u00b7 mean confidence 0.940 \u00b7 block 1/4 \u00b7 retained 4 tokens \u00b7 answer finished (EOS) \u00b7 remaining blocks skipped\n\nDecoding metrics: {\"selector_calls\": 1, \"editable_predictions\": 16, \"changed_predictions\": 1, \"changed_fraction\": 0.0625, \"selector_ms\": 2.6107868179678917, \"mean_selector_ms\": 2.6107868179678917}",
+      "decoding": {
+        "selector_calls": 1,
+        "editable_predictions": 16,
+        "changed_predictions": 1,
+        "changed_fraction": 0.0625,
+        "selector_ms": 2.6107868179678917,
+        "mean_selector_ms": 2.6107868179678917
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital city of country of the Netherlands. It is known for its canals, museums, and vibrant culture. It is a city of rich history and",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.048 \u00b7 retained 30 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 150, \"changed_fraction\": 0.5514705882352942, \"selector_ms\": 122.94053006917238, \"mean_selector_ms\": 7.683783129323274}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 150,
+        "changed_fraction": 0.5514705882352942,
+        "selector_ms": 122.94053006917238,
+        "mean_selector_ms": 7.683783129323274
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "What do you know about Amsterdam?",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "Amsterdam is the capital city of the Netherlands. It is located of the largest city of the Netherlands. It is known for its canals and its historic architecture. It is also known for its art museums, and its nightlife scene.......... Amsterdam is Amsterdam, which is the capital city of the Netherlands. It is one of the most one of the largest city in Europe and the Netherlands. It is also known for its vibrant nightlife scene, and its history of freedom and tolerance.",
+      "status": "Denoising step 16/16 \u00b7 99 output tokens \u00b7 mean confidence 0.211 \u00b7 retained 120 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 476, \"changed_fraction\": 0.4375, \"selector_ms\": 438.4268312714994, \"mean_selector_ms\": 27.401676954468712}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 476,
+        "changed_fraction": 0.4375,
+        "selector_ms": 438.4268312714994,
+        "mean_selector_ms": 27.401676954468712
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 32,
+      "block": 32,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue due to a phenomenon known as Rayleigh scattering. When sunlight enters the atmosphere, it is scattered by the tiny particles in the air. Blue light",
+      "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.033 \u00b7 retained 30 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 196, \"changed_fraction\": 0.7205882352941176, \"selector_ms\": 119.61353197693825, \"mean_selector_ms\": 7.4758457485586405}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 272,
+        "changed_predictions": 196,
+        "changed_fraction": 0.7205882352941176,
+        "selector_ms": 119.61353197693825,
+        "mean_selector_ms": 7.4758457485586405
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "Explain why the sky looks blue.",
+      "tokens": 128,
+      "block": 128,
+      "early": false,
+      "steps": 16,
+      "text": "The sky appears blue blue due to a phenomenon known as scattering. When light blue light blue light is scattered more than the other colors of light blue sky blue sky blue light blue sky blue light blue sky blue sky blue light blue sky blue sky blue sky blue light blue sky blue light blue sky blue sky blue sky blue light blue sky blue sky blue sky blue sky blue sky blue sky blue light blue sky blue sky blue sky blue sky blue light blue sky blue sky blue sky blue sky blue sky blue sky.",
+      "status": "Denoising step 16/16 \u00b7 101 output tokens \u00b7 mean confidence 0.228 \u00b7 retained 120 tokens \u00b7 Viterbi-margin remasking\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 1088, \"changed_predictions\": 443, \"changed_fraction\": 0.4071691176470588, \"selector_ms\": 423.6538140103221, \"mean_selector_ms\": 26.47836337564513}",
+      "decoding": {
+        "selector_calls": 16,
+        "editable_predictions": 1088,
+        "changed_predictions": 443,
+        "changed_fraction": 0.4071691176470588,
+        "selector_ms": 423.6538140103221,
+        "mean_selector_ms": 26.47836337564513
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "mode": "Viterbi path margin",
+      "prompt": "What is 2 + 2? Answer with only the number.",
+      "tokens": 64,
+      "block": 16,
+      "early": true,
+      "steps": 16,
+      "text": "4.",
+      "status": "Denoising step 1/16 \u00b7 2 output tokens \u00b7 mean confidence 0.940 \u00b7 block 1/4 \u00b7 retained 4 tokens \u00b7 Viterbi-margin remasking \u00b7 answer finished (EOS) \u00b7 remaining blocks skipped\n\nDecoding metrics: {\"selector_calls\": 1, \"editable_predictions\": 16, \"changed_predictions\": 1, \"changed_fraction\": 0.0625, \"selector_ms\": 3.9663948118686676, \"mean_selector_ms\": 3.9663948118686676}",
+      "decoding": {
+        "selector_calls": 1,
+        "editable_predictions": 16,
+        "changed_predictions": 1,
+        "changed_fraction": 0.0625,
+        "selector_ms": 3.9663948118686676,
+        "mean_selector_ms": 3.9663948118686676
+      }
+    }
+  ]
+}

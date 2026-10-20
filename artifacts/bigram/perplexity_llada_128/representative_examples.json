@@ -1,0 +1,156 @@
+{
+  "scope": "10 questions, 128-token limit; two methods on LLaDA-8B-Instruct",
+  "selection": "Manual qualitative review of all 100 outputs; labels relative within method/NFE group",
+  "examples": [
+    {
+      "key": "open_07/8/confidence",
+      "grade": "Good",
+      "reason": "One of the few sustained answers in this group: it discusses population protection and vulnerable people. Several sentences are garbled, so this is only a relative good example."
+    },
+    {
+      "key": "open_09/8/confidence",
+      "grade": "Average",
+      "reason": "A recognizable economics opening turns into repetitive and inconsistent supply/price statements, typical of the low-budget breakdowns here."
+    },
+    {
+      "key": "open_05/8/confidence",
+      "grade": "Bad",
+      "reason": "The answer almost immediately collapses into repeated the tokens without explaining refrigeration."
+    },
+    {
+      "key": "open_06/8/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A relatively fluent, sustained seasons explanation with a recognizable axial-tilt argument. It also muddles the role of the elliptical orbit, so fluency does not establish correctness."
+    },
+    {
+      "key": "open_08/8/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The weather/climate distinction is present, but long runs of humidity and repeated phrasing interrupt it."
+    },
+    {
+      "key": "open_10/8/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "A search-engine opening degenerates into a long web pages loop; the closing sentence does not rescue the missing explanation."
+    },
+    {
+      "key": "open_09/16/confidence",
+      "grade": "Good",
+      "reason": "A coherent, relevant supply-and-demand explanation, with small duplications but no long repetition collapse."
+    },
+    {
+      "key": "open_03/16/confidence",
+      "grade": "Average",
+      "reason": "It identifies photosynthesis and glucose, but the mechanism is garbled and the last portion collapses into repeated the tokens."
+    },
+    {
+      "key": "open_05/16/confidence",
+      "grade": "Bad",
+      "reason": "The refrigerator answer contains little beyond a prompt paraphrase and a long function-word loop."
+    },
+    {
+      "key": "open_06/16/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A sustained explanation of axial tilt and opposing hemispheric seasons, with only small wording omissions."
+    },
+    {
+      "key": "open_10/16/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The search-engine workflow is recognizable, but missing verbs and broken transitions weaken the explanation."
+    },
+    {
+      "key": "open_04/16/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "Relevant friendship advice is undermined by malformed words, duplicated items, and many empty lines; this illustrates formatting degeneration as well as repetition."
+    },
+    {
+      "key": "open_08/32/confidence",
+      "grade": "Good",
+      "reason": "A clear short-term/long-term contrast with organized paragraphs; a few duplicated words and punctuation marks remain."
+    },
+    {
+      "key": "open_01/32/confidence",
+      "grade": "Average",
+      "reason": "A mostly coherent Amsterdam overview with duplicated landmarks, repeated nightlife references, and a missing phrase."
+    },
+    {
+      "key": "open_04/32/confidence",
+      "grade": "Bad",
+      "reason": "Almost the entire answer becomes a listens/and loop rather than usable advice."
+    },
+    {
+      "key": "open_10/32/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A coherent sequence of crawling, indexing, relevance ranking, and returning search results, without a major repetition loop."
+    },
+    {
+      "key": "open_09/32/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The definitions are mostly understandable, but the equilibrium-price sentence becomes grammatically and conceptually muddled."
+    },
+    {
+      "key": "open_01/32/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "Fluent prose still names Red Square as an Amsterdam landmark and repeats Anne Frank House. This is an obvious content failure rather than a grammatical collapse."
+    },
+    {
+      "key": "open_04/64/confidence",
+      "grade": "Good",
+      "reason": "A fluent, coherent paragraph describing supportive friendship, with no conspicuous broken wording or repetition loop."
+    },
+    {
+      "key": "open_01/64/confidence",
+      "grade": "Average",
+      "reason": "A readable but generic overview that repeats known for and includes canals canals and the malformed Van Gogh-Amuseum name."
+    },
+    {
+      "key": "open_03/64/confidence",
+      "grade": "Bad",
+      "reason": "Mostly fluent text ends by saying the glucose is released into the atmosphere as a byproduct. The content error makes it a relative weak answer despite the readable surface."
+    },
+    {
+      "key": "open_09/64/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A coherent explanation that defines supply, demand, and equilibrium price and stays on topic."
+    },
+    {
+      "key": "open_01/64/pmi_diffusion",
+      "grade": "Average",
+      "reason": "Mostly fluent descriptive prose, with generic repetition and a missing item in festivals, concerts, and taking place."
+    },
+    {
+      "key": "open_05/64/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "It repeats coils and presents a confused refrigeration mechanism, including releasing cold refrigerant into the surrounding air."
+    },
+    {
+      "key": "open_09/128/confidence",
+      "grade": "Good",
+      "reason": "A clear, complete explanation of supply, demand, and equilibrium, with consistent terminology."
+    },
+    {
+      "key": "open_01/128/confidence",
+      "grade": "Average",
+      "reason": "A readable and relevant Amsterdam overview that uses several generic known for and also constructions, typical of the stronger outputs here."
+    },
+    {
+      "key": "open_05/128/confidence",
+      "grade": "Bad",
+      "reason": "Even at 128 NFE, this answer collapses into a long cold air loop and never explains the heat-transfer mechanism."
+    },
+    {
+      "key": "open_03/128/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A coherent photosynthesis explanation with consistent reactants/products and a balanced summary equation."
+    },
+    {
+      "key": "open_08/128/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The main distinction is clear, but the time-scale examples are vague and the concluding summary repeats the earlier definition."
+    },
+    {
+      "key": "open_01/128/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "A relative weak example, not a collapse: it remains fluent but lists Anne Frank House twice and repeats generic descriptions of the city."
+    }
+  ]
+}

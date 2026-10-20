@@ -1,0 +1,260 @@
+[
+  {
+    "key": "open_24/128/pmi_diffusion",
+    "prompt_id": "open_24",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_24/128/conditional_margin",
+    "prompt_id": "open_24",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_24/128/pmi_margin",
+    "prompt_id": "open_24",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_25/128/confidence",
+    "prompt_id": "open_25",
+    "steps": 128,
+    "method": "confidence"
+  },
+  {
+    "key": "open_25/128/conditional_diffusion",
+    "prompt_id": "open_25",
+    "steps": 128,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_25/128/pmi_diffusion",
+    "prompt_id": "open_25",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_25/128/conditional_margin",
+    "prompt_id": "open_25",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_25/128/pmi_margin",
+    "prompt_id": "open_25",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_26/128/confidence",
+    "prompt_id": "open_26",
+    "steps": 128,
+    "method": "confidence"
+  },
+  {
+    "key": "open_26/128/conditional_diffusion",
+    "prompt_id": "open_26",
+    "steps": 128,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_26/128/pmi_diffusion",
+    "prompt_id": "open_26",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_26/128/conditional_margin",
+    "prompt_id": "open_26",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_26/128/pmi_margin",
+    "prompt_id": "open_26",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_27/128/confidence",
+    "prompt_id": "open_27",
+    "steps": 128,
+    "method": "confidence"
+  },
+  {
+    "key": "open_27/128/conditional_diffusion",
+    "prompt_id": "open_27",
+    "steps": 128,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_27/128/pmi_diffusion",
+    "prompt_id": "open_27",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_27/128/conditional_margin",
+    "prompt_id": "open_27",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_27/128/pmi_margin",
+    "prompt_id": "open_27",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_28/128/confidence",
+    "prompt_id": "open_28",
+    "steps": 128,
+    "method": "confidence"
+  },
+  {
+    "key": "open_28/128/conditional_diffusion",
+    "prompt_id": "open_28",
+    "steps": 128,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_28/128/pmi_diffusion",
+    "prompt_id": "open_28",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_28/128/conditional_margin",
+    "prompt_id": "open_28",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_28/128/pmi_margin",
+    "prompt_id": "open_28",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_29/128/confidence",
+    "prompt_id": "open_29",
+    "steps": 128,
+    "method": "confidence"
+  },
+  {
+    "key": "open_29/128/conditional_diffusion",
+    "prompt_id": "open_29",
+    "steps": 128,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_29/128/pmi_diffusion",
+    "prompt_id": "open_29",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_29/128/conditional_margin",
+    "prompt_id": "open_29",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_29/128/pmi_margin",
+    "prompt_id": "open_29",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_29/64/confidence",
+    "prompt_id": "open_29",
+    "steps": 64,
+    "method": "confidence"
+  },
+  {
+    "key": "open_29/64/conditional_diffusion",
+    "prompt_id": "open_29",
+    "steps": 64,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_29/64/pmi_diffusion",
+    "prompt_id": "open_29",
+    "steps": 64,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_29/64/conditional_margin",
+    "prompt_id": "open_29",
+    "steps": 64,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_29/64/pmi_margin",
+    "prompt_id": "open_29",
+    "steps": 64,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_30/128/confidence",
+    "prompt_id": "open_30",
+    "steps": 128,
+    "method": "confidence"
+  },
+  {
+    "key": "open_30/128/conditional_diffusion",
+    "prompt_id": "open_30",
+    "steps": 128,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_30/128/pmi_diffusion",
+    "prompt_id": "open_30",
+    "steps": 128,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_30/128/conditional_margin",
+    "prompt_id": "open_30",
+    "steps": 128,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_30/128/pmi_margin",
+    "prompt_id": "open_30",
+    "steps": 128,
+    "method": "pmi_margin"
+  },
+  {
+    "key": "open_30/64/confidence",
+    "prompt_id": "open_30",
+    "steps": 64,
+    "method": "confidence"
+  },
+  {
+    "key": "open_30/64/conditional_diffusion",
+    "prompt_id": "open_30",
+    "steps": 64,
+    "method": "conditional_diffusion"
+  },
+  {
+    "key": "open_30/64/pmi_diffusion",
+    "prompt_id": "open_30",
+    "steps": 64,
+    "method": "pmi_diffusion"
+  },
+  {
+    "key": "open_30/64/conditional_margin",
+    "prompt_id": "open_30",
+    "steps": 64,
+    "method": "conditional_margin"
+  },
+  {
+    "key": "open_30/64/pmi_margin",
+    "prompt_id": "open_30",
+    "steps": 64,
+    "method": "pmi_margin"
+  }
+]

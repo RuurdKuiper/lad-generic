@@ -1,0 +1,20 @@
+{
+  "complete": true,
+  "generated": 100,
+  "scored": 100,
+  "questions": 10,
+  "steps": [
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "nfe_verified": true,
+  "eos_retention_delay_both": true,
+  "generator_revision_unchanged": true,
+  "revision": "0904e3f97dd50eb51ed96a27fabe7f93ca1c19dc",
+  "distinct_1_verified": true,
+  "unique_token_counts_verified": true,
+  "representative_examples": 30
+}

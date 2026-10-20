@@ -1,0 +1,153 @@
+{
+  "generated": 100,
+  "scored": 100,
+  "planned": 100,
+  "groups": [
+    {
+      "steps": 8,
+      "method": "confidence",
+      "prompts": 10,
+      "perplexity": 15.894711277695983,
+      "reference_tokens": 525,
+      "median_answer_perplexity": 24.632549595271538,
+      "mean_words": 45.5,
+      "mean_generated_tokens": 53.1,
+      "mean_distinct_1": 0.35276825729719985,
+      "mean_unique_tokens": 14.4
+    },
+    {
+      "steps": 8,
+      "method": "pmi_diffusion",
+      "prompts": 10,
+      "perplexity": 6.5431104226661425,
+      "reference_tokens": 762,
+      "median_answer_perplexity": 8.70507738009267,
+      "mean_words": 64.5,
+      "mean_generated_tokens": 76.0,
+      "mean_distinct_1": 0.32912835357565134,
+      "mean_unique_tokens": 23.0,
+      "paired_ppl_ratio_ci95": [
+        0.2144587456784066,
+        0.6807668352817828
+      ],
+      "per_answer_ppl_wins": 9
+    },
+    {
+      "steps": 16,
+      "method": "confidence",
+      "prompts": 10,
+      "perplexity": 16.527248383710955,
+      "reference_tokens": 488,
+      "median_answer_perplexity": 21.792042274660503,
+      "mean_words": 43.1,
+      "mean_generated_tokens": 48.6,
+      "mean_distinct_1": 0.4653124312256459,
+      "mean_unique_tokens": 20.3
+    },
+    {
+      "steps": 16,
+      "method": "pmi_diffusion",
+      "prompts": 10,
+      "perplexity": 8.757565350332133,
+      "reference_tokens": 719,
+      "median_answer_perplexity": 8.920835897159163,
+      "mean_words": 63.4,
+      "mean_generated_tokens": 71.7,
+      "mean_distinct_1": 0.47988990372405843,
+      "mean_unique_tokens": 31.5,
+      "paired_ppl_ratio_ci95": [
+        0.37254080466936684,
+        0.6635412517339669
+      ],
+      "per_answer_ppl_wins": 9
+    },
+    {
+      "steps": 32,
+      "method": "confidence",
+      "prompts": 10,
+      "perplexity": 10.75560015108031,
+      "reference_tokens": 648,
+      "median_answer_perplexity": 14.806855082950058,
+      "mean_words": 57.4,
+      "mean_generated_tokens": 65.2,
+      "mean_distinct_1": 0.4728724136016157,
+      "mean_unique_tokens": 27.5
+    },
+    {
+      "steps": 32,
+      "method": "pmi_diffusion",
+      "prompts": 10,
+      "perplexity": 5.40211473167258,
+      "reference_tokens": 830,
+      "median_answer_perplexity": 5.207627663756854,
+      "mean_words": 72.9,
+      "mean_generated_tokens": 83.8,
+      "mean_distinct_1": 0.4749391004525001,
+      "mean_unique_tokens": 35.2,
+      "paired_ppl_ratio_ci95": [
+        0.38051054613469465,
+        0.6377593172904716
+      ],
+      "per_answer_ppl_wins": 9
+    },
+    {
+      "steps": 64,
+      "method": "confidence",
+      "prompts": 10,
+      "perplexity": 4.9616096702054415,
+      "reference_tokens": 773,
+      "median_answer_perplexity": 5.3628404460251,
+      "mean_words": 69.7,
+      "mean_generated_tokens": 77.8,
+      "mean_distinct_1": 0.48761047340149777,
+      "mean_unique_tokens": 35.6
+    },
+    {
+      "steps": 64,
+      "method": "pmi_diffusion",
+      "prompts": 10,
+      "perplexity": 3.9646082032313767,
+      "reference_tokens": 812,
+      "median_answer_perplexity": 3.977573543987659,
+      "mean_words": 71.1,
+      "mean_generated_tokens": 80.2,
+      "mean_distinct_1": 0.5439288891345513,
+      "mean_unique_tokens": 42.2,
+      "paired_ppl_ratio_ci95": [
+        0.612888797538222,
+        1.045904255235093
+      ],
+      "per_answer_ppl_wins": 8
+    },
+    {
+      "steps": 128,
+      "method": "confidence",
+      "prompts": 10,
+      "perplexity": 3.7163139168530304,
+      "reference_tokens": 778,
+      "median_answer_perplexity": 3.7574595487700906,
+      "mean_words": 67.7,
+      "mean_generated_tokens": 77.0,
+      "mean_distinct_1": 0.5479844883171859,
+      "mean_unique_tokens": 40.3
+    },
+    {
+      "steps": 128,
+      "method": "pmi_diffusion",
+      "prompts": 10,
+      "perplexity": 3.187096470413401,
+      "reference_tokens": 696,
+      "median_answer_perplexity": 3.436314267618448,
+      "mean_words": 60.5,
+      "mean_generated_tokens": 69.2,
+      "mean_distinct_1": 0.5982478593882259,
+      "mean_unique_tokens": 40.0,
+      "paired_ppl_ratio_ci95": [
+        0.7795541889371445,
+        0.9680803922217182
+      ],
+      "per_answer_ppl_wins": 8
+    }
+  ],
+  "interpretation": "Lower reference perplexity means more predictable text, not necessarily more factual or useful answers."
+}

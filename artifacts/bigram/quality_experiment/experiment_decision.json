@@ -1,0 +1,11 @@
+{
+  "status": "closed_at_user_request",
+  "date": "2026-10-20",
+  "generated": 557,
+  "reviewed": 557,
+  "original_planned": 600,
+  "skipped": 43,
+  "runner_stopped": true,
+  "balanced_prose_questions": 23,
+  "reason": "User chose to skip quota-blocked results and base the assessment on existing outputs."
+}

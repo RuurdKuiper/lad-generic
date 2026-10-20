@@ -1,0 +1,16 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "parent": "977a9266f2482a17e03b67eedd1f9b44c7f95f81",
+  "commit": "2d5f62fff44a3ac452dafc1220f0d79eb70f133a",
+  "files_sha256": {
+    "app.py": "a13db2583e2ed33c0c6bd8a016bed9e6190c015190fe6fa1609de0a11d407765",
+    "src/diffusion_lm/inference.py": "0ddb7fd53a2e51c7a1200aa19ff3798906dcd29aa98b92cee5a7d6a34ea5320a"
+  },
+  "defaults": {
+    "temperature": 1.0,
+    "top_k": 16
+  },
+  "change": "Use original diffusion probabilities for retention and display when ending prediction logits are penalized.",
+  "validation": "190 passed, 3 CUDA-only skips",
+  "extra_model_forward_passes": 0
+}

@@ -1,0 +1,156 @@
+{
+  "scope": "10 questions, 128-token limit; two methods on the same Gemma model",
+  "selection": "Manual qualitative review; labels relative within method/NFE group",
+  "examples": [
+    {
+      "key": "open_08/8/confidence",
+      "grade": "Good",
+      "reason": "One of the more recognizable answers in this group: it retains the short-term versus long-term distinction, despite broken grammar and an unfinished ending."
+    },
+    {
+      "key": "open_03/8/confidence",
+      "grade": "Average",
+      "reason": "Relevant photosynthesis terms are present, but duplication and punctuation fragments prevent a coherent explanation."
+    },
+    {
+      "key": "open_05/8/confidence",
+      "grade": "Bad",
+      "reason": "A long loop of function words and temperature/refrigerator fragments overwhelms the initial idea."
+    },
+    {
+      "key": "open_10/8/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A relatively short, recognizable search-engine answer. Grammar is awkward and links/algorithms repeat, so this is only good relative to this weak group."
+    },
+    {
+      "key": "open_06/8/pmi_diffusion",
+      "grade": "Average",
+      "reason": "It identifies axial tilt, but the subsequent causal explanation becomes garbled and repeatedly refers to Earth and its axis."
+    },
+    {
+      "key": "open_01/8/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "The answer collapses into 45 occurrences of Netherlands. Its very low perplexity illustrates why examples were not selected by perplexity rank."
+    },
+    {
+      "key": "open_03/16/confidence",
+      "grade": "Good",
+      "reason": "One of the more informative attempts: it names photosynthesis and its main vocabulary. It still repeats words, muddles the mechanism, and includes the nonsensical phrase oxygen dioxide."
+    },
+    {
+      "key": "open_05/16/confidence",
+      "grade": "Average",
+      "reason": "The intended inside-to-outside heat transfer is partly recognizable, but missing words, duplicated articles, and confused wording make the explanation difficult to follow."
+    },
+    {
+      "key": "open_09/16/confidence",
+      "grade": "Bad",
+      "reason": "Repeated quantity/price fragments fail to explain the relationship between supply, demand, and price."
+    },
+    {
+      "key": "open_10/16/pmi_diffusion",
+      "grade": "Good",
+      "reason": "Mostly follows a coherent search-engine explanation and stays relevant, with grammatical errors and some duplicated keywords."
+    },
+    {
+      "key": "open_01/16/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The answer gives recognizable facts about Amsterdam but keeps revisiting canals, nightlife, culture, and museums."
+    },
+    {
+      "key": "open_09/16/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "The output repeatedly cycles through quantity and price without developing a meaningful explanation."
+    },
+    {
+      "key": "open_09/32/confidence",
+      "grade": "Good",
+      "reason": "A clear, largely coherent explanation of how high supply/low demand and low supply/high demand affect price, with minor wording errors."
+    },
+    {
+      "key": "open_08/32/confidence",
+      "grade": "Average",
+      "reason": "The main weather/climate distinction is recognizable, but duplicated punctuation and the malformed at least00 years ending weaken it."
+    },
+    {
+      "key": "open_10/32/confidence",
+      "grade": "Bad",
+      "reason": "A relevant opening develops into repeated crawling/ranking fragments and broken sentences about pages and search results."
+    },
+    {
+      "key": "open_10/32/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A coherent sequence of crawling, content analysis, and ranking. The duplicated Then and awkward final wording are minor relative to the other answers here."
+    },
+    {
+      "key": "open_08/32/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The main distinction is conveyed, but the answer repeatedly restates long periods, weather conditions, temperature, and humidity."
+    },
+    {
+      "key": "open_04/32/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "A plausible opening degenerates into a long list of repeated They are trustworthy and They are willing phrases."
+    },
+    {
+      "key": "open_10/64/confidence",
+      "grade": "Good",
+      "reason": "A coherent explanation of crawling, indexing, ranking, and query interpretation, with a small omission in natural language."
+    },
+    {
+      "key": "open_08/64/confidence",
+      "grade": "Average",
+      "reason": "The distinction is mostly clear, with duplicated words and an awkward final sentence that restates the point."
+    },
+    {
+      "key": "open_05/64/confidence",
+      "grade": "Bad",
+      "reason": "The answer starts with the right heat-transfer idea but repeatedly loops through inside/outside wording and fails to explain a clear cycle."
+    },
+    {
+      "key": "open_09/64/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A fluent, relevant supply-and-demand explanation with a clear relationship between scarcity, demand, and price."
+    },
+    {
+      "key": "open_04/64/pmi_diffusion",
+      "grade": "Average",
+      "reason": "Mostly fluent and relevant, but the missing verb in also to celebrate and the unfinished final They show remaining generation errors."
+    },
+    {
+      "key": "open_05/64/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "The answer mixes up the refrigeration mechanism, repeats much of the heat-transfer description, and ends mid-sentence."
+    },
+    {
+      "key": "open_02/128/confidence",
+      "grade": "Good",
+      "reason": "A concise, coherent explanation naming Rayleigh scattering and connecting it to the observed sky color."
+    },
+    {
+      "key": "open_03/128/confidence",
+      "grade": "Average",
+      "reason": "The main photosynthesis explanation is understandable, but the final relative clause is malformed and chlorophyll is duplicated."
+    },
+    {
+      "key": "open_05/128/confidence",
+      "grade": "Bad",
+      "reason": "The initial heat-transfer explanation is followed by repetitive, largely unintelligible inside/outside-temperature sentences."
+    },
+    {
+      "key": "open_04/128/pmi_diffusion",
+      "grade": "Good",
+      "reason": "A clear, relevant, complete paragraph with no conspicuous grammatical errors or repetition loops."
+    },
+    {
+      "key": "open_08/128/pmi_diffusion",
+      "grade": "Average",
+      "reason": "The main distinction is clear, but the final sentence awkwardly repeats the short-term/long-term explanation."
+    },
+    {
+      "key": "open_05/128/pmi_diffusion",
+      "grade": "Bad",
+      "reason": "A relative weak example rather than a collapse: it reads fluently, but the compressor/liquid/gas sequence is confused and the cycle is described repetitively."
+    }
+  ]
+}

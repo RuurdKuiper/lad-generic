@@ -1,0 +1,17 @@
+{
+  "path": "artifacts/bigram/qwen.pt",
+  "checkpoint_version": 2,
+  "successor_tokens": 71725486,
+  "successor_marginal": "additive-beta-smoothed successor counts from observed pairs",
+  "observed_pairs": 5681129,
+  "tokens": 72705486,
+  "model_vocab_size": 152064,
+  "tokenizer": "Qwen/Qwen2.5-7B-Instruct",
+  "tokenizer_sha256": "0bcfe76c695a7b4b08e77e8b48ebc15335d1afe61759dfec50312fc0dfbaee39",
+  "source": "data/lad-training-1m-256-long",
+  "split": "train",
+  "max_documents": null,
+  "text_column": "output",
+  "response_eos": true,
+  "documents": 980000
+}

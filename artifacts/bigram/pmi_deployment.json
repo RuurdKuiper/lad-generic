@@ -1,0 +1,13 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "commit": "f3ca90d2b51bad138961ee8821a531d4cc00885e",
+  "pmi_commit": "d572cd8136a96d3c68198382f52ebeb8c1ddde2e",
+  "argmax_tie_fix": "87ab889fae0ad247b5d5002ba18349d80da61ae6",
+  "files": [
+    "app.py",
+    "src/diffusion_lm/bigram.py",
+    "src/diffusion_lm/bigram_evaluation.py",
+    "src/diffusion_lm/inference.py",
+    "bigram.pt"
+  ]
+}

@@ -1,7 +1,8 @@
-"""Shared full-precision ZeroGPU demo for the four BYOD models."""
+"""Shared full-precision ZeroGPU demo for BYOD adapters and native LLaDA."""
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 import os
 import secrets
 import sys
@@ -14,10 +15,26 @@ import spaces
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from diffusion_lm.inference import denoise_stream, load_hub_adapter_session
+from diffusion_lm.bigram import BigramScorer, BigramViterbiSelector
+from diffusion_lm.bigram_evaluation import ProfiledBigramSelector
+from diffusion_lm.inference import denoise_stream, load_hub_adapter_session, load_llada_session
 
 
 SPACE = json.loads((Path(__file__).parent / "space_model.json").read_text())
+BIGRAM_ENABLED = bool(SPACE.get("bigram_enabled", False))
+BIGRAM_PATH = os.getenv("BIGRAM_MODEL_PATH", str(Path(__file__).parent / "bigram.pt"))
+# Bigram defaults: edit these here to change the hosted configuration.
+# Scoring: "Conditional bigram" or "PMI bigram".
+# Retention: "Diffusion probability" or "Viterbi path margin".
+BIGRAM_SCORING_METHOD = "PMI bigram"
+BIGRAM_REMASKING_CONFIDENCE = "Diffusion probability"
+PMI_MIN_COUNT = 1
+PMI_CLIP = 2.0
+BIGRAM_ENDING_DELAY_STRENGTH = 10.0
+# Preserve the candidate pool and balance used in the matched Viterbi tests.
+DEFAULT_TEMPERATURE = 2.0 if BIGRAM_ENABLED else 0.7
+DEFAULT_TOP_K = 16 if BIGRAM_ENABLED else 3
+
 MODEL_REPO_ID = os.getenv("MODEL_REPO_ID", SPACE["model_repo_id"])
 DISPLAY_NAME = SPACE["display_name"]
 SHOW_REPOSITORY_LINKS = bool(SPACE.get("show_repository_links", True))
@@ -40,16 +57,27 @@ def _visitor_badge(counter_id: str | None) -> str:
     return f"![Visitor count](https://visitor-badge.laobi.icu/badge?{query})"
 
 # ZeroGPU recommends constructing and placing the root module on CUDA at module
-# scope. No quantization is used: all four demos run with the saved BF16 setup.
+# scope. The models are loaded without quantization.
 print(f"Loading {MODEL_REPO_ID} in full precision...")
-SESSION = load_hub_adapter_session(
-    MODEL_REPO_ID,
-    device_name="cuda",
-    quantization="none",
-    # A forward pass is only valid after @spaces.GPU has allocated hardware.
-    preflight=False,
-)
+if SPACE.get("model_backend", "byod") == "llada":
+    SESSION = load_llada_session(
+        MODEL_REPO_ID, device_name="cuda", revision=SPACE["model_revision"], preflight=False,
+    )
+else:
+    SESSION = load_hub_adapter_session(
+        MODEL_REPO_ID,
+        device_name="cuda",
+        quantization="none",
+        # A forward pass is only valid after @spaces.GPU allocates hardware.
+        preflight=False,
+    )
 print(f"Loaded {DISPLAY_NAME} ({SESSION.compute_dtype}, unquantized).")
+
+
+@lru_cache(maxsize=2)
+def _bigram_scorer(path):
+    # weights_only loading and tokenizer validation happen once per checkpoint.
+    return BigramScorer.load(path, tokenizer=SESSION.tokenizer)
 
 
 def _duration(*args) -> int:
@@ -84,11 +112,34 @@ def generate(
     ar_check_interval: int,
     delay_eos_eot: bool,
     early_stopping: bool,
+    bigram_model_path: str = BIGRAM_PATH,
+    bigram_scoring_method: str = BIGRAM_SCORING_METHOD,
+    pmi_min_count: int = PMI_MIN_COUNT,
+    pmi_clip: float = PMI_CLIP,
+    generation_seed: int = -1,
+    measure_decoding: bool = False,
+    bigram_eos_delay_penalty: float = BIGRAM_ENDING_DELAY_STRENGTH,
+    bigram_remasking_confidence: str = BIGRAM_REMASKING_CONFIDENCE,
 ):
     """Stream iterative masked-diffusion generation from the fixed model."""
     question = question.strip() or "What do you know about Amsterdam?"
     block_length = min(int(block_length), int(max_new_tokens))
-    seed = secrets.randbelow(2**63 - 1)
+    seed = secrets.randbelow(2**63 - 1) if int(generation_seed) < 0 else int(generation_seed)
+    selector = None
+    if remasking_strategy == "Bigram Viterbi":
+        if not BIGRAM_ENABLED:
+            raise gr.Error("Bigram Viterbi is not enabled for this Space.")
+        try:
+            selector = BigramViterbiSelector(
+                _bigram_scorer(bigram_model_path).to(SESSION.device), 0.5,
+                scoring_method={"Conditional bigram": "conditional", "PMI bigram": "pmi"}.get(bigram_scoring_method, ""),
+                min_count=int(pmi_min_count), pmi_clip=float(pmi_clip),
+                remasking_confidence={"Diffusion probability": "diffusion", "Viterbi path margin": "viterbi_margin"}.get(bigram_remasking_confidence, ""),
+            )
+            if measure_decoding:
+                selector = ProfiledBigramSelector(selector)
+        except (FileNotFoundError, ValueError) as exc:
+            raise gr.Error(str(exc)) from exc
     first_step = True
     for text, status, trajectory_html in denoise_stream(
         SESSION,
@@ -101,11 +152,11 @@ def generate(
         top_k=int(top_k),
         seed=int(seed),
         permanent_unmask=not bool(revisable_tokens),
-        confidence_guided=remasking_strategy == "Confidence-guided",
+        confidence_guided=remasking_strategy in {"Confidence-guided", "Bigram Viterbi"},
         proportional_unmask=False,
         early_stopping=bool(early_stopping),
-        # This delays retention of predicted endings; it does not alter their
-        # sampling probability. Keep it optional so answers can end naturally.
+        # Bigram mode also fades an ending-prediction penalty to counter its
+        # deterministic tendency to choose the same short ending repeatedly.
         confidence_eos_eot_inf=bool(delay_eos_eot),
         freeze_retained_tokens=True,
         repetition_penalty=1.0,
@@ -116,12 +167,16 @@ def generate(
         autoregressive_guided=remasking_strategy == "Autoregressive-confidence",
         revisable_tokens=bool(revisable_tokens),
         autoregressive_check_interval=int(ar_check_interval),
+        bigram_selector=selector,
+        bigram_eos_delay_penalty=float(bigram_eos_delay_penalty),
     ):
         if not first_step and float(pause_per_step) > 0:
             # The sleep occurs inside this one decorated generator invocation,
             # so ZeroGPU remains allocated for the entire denoising run.
             time.sleep(float(pause_per_step))
         first_step = False
+        if measure_decoding and selector is not None:
+            status += "\n\nDecoding metrics: " + json.dumps(selector.metrics())
         yield status, trajectory_html
 
 
@@ -141,7 +196,7 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         f"# {DISPLAY_NAME}\n"
         "A full-precision masked-diffusion model converted from an "
         "autoregressive language model with LoRA. This demo uses the exact "
-        "best training checkpoint and does **not** use 4-bit quantization."
+        "published training checkpoint and does **not** use 4-bit quantization."
     )
     with gr.Row():
         with gr.Column(scale=3):
@@ -159,11 +214,13 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 value="You are a helpful assistant.",
                 lines=2,
             )
-            max_new_tokens = gr.Slider(16, 512, value=64, step=16, label="New tokens")
+            max_new_tokens = gr.Slider(1, 512, value=64, step=16, label="New tokens")
             num_steps = gr.Slider(1, 512, value=64, step=1, label="Denoising steps")
-            block_length = gr.Slider(16, 512, value=64, step=16, label="Block length")
-            temperature = gr.Slider(0.0, 2.0, value=0.7, step=0.05, label="Temperature")
-            top_k = gr.Slider(1, 100, value=3, step=1, label="Top-k")
+            block_length = gr.Slider(1, 512, value=64, step=1, label="Block length")
+            temperature = gr.Slider(0.0, 2.0, value=DEFAULT_TEMPERATURE, step=0.05, label="Temperature",
+                info="In Viterbi, lower values favor diffusion predictions over bigrams; 0 ignores bigram scores. Viterbi remains deterministic." if BIGRAM_ENABLED else None)
+            top_k = gr.Slider(1, 100, value=DEFAULT_TOP_K, step=1, label="Top-k",
+                info="Number of candidate tokens per position for sampling or Viterbi. At 1, only the model’s highest-scoring token is available." if BIGRAM_ENABLED else None)
             pause_per_step = gr.Slider(
                 0.0,
                 1.0,
@@ -179,14 +236,14 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 info="Hover over any token to see its position, prediction iteration, and probability.",
             )
             remasking_strategy = gr.Radio(
-                choices=["Confidence-guided", "Autoregressive-confidence", "Random"],
-                value="Confidence-guided",
+                choices=["Confidence-guided"] + ([] if SESSION.llada else ["Autoregressive-confidence"]) + ["Random"] + (["Bigram Viterbi"] if BIGRAM_ENABLED else []),
+                value="Bigram Viterbi" if BIGRAM_ENABLED else "Confidence-guided",
                 label="Remasking strategy",
-                info="Rank tokens with diffusion confidence, the original causal model, or random selection.",
             )
             revisable_tokens = gr.Checkbox(
                 value=False,
                 label="Allow revising retained tokens",
+                visible=not SESSION.llada,
                 info="When enabled, previously visible tokens can be re-masked on later iterations.",
                 interactive=False,
             )
@@ -196,20 +253,21 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 value=4,
                 step=1,
                 label="AR check interval",
+                visible=not SESSION.llada,
                 info="Use the original causal model every N denoising steps; diffusion confidence is used between checks.",
                 interactive=False,
             )
             delay_eos_eot = gr.Checkbox(
                 value=True,
                 label="Delay EOS/EOT retention (longer answers)",
-                info="Preferentially re-masks predicted endings; it does not lower their prediction probability.",
+                info="Retains ending tokens last to give the answer room to develop.",
             )
             early_stopping = gr.Checkbox(
                 value=True,
                 label="Early stopping",
-                info="Stop after the visible answer is unchanged for two consecutive iterations.",
+                info="Converge a block after two matching answers; stop all remaining blocks when EOS/EOT is finalized with a complete preceding answer.",
             )
-    footer = "The first request may take longer while the base model and adapter are loaded."
+    footer = "The first request may take longer while the model is loaded."
     if SHOW_REPOSITORY_LINKS:
         footer += f" [Model card](https://huggingface.co/{MODEL_REPO_ID})"
         if SOURCE_URL:
@@ -218,6 +276,17 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
     if visitor_badge:
         footer += f"\n\n{visitor_badge}"
     gr.Markdown(footer)
+
+    # Hidden inputs preserve programmatic evaluation overrides. The interface
+    # uses the editable defaults above without exposing expert controls.
+    bigram_scoring_method = gr.Textbox(value=BIGRAM_SCORING_METHOD, visible=False)
+    bigram_remasking_confidence = gr.Textbox(value=BIGRAM_REMASKING_CONFIDENCE, visible=False)
+    pmi_min_count = gr.Number(value=PMI_MIN_COUNT, precision=0, visible=False)
+    pmi_clip = gr.Number(value=PMI_CLIP, visible=False)
+    bigram_eos_delay_penalty = gr.Number(value=BIGRAM_ENDING_DELAY_STRENGTH, visible=False)
+    bigram_model_path = gr.Textbox(value=BIGRAM_PATH, visible=False)
+    generation_seed = gr.Number(value=-1, precision=0, visible=False)
+    measure_decoding = gr.Checkbox(value=False, visible=False)
 
     inputs = [
         question,
@@ -234,6 +303,14 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         ar_check_interval,
         delay_eos_eot,
         early_stopping,
+        bigram_model_path,
+        bigram_scoring_method,
+        pmi_min_count,
+        pmi_clip,
+        generation_seed,
+        measure_decoding,
+        bigram_eos_delay_penalty,
+        bigram_remasking_confidence,
     ]
     def update_ar_controls(strategy):
         """Expose AR-only controls and clear revision when another strategy is selected."""

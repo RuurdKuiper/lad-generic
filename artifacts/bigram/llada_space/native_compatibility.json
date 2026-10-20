@@ -1,0 +1,13 @@
+{
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+  "transformers": "4.57.6",
+  "tiny_native_forward_shape": [
+    1,
+    4,
+    128
+  ],
+  "finite": true,
+  "bidirectional": true,
+  "full_weights_loaded_locally": false
+}

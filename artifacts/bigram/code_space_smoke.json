@@ -1,0 +1,5 @@
+{
+  "status": "Denoising step 32/32 \u00b7 29 output tokens \u00b7 mean confidence 0.577 \u00b7 retained 62 tokens",
+  "text": "```python\ndef add(a, b):\n    \"\"\"\ndef add(a, b):\n    return a + b\n```",
+  "newlines": 5
+}

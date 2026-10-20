@@ -1,0 +1,45 @@
+{
+  "stage": "complete",
+  "spaces": [
+    "Ruurd/byod-llama-3.1-8b",
+    "Ruurd/byod-qwen2.5-7b",
+    "Ruurd/byod-ministral-8b"
+  ],
+  "action": "Upload model-specific corpus-derived bigram counts to three existing public Spaces",
+  "spaces_unchanged": false,
+  "full_corpus_documents": 980000,
+  "tests_passed": 126,
+  "cuda_tests_skipped": 2,
+  "next_step": "Obtain explicit permission for public bigram statistics, then deploy and run hosted smoke checks.",
+  "initial_automatic_approval": "rejected",
+  "initial_reason": "Transcript does not clearly authorize publicly disclosing corpus-derived statistics to those specific destinations.",
+  "user_approved_public_statistics": true,
+  "approval_message": "Yes please change them!",
+  "deployment": [
+    {
+      "space": "Ruurd/byod-llama-3.1-8b",
+      "parent_revision": "be49cfdbf3256fd2c9edc6c1949a487e4417c624",
+      "private": false,
+      "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/byod_rollout/bundles/byod-llama-3.1-8b",
+      "model": "BYOD-Llama-3.1-8B",
+      "revision": "c8fd1efb8ef980a182f93f9f53f7c26c31b4eefd"
+    },
+    {
+      "space": "Ruurd/byod-qwen2.5-7b",
+      "parent_revision": "76a47fd7173f2c71c04c27904b50ea417d383998",
+      "private": false,
+      "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/byod_rollout/bundles/byod-qwen2.5-7b",
+      "model": "BYOD-Qwen2.5-7B",
+      "revision": "42f4809f51abcead37fe96eaa38d4b4b137e8119"
+    },
+    {
+      "space": "Ruurd/byod-ministral-8b",
+      "parent_revision": "b4966ed9d0dc820a1661b27926c0bcd5b9d6c4dd",
+      "private": false,
+      "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/byod_rollout/bundles/byod-ministral-8b",
+      "model": "BYOD-Ministral-8B",
+      "revision": "a0b71814ab4f21dfb76963ab19f700e8818d7fac"
+    }
+  ],
+  "hosted_verification_passed": true
+}

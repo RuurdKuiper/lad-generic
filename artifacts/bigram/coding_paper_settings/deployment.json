@@ -1,0 +1,7 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "parent": "c8003db3f4da4569d0915199751c1b7e0f1147d2",
+  "commit": "3e22ca7e38f1380b343928763fe1709b4173e76d",
+  "validation": "136 passed, 3 CUDA skips",
+  "change": "Temperature zero uses raw-logit argmax and full-vocabulary probability for retention; positive-temperature sampling and Viterbi unchanged."
+}

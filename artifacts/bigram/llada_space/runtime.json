@@ -1,0 +1,20 @@
+{
+  "stage": "RUNNING",
+  "hardware": {
+    "current": "zero-a10g",
+    "requested": "zero-a10g"
+  },
+  "gcTimeout": 172800,
+  "replicas": {
+    "current": 1,
+    "requested": 1
+  },
+  "devMode": false,
+  "domains": [
+    {
+      "domain": "ruurd-llada-8b-instruct.hf.space",
+      "stage": "READY"
+    }
+  ],
+  "sha": "153c673b030abe2a7081b0506e65e6c6264fd1cd"
+}

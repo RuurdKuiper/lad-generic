@@ -1,0 +1,30 @@
+[
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "parent_revision": "a55c889ea3639682b2ee478e989f617c4afea8d8",
+    "private": false,
+    "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/dovelove_rollout/bundles/byod-gemma-2-9b",
+    "model": "BYOD-Gemma-2-9B"
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "parent_revision": "b945b37d5b86294a2912399454e07f9af8e278dd",
+    "private": false,
+    "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/dovelove_rollout/bundles/byod-llama-3.1-8b",
+    "model": "BYOD-Llama-3.1-8B"
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "parent_revision": "ae2f0a2af73ef4c300d5f5d215fc0d1aa1e9218a",
+    "private": false,
+    "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/dovelove_rollout/bundles/byod-qwen2.5-7b",
+    "model": "BYOD-Qwen2.5-7B"
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "parent_revision": "1ff68c2879aff966589d32a22bfe741621eed3aa",
+    "private": false,
+    "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/dovelove_rollout/bundles/byod-ministral-8b",
+    "model": "BYOD-Ministral-8B"
+  }
+]

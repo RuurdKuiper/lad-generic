@@ -1,0 +1,17 @@
+{
+  "path": "artifacts/bigram/llama.pt",
+  "checkpoint_version": 2,
+  "successor_tokens": 70108258,
+  "successor_marginal": "additive-beta-smoothed successor counts from observed pairs",
+  "observed_pairs": 5895450,
+  "tokens": 71088258,
+  "model_vocab_size": 128256,
+  "tokenizer": "meta-llama/Llama-3.1-8B-Instruct",
+  "tokenizer_sha256": "280b8d85c3f201fd3160faae007b3483ddfec41a7f8b257f8fd8a8b0329f1998",
+  "source": "data/lad-training-1m-256-long",
+  "split": "train",
+  "max_documents": null,
+  "text_column": "output",
+  "response_eos": true,
+  "documents": 980000
+}

@@ -1,0 +1,9 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "commit": "c8003db3f4da4569d0915199751c1b7e0f1147d2",
+  "default": "Diffusion probability",
+  "option": "Viterbi path margin",
+  "full_passed": 305,
+  "cuda_skipped": 3,
+  "preexisting_training_config_failures": 3
+}

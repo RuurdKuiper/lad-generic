@@ -1,0 +1,110 @@
+[
+  {
+    "phase": "before",
+    "label": "pmi_t1",
+    "requested_steps": 16,
+    "actual_steps": 16,
+    "temperature": 1.0,
+    "ending_strength": 10.0,
+    "note": "Weak: repeated Netherlands, incomplete province phrase, duplicated punctuation and topics."
+  },
+  {
+    "phase": "before",
+    "label": "pmi_t2",
+    "requested_steps": 16,
+    "actual_steps": 16,
+    "temperature": 2.0,
+    "ending_strength": 10.0,
+    "note": "More fluent than T1, but still repeats Netherlands and contains an incomplete province phrase."
+  },
+  {
+    "phase": "before",
+    "label": "previous_conditional_default",
+    "requested_steps": 16,
+    "actual_steps": 16,
+    "temperature": 1.0,
+    "ending_strength": 10.0,
+    "note": "Starts fluently, then becomes malformed and adds unsupported claims."
+  },
+  {
+    "phase": "before",
+    "label": "pmi_t1",
+    "requested_steps": 32,
+    "actual_steps": 23,
+    "temperature": 1.0,
+    "ending_strength": 10.0,
+    "note": "Mostly fluent, with one of of repetition."
+  },
+  {
+    "phase": "before",
+    "label": "pmi_t2",
+    "requested_steps": 32,
+    "actual_steps": 23,
+    "temperature": 2.0,
+    "ending_strength": 10.0,
+    "note": "Fluent, generic short answer; cleaner than T1 on this prompt."
+  },
+  {
+    "phase": "before",
+    "label": "previous_conditional_default",
+    "requested_steps": 32,
+    "actual_steps": 23,
+    "temperature": 1.0,
+    "ending_strength": 10.0,
+    "note": "Fluent short answer."
+  },
+  {
+    "phase": "after",
+    "label": "pmi_t1",
+    "requested_steps": 16,
+    "actual_steps": 11,
+    "temperature": 1.0,
+    "ending_strength": 10.0,
+    "note": "Raw-confidence experiment: worse than before; strong repetition and malformed phrasing."
+  },
+  {
+    "phase": "after",
+    "label": "pmi_t2",
+    "requested_steps": 16,
+    "actual_steps": 13,
+    "temperature": 2.0,
+    "ending_strength": 10.0,
+    "note": "Raw-confidence experiment: worse than before; repeated museums and confused administrative phrasing."
+  },
+  {
+    "phase": "after",
+    "label": "pmi_t1",
+    "requested_steps": 32,
+    "actual_steps": 23,
+    "temperature": 1.0,
+    "ending_strength": 10.0,
+    "note": "Exactly the same answer as before the confidence experiment."
+  },
+  {
+    "phase": "after",
+    "label": "pmi_t2",
+    "requested_steps": 32,
+    "actual_steps": 23,
+    "temperature": 2.0,
+    "ending_strength": 10.0,
+    "note": "Exactly the same answer as before the confidence experiment."
+  },
+  {
+    "phase": "after_stronger_ending_delay",
+    "label": "pmi_t1",
+    "requested_steps": 16,
+    "actual_steps": 16,
+    "temperature": 1.0,
+    "ending_strength": 1000.0,
+    "note": "Longer continuation of the same weak prefix; repetitions persist and answer reaches token cap."
+  },
+  {
+    "phase": "after_stronger_ending_delay",
+    "label": "pmi_t2",
+    "requested_steps": 16,
+    "actual_steps": 16,
+    "temperature": 2.0,
+    "ending_strength": 1000.0,
+    "note": "Longer continuation of the same weak prefix; repeats museums and largest city."
+  }
+]

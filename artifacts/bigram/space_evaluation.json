@@ -1,0 +1,283 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "prompt": "What do you know about Amsterdam?",
+  "steps": 8,
+  "note": "Exploratory single runs. Latency includes startup/queue. Word repetition and token differences are diagnostics, not correctness scores.",
+  "results": [
+    {
+      "length": 1,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.0,
+      "elapsed_seconds": 5.75350779099972,
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 0.000 \u00b7 retained 1 tokens",
+      "text": "Amsterdam",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 1.0,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 1,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.5,
+      "elapsed_seconds": 1.1420986670018465,
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 0.000 \u00b7 retained 1 tokens",
+      "text": "I",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 1.0,
+      "token_sequence_difference_from_lambda0": 1.0
+    },
+    {
+      "length": 1,
+      "strategy": "Bigram Viterbi",
+      "weight": 1.0,
+      "elapsed_seconds": 1.166605750000599,
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 0.000 \u00b7 retained 1 tokens",
+      "text": "I",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 1.0,
+      "token_sequence_difference_from_lambda0": 1.0
+    },
+    {
+      "length": 1,
+      "strategy": "Confidence-guided",
+      "weight": 0.5,
+      "elapsed_seconds": 0.9579222499996831,
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 1.000 \u00b7 retained 1 tokens",
+      "text": "Amsterdam",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 1.0,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 1,
+      "strategy": "Random",
+      "weight": 0.5,
+      "elapsed_seconds": 1.2620177919998241,
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 1.000 \u00b7 retained 1 tokens",
+      "text": "Amsterdam",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 1.0,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 8,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.0,
+      "elapsed_seconds": 0.889152625000861,
+      "status": "Denoising step 8/8 \u00b7 8 output tokens \u00b7 mean confidence 0.086 \u00b7 retained 7 tokens",
+      "text": "Amsterdam is the capital of the Netherlands and",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.875,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 8,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.5,
+      "elapsed_seconds": 0.8870792500019888,
+      "status": "Denoising step 8/8 \u00b7 8 output tokens \u00b7 mean confidence 0.086 \u00b7 retained 7 tokens",
+      "text": "Amsterdam is the capital of the Netherlands and",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.875,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 8,
+      "strategy": "Bigram Viterbi",
+      "weight": 1.0,
+      "elapsed_seconds": 0.8418170000004466,
+      "status": "Denoising step 8/8 \u00b7 8 output tokens \u00b7 mean confidence 0.125 \u00b7 retained 7 tokens",
+      "text": "Amsterdam is the capital of the Netherlands and",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.875,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 8,
+      "strategy": "Confidence-guided",
+      "weight": 0.5,
+      "elapsed_seconds": 1.021063708998554,
+      "status": "Denoising step 8/8 \u00b7 8 output tokens \u00b7 mean confidence 0.816 \u00b7 retained 7 tokens",
+      "text": "Amsterdam is the capital of the Netherlands and",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.875,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 8,
+      "strategy": "Random",
+      "weight": 0.5,
+      "elapsed_seconds": 0.8986475829988194,
+      "status": "Denoising step 8/8 \u00b7 8 output tokens \u00b7 mean confidence 0.707 \u00b7 retained 7 tokens",
+      "text": "Amsterdam is the capital of the Netherlands and",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.875,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 32,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.0,
+      "elapsed_seconds": 1.0400252079998609,
+      "status": "Denoising step 8/8 \u00b7 10 output tokens \u00b7 mean confidence 0.743 \u00b7 retained 28 tokens",
+      "text": "Amsterdam is the the capital of the the Netherlands.",
+      "adjacent_word_repeats": 2,
+      "unique_word_fraction": 0.6666666666666666,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 32,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.5,
+      "elapsed_seconds": 0.9634741670015501,
+      "status": "Denoising step 8/8 \u00b7 20 output tokens \u00b7 mean confidence 0.432 \u00b7 retained 28 tokens",
+      "text": "Amsterdam is the capital of the Netherlands, and is one of the most popular tourist in the world.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.7222222222222222,
+      "token_sequence_difference_from_lambda0": 0.4666666666666667
+    },
+    {
+      "length": 32,
+      "strategy": "Bigram Viterbi",
+      "weight": 1.0,
+      "elapsed_seconds": 0.9012869590005721,
+      "status": "Denoising step 8/8 \u00b7 21 output tokens \u00b7 mean confidence 0.377 \u00b7 retained 28 tokens",
+      "text": "It is the capital city of the Netherlands. It is known for its canals, museums, and culture.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.8235294117647058,
+      "token_sequence_difference_from_lambda0": 0.5483870967741935
+    },
+    {
+      "length": 32,
+      "strategy": "Confidence-guided",
+      "weight": 0.5,
+      "elapsed_seconds": 1.0174592920011492,
+      "status": "Denoising step 8/8 \u00b7 29 output tokens \u00b7 mean confidence 0.848 \u00b7 retained 28 tokens",
+      "text": "Amsterdam is the capital city of country of the Netherlands. It is known for the canals canals, museums,, the Anne Frank, and nightlife.",
+      "adjacent_word_repeats": 1,
+      "unique_word_fraction": 0.7391304347826086,
+      "token_sequence_difference_from_lambda0": 0.5897435897435898
+    },
+    {
+      "length": 32,
+      "strategy": "Random",
+      "weight": 0.5,
+      "elapsed_seconds": 0.9493924159978633,
+      "status": "Denoising step 8/8 \u00b7 25 output tokens \u00b7 mean confidence 0.770 \u00b7 retained 28 tokens",
+      "text": "Amsterdam is the capital of the Netherlands, a part the country, and the largest city of the and a major cultural city.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.6363636363636364,
+      "token_sequence_difference_from_lambda0": 0.5428571428571429
+    },
+    {
+      "length": 128,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.0,
+      "elapsed_seconds": 1.8780818339982943,
+      "status": "Denoising step 8/8 \u00b7 17 output tokens \u00b7 mean confidence 0.835 \u00b7 retained 112 tokens",
+      "text": "Amsterdam is the capital of the Netherlands Netherlands and is of of the most most cities in",
+      "adjacent_word_repeats": 3,
+      "unique_word_fraction": 0.5882352941176471,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 128,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.5,
+      "elapsed_seconds": 1.1474480830001994,
+      "status": "Denoising step 8/8 \u00b7 20 output tokens \u00b7 mean confidence 0.829 \u00b7 retained 112 tokens",
+      "text": "Amsterdam is the capital of the Netherlands. It is known for its canals, and, and culture.",
+      "adjacent_word_repeats": 1,
+      "unique_word_fraction": 0.8125,
+      "token_sequence_difference_from_lambda0": 0.5675675675675675
+    },
+    {
+      "length": 128,
+      "strategy": "Bigram Viterbi",
+      "weight": 1.0,
+      "elapsed_seconds": 1.175086791998183,
+      "status": "Denoising step 8/8 \u00b7 18 output tokens \u00b7 mean confidence 0.837 \u00b7 retained 112 tokens",
+      "text": "It is the capital of the Netherlands, and is known for its canals, and culture.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.8,
+      "token_sequence_difference_from_lambda0": 0.5428571428571429
+    },
+    {
+      "length": 128,
+      "strategy": "Confidence-guided",
+      "weight": 0.5,
+      "elapsed_seconds": 0.9928605419991072,
+      "status": "Denoising step 8/8 \u00b7 12 output tokens \u00b7 mean confidence 0.930 \u00b7 retained 112 tokens",
+      "text": "Amsterdam is the capital city of the Netherlands Netherlands, known famous",
+      "adjacent_word_repeats": 1,
+      "unique_word_fraction": 0.8181818181818182,
+      "token_sequence_difference_from_lambda0": 0.4482758620689655
+    },
+    {
+      "length": 128,
+      "strategy": "Random",
+      "weight": 0.5,
+      "elapsed_seconds": 1.069729709000967,
+      "status": "Denoising step 8/8 \u00b7 46 output tokens \u00b7 mean confidence 0.906 \u00b7 retained 112 tokens",
+      "text": "Amsterdam is the capital of the Netherlands, the Netherlands. Known, especially, its history and the of culture, it has many museums,, theaters, and canals and bridges. Amsterdam is one of the world and the of of tourism",
+      "adjacent_word_repeats": 1,
+      "unique_word_fraction": 0.5945945945945946,
+      "token_sequence_difference_from_lambda0": 0.6190476190476191
+    },
+    {
+      "length": 256,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.0,
+      "elapsed_seconds": 1.218595667000045,
+      "status": "Denoising step 8/8 \u00b7 10 output tokens \u00b7 mean confidence 0.893 \u00b7 retained 224 tokens",
+      "text": "Amsterdam is the capital city the Netherlands Netherlands Netherlands.",
+      "adjacent_word_repeats": 2,
+      "unique_word_fraction": 0.6666666666666666,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 256,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.5,
+      "elapsed_seconds": 1.419030749999365,
+      "status": "Denoising step 8/8 \u00b7 16 output tokens \u00b7 mean confidence 0.890 \u00b7 retained 224 tokens",
+      "text": "Amsterdam is the capital city of the Netherlands. It is known for the history.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.7857142857142857,
+      "token_sequence_difference_from_lambda0": 0.3846153846153846
+    },
+    {
+      "length": 256,
+      "strategy": "Bigram Viterbi",
+      "weight": 1.0,
+      "elapsed_seconds": 1.3228716249977879,
+      "status": "Denoising step 8/8 \u00b7 18 output tokens \u00b7 mean confidence 0.890 \u00b7 retained 224 tokens",
+      "text": "It is the capital city of the Netherlands, and is known for a, and culture.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.8,
+      "token_sequence_difference_from_lambda0": 0.5
+    },
+    {
+      "length": 256,
+      "strategy": "Confidence-guided",
+      "weight": 0.5,
+      "elapsed_seconds": 1.3063142499995593,
+      "status": "Denoising step 8/8 \u00b7 10 output tokens \u00b7 mean confidence 0.957 \u00b7 retained 224 tokens",
+      "text": "Amsterdam is the capital of the Netherlands Netherlands Netherlands.",
+      "adjacent_word_repeats": 2,
+      "unique_word_fraction": 0.6666666666666666,
+      "token_sequence_difference_from_lambda0": 0.09999999999999998
+    },
+    {
+      "length": 256,
+      "strategy": "Random",
+      "weight": 0.5,
+      "elapsed_seconds": 1.32553312500022,
+      "status": "Denoising step 8/8 \u00b7 40 output tokens \u00b7 mean confidence 0.965 \u00b7 retained 224 tokens",
+      "text": "Amsterdam is the capital of Netherlands Netherlands, province, Netherlands and the of the municipality of Amsterdam, the municipality of Amsterdam, and the of metropolitan Amsterdam.. It is also widely known for its canals.",
+      "adjacent_word_repeats": 1,
+      "unique_word_fraction": 0.5151515151515151,
+      "token_sequence_difference_from_lambda0": 0.6799999999999999
+    }
+  ]
+}

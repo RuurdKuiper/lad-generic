@@ -1,0 +1,127 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "revision": "3e22ca7e38f1380b343928763fe1709b4173e76d",
+  "seed": 42,
+  "shared_options": {
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 128,
+    "block_length": 128,
+    "temperature": 0.0,
+    "top_k": 1,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "early_stopping": false,
+    "bigram_top_k": 16,
+    "bigram_weight": 0.5,
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "generation_seed": 42,
+    "measure_decoding": true
+  },
+  "steps": [
+    32,
+    64,
+    128
+  ],
+  "methods": [
+    [
+      "confidence",
+      "Confidence-guided",
+      "Conditional bigram",
+      "Diffusion probability"
+    ],
+    [
+      "conditional_diffusion",
+      "Bigram Viterbi",
+      "Conditional bigram",
+      "Diffusion probability"
+    ],
+    [
+      "pmi_diffusion",
+      "Bigram Viterbi",
+      "PMI bigram",
+      "Diffusion probability"
+    ],
+    [
+      "conditional_margin",
+      "Bigram Viterbi",
+      "Conditional bigram",
+      "Viterbi path margin"
+    ],
+    [
+      "pmi_margin",
+      "Bigram Viterbi",
+      "PMI bigram",
+      "Viterbi path margin"
+    ]
+  ],
+  "tasks": [
+    {
+      "id": "code_sum_even",
+      "task": "code",
+      "prompt": "Write Python function sum_even(nums) returning the sum of even integers in nums. Handle an empty list. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_palindrome",
+      "task": "code",
+      "prompt": "Write Python function is_palindrome(text) ignoring case and non-alphanumeric characters. Return a boolean. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_fibonacci",
+      "task": "code",
+      "prompt": "Write Python function fibonacci(n) returning a list of the first n Fibonacci numbers, starting with 0, 1. For n <= 0 return []. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_deduplicate",
+      "task": "code",
+      "prompt": "Write Python function deduplicate(items) removing duplicates while preserving first occurrence order. Items are hashable. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_balanced",
+      "task": "code",
+      "prompt": "Write Python function balanced(s) checking balanced parentheses (), brackets [], and braces {}. Ignore other characters. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_binary_search",
+      "task": "code",
+      "prompt": "Write Python function binary_search(nums, target) for sorted nums, returning its index or -1 if absent. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_word_counts",
+      "task": "code",
+      "prompt": "Write Python function word_counts(text) returning a dictionary of word frequencies. Split on whitespace and ignore case. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_merge_sorted",
+      "task": "code",
+      "prompt": "Write Python function merge_sorted(a, b) merging two sorted integer lists into one sorted list. Do not call sorted() or .sort(). Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_flatten",
+      "task": "code",
+      "prompt": "Write Python function flatten(rows) flattening a list of lists by one level. Preserve order and handle empty lists. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_fizzbuzz",
+      "task": "code",
+      "prompt": "Write Python function fizzbuzz(n) returning strings for integers 1 through n: Fizz for multiples of 3, Buzz for 5, FizzBuzz for both, otherwise the number as a string. Return only concise Python code, without explanation or examples."
+    }
+  ],
+  "total": 150,
+  "early_stopping_reason": "Fixed forward-pass budget for comparing step counts.",
+  "coding_delay": true,
+  "open_delay": true,
+  "coding_delay_strength": 1.0,
+  "open_delay_strength": 1000.0,
+  "note": "Strength 1 disables ending prediction penalty. Baseline uses no bigram selector. Manual review; no external judge.",
+  "profile": "paper-coding",
+  "paper_source": "arxiv_submission/paper.tex:408-429",
+  "sampling": "Raw-logit greedy argmax with full-vocabulary retention confidence.",
+  "ending_policy": "Delay retention only, no bigram logit penalty.",
+  "scope": "Same ten custom assignments, 128-token MBPP-style canvas; NFE ablation, not HumanEval/MBPP benchmark scores.",
+  "priority": "Baseline and PMI/diffusion pairs at every NFE first; remaining three methods afterwards.",
+  "quota_policy": "Use available allowance, defer rejected budgets, stop when no budget is available.",
+  "probe": "One PMI/diffusion/32 result reused from credit_probe.json; baseline-only greedy fix does not affect this path."
+}

@@ -1,0 +1,260 @@
+[
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "revision": "a0b71814ab4f21dfb76963ab19f700e8818d7fac",
+    "stage": "RUNNING",
+    "defaults": {
+      "Temperature": 2.0,
+      "Top-k": 16,
+      "Remasking strategy": "Bigram Viterbi",
+      "New tokens": 64,
+      "Denoising steps": 64,
+      "Block length": 64,
+      "Bigram ending delay strength": 10.0,
+      "Delay EOS/EOT retention (longer answers)": true,
+      "Early stopping": true
+    },
+    "results": [
+      {
+        "method": "pmi",
+        "text": "Weather refers to the short-term atmospheric conditions in place in a specific location or time. Climate refers to the long-term average of atmospheric conditions in a specific location or region. Weather refers to atmospheric conditions such as temperature, humidity, humidity, and precipitation, while climate refers to the average of these conditions, humidity, and precipitation",
+        "status": "Denoising step 16/16 \u00b7 64 output tokens \u00b7 mean confidence 0.031 \u00b7 retained 60 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 544, \"changed_predictions\": 303, \"changed_fraction\": 0.5569852941176471, \"selector_ms\": 229.4199736788869, \"mean_selector_ms\": 14.33874835493043}",
+        "metrics": {
+          "selector_calls": 16,
+          "editable_predictions": 544,
+          "changed_predictions": 303,
+          "changed_fraction": 0.5569852941176471,
+          "selector_ms": 229.4199736788869,
+          "mean_selector_ms": 14.33874835493043
+        },
+        "options": {
+          "question": "Explain the difference between weather and climate.",
+          "system_prompt": "You are a helpful assistant.",
+          "max_new_tokens": 64,
+          "num_steps": 16,
+          "block_length": 64,
+          "pause_per_step": 0.0,
+          "trajectory_color_mode": "No coloring",
+          "revisable_tokens": false,
+          "ar_check_interval": 4,
+          "delay_eos_eot": true,
+          "early_stopping": false,
+          "bigram_scoring_method": "PMI bigram",
+          "pmi_min_count": 1,
+          "pmi_clip": 2.0,
+          "generation_seed": 1234,
+          "bigram_remasking_confidence": "Diffusion probability",
+          "remasking_strategy": "Bigram Viterbi",
+          "temperature": 2.0,
+          "top_k": 16,
+          "bigram_eos_delay_penalty": 10.0,
+          "measure_decoding": true
+        },
+        "seconds": 5.7765582089996315
+      },
+      {
+        "method": "baseline",
+        "text": "Weather refers to the short-term atmospheric conditions a a specific location or specific time, while climate refers to the long-term atmospheric conditions a a a specific location or region. Weather includes factors such as temperature,,, precipitation, humidity, wind pressure, and visibility,, while,, and,, while,,,,",
+        "status": "Denoising step 16/16 \u00b7 64 output tokens \u00b7 mean confidence 0.734 \u00b7 retained 60 tokens",
+        "metrics": null,
+        "options": {
+          "question": "Explain the difference between weather and climate.",
+          "system_prompt": "You are a helpful assistant.",
+          "max_new_tokens": 64,
+          "num_steps": 16,
+          "block_length": 64,
+          "pause_per_step": 0.0,
+          "trajectory_color_mode": "No coloring",
+          "revisable_tokens": false,
+          "ar_check_interval": 4,
+          "delay_eos_eot": true,
+          "early_stopping": false,
+          "bigram_scoring_method": "PMI bigram",
+          "pmi_min_count": 1,
+          "pmi_clip": 2.0,
+          "generation_seed": 1234,
+          "bigram_remasking_confidence": "Diffusion probability",
+          "remasking_strategy": "Confidence-guided",
+          "temperature": 0.7,
+          "top_k": 3,
+          "bigram_eos_delay_penalty": 1.0,
+          "measure_decoding": false
+        },
+        "seconds": 1.22869854199962
+      }
+    ],
+    "passed": true
+  },
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "revision": "c8fd1efb8ef980a182f93f9f53f7c26c31b4eefd",
+    "stage": "RUNNING",
+    "defaults": {
+      "Temperature": 2.0,
+      "Top-k": 16,
+      "Remasking strategy": "Bigram Viterbi",
+      "New tokens": 64,
+      "Denoising steps": 64,
+      "Block length": 64,
+      "Bigram ending delay strength": 10.0,
+      "Delay EOS/EOT retention (longer answers)": true,
+      "Early stopping": true
+    },
+    "results": [
+      {
+        "method": "pmi",
+        "text": "Weather refers is the state of the temperature in a particular place at a time, while climate refers to the average of the temperature in a particular place over a period.",
+        "status": "Denoising step 16/16 \u00b7 33 output tokens \u00b7 mean confidence 0.091 \u00b7 retained 60 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 544, \"changed_predictions\": 182, \"changed_fraction\": 0.33455882352941174, \"selector_ms\": 284.46255903691053, \"mean_selector_ms\": 17.77890993980691}",
+        "metrics": {
+          "selector_calls": 16,
+          "editable_predictions": 544,
+          "changed_predictions": 182,
+          "changed_fraction": 0.33455882352941174,
+          "selector_ms": 284.46255903691053,
+          "mean_selector_ms": 17.77890993980691
+        },
+        "options": {
+          "question": "Explain the difference between weather and climate.",
+          "system_prompt": "You are a helpful assistant.",
+          "max_new_tokens": 64,
+          "num_steps": 16,
+          "block_length": 64,
+          "pause_per_step": 0.0,
+          "trajectory_color_mode": "No coloring",
+          "revisable_tokens": false,
+          "ar_check_interval": 4,
+          "delay_eos_eot": true,
+          "early_stopping": false,
+          "bigram_scoring_method": "PMI bigram",
+          "pmi_min_count": 1,
+          "pmi_clip": 2.0,
+          "generation_seed": 1234,
+          "bigram_remasking_confidence": "Diffusion probability",
+          "remasking_strategy": "Bigram Viterbi",
+          "temperature": 2.0,
+          "top_k": 16,
+          "bigram_eos_delay_penalty": 10.0,
+          "measure_decoding": true
+        },
+        "seconds": 6.525139249999484
+      },
+      {
+        "method": "baseline",
+        "text": "Weather is the condition of the weather in a a specific a given time, while climate is the condition of the weather in a place over a long period of.",
+        "status": "Denoising step 16/16 \u00b7 32 output tokens \u00b7 mean confidence 0.770 \u00b7 retained 60 tokens",
+        "metrics": null,
+        "options": {
+          "question": "Explain the difference between weather and climate.",
+          "system_prompt": "You are a helpful assistant.",
+          "max_new_tokens": 64,
+          "num_steps": 16,
+          "block_length": 64,
+          "pause_per_step": 0.0,
+          "trajectory_color_mode": "No coloring",
+          "revisable_tokens": false,
+          "ar_check_interval": 4,
+          "delay_eos_eot": true,
+          "early_stopping": false,
+          "bigram_scoring_method": "PMI bigram",
+          "pmi_min_count": 1,
+          "pmi_clip": 2.0,
+          "generation_seed": 1234,
+          "bigram_remasking_confidence": "Diffusion probability",
+          "remasking_strategy": "Confidence-guided",
+          "temperature": 0.7,
+          "top_k": 3,
+          "bigram_eos_delay_penalty": 1.0,
+          "measure_decoding": false
+        },
+        "seconds": 2.182938040998124
+      }
+    ],
+    "passed": true
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "revision": "42f4809f51abcead37fe96eaa38d4b4b137e8119",
+    "stage": "RUNNING",
+    "defaults": {
+      "Temperature": 2.0,
+      "Top-k": 16,
+      "Remasking strategy": "Bigram Viterbi",
+      "New tokens": 64,
+      "Denoising steps": 64,
+      "Block length": 64,
+      "Bigram ending delay strength": 10.0,
+      "Delay EOS/EOT retention (longer answers)": true,
+      "Early stopping": true
+    },
+    "results": [
+      {
+        "method": "pmi",
+        "text": "Weather is the state of air and atmospheric conditions in a particular, such as temperature, humidity, precipitation, and wind, on a day, and can change. Climate, however is the average of weather conditions over a period of several years, and does not change.",
+        "status": "Denoising step 16/16 \u00b7 53 output tokens \u00b7 mean confidence 0.172 \u00b7 retained 60 tokens\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 544, \"changed_predictions\": 322, \"changed_fraction\": 0.5919117647058824, \"selector_ms\": 449.0376403555274, \"mean_selector_ms\": 28.064852522220463}",
+        "metrics": {
+          "selector_calls": 16,
+          "editable_predictions": 544,
+          "changed_predictions": 322,
+          "changed_fraction": 0.5919117647058824,
+          "selector_ms": 449.0376403555274,
+          "mean_selector_ms": 28.064852522220463
+        },
+        "options": {
+          "question": "Explain the difference between weather and climate.",
+          "system_prompt": "You are a helpful assistant.",
+          "max_new_tokens": 64,
+          "num_steps": 16,
+          "block_length": 64,
+          "pause_per_step": 0.0,
+          "trajectory_color_mode": "No coloring",
+          "revisable_tokens": false,
+          "ar_check_interval": 4,
+          "delay_eos_eot": true,
+          "early_stopping": false,
+          "bigram_scoring_method": "PMI bigram",
+          "pmi_min_count": 1,
+          "pmi_clip": 2.0,
+          "generation_seed": 1234,
+          "bigram_remasking_confidence": "Diffusion probability",
+          "remasking_strategy": "Bigram Viterbi",
+          "temperature": 2.0,
+          "top_k": 16,
+          "bigram_eos_delay_penalty": 10.0,
+          "measure_decoding": true
+        },
+        "seconds": 14.504576833998726
+      },
+      {
+        "method": "baseline",
+        "text": "Weather refers the the conditions of temperature and precipitation in a specific, short, or immediate time, the other hand the is the average of these weather patterns over a particular period, usually.",
+        "status": "Denoising step 16/16 \u00b7 37 output tokens \u00b7 mean confidence 0.785 \u00b7 retained 60 tokens",
+        "metrics": null,
+        "options": {
+          "question": "Explain the difference between weather and climate.",
+          "system_prompt": "You are a helpful assistant.",
+          "max_new_tokens": 64,
+          "num_steps": 16,
+          "block_length": 64,
+          "pause_per_step": 0.0,
+          "trajectory_color_mode": "No coloring",
+          "revisable_tokens": false,
+          "ar_check_interval": 4,
+          "delay_eos_eot": true,
+          "early_stopping": false,
+          "bigram_scoring_method": "PMI bigram",
+          "pmi_min_count": 1,
+          "pmi_clip": 2.0,
+          "generation_seed": 1234,
+          "bigram_remasking_confidence": "Diffusion probability",
+          "remasking_strategy": "Confidence-guided",
+          "temperature": 0.7,
+          "top_k": 3,
+          "bigram_eos_delay_penalty": 1.0,
+          "measure_decoding": false
+        },
+        "seconds": 12.623269874995458
+      }
+    ],
+    "passed": true
+  }
+]

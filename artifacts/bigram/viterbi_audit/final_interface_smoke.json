@@ -1,0 +1,25 @@
+{
+  "revision": "ec764e8524e9c26e379d94cb3ee08ad4bc017a7b",
+  "options": {
+    "question": "What do you know about Amsterdam?",
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 64,
+    "num_steps": 16,
+    "block_length": 64,
+    "temperature": 2.0,
+    "top_k": 16,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "remasking_strategy": "Bigram Viterbi",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "delay_eos_eot": true,
+    "early_stopping": true,
+    "generation_seed": 42,
+    "measure_decoding": true,
+    "bigram_eos_delay_penalty": 10.0
+  },
+  "text": "Amsterdam is the capital of the Netherlands, Netherlands. It is the center of the province of North and is one of the most populous cities in the Netherlands. It is known for its historic architecture, vibrant culture, museums, theaters, and canals. Additionally, Amsterdam is known for its art, history, and culture.",
+  "status": "Denoising step 16/16 \u00b7 63 output tokens \u00b7 mean confidence 0.021 \u00b7 retained 60 tokens \u00b7 answer finished (EOS)\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 544, \"changed_predictions\": 317, \"changed_fraction\": 0.5827205882352942, \"selector_ms\": 336.75111131742597, \"mean_selector_ms\": 21.046944457339123}",
+  "exact_previous_output": true
+}

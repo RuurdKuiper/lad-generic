@@ -1,0 +1,56 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "0904e3f97dd50eb51ed96a27fabe7f93ca1c19dc",
+  "prompts": [
+    "What do you know about Amsterdam?",
+    "Why is the sky blue?",
+    "How do plants convert sunlight into energy?",
+    "What makes a good friend?",
+    "Explain how a refrigerator keeps food cold.",
+    "Why do we have different seasons on Earth?",
+    "How does vaccination help protect a population?",
+    "What is the difference between weather and climate?",
+    "Explain the basic idea behind supply and demand.",
+    "How does a search engine find relevant web pages?"
+  ],
+  "steps": [
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "shared": {
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 128,
+    "block_length": 128,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "delay_eos_eot": true,
+    "early_stopping": false,
+    "bigram_scoring_method": "PMI bigram",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "generation_seed": 1234,
+    "measure_decoding": true,
+    "bigram_remasking_confidence": "Diffusion probability"
+  },
+  "methods": {
+    "confidence": {
+      "remasking_strategy": "Confidence-guided",
+      "temperature": 0.7,
+      "top_k": 3,
+      "bigram_eos_delay_penalty": 1.0
+    },
+    "pmi_diffusion": {
+      "remasking_strategy": "Bigram Viterbi",
+      "temperature": 2.0,
+      "top_k": 16,
+      "bigram_eos_delay_penalty": 10.0
+    }
+  },
+  "total": 100,
+  "caveat": "Practical app-settings comparison, not isolated Viterbi ablation or exact paper replication."
+}

@@ -1,0 +1,63 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "prompt": "Explain why the sky looks blue.",
+  "steps": 32,
+  "note": "Exploratory single runs. Latency includes startup/queue. Word repetition and token differences are diagnostics, not correctness scores.",
+  "results": [
+    {
+      "length": 64,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.0,
+      "elapsed_seconds": 2.986008624997339,
+      "status": "Denoising step 32/32 \u00b7 17 output tokens \u00b7 mean confidence 0.765 \u00b7 retained 62 tokens",
+      "text": "The sky looks blue because of the scattering of sunlight by the molecules in the atmosphere.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.75,
+      "token_sequence_difference_from_lambda0": 0.0
+    },
+    {
+      "length": 64,
+      "strategy": "Bigram Viterbi",
+      "weight": 0.5,
+      "elapsed_seconds": 2.50219033400208,
+      "status": "Denoising step 32/32 \u00b7 13 output tokens \u00b7 mean confidence 0.809 \u00b7 retained 62 tokens",
+      "text": "The sky appears blue due to the scattering of sunlight by air.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.9166666666666666,
+      "token_sequence_difference_from_lambda0": 0.4
+    },
+    {
+      "length": 64,
+      "strategy": "Bigram Viterbi",
+      "weight": 1.0,
+      "elapsed_seconds": 2.7207256660003623,
+      "status": "Denoising step 32/32 \u00b7 13 output tokens \u00b7 mean confidence 0.820 \u00b7 retained 62 tokens",
+      "text": "The sky appears blue due to the scattering of sunlight by air.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.9166666666666666,
+      "token_sequence_difference_from_lambda0": 0.4
+    },
+    {
+      "length": 64,
+      "strategy": "Confidence-guided",
+      "weight": 0.5,
+      "elapsed_seconds": 2.278018875000271,
+      "status": "Denoising step 32/32 \u00b7 14 output tokens \u00b7 mean confidence 0.961 \u00b7 retained 62 tokens",
+      "text": "The sky looks blue because of the scattering the sunlight by the atmosphere.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.7692307692307693,
+      "token_sequence_difference_from_lambda0": 0.16129032258064513
+    },
+    {
+      "length": 64,
+      "strategy": "Random",
+      "weight": 0.5,
+      "elapsed_seconds": 2.1524957499968878,
+      "status": "Denoising step 32/32 \u00b7 30 output tokens \u00b7 mean confidence 0.887 \u00b7 retained 62 tokens",
+      "text": "The sky looks blue due to the scattering of sunlight, the atmosphere is most the color of blue. As result, the most amount of blue light.",
+      "adjacent_word_repeats": 0,
+      "unique_word_fraction": 0.6538461538461539,
+      "token_sequence_difference_from_lambda0": 0.5319148936170213
+    }
+  ]
+}

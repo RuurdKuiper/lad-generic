@@ -1,0 +1,2861 @@
+{
+  "code_sum_even": {
+    "a542c78f7615": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct generator expression; even selection and empty-list sum satisfy the contract."
+    },
+    "6061848ce58a": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct function, but adds unsolicited explanatory prose and fences."
+    },
+    "c1f6b8ee927c": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct function with a stray closing Markdown fence."
+    }
+  },
+  "code_palindrome": {
+    "cedb33ffa410": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Nonexistent loweralnum method and unfinished invalid reversal slice."
+    },
+    "7655672d0b09": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "replace() called without arguments; compares transformed text to itself rather than its reverse."
+    },
+    "be61583277bb": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Checks whether all characters are alphanumeric, not whether normalized text is a palindrome."
+    },
+    "892d75bf8c60": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken string and slice syntax; no executable palindrome test."
+    },
+    "7fd427051e24": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated arbitrary replacement literal; no palindrome comparison."
+    },
+    "0516591caf71": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished slice; also compares an isalnum boolean against text rather than normalized reverse."
+    },
+    "a8e763ccaa4c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid nested slice syntax and boolean-versus-string comparison."
+    },
+    "d290e82e26d2": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Iterates over boolean text.isalnum(); even repaired, returns a reversed string rather than a boolean comparison."
+    },
+    "8c776343a17b": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished slice and wrong isalnum-versus-string comparison."
+    },
+    "991fa9c21c1b": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated replacement string and no valid normalization/reversal test."
+    },
+    "2c0c3d6ec671": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unterminated replacement string; no valid palindrome comparison."
+    },
+    "3f3762cd4806": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated arbitrary replacement literal; invalid Python."
+    },
+    "96fd807f5011": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated replacement argument and no reverse comparison."
+    },
+    "1d1671e8a2e4": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Uses nonexistent lower_non_alphanumericlower method; intended reverse comparison is recognizable."
+    }
+  },
+  "code_fibonacci": {
+    "aba20147f4e0": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional expression; base case also returns two values for n<=1."
+    },
+    "92c9f084e2f3": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid conditional expression/unmatched bracket, and incorrect base cases."
+    },
+    "875cace05529": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Returns [0,1] for n<=2, even nonpositive n, and [] for every larger n."
+    },
+    "991d9ab35af4": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "fib[i] is out of range on first loop iteration; n=1 also incorrectly returns [0,1]."
+    },
+    "21b962ddf05e": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Ends at for statement without body or result; invalid Python."
+    },
+    "d881b64a7bdf": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional expression and incorrect small-n list."
+    },
+    "eccaed3646ab": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Duplicate unused imports; fib[i] causes IndexError and n=1 returns too many elements."
+    },
+    "5ca0fdc4769d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Loops exactly twice, appends one previous value rather than a sum, and has no final return."
+    },
+    "f41ea1c69990": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished append expression and no return; invalid Python."
+    },
+    "ba91884e8ba1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Corrupt function declaration and incomplete list index/append."
+    },
+    "9ef69b15b701": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed extra function declaration; following recurrence also accesses fib[i] out of range."
+    },
+    "804d7bf36185": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing for keyword, unfinished addition, and no return."
+    },
+    "591f13606fe2": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Indexes both a nonexistent fib[i] and integer 1; also returns too many values for n=1."
+    }
+  },
+  "code_deduplicate": {
+    "90b8381aec6f": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "set removes duplicates but discards required first-occurrence order; stray closing fence."
+    },
+    "5c8773b08627": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "set removes duplicates but does not preserve first-occurrence order."
+    },
+    "360f8775c402": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Uses undefined Ordered; does not implement ordered deduplication."
+    },
+    "d866993cc3ed": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing closing parenthesis; nested sets still lose required order."
+    },
+    "ed18eaf27df0": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing parenthesis; dict(set(items)) is not a valid general ordered deduplication approach."
+    },
+    "d0a34ab7bf94": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid OrderedDict() import syntax and unmatched return parentheses; nested sets lose order."
+    },
+    "8100d5eb1caa": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "set discards required first-occurrence order."
+    },
+    "4143c15dee86": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing closing parenthesis; iterating a set still loses order."
+    }
+  },
+  "code_balanced": {
+    "49e8ad6d3d5f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished bracket dictionary and argumentless append; no matching-bracket algorithm."
+    },
+    "bbb9c4fb6b2a": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed dictionary, appends closing brackets without matching, and no return."
+    },
+    "9187b28d9d83": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid stack.append False syntax and no working bracket logic."
+    },
+    "ed8c6f8f687b": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Empty bracket dictionary and repeated condition mean function returns True for every input."
+    },
+    "e1af694cec05": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Double colon is invalid syntax; does not update or validate stack."
+    },
+    "abb73d16a15e": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Only pushes closing brackets and never checks or returns a boolean."
+    },
+    "9dfd82a148dc": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid elif char not stack syntax, wrong stack operations, and no success return."
+    },
+    "9aec4b3d75fb": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid dictionary syntax, unguarded pop, and missing boolean return."
+    },
+    "856ab697af51": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unfinished dictionary prevents execution; bracket matching also not implemented."
+    },
+    "37ac220ef8b1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken dictionary/string literals and incomplete else; no valid bracket check."
+    },
+    "02506f04049c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Only pushes closing brackets and returns None; matching and final boolean absent."
+    },
+    "8360d8d7e1ab": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined brackets variable; tests matching character instead of opener/closer pairs and rejects ordinary text."
+    },
+    "1121d7726eb8": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Empty dictionary makes both branches unreachable; always returns True."
+    },
+    "2703475facad": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid dictionary syntax and no working push/match/success behavior."
+    },
+    "0e26a4573d86": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Uses undefined brackets and invalid elif char not stack.pop() expression."
+    }
+  },
+  "code_binary_search": {
+    "0ac443d7f95e": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct index-or-minus-one behavior, including empty input. Uses linear membership/index lookup; no explicit complexity constraint in prompt.",
+      "algorithm_issue": true
+    },
+    "bc90e2cd5bbe": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct binary search bounds, comparisons, success and absent result; adds unwanted introduction."
+    },
+    "ce3f4438e8bd": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid from import syntax; bisect insertion index alone also fails absent-target requirement."
+    },
+    "1f12b0770e00": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unfinished conditional expression; invalid Python."
+    },
+    "06a2b895a54d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Malformed nums[ target condition and no success return; invalid search."
+    },
+    "26fa4ca042dd": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Stray bise/semicolon syntax, indexes nums[target] instead of candidate, and omits absent result."
+    },
+    "279d6c74c148": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed import and return syntax; returns comparison rather than required index."
+    },
+    "2cde01d56627": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Returns False or element-minus-one, not index-or-minus-one; unused import and unclosed fence."
+    },
+    "e7dc5c98787f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken annotations, midpoint operator, and incomplete else; no working search."
+    },
+    "a167c04820f2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated docstring swallows proposed implementation; search itself lacks target comparison/success."
+    },
+    "f43f076c1b03": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid conditional return expression and no target comparison; bounds may never progress."
+    },
+    "5b40128bee1e": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unexpected indentation and invalid return assignment; no target comparison."
+    },
+    "6a72b76f2da7": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Broken indentation/variable name, no success return, and always returns -1."
+    },
+    "afcc6229ebe5": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Duplicate definition, non-progressing bounds on success/less-than, and undefined result."
+    },
+    "0eec389c483c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Incomplete invalid import alias and invalid return colon; no valid search result."
+    }
+  },
+  "code_word_counts": {
+    "9502168af838": {
+      "score": 2,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct lower/split/Counter approach, but missing from collections import Counter prevents standalone execution."
+    },
+    "7d498419aa93": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined word and argumentless str.count; no per-word counting or lowercasing."
+    },
+    "6667e434ab37": {
+      "score": 2,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct frequency aggregation but missing Counter import and required case normalization."
+    },
+    "c7ac337db855": {
+      "score": 2,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct frequency aggregation but missing Counter import and required case normalization."
+    },
+    "4b217001314a": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined word and nonexistent list.word attribute; no valid counting or lowercasing."
+    },
+    "14fee91ddd7f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Stray closing parenthesis makes function invalid; also omits Counter import."
+    },
+    "94923e8a5704": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Multiple unmatched parentheses and attempts lower() on a list; Counter import absent."
+    },
+    "050eacfb0235": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Stray parenthesis plus invalid list.lower() call; Counter import absent."
+    },
+    "0403cdcbdfa4": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid dict Counter expression, no lowercasing or import, and repeated fences."
+    },
+    "d192bfa04786": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Replaces words with nonexistent set.lower(); Counter is unimported."
+    },
+    "95f1a803850c": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Nonexistent set.lower(), missing import, and inconsistent count/counts variable."
+    },
+    "aed318b9a7bf": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Stray closing parenthesis makes otherwise recognizable counting code invalid; Counter import absent."
+    }
+  },
+  "code_merge_sorted": {
+    "ba5967a4cb91": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken imports/parentheses/while syntax and undefined heap operations; unusable merge."
+    },
+    "67817b62c7d1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid function declaration and nonexistent itertools.merge import; no returned list."
+    },
+    "2d72487e7c1c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid extra declaration and explicitly forbidden sorted() approach."
+    },
+    "2e4d07181a89": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Empty extra function definition and nonexistent itertools.merge import; not a valid merge solution."
+    },
+    "a11d7c8ccf03": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid empty function/indentation, undefined heapappush/heap, and wrong merge logic."
+    },
+    "deea00642f78": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid while condition; appends whole lists with no element comparisons or index progress."
+    },
+    "33767730f2fc": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Promising two-pointer start but ends at j +=; no leftover handling or return."
+    },
+    "325ceb4d2351": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid function declaration and forbidden sorted() call with wrong arguments."
+    },
+    "63d6bb763afe": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Incomplete two-pointer merge; appends whole b, no j increment, leftovers, or return."
+    },
+    "56d9d35cb703": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid loops/indentation, and .sort() violates explicit constraint."
+    },
+    "26d8cfc07928": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid empty extra definition, nonexistent itertools.merge, and wrong one-argument merge call."
+    },
+    "470800f20e4c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Incomplete two-pointer merge; no j increment, remaining tails, or returned result."
+    },
+    "d6494d1fb789": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Missing else colon, no j progress, remaining tails, or returned result; unfinished merge."
+    }
+  },
+  "code_flatten": {
+    "b7039c810a4a": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed comprehension with no inner iterable; invalid Python."
+    },
+    "67066614ac30": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid comprehension/list brackets and undefined item."
+    },
+    "eeeca5220499": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid sublist rows iterable syntax and no nested iteration."
+    },
+    "aa7f0df45df8": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Undefined row and item; no outer traversal of rows or inner list traversal."
+    },
+    "1600885a9d46": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Duplicated item syntax and unfinished list comprehension."
+    },
+    "4486c08b5f8f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Missing iterable after in and no valid nested comprehension."
+    },
+    "d0219beb9216": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct nested traversal but sums flattened elements, returning a number rather than a list."
+    },
+    "2712e887a382": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Undefined item and missing inner iteration; does not flatten."
+    },
+    "bc12bcc42966": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct nested comprehension preserves order and handles empty outer/inner lists."
+    },
+    "a012950fdfae": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct nested comprehension preserves list order and handles empty lists."
+    },
+    "17aee780cced": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid list-comprehension bracketing and missing inner iteration."
+    },
+    "12001d00d2a0": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct nested comprehension; missing closing Markdown fence."
+    },
+    "8f51994acf53": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Missing iterable in nested for, duplicated row loop, and undefined item; invalid comprehension."
+    }
+  },
+  "code_fizzbuzz": {
+    "8ffbc960a783": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid nested conditional/comprehension syntax and no valid divisibility rules."
+    },
+    "8db7a5711737": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional/list expression; no iteration or FizzBuzz case."
+    },
+    "cbc41ac472bf": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid string/number conditions and unfinished comprehension."
+    },
+    "854410fbbfc2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid nested else/quotes and range expression; no executable FizzBuzz."
+    },
+    "24e172b9c35c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Duplicated nested code fence/function declaration, invalid conditionals, and undefined i."
+    },
+    "1339a40c030d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed string/comprehension and no valid FizzBuzz logic."
+    },
+    "0624e52463e5": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unterminated string rather than a list comprehension."
+    },
+    "319b372511e2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid def typing import and indentation, truncated range, and missing FizzBuzz case."
+    },
+    "a588f53d6a9d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid indentation/conditional expression and wrong divisibility tests."
+    },
+    "edd0dcbd70f7": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid conditional/comprehension and no FizzBuzz-before-Fizz precedence."
+    },
+    "90eb30854e89": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined i and no iteration over 1..n; literal Fizz i replaces required distinct cases."
+    },
+    "22629ef2e667": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid indentation, unterminated string, and incorrect modulo-30 rule."
+    },
+    "4a5d503027d6": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unterminated string/conditional and no range or string-list output."
+    },
+    "233e03e400d2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional/list expression with no iteration or FizzBuzz case."
+    },
+    "19f025cefbe1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid conditional/comprehension and doubled modulo operator; returns integers rather than specified strings."
+    }
+  },
+  "open_01": {
+    "75b5850900c2": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken It is also for construction and repeated history/culture sentences dominate; final cutoff at token cap."
+    },
+    "b2cd4d5a8d79": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing nouns/complements and repeated words: capital and largest Netherlands, large city city, popular tourist, country of the."
+    },
+    "3a347d72f96f": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; duplicated canals and missing be in considered to one."
+    },
+    "489bd11b2574": {
+      "score": 1,
+      "complete": false,
+      "relevance_issue": true,
+      "note": "Missing noun after visited and giant number strings in place of predicates; incoherent ending at cap."
+    },
+    "9d68ef53520e": {
+      "score": 2,
+      "complete": true,
+      "note": "Readable sentences but duplicated canals and awkward home for construction; whole passage repeats."
+    },
+    "40c621e8188e": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated words, broken prepositions/possessives, comma lists, and unfinished final It is before cap."
+    },
+    "a5593a9013b1": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicated nouns, stray list numbering, comma/name word salad, and final cap cutoff."
+    },
+    "1d49970c5aed": {
+      "score": 1,
+      "complete": false,
+      "note": "Located of, repeated Netherlands lists, capital of the capital, and unfinished cap ending."
+    },
+    "a37808926500": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing predicate in city is also for, unmatched quotations, broken numbering, repetitions, and cap cutoff."
+    },
+    "4d3969e34791": {
+      "score": 1,
+      "complete": false,
+      "note": "Recursive capital of city wording, missing adjective in most cities, stray punctuation, and cap cutoff."
+    },
+    "a353e087120e": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete, grammatical, readable paragraph with no material language errors."
+    },
+    "1afda2020b95": {
+      "score": 1,
+      "complete": true,
+      "note": "Extreme United States phrase loops dominate the answer; location claims are also wrong.",
+      "content_issue": true
+    },
+    "fff2b69e6e95": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; malformed historic buildings architecture coordination and duplicated city."
+    },
+    "197118384bd8": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent sentences with no material grammar errors."
+    },
+    "68a9960f1d4d": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise fluent complete paragraph; doubled comma after architecture is an isolated punctuation error."
+    }
+  },
+  "open_02": {
+    "51fde96fb8fb": {
+      "score": 1,
+      "complete": false,
+      "note": "Awkward making it appear as the sky is blue, influence on, and a blue; unfinished ending."
+    },
+    "98841b3674c1": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing article after because of; severely broken wavelength clause and sun is the horizon/light has to travel clause."
+    },
+    "fe1620e9d649": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated circular color clauses, a sentence fragment beginning The amount, and missing predicate after because the amount."
+    },
+    "f4ff31191614": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; redundant why/because construction and awkward all the amount in final sentence."
+    },
+    "0f8973bf090c": {
+      "score": 0,
+      "complete": false,
+      "note": "After the opening, most text is repeated sky/color word salad without valid sentence structure; final cutoff."
+    },
+    "867531a91867": {
+      "score": 1,
+      "complete": true,
+      "note": "Because to/called as, repeated words, multiple wavelengths is agreement errors, missing that is, and malformed final why clause."
+    },
+    "a2cf27804c03": {
+      "score": 1,
+      "complete": true,
+      "note": "This can see has no human subject, This is why it is a fragment, and final atmosphere clause is broken/repetitive."
+    },
+    "e66555fccc25": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated scattered, fragment Because the color of blue, and standalone In the morning when subordinate clause."
+    },
+    "0300d9205648": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken how the atmosphere scat and light construction and multiple recursive color clauses lacking grammatical predicates."
+    },
+    "16e507cf01ec": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken blue which and yellow coordination, incomplete However clause, and missing verb in light is through."
+    },
+    "bda89aa366b8": {
+      "score": 2,
+      "complete": true,
+      "note": "Readable complete explanation; redundant This is why ... because construction. Physical explanation has a separate content issue.",
+      "content_issue": true
+    },
+    "b185b679184d": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing at in sun is the horizon, making the sky appears agreement, and malformed causing for the sky."
+    },
+    "e28510919153": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatical complete explanation. Sun atmosphere detail is a content error, not a grammar deduction.",
+      "content_issue": true
+    },
+    "85e46d8f1e1f": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; missing verb after important to in final paragraph and awkward amount of atmosphere."
+    },
+    "8b1f74512ef4": {
+      "score": 2,
+      "complete": true,
+      "note": "Complete readable explanation; redundant This is why ... because structure in final sentence."
+    }
+  },
+  "open_03": {
+    "3b081969e6fc": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated photosynthesis/use/convert/energy, roots system disagreement, and incomplete in the form phrase."
+    },
+    "5c6f8b02b7d8": {
+      "score": 3,
+      "complete": true,
+      "content_issue": true,
+      "note": "Grammatically well formed. Last sentence wrongly calls the process of oxygen a byproduct; content error kept separate from grammar."
+    },
+    "e4342dafffc8": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated conjunctions/prepositions/called, missing noun after metabolic, and confused chlorophyll relative clause."
+    },
+    "0827f05730bf": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken This process which water relative clause and standalone The glucose produced fragment."
+    },
+    "e5b674072881": {
+      "score": 1,
+      "complete": true,
+      "note": "Circular process of the sun sentence loops dominate the middle; stray punctuation/lowercase sentence opening reduce fluency."
+    },
+    "7d6c874e5bb0": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing of in byproduct oxygen, incomplete growth and other, missing out after carried, and repeated pigments/organelles/cells."
+    },
+    "a9ab08e7e9c5": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated energy/photosynthesis/chlorophyll/glucose, missing article during process, and doubled into."
+    },
+    "46859a278c6c": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated words, The glucose fragment, by the splitting the water construction, and incoherent glucose-is-sunlight clause."
+    },
+    "84da1e7d8689": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated circular process-of-energy clauses dominate; malformed chained is the process ... is the conversion and on the world."
+    },
+    "2e10e50e0b81": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent explanation with no material grammar errors."
+    },
+    "50d30253fb45": {
+      "score": 1,
+      "complete": true,
+      "note": "Long recursively chained which is stored/used clauses repeatedly loop and lose clear referents."
+    },
+    "b8397d486ad1": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatical coherent paragraphs; reaches cap but last visible clause is complete, only terminal punctuation absent."
+    },
+    "ae1b62945fc1": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; compound sunlight/carbon dioxide/water subject incorrectly takes is and in the plant sunlight is awkward."
+    },
+    "ca9f863d6f58": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete well-formed explanation with clear sentence structure."
+    },
+    "0f4b79ebb6c2": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; final numbered item is an As subordinate fragment, with repeated numbering and stray dot."
+    }
+  },
+  "open_04": {
+    "c49c8fd92d69": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing who is, broken coordination, and dangling there your best interests at ending before cap."
+    },
+    "2d5a96d406de": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly readable list; repeated trustworthy, missing coordination in listen to offer support advice, awkward are also to be honest; final cap cutoff."
+    },
+    "53b00c3f54bf": {
+      "score": 2,
+      "complete": true,
+      "note": "One otherwise coherent sentence with duplicated trustworthy and supportive plus doubled punctuation."
+    },
+    "8c552a670766": {
+      "score": 2,
+      "complete": false,
+      "note": "Readable list with repeated understanding, awkward help you in your dreams, stray leading dots, and cap cutoff."
+    },
+    "bb12c3e39415": {
+      "score": 1,
+      "complete": true,
+      "note": "Almost entire answer loops and honest with broken numbering and a final A and honest fragment."
+    },
+    "56972a48d343": {
+      "score": 2,
+      "complete": true,
+      "note": "Repeats the entire paragraph; second version has honest double comma and malformed supportive trustworthy sequence."
+    },
+    "12347d8dc81b": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete readable answer with correct sentence structure."
+    },
+    "a78f1ecde764": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; help you to your full potential lacks reach and duplicates potential."
+    },
+    "c848d7fabdfb": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing there/predicate in always to celebrate, duplicated you/for, broken even they like not to say and best version can be."
+    },
+    "bf0001f702ba": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical sentences; somewhat repetitive but no material language defect."
+    },
+    "0cab38452cbb": {
+      "score": 3,
+      "complete": true,
+      "note": "Short but complete grammatical sentence; limited detail is not a grammar error."
+    },
+    "b15baa7f6492": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent paragraphs with no material grammar errors."
+    },
+    "9f0f6ee1e679": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed They are you and your friend, then repeated ups-of-life sentence loop and cap cutoff."
+    },
+    "843233e47b16": {
+      "score": 2,
+      "complete": true,
+      "note": "Repeated paragraph with duplicated good/loyal and doubled comma; always who you are is also semantically confused."
+    },
+    "cee5ddd179dd": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly well formed; cares about their friend apostrophe-s has no following noun."
+    }
+  },
+  "open_05": {
+    "4a3ec3b9f50d": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; one sentence lacks a preposition in coils the inside and a noun in causes the to evaporate."
+    },
+    "83007e3068e3": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing objects in absorbs through/releases through; circular refrigerator/heat clauses repeatedly loop."
+    },
+    "d2052c515b25": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically well-formed complete explanation. Physical cycle details are inaccurate; assessed separately.",
+      "content_issue": true
+    },
+    "25d18d845ce6": {
+      "score": 0,
+      "complete": true,
+      "note": "Most sentences are malformed recursive refrigerator/inside/outside word salad, including refrigerant is a in the inside."
+    },
+    "3b9aa9626774": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing verb after helps to, then long repetitive system-is-designed clauses and a cap cutoff."
+    },
+    "389fe0b99ac6": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation; some redundancy but no material grammar errors."
+    },
+    "895668af5d15": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with no material language errors."
+    },
+    "9e430fbcb719": {
+      "score": 1,
+      "complete": true,
+      "note": "Opening system of pipes and a fragment, then extensive other-side-of-refrigerator sentence loops."
+    },
+    "cd483c663ddb": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; awkward refrigerator evaporator noun chain and doubled full stop."
+    },
+    "4be3ab72194b": {
+      "score": 2,
+      "complete": true,
+      "note": "Most sentences are grammatical; final sentence twice lacks a verb after used to and becomes circular."
+    },
+    "4e7c7e0224d1": {
+      "score": 1,
+      "complete": true,
+      "note": "One cycle-of-refrigerator sentence repeats four times and dominates the answer; Fre gas is malformed wording."
+    },
+    "23f1dfcbc48d": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated block, multiple coils is agreement errors, broken from to phrase, stray numbering, and cap cutoff."
+    },
+    "44e784fd6a6b": {
+      "score": 1,
+      "complete": false,
+      "note": "Recursive cooling-system definitions repeat food/part clauses and broken numbering; ends mid-clause at cap."
+    },
+    "095d2a21dc70": {
+      "score": 1,
+      "complete": true,
+      "note": "Several missing verbs: refrigerant is through, is then by a condenser, and is then by the evaporator."
+    },
+    "8f1a3c2cd0fe": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete well-formed explanation with coherent sentence progression."
+    }
+  },
+  "open_06": {
+    "6fee18bc5bbf": {
+      "score": 0,
+      "complete": true,
+      "note": "Most clauses are structurally broken: The have seasons is to, which the amount, and repeated Earth/the sequences."
+    },
+    "59dbf15889cf": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing noun after amount of, lowercase sentence start, and unfinished sunlight/surface and seasons clauses."
+    },
+    "d67ce32586ac": {
+      "score": 1,
+      "complete": true,
+      "note": "Malformed As the rotates the Earth, incomplete causes the amount clause, invented awayward, and repeated system."
+    },
+    "6e2eb42ca8fc": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken relative clause which the direction and recursive direction/axis sentences dominate."
+    },
+    "26cc8be3ae2d": {
+      "score": 0,
+      "complete": false,
+      "note": "One opening sentence followed almost entirely by repeated number fragments; token cap reached."
+    },
+    "b7ebf6c9e24d": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical complete explanation; missing from in tilted away the sun."
+    },
+    "5a33c0d125c0": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent sentences with no material grammar errors."
+    },
+    "ad6e9c11e9d1": {
+      "score": 1,
+      "complete": true,
+      "note": "Depending to, results in ... to vary, missing is in This due, and malformed tilt and of phrase."
+    },
+    "c38b933d19cc": {
+      "score": 1,
+      "complete": true,
+      "note": "Standalone resulting fragment, different of seasons, duplicated The, and missing towards/article in hemisphere clauses."
+    },
+    "504c4cd9b4bf": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; splits and when the axis is tilted away from the sun into an incomplete sentence."
+    },
+    "64c4bf2c2ed7": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical but standalone 23.5 degrees fragment and awkward equator/Sun phrasing; numerical claims also problematic.",
+      "content_issue": true
+    },
+    "089d2a76ca5e": {
+      "score": 1,
+      "complete": true,
+      "note": "Malformed causes that clause, comma splice, and final This means that sentence lacks a predicate."
+    },
+    "e3e373a17cee": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing verb in causes it to the sun, missing of in times the year, causes of, and severely broken time is the sun clauses."
+    },
+    "a377858dc652": {
+      "score": 1,
+      "complete": true,
+      "note": "Causes in variations, different of the Earth, and malformed causes sun to hit parts to receive construction."
+    },
+    "cc7079d69e0b": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly grammatical; isolated receives less direct sunlight fragment and some repeated explanation; final cap cutoff."
+    }
+  },
+  "open_07": {
+    "fd3cbf24d41c": {
+      "score": 1,
+      "complete": true,
+      "note": "Vaccinationation help, spread possessive, helps strengthens, missing links in immune-system clause, and duplicated chances/risk."
+    },
+    "bdfe11368e78": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated population, missing verbs in works by the immune system and which the body, and recursive disease/body fragments."
+    },
+    "a033289ff7b7": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly grammatical but repetitive numbered list, empty item, broken numbering/doubled punctuation, and trailing item number at cap."
+    },
+    "23e23452f800": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing is before introduced, missing predicate after it, exposed to without object, and repeated number of the disease phrases."
+    },
+    "0ef07ec16824": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing verb in which the immune system to produce, broken if it is clause, and people who the contract construction."
+    },
+    "55c91a3dc567": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; awkward helps build the body to produce antibodies construction is a localized wording defect."
+    },
+    "c62162afa3e0": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; extra to in helps to the body and missing to be in not able vaccinated."
+    },
+    "6091abe2a0a7": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; missing verb after recognize and before the presence of the disease."
+    },
+    "d8a641a9f38e": {
+      "score": 1,
+      "complete": true,
+      "note": "Herd immune immunity, where which, making difficult without it, duplicated to, and missing reduce in final clause."
+    },
+    "6a72319dc734": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with clear sentence structure."
+    },
+    "d269bb7fae38": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; works by the immune system to recognize lacks a verb, repeated sentence, and duplicated overall health."
+    },
+    "837cfcc2140c": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical complete paragraph; missing a in As result."
+    },
+    "8c90e659123d": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing noun in create a specific to a disease and incomplete This means that people who have the disease sentence."
+    },
+    "d5fb9b35a318": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly fluent; duplicated to and misplaced period in Overall vaccination; final cap cutoff."
+    },
+    "2b4fa8d6859a": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; final making it difficult the population phrase is incomplete/malformed. Some causal claims also wrong.",
+      "content_issue": true
+    }
+  },
+  "open_08": {
+    "4a3a115c3712": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken short- conditions/long weather/on the climate constructions, repeated the is the, and missing sentence predicates."
+    },
+    "a8dbaa68814e": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically complete contrast. The 300-year factual detail is wrong; grammar score does not reward factual accuracy.",
+      "content_issue": true
+    },
+    "164e7b26ae8a": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated atmospheric/precipitation/climate/years throughout one sentence; is conditions mismatch."
+    },
+    "97cfac90c56b": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; missing article in over time period and repetitive list. Conflicting 300/30 years is a separate content issue."
+    },
+    "e8e880f2fb8a": {
+      "score": 0,
+      "complete": true,
+      "note": "Almost entire answer is a long zero string rather than an explanation."
+    },
+    "a8bd5dccc6c7": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete readable comparison with no material grammar errors."
+    },
+    "ce7a444493b3": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; period inserted into 30 years and duplicated average of the average."
+    },
+    "275918a19e22": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated incorrect while as construction, duplicated weather, punctuation errors, and repeated paragraph content."
+    },
+    "f9c716f1c41d": {
+      "score": 1,
+      "complete": false,
+      "note": "A long zero string replaces part of the explanation; final temperature for clause is cut off at cap."
+    },
+    "d4cbac9f44f6": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical complete comparison; duplicated to in day to to day."
+    },
+    "fbca5f23c09a": {
+      "score": 2,
+      "complete": false,
+      "note": "Readable definitions but repeats one definition and ends with an unclosed quotation; For an example is awkward."
+    },
+    "93ec994aca9e": {
+      "score": 1,
+      "complete": true,
+      "note": "In a time, malformed For example of the following are, broken numbering, and amount of the amount repetition. Cap ends on a complete list-item phrase."
+    },
+    "c577c59b61d4": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical comparison with no material errors."
+    },
+    "7f7257e315ca": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent contrast and summary with no material grammar errors."
+    },
+    "dee801cd21b2": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated climate and a broken final sentence looping weather patterns/average/time."
+    }
+  },
+  "open_09": {
+    "7c99d05cb71e": {
+      "score": 1,
+      "complete": true,
+      "note": "Between of, missing is and who or want, followed by multiple incomplete When clauses without predicates."
+    },
+    "e04af0d1aded": {
+      "score": 1,
+      "complete": true,
+      "note": "Malformed principle that construction, missing than/article, and a price-of-product fragment without verb."
+    },
+    "8bfcb0b9ae04": {
+      "score": 1,
+      "complete": true,
+      "note": "Overloaded principle that sentence and duplicated is in definitions; last two statements contradict but content assessed separately."
+    },
+    "cf02adf983ca": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; awkward principle that and demand of constructions. Final equating price with supply/demand is a content problem."
+    },
+    "9101b5014f56": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken It is that and E.g of the product clauses; loops amount/product and ends at E.g before cap."
+    },
+    "93c069d04109": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with clear conditional sentences."
+    },
+    "ad97d1a12329": {
+      "score": 1,
+      "complete": true,
+      "note": "Several If clauses lack a main predicate; amount of people for the good and amount repetitions are malformed."
+    },
+    "33a2e2bbcbf8": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; missing noun after an economic in opening sentence."
+    },
+    "8cf7379518c2": {
+      "score": 1,
+      "complete": true,
+      "note": "Amount/product word loops, On the other without hand, and less than that the amount construction."
+    },
+    "6fec99be3d12": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly well formed; doubled full stop and repetitive restatement; final clause cut at cap."
+    },
+    "9682d868d08a": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; missing than in demand is greater the supply."
+    },
+    "e1a4b12ea03b": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete readable explanation with no material grammar errors."
+    },
+    "c93cb2473453": {
+      "score": 1,
+      "complete": false,
+      "note": "Almost every sentence loops amount of the product; later clauses lose predicates and final clause cuts at cap."
+    },
+    "d68bcfe57ebe": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation; reaches cap on a fully formed final sentence."
+    },
+    "15f141e620e6": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing buy after willing to and final conditional sentence lacks a main predicate."
+    }
+  },
+  "open_10": {
+    "d1479573db8c": {
+      "score": 0,
+      "complete": false,
+      "note": "After opening, almost entire text is crawl/algorithm repetitions and comma word salad; no usable explanation."
+    },
+    "082cdfa609af": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with clear steps."
+    },
+    "431c46257a1e": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; final list repeats indexing, ranking, and returning results."
+    },
+    "4edad8b1d57f": {
+      "score": 2,
+      "complete": true,
+      "note": "Duplicated links and missing modifier in most pages; otherwise readable."
+    },
+    "ab6ab650db96": {
+      "score": 1,
+      "complete": true,
+      "note": "Number-of-web-pages phrase loops dominate several sentences with little coherent progression."
+    },
+    "30155d577d34": {
+      "score": 2,
+      "complete": true,
+      "note": "Grammatical sentences but second paragraph largely repeats the first with an awkward page rank authority noun chain."
+    },
+    "05177b3fe09e": {
+      "score": 2,
+      "complete": true,
+      "note": "Awkward all pages of the web pages, doubled full stop, and redundant relevance sentences; mostly readable."
+    },
+    "4b179e6e8525": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent explanation with correct sentence structure."
+    },
+    "7b4309b7c9c8": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed headings/Markdown, fragmentary first item, Retrie typo, and final cap cutoff."
+    },
+    "4f58b149081a": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically complete sentences; repetitive/vague content but no material language errors."
+    },
+    "8612d7d7e35c": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly grammatical; missing on after based and final list cut at cap."
+    },
+    "c57417efefe6": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; duplicated web and punctuation errors."
+    },
+    "eb5bc2ea9fe9": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; Then web indexing lacks a linking preposition, repeated rank, and doubled periods."
+    },
+    "59c9ff793224": {
+      "score": 1,
+      "complete": true,
+      "note": "Later sentences become recursive search-engine noun fragments with missing predicates."
+    },
+    "9165197849ad": {
+      "score": 0,
+      "complete": false,
+      "note": "Most answer loops number of the number without coherent sentence structure; final cap cutoff."
+    }
+  },
+  "open_11": {
+    "32d2ed9a5a5b": {
+      "score": 1,
+      "complete": true,
+      "note": "Colors is agreement error, colors of colors repetition, and incomplete where the observer clause."
+    },
+    "1f6887bf809f": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken angle-of-sun sentence fragment and can change of the rainbow construction."
+    },
+    "80e153a37ad1": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing of after refraction, broken light of the bends clause, missing noun after the, and at the same of construction."
+    },
+    "0fdddcedf2c6": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation; scientific content is not graded here."
+    },
+    "3614ac0eb469": {
+      "score": 2,
+      "complete": true,
+      "note": "Awkward always in the red color-list construction, duplicated indigo, and malformed behind/opposite wording."
+    },
+    "dacaa6c2e374": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; missing link between light and water droplets and colors is disagreement."
+    },
+    "a30303eda2b4": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; duplicated color of the color and awkward size of the water phrasing."
+    },
+    "b021472b48eb": {
+      "score": 1,
+      "complete": true,
+      "note": "Three angle-of-rainbow sentences loop the same position-of-sun/observer phrase, including malformed sun of the rainbow."
+    },
+    "d5dd382116ea": {
+      "score": 2,
+      "complete": true,
+      "note": "Grammatical sentences but repeatedly restates light bent at angle of rainbow with little progression."
+    },
+    "ff36bcf2323b": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing by, broken water/of/droplets sequence, ra of fragments, and missing by after determined."
+    },
+    "907938edd672": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; duplicated sunlight and comma splices join independent clauses."
+    },
+    "d048585a929b": {
+      "score": 1,
+      "complete": true,
+      "note": "Colors of colors and repeated angle-of-rainbow clauses become malformed circular definitions."
+    },
+    "4aca975968f9": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated refraction/presence noun phrases and broken numbering; final item cut at cap."
+    },
+    "2d3c37f8ac30": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; standalone The reason why fragment and malformed This is of course transition."
+    },
+    "0154c4b21b7f": {
+      "score": 1,
+      "complete": false,
+      "note": "Colors is disagreement, due to followed by an unlinked full clause, repeated and/position phrases, and cap cutoff."
+    }
+  },
+  "open_12": {
+    "2dfeb59150b4": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical; heart has two sides is comma-spliced to the following independent clause."
+    },
+    "630c300df88b": {
+      "score": 2,
+      "complete": true,
+      "note": "Readable overall; truncated circ verb and awkward heart is on two sides wording."
+    },
+    "06c7ffd2fefb": {
+      "score": 1,
+      "complete": false,
+      "note": "Corrupted oxygenatedated/deoxygenatedated words, repeated blood, malformed chamber names, and cap cutoff."
+    },
+    "9415acb66c4e": {
+      "score": 1,
+      "complete": false,
+      "note": "Truncated circ, repeated heart of the heart, repetitive right/left-side clauses, and cap cutoff."
+    },
+    "c615aa65a08d": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; repeated throughout and awkward blood in phrasing. Anatomical details not grammar-scored."
+    },
+    "35a4ca15f65d": {
+      "score": 1,
+      "complete": true,
+      "note": "Truncated circ/de, missing nouns after side of and oxygenated, and left-side fragment."
+    },
+    "d944c7c7ea46": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated incomplete circ/de word forms and oxygen blood wording impair several sentences."
+    },
+    "c85c9702eab7": {
+      "score": 1,
+      "complete": true,
+      "note": "Circates/at/ventriclecles corruptions, receives pumps collisions, repeated to, and missing subject in The pumps."
+    },
+    "8b84bb48f45b": {
+      "score": 1,
+      "complete": true,
+      "note": "Truncated circ/at/ventri, repeated blood/pumps/oxygen, and malformed final cycle clause."
+    },
+    "a43f2164ed48": {
+      "score": 1,
+      "complete": true,
+      "note": "Truncated circ/de/deoxygen forms and repeated ventricle phrases throughout."
+    },
+    "8b5368126889": {
+      "score": 1,
+      "complete": true,
+      "note": "Circ/de fragments, chambers is and valves is errors, and final aorta-pulmonary-arteries fragment."
+    },
+    "1b78ef461619": {
+      "score": 1,
+      "complete": true,
+      "note": "Circ fragment, broken chamber description, repeated right-side clauses, and compound-subject pumps disagreement."
+    },
+    "e03d9ee18405": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; truncated circ in opening and tautological last-side wording. Anatomical claims separately problematic."
+    },
+    "28d1c1cadbc1": {
+      "score": 0,
+      "complete": true,
+      "note": "After opening, almost entire answer repeats and the lungs in an incoherent extended sentence."
+    },
+    "55cb20558067": {
+      "score": 1,
+      "complete": true,
+      "note": "Two malformed predicates: pick the blood up oxygen and deliver the blood up oxygen."
+    }
+  },
+  "open_13": {
+    "06d2ccc473da": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; malformed mass of the the distance phrase in one sentence."
+    },
+    "a06de3781c8a": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical but tautological/confused mass-of-Earth sentence. Scientific claims not grammar-scored.",
+      "content_issue": true
+    },
+    "88a77d1dc349": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; doubled comma and comes at rest instead of comes to rest."
+    },
+    "561e9901cd5a": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; very strong enough and same direction towards the ground are awkward constructions."
+    },
+    "422e7649c162": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken created of/comparative clauses, repeated words, downwardward, and dangling The before cap."
+    },
+    "a42e141c9f05": {
+      "score": 1,
+      "complete": true,
+      "note": "Malformed Earth of which clause and This is why the reason why we the ground fragment."
+    },
+    "b51e5991fc8c": {
+      "score": 1,
+      "complete": false,
+      "note": "Force of attracts, missing on after depends, multiple broken comparative clauses, and cap cutoff."
+    },
+    "a3a9ce621f00": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated toward and severely tangled distance/object/center clauses with missing predicates."
+    },
+    "fe618d7136de": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated toward, missing article, missing verb in that between, and repetitive force/pulls clauses."
+    },
+    "6af75ff3f084": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated toward, because missing of, attracts with, and causing them toward lacks fall."
+    },
+    "88501bbc538d": {
+      "score": 1,
+      "complete": true,
+      "note": "Attracts with, compound-subject determines errors, repeated force of force, and fragmentary final sentence."
+    },
+    "6382b91ca604": {
+      "score": 1,
+      "complete": true,
+      "note": "Extensive repeated It is the force sentences and standalone Gravity fragment dominate."
+    },
+    "afa5ec4a01f9": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; attracts objects with each other is awkward. Physical claims not grammar-scored."
+    },
+    "774d7651e385": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical concise answer; attracts objects with each other uses the wrong preposition."
+    },
+    "8e392b39d4b8": {
+      "score": 1,
+      "complete": true,
+      "note": "Because missing of, tangled mass-of-distance phrase, and center the Earth missing of."
+    }
+  },
+  "open_14": {
+    "faea760e1c63": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; final application list leaves natural language without processing or a clear field description."
+    },
+    "d81a046829a2": {
+      "score": 1,
+      "complete": true,
+      "note": "Second half has misplaced commas, missing in before field list, repeated technology/more, and malformed lists."
+    },
+    "ddab07a1f7a8": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation and clear summary."
+    },
+    "6c6f5350ca18": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken opening infinitives, to to, those and patterns, predict when with, and is are final clause."
+    },
+    "a77a1dc2a67c": {
+      "score": 1,
+      "complete": true,
+      "note": "Nearly the entire answer repeats the same definition sentence without progression."
+    },
+    "28819be7f6c9": {
+      "score": 1,
+      "complete": true,
+      "note": "Programmed to do lacks so/object; In is fragment, faster and efficient mismatch, and malformed application list."
+    },
+    "36d34c46df89": {
+      "score": 1,
+      "complete": true,
+      "note": "Multiple missing verbs/be auxiliaries, data repetitions, over over, and broken inbox relative clause."
+    },
+    "4e4fd11875b2": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; then use breaks the creating/training/testing parallel construction; training/testing wording is awkward."
+    },
+    "6109b8c7b65d": {
+      "score": 0,
+      "complete": false,
+      "note": "Answer degenerates into a long etc/comma loop after opening, then ends mid-clause at cap."
+    },
+    "72a2097502d4": {
+      "score": 0,
+      "complete": false,
+      "note": "After two sentences, most remaining text is an etc/punctuation loop at the cap."
+    },
+    "be4c9f69150e": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated data/and, missing article before minimal amount, and final whether a spam clause lacks predicate."
+    },
+    "2006ae58d385": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated definition paragraphs, allows computers fragment, and final cap cutoff."
+    },
+    "82dfa658743a": {
+      "score": 1,
+      "complete": true,
+      "note": "Opening amount-of-data recursion and duplicated task list with mismatched learn-from-data item."
+    },
+    "f3d31f2e47a0": {
+      "score": 1,
+      "complete": true,
+      "note": "Dangling predictions or, can then to make, corrupted diagnose/fraud list, and improve their time wording."
+    },
+    "c8ec0d45fea5": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical complete answer; algorithms enables disagreement."
+    }
+  },
+  "open_15": {
+    "1cc46f08d6ee": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing object after reduced risk of, entire benefits list repeated three times, and Main main duplication."
+    },
+    "e8d119779812": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing object after risk of, missing include, dangling mood and, repeated lists, and cap cutoff."
+    },
+    "6e0ad986ea14": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete readable answer with no material grammar errors."
+    },
+    "4ae2bdc6a571": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken opening, repeated mood/stress/cholesterol, and several malformed and-heavy lists."
+    },
+    "2e340ed56a6c": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical concise answer; doubled comma and duplicated diseases."
+    },
+    "3beed2afb650": {
+      "score": 1,
+      "complete": false,
+      "note": "Corrupted disease list, missing words, repeated nouns/conjunctions, and final cap cutoff."
+    },
+    "ba78a34a1ede": {
+      "score": 0,
+      "complete": false,
+      "note": "Most output degenerates into repeated and/punctuation with no coherent list ending."
+    },
+    "87dda3435149": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical but includes a standalone repeated benefits fragment and redundant health statements."
+    },
+    "ce59dcc0cc67": {
+      "score": 0,
+      "complete": false,
+      "note": "Long improved/and/comma loop dominates; final cap cutoff."
+    },
+    "52e53190525b": {
+      "score": 0,
+      "complete": true,
+      "note": "Almost entire list repeats reduced chronic disease with punctuation/word duplication."
+    },
+    "391fd22a6503": {
+      "score": 0,
+      "complete": false,
+      "note": "After one opening sentence, answer is almost entirely empty numbered items up to the cap."
+    },
+    "ede14e37a6d5": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated mental health, incomplete disease list, and long numbering loop at cap."
+    },
+    "ea1578adacaf": {
+      "score": 1,
+      "complete": false,
+      "note": "Two clean opening sentences followed by extensive nonsensical letter/number list at cap."
+    },
+    "5159a9d3bad7": {
+      "score": 1,
+      "complete": true,
+      "note": "Reduced weight management, missing object after risk of, and repeated punctuation/fragmentary list."
+    },
+    "c28ebdd1f1b4": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise readable list; reduced risk of has no object."
+    }
+  },
+  "open_16": {
+    "c766340e2982": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; Earth the water is collected run-on lacks punctuation or conjunction."
+    },
+    "0c5f5e43f060": {
+      "score": 1,
+      "complete": true,
+      "note": "Malformed between ... and back coordination, missing list separator, and missing movement words in evaporation/transpiration definitions."
+    },
+    "a235eabf169a": {
+      "score": 1,
+      "complete": false,
+      "note": "Where which, truncated cond, missing prepositions/verbs, repeated stage names, and cap cutoff."
+    },
+    "2e9a10c3b4a6": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; between surface atmosphere and back coordination and release water back the Earth lacks to."
+    },
+    "72132674110e": {
+      "score": 0,
+      "complete": true,
+      "note": "Most text is repeated and/precipitation fragments rather than coherent sentences."
+    },
+    "457b3711363c": {
+      "score": 1,
+      "complete": true,
+      "note": "Cond/sle/slelelet fragments, missing prepositions, repeated then/rivers, and broken precipitation clause."
+    },
+    "f58432077a72": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated condensation, truncated cond verb, and multiple doubled commas impair the process sentence."
+    },
+    "ae3c6fb9d5e8": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically complete sentences. Final process-is-water statement is a content problem rather than a syntax error.",
+      "content_issue": true
+    },
+    "a202d5c2c6ea": {
+      "score": 1,
+      "complete": true,
+      "note": "Evaporation clause lacks verb, into into duplication, missing to before Earth, and repeated most important."
+    },
+    "6b7f7d821533": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; truncated evapor and awkward all life on Earth climate/weather ending."
+    },
+    "3ae5fcbfe277": {
+      "score": 1,
+      "complete": false,
+      "note": "Process of water moves, evapor/cond fragments, multiple missing verbs, and final cap cutoff."
+    },
+    "ed0fe417062d": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; awkward changing it/moving coordination and missing of in form the water."
+    },
+    "184395c6d0a0": {
+      "score": 0,
+      "complete": false,
+      "note": "Most clauses are water/atmosphere noun loops without predicates; final cap cutoff."
+    },
+    "a36e40bb1cb2": {
+      "score": 1,
+      "complete": true,
+      "note": "Truncated cond and missing to/on in falls back Earth, collects Earth, and flows back oceans."
+    },
+    "bcff431c23f8": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically complete explanation; turns into the atmosphere is a scientific/content error, not malformed syntax.",
+      "content_issue": true
+    }
+  },
+  "open_17": {
+    "25fefd8743dd": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; period wrongly splits variety of and a doubled comma after fatigue."
+    },
+    "e83c7e90a35a": {
+      "score": 1,
+      "complete": true,
+      "note": "Overall well is incomplete, benefit list has confused coordination, and negative-effects list includes bare mood."
+    },
+    "f069a9f26f35": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing nouns in cognitive/emotional list, malformed repair/stress coordination, extensive punctuation and and loops."
+    },
+    "cbddb334a2cb": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; duplicated sleep and awkward decreased mood list item."
+    },
+    "308530c75381": {
+      "score": 1,
+      "complete": true,
+      "note": "Well.being corruption, repairs and the body, Main verb fragments, and broken numbered list."
+    },
+    "061263870cc0": {
+      "score": 1,
+      "complete": true,
+      "note": "Repair the and body, mood regulation repetition, incomplete immune noun, and malformed without enough clause."
+    },
+    "0cc97d22d548": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical sentences; repeated commas/full stops and awkward cognitive memory phrase."
+    },
+    "7b014004596e": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; emotional-health paragraph has broken there is not getting enough wording and missing problems after serious health. Cap ends on complete clause."
+    },
+    "184b4ac66995": {
+      "score": 2,
+      "complete": true,
+      "note": "Readable overall; several punctuation errors and tangled final sleep-disorders/sleep-apnea coordination."
+    },
+    "ca7c544296f9": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing system after immune, has shown missing been, heart missing disease, and malformed final helps such as memory clause."
+    },
+    "1ede8ffae221": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated list items and repeated missing being after overall/emotional well."
+    },
+    "458d4c83595c": {
+      "score": 1,
+      "complete": true,
+      "note": "Paragraph nearly repeats wholesale and includes standalone Sleep fragment."
+    },
+    "22a0259928b7": {
+      "score": 0,
+      "complete": true,
+      "note": "Most opening sentence degenerates into a long and the body loop without clear predicates."
+    },
+    "40e0160401da": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; full stop splits risk of, misplaced Overall period, duplicated comma, and diabetes type wording."
+    },
+    "beaa1422fee0": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical; stray comma after and and doubled comma after stroke."
+    }
+  },
+  "open_18": {
+    "cd736f378621": {
+      "score": 1,
+      "complete": false,
+      "note": "Non-renewable renewable duplication, do not emissions missing verb, malformed source comparisons, and cap cutoff."
+    },
+    "4a628eb31e4a": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical comparison with clear sentence structure."
+    },
+    "fb134d9d6a59": {
+      "score": 1,
+      "complete": true,
+      "note": "Renewablerenewable/energy energy/be be repetitions and malformed duplicated source lists."
+    },
+    "3fb2cf9b155c": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical comparison; factual overgeneralizations are not grammar-scored."
+    },
+    "4e265aaa193a": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; missing article in over time period and duplicated sustainable."
+    },
+    "2f57d61e1273": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated energy, non non, and be be across the answer."
+    },
+    "424d6993434e": {
+      "score": 1,
+      "complete": true,
+      "note": "Renewablerenewable, energy is sources disagreement, over over/such such repetitions, and tangled final contrast."
+    },
+    "b47c61c951ef": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; good to the environment is wrong collocation and time-period phrasing is awkward. Meaning is also unreliable."
+    },
+    "c25f59b586e3": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing predicate, repeated biomass, are not replenish, incomplete natural gas item, and final Non fragment."
+    },
+    "799df86b8a26": {
+      "score": 1,
+      "complete": true,
+      "note": "Opening lacks verb, renewable energy are disagreement, and are cost more efficient construction."
+    },
+    "bba35e3da957": {
+      "score": 1,
+      "complete": true,
+      "note": "Truncated replen, energy is sources, repeated time phrase, and contradictory source-definition loops."
+    },
+    "5c89db04ed21": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated malformed used in a time phrasing and a final While subordinate fragment."
+    },
+    "df138c2805f4": {
+      "score": 0,
+      "complete": true,
+      "note": "Almost every sentence is a repeated energy-sources noun phrase without a predicate."
+    },
+    "04fb7a92e72f": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated energy and two incomplete replen word forms impair both main definitions."
+    },
+    "49c6e56b8941": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated energy, missing in before time period, good to collocation, comma splice, and looping comparison."
+    }
+  },
+  "open_19": {
+    "ad42957b0d43": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete coherent sentences with no material grammar errors."
+    },
+    "10a83bb24fac": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; final and more and more duplication is a localized fluency defect."
+    },
+    "de205e0b30ad": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated communicate/chemical, malformed For example communication, missing object after warn each other of, and repeated acoustic signals."
+    },
+    "4afcb79f0e62": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with coherent sentences."
+    },
+    "a582f422bff3": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete readable sentences; scientific claims not assessed in grammar score."
+    },
+    "e2759a59d620": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated networks, corrupted my fungi wording, missing words in through the help animals, and extensive punctuation errors."
+    },
+    "c4a1e9af533c": {
+      "score": 1,
+      "complete": true,
+      "note": "Including as, incomplete and other, mycorr word fragment, and repeated punctuation errors."
+    },
+    "e543f51dccf2": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical; mycorr is an unfinished technical word."
+    },
+    "bb5015ac47f2": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated share, missing through before networks, warn each of danger, and tangled signal/root clauses."
+    },
+    "e8b26178acdb": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated nutrients, truncated pollin, missing as in such sending, and missing other in warn each of danger."
+    },
+    "5116a8365fc1": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated chemical signals, alert each of the presence missing complement, and malformed each other resources."
+    },
+    "81b1be1be339": {
+      "score": 3,
+      "complete": true,
+      "note": "Long and vague but grammatically formed clauses. Cap ends on a complete use-to-help infinitive; no clear dangling syntax."
+    },
+    "0add8c276f80": {
+      "score": 0,
+      "complete": false,
+      "note": "Almost entirely empty Communication numbered items and repeated letter/number fragments at cap."
+    },
+    "42aecd3fe637": {
+      "score": 2,
+      "complete": true,
+      "note": "Two grammatical sentences followed by isolated signals and interactions fragment."
+    },
+    "92529fac6b26": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with clear parallel examples."
+    }
+  },
+  "open_20": {
+    "04577b3da770": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; buy a mortgage is an awkward/wrong collocation."
+    },
+    "c23d678ad9c3": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with clear sentence structure."
+    },
+    "1b3aff6b2b1a": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically well formed; final stability claim is semantically at odds with the preceding negative effects, recorded separately.",
+      "content_issue": true
+    },
+    "2c5cf5fbc3d3": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing in after increase, repeated period/time/affect/to, incomplete cost of, and malformed essentials phrase."
+    },
+    "28df418196c5": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing article, goods that can buy lacks buyer subject, and milk is 1 is 100 corruption."
+    },
+    "272b1fe70655": {
+      "score": 1,
+      "complete": true,
+      "note": "Opening ends at over, purchasing lacks power, affect for, garbled inflation-rate sentence, and repeated rate text."
+    },
+    "cd0bf712e843": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing verb in can households by purchasing power and repeated households/punctuation."
+    },
+    "272b14cad2fd": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly grammatical; missing noun in It is a in the value of money; final standard-of clause cuts at cap."
+    },
+    "3925839a1f8a": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated period/their, as reducing construction, missing noun after same/higher, and awkward strain for households phrase."
+    },
+    "4d0948390932": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; cost of goods such services is malformed and savings on their income is awkward."
+    },
+    "b2d8c78afb4d": {
+      "score": 1,
+      "complete": true,
+      "note": "Time period of time, repeated demand/cost lists, missing articles, and tangled spend more on income phrasing."
+    },
+    "9d96a3c1050a": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated value of value, missing subject in numbered item, broken numbering, and trailing empty item at cap."
+    },
+    "1de1c12d9bc5": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing services after goods and, unfinished possessive peoples, and value-of-US loops/corrupt punctuation."
+    },
+    "0dba30763f60": {
+      "score": 1,
+      "complete": true,
+      "note": "Households of households, make it more missing expensive, buy mortgage collocation, and job missing losses."
+    },
+    "75d63fee7eaf": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically complete sentences; budgeting clause may reverse the intended meaning, a semantic/content issue.",
+      "content_issue": true
+    }
+  },
+  "open_21": {
+    "33a6e903f1bc": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; missing to in leaves begin change and awkward chlorophyll breaks wording."
+    },
+    "3c73b2a12bb6": {
+      "score": 1,
+      "complete": true,
+      "note": "Depends missing on, ratio amount collision, misplaced period splitting leaf will, and be be duplication."
+    },
+    "fe6c3c518a2c": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing verb in which the trees to produce and truncated pigment names caroten/x."
+    },
+    "913e0b4a4d96": {
+      "score": 1,
+      "complete": true,
+      "note": "Color season collision, misplaced without chlorophyll phrase, ThereforeTherefore/the the, agreement errors, and duplicated color list."
+    },
+    "6009ea38a22c": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; pigment that makes them appear lacks a complement such as green."
+    },
+    "ce28157e9fc2": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken which chlorophyll/which other pigments clauses, truncated pigment names, and repetitive color wording."
+    },
+    "bca089848e22": {
+      "score": 1,
+      "complete": true,
+      "note": "Responsible missing for, truncated caroten/anth, awkward red spectrum, and doubled period."
+    },
+    "9fef98c5a384": {
+      "score": 1,
+      "complete": false,
+      "note": "Opening because clause lacks predicate, amount-of-amount recursion, comma splice, and final cap cutoff."
+    },
+    "d971a89335f7": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated amount definitions, corrupted list numbering, and truncated caroten/anthocyan/anth terms."
+    },
+    "f7373e8202aa": {
+      "score": 1,
+      "complete": false,
+      "note": "Almost identical chlorophyll/caroten sentence loops dominate; final The amount fragment at cap."
+    },
+    "00424c0b39cc": {
+      "score": 1,
+      "complete": true,
+      "note": "Pigment that is the leaves lacks gives, broken This clause, and tangled for-the-leaves-change construction."
+    },
+    "e6ae3e655dcc": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly grammatical until malformed As day decreases and it will clause; final cap cutoff. Scientific direction also problematic.",
+      "content_issue": true
+    },
+    "7bf446bc5f6c": {
+      "score": 1,
+      "complete": false,
+      "note": "Double predicate Leaves change ... is due, repetitive incomplete list, and final The fragment before cap."
+    },
+    "782338959aef": {
+      "score": 1,
+      "complete": true,
+      "note": "Which missing is, As amount without predicate, begin to other colors, if there leaf, and truncated caroten."
+    },
+    "8f60c9a4ca39": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated amount clauses, anthocyan/caroten fragments, and final clauses without a complete predicate."
+    }
+  },
+  "open_22": {
+    "c406999e59af": {
+      "score": 1,
+      "complete": true,
+      "note": "Due missing to, center of of, prevents them it collision, and a a duplication."
+    },
+    "5b2b0477ac24": {
+      "score": 1,
+      "complete": true,
+      "note": "Because missing of and repeated help to the balance clauses without a verb after to."
+    },
+    "911a92a0d7e2": {
+      "score": 1,
+      "complete": false,
+      "note": "Extensive of/the/adjustments duplications, malformed balance clauses, and final cap cutoff."
+    },
+    "b9ccf69d7fb7": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with clear clause structure; physics not scored."
+    },
+    "67dc0a4fd459": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; contribute to create is an awkward/wrong verb construction."
+    },
+    "cc2308c977a5": {
+      "score": 0,
+      "complete": false,
+      "note": "Most body becomes center/the/of word loops with missing predicates; cap cutoff."
+    },
+    "985ff15f648f": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated the, handlebars is disagreements, missing of, and circular center-of-bicycle clauses."
+    },
+    "8febc32d34ae": {
+      "score": 1,
+      "complete": true,
+      "note": "One extremely repetitive weight-of-the list cycles through the same components without progression."
+    },
+    "d99350160d3d": {
+      "score": 1,
+      "complete": false,
+      "note": "Moving moving, broken Gy heading/Markdown, force-of-force repetitions, malformed steering clause, and unfinished list."
+    },
+    "ed6b4d36406d": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; distance of one center and another is missing a proper between construction. Meaning also questionable."
+    },
+    "86afb4396772": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; missing article before stable position and missing verb in help to the balance."
+    },
+    "cb41719fcac4": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing noun after weight of the and severely tangled helps-to-center/front/back clauses."
+    },
+    "b1408ca898ab": {
+      "score": 0,
+      "complete": true,
+      "note": "Nearly entire answer loops center of the center of the ground without usable explanation."
+    },
+    "b579c99f540d": {
+      "score": 1,
+      "complete": true,
+      "note": "Malformed handlebars of keep and repeated balance/speed clauses lack predicates."
+    },
+    "f1c55c1a7d6a": {
+      "score": 2,
+      "complete": true,
+      "note": "Compound subject incorrectly takes helps; extra to in helps to the bicycle to stay."
+    }
+  },
+  "open_23": {
+    "51789f31e789": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical practical list; awkward conscious to reduce wording and doubled comma after Lastly."
+    },
+    "b39ef1c6d7d5": {
+      "score": 1,
+      "complete": true,
+      "note": "Duplicated bags/composting/recycling, incomplete food list item, and long run of stray dots."
+    },
+    "54e517b91853": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable list; lowflow lacks a clear noun and unless you need lacks an object/to complement."
+    },
+    "66d3c64b82e0": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken/duplicated item numbering and repeated reusable-container bullets; trailing empty item at cap."
+    },
+    "9a9650473de0": {
+      "score": 1,
+      "complete": true,
+      "note": "Repur fragment, missing complement after instead of, repeated punctuation, and broken final list wording."
+    },
+    "906a907a6163": {
+      "score": 0,
+      "complete": false,
+      "note": "Almost entirely repeated composting phrases and comma loops at cap."
+    },
+    "57667288612f": {
+      "score": 1,
+      "complete": false,
+      "note": "Several valid items followed by incomplete and then/public phrases, repeated car items, and final Use cutoff."
+    },
+    "559a4d76ef8b": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical concise list; doubled comma and full stop."
+    },
+    "33eb7e0e7129": {
+      "score": 1,
+      "complete": false,
+      "note": "Large second half repeatedly restates reduce household waste without progression; final You cutoff."
+    },
+    "0b0827e3390c": {
+      "score": 1,
+      "complete": true,
+      "note": "Com word fragment and repeated natural/reusable-product bullets dominate later list."
+    },
+    "e7799783f8a8": {
+      "score": 1,
+      "complete": true,
+      "note": "Opening number junk, missing noun after yard, and malformed buying/energy list items."
+    },
+    "f06d12e2a395": {
+      "score": 0,
+      "complete": false,
+      "note": "After opening, answer is only repeated empty numbered items up to cap."
+    },
+    "237d861deddb": {
+      "score": 0,
+      "complete": false,
+      "note": "After opening, answer is number/bullet fragments without actual advice at cap."
+    },
+    "102b8880e2f8": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated waste-type items, missing noun after energy efficient, extensive doubled commas, and trailing comma at cap."
+    },
+    "044939648aad": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; buy locally sourced lacks a noun and make sure to familiar lacks be."
+    }
+  },
+  "open_24": {
+    "20d8599df488": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically formed complete clauses; cap ends on a complete statement. Scientific mechanism is unreliable and not grammar-scored.",
+      "content_issue": true
+    },
+    "debe8e0b6142": {
+      "score": 3,
+      "complete": true,
+      "note": "Grammatically complete sentences. Final amount-of-battery statement is semantically vague/incorrect; content kept separate.",
+      "content_issue": true
+    },
+    "e6b9a823cf3f": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated the, chemical used without a noun, broken converts clause, internal the of, and missing prepositions."
+    },
+    "a784a7060aaf": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; electrodes and the in the battery lacks noun and stored and depends has an extra and."
+    },
+    "044b05ff631a": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing of, When a battery fragment, repeated energy/the, missing energy nouns, and broken capacity definition."
+    },
+    "00ec49a9f5b6": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated chemical, form the battery missing of, terminalss corruption, repeated energy claims, and cap cutoff."
+    },
+    "402cf57984e9": {
+      "score": 1,
+      "complete": false,
+      "note": "A chemical reactions disagreement, missing between, repeated numbered items, fragments, and empty final item at cap."
+    },
+    "5cc1923bd056": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; released electrons repeats electrons and final period doubled."
+    },
+    "20bf96b42fb7": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated mixture-of-mixture clauses dominate; energy is by chemical reactions lacks a predicate verb."
+    },
+    "6c483f5714a9": {
+      "score": 2,
+      "complete": false,
+      "note": "Mostly grammatical opening; malformed Therefore which is correct answer transition and final option cut at cap."
+    },
+    "8c37e20ef589": {
+      "score": 1,
+      "complete": true,
+      "note": "Broken electrolyte relative clause, several standalone noun fragments, and recursive chemical/electrical energy wording."
+    },
+    "06274610f6f7": {
+      "score": 1,
+      "complete": true,
+      "note": "A chemical reactions disagreement, occur electrons, missing nouns/prepositions, and repeated the/of."
+    }
+  },
+  "open_25": {
+    "44e9f65e9c57": {
+      "score": 1,
+      "complete": true,
+      "note": "Tes fragment, missing noun after is a, repeated is/the, standalone word fragments, and tangled final clause."
+    },
+    "1ea3f4549661": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; testing/analyzing and to draw breaks parallel construction."
+    },
+    "6241c65e476d": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated validity/of, missing object after conduct/solve, and several broken parallel lists."
+    },
+    "8f2a5767456d": {
+      "score": 1,
+      "complete": true,
+      "note": "Development/understanding phrase loops, repeated to, and repeated standalone It fragments."
+    },
+    "021339b67274": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical; duplicated phenomena in final phrase."
+    },
+    "1c8c6090f6cf": {
+      "score": 1,
+      "complete": true,
+      "note": "After opening, most text loops and testing within an excessively repetitive list."
+    },
+    "a4e3382dd9ce": {
+      "score": 1,
+      "complete": true,
+      "note": "Systematic duplication, understanding and the world mismatch, Technology fragment, and broken world/challenges ending."
+    },
+    "30c2c40029f4": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; world of the world and and and duplications with repetitive summary."
+    },
+    "be0b9169e5ab": {
+      "score": 1,
+      "complete": true,
+      "note": "Repeated natural/world/universe phrases and several way to the world clauses lacking a verb."
+    },
+    "43bec76ae087": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; they are and reproducible has a missing adjective before and."
+    }
+  },
+  "open_26": {
+    "847d51660c0f": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical explanation with coherent examples."
+    },
+    "5bb5d2fb9676": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; use of older lacks a noun and doubled comma after Overall."
+    },
+    "b9928e27aa6b": {
+      "score": 1,
+      "complete": true,
+      "note": "Change change, missing to, broken cultural list, missing predicates, and repeated globalization/etc phrases."
+    },
+    "e7bb57c2d725": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; duplicated contact and can include in pronunciation lacks a noun such as changes."
+    },
+    "dd02f80b4d98": {
+      "score": 1,
+      "complete": false,
+      "note": "Change change and extensive migration repetition; ends in Over time fragment."
+    },
+    "01ade8d73637": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated question/answer prompt loops, lead changes missing to, duplicated grammar/change, and cap cutoff."
+    },
+    "c73b4cc73fa0": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; creation loss loss and of words is a malformed list."
+    },
+    "96739eadba13": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; can also the development lacks a verb such as influence; some redundancy."
+    },
+    "ac097ea4c3e0": {
+      "score": 1,
+      "complete": false,
+      "note": "Culture repetitions, multiple For example noun fragments, play a missing role, and final cap cutoff."
+    },
+    "6833196a95f3": {
+      "score": 1,
+      "complete": false,
+      "note": "First paragraph has syntax of over time error; later answer degenerates into conjunction/punctuation loop at cap."
+    }
+  },
+  "open_27": {
+    "7eeb69ae2153": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; source of of repetition and stray punctuation."
+    },
+    "9820f0909573": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly readable; helps to the Earth surface temperature lacks a verb and Additionally has misplaced period."
+    },
+    "c8c249a12ff0": {
+      "score": 1,
+      "complete": true,
+      "note": "Act a major role, truncated sun phrase, existence oceans missing of, and incomplete Earth would clause."
+    },
+    "d824d7b0b274": {
+      "score": 1,
+      "complete": true,
+      "note": "Climate climate, missing are, malformed Without oceans are important clauses, and duplicated the/planet text."
+    },
+    "8c670c5caea3": {
+      "score": 0,
+      "complete": false,
+      "note": "Most output is repeated precipitation/punctuation rather than explanation, at cap."
+    },
+    "fac42cb69be0": {
+      "score": 3,
+      "complete": true,
+      "note": "Complete grammatical sentences; some reasoning/content is awkward but no material syntax error."
+    },
+    "28f9ecf9c045": {
+      "score": 3,
+      "complete": false,
+      "note": "Visible sentences are grammatical; final relative clause is cut at token cap."
+    },
+    "74c466122492": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing verbs in help to the distribution/temperature and standalone Oceans/The oceans fragments."
+    },
+    "c4bd6b41414b": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed numeric phrase, role of Earth, missing verbs in amount clauses, and final cap cutoff."
+    },
+    "55c9f21475de": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; doubled final full stop. Scientific assertions are not grammar-scored."
+    }
+  },
+  "open_28": {
+    "05b248c8930b": {
+      "score": 1,
+      "complete": true,
+      "note": "A explanation, is be, well concise, missing be after should, and tangled punctuation/list grammar."
+    },
+    "4622a58cf082": {
+      "score": 1,
+      "complete": true,
+      "note": "A explanation, well and organized, free to errors, and should be a tone instead of use/have a tone."
+    },
+    "a1f3c2606274": {
+      "score": 1,
+      "complete": false,
+      "note": "A explanation and polite/free tone construction, then extensive and/punctuation loop ending before cap."
+    },
+    "7dbf54e06eae": {
+      "score": 1,
+      "complete": false,
+      "note": "Opening lacks is and understand, repeated persuasive, duplicate list items, and empty last item at cap."
+    },
+    "c4ce2173a2d0": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing is, mismatched adjective/noun list, appeal to provide, and repeated support."
+    },
+    "68deb1fa75b7": {
+      "score": 2,
+      "complete": true,
+      "note": "Otherwise grammatical short sentence; period splits well-organized word."
+    },
+    "f8385098f8ce": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing noun after use of, missing verb/adjective in audience clause, and several broken evidence list items."
+    },
+    "fce9d29947e7": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated Use evidence and information items and broken numbering; final empty item at cap."
+    },
+    "8c3142564eb8": {
+      "score": 1,
+      "complete": true,
+      "note": "Clear and clear, repeated First headings, importance noun fragment, and how to the audience missing a verb."
+    },
+    "c583c9e639be": {
+      "score": 1,
+      "complete": true,
+      "note": "Well and organized, should be the audience, and free and objective of bias are malformed."
+    }
+  },
+  "open_29": {
+    "4719eeabad85": {
+      "score": 1,
+      "complete": true,
+      "note": "Invalid To can opening, repeated source/the, missing subjects, and malformed bias/information clauses."
+    },
+    "1d5cec5f1930": {
+      "score": 2,
+      "complete": true,
+      "note": "Mostly grammatical; evaluate/information duplications and invented contexttability word."
+    },
+    "32c0991ee0ca": {
+      "score": 0,
+      "complete": false,
+      "note": "After initial advice, most output becomes an etc/punctuation loop up to cap."
+    },
+    "cf0c164314c2": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing noun in checking the of the source, recursive definitions, repeated validity, and cap cutoff."
+    },
+    "bc16f85260fb": {
+      "score": 1,
+      "complete": true,
+      "note": "Double predicate in opening and repeated If you to clauses without verbs; broken numbering."
+    }
+  },
+  "open_30": {
+    "3340a05e2287": {
+      "score": 1,
+      "complete": true,
+      "note": "Named named, missing noun after faraway, who instead of whose, him/the duplications, and missing met in final clause."
+    },
+    "594f8c3c8377": {
+      "score": 1,
+      "complete": true,
+      "note": "He He, many used-to/eat fragments, repeated sentences, never lesson lacks verb, and corrupted final phrase."
+    },
+    "1c37a2991eef": {
+      "score": 0,
+      "complete": true,
+      "note": "Almost entire output is traveler/place/destination noun repetitions rather than a grammatical story."
+    },
+    "6db1108263c1": {
+      "score": 1,
+      "complete": false,
+      "note": "Long and the world loops, malformed found that of the world clause, and cap cutoff."
+    },
+    "a5185195aa5d": {
+      "score": 1,
+      "complete": true,
+      "note": "Mostly repeats traveler-to-destination sentence, with malformed a of/a the fragments and missing was in final clause."
+    }
+  }
+}

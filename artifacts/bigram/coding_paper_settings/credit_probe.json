@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "space": "Ruurd/byod-gemma-2-9b",
+  "revision": "c8003db3f4da4569d0915199751c1b7e0f1147d2",
+  "options": {
+    "question": "Write Python function sum_even(nums) returning the sum of even integers in nums. Handle an empty list. Return only concise Python code, without explanation or examples.",
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 128,
+    "num_steps": 32,
+    "block_length": 128,
+    "temperature": 0.0,
+    "top_k": 1,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "remasking_strategy": "Bigram Viterbi",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "delay_eos_eot": true,
+    "early_stopping": false,
+    "bigram_top_k": 16,
+    "bigram_weight": 0.5,
+    "bigram_scoring_method": "PMI bigram",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "generation_seed": 42,
+    "measure_decoding": true,
+    "bigram_eos_delay_penalty": 1.0,
+    "bigram_remasking_confidence": "Diffusion probability"
+  },
+  "text": "Here is the code to solve this problem: \n```python\ndef sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)\n```",
+  "status": "Denoising step 32/32 \u00b7 42 output tokens \u00b7 mean confidence 0.672 \u00b7 retained 124 tokens\n\nDecoding metrics: {\"selector_calls\": 32, \"editable_predictions\": 2112, \"changed_predictions\": 62, \"changed_fraction\": 0.029356060606060608, \"selector_ms\": 556.5059166401625, \"mean_selector_ms\": 17.390809895005077}",
+  "wall_seconds": 8.493172875001619
+}

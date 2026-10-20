@@ -1,0 +1,1358 @@
+{
+  "code_sum_even": {
+    "a542c78f7615": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct generator expression; even selection and empty-list sum satisfy the contract."
+    },
+    "6061848ce58a": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct function, but adds unsolicited explanatory prose and fences."
+    },
+    "c1f6b8ee927c": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct function with a stray closing Markdown fence."
+    },
+    "c7386fb08824": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicates a function header and opening fence before the body; original def has no body, so invalid Python."
+    },
+    "57f6c78d5f20": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct function, but from typing import int raises ImportError."
+    },
+    "a5ebf2d4e857": {
+      "score": 3,
+      "complete": true,
+      "note": "Correct sum of even values, including empty input; harmless unused imports."
+    },
+    "0a7d31130373": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing indent under if and loop uses i while body references undefined num."
+    },
+    "f7d667d58686": {
+      "score": 3,
+      "complete": true,
+      "note": "Correct explicit accumulator, including empty input; shadows sum harmlessly."
+    },
+    "8d293916bd54": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid empty def int: List before otherwise correct function."
+    },
+    "67882786deea": {
+      "score": 3,
+      "complete": true,
+      "note": "Correct even-number sum and explicit empty-input return."
+    }
+  },
+  "code_palindrome": {
+    "cedb33ffa410": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Nonexistent loweralnum method and unfinished invalid reversal slice."
+    },
+    "7655672d0b09": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "replace() called without arguments; compares transformed text to itself rather than its reverse."
+    },
+    "be61583277bb": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Checks whether all characters are alphanumeric, not whether normalized text is a palindrome."
+    },
+    "892d75bf8c60": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken string and slice syntax; no executable palindrome test."
+    },
+    "7fd427051e24": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated arbitrary replacement literal; no palindrome comparison."
+    },
+    "0516591caf71": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished slice; also compares an isalnum boolean against text rather than normalized reverse."
+    },
+    "a8e763ccaa4c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid nested slice syntax and boolean-versus-string comparison."
+    },
+    "d290e82e26d2": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Iterates over boolean text.isalnum(); even repaired, returns a reversed string rather than a boolean comparison."
+    },
+    "8c776343a17b": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished slice and wrong isalnum-versus-string comparison."
+    },
+    "991fa9c21c1b": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated replacement string and no valid normalization/reversal test."
+    },
+    "2c0c3d6ec671": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unterminated replacement string; no valid palindrome comparison."
+    },
+    "3f3762cd4806": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated arbitrary replacement literal; invalid Python."
+    },
+    "96fd807f5011": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated replacement argument and no reverse comparison."
+    },
+    "1d1671e8a2e4": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Uses nonexistent lower_non_alphanumericlower method; intended reverse comparison is recognizable."
+    },
+    "1f311a60c67b": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid text.lower() re_sub(text) syntax; normalization function undefined."
+    },
+    "bf93e151fa6f": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed function/header, invalid return assignment, and broken method calls."
+    },
+    "c3ac20dcef8f": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken indentation and nonexistent isal method prevent execution."
+    },
+    "fe75aae86c05": {
+      "score": 1,
+      "complete": true,
+      "note": "Nonexistent replace_alphanumeric method; does not provide working normalization."
+    },
+    "8486641a917d": {
+      "score": 1,
+      "complete": false,
+      "note": "Double dot before join is invalid Python; intended normalization and reversal otherwise right."
+    },
+    "b4543daefd07": {
+      "score": 1,
+      "complete": false,
+      "note": "Double dot before join is invalid Python; intended normalization and reversal otherwise right."
+    },
+    "790fc4dea030": {
+      "score": 1,
+      "complete": false,
+      "note": "Incomplete return and duplicate function; compares lowercase text with itself."
+    },
+    "41e87d8e8c6b": {
+      "score": 1,
+      "complete": true,
+      "note": "Calls nonexistent replace_join method; no valid normalization."
+    },
+    "868b086bbfd3": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicate function and invalid replace-zA-Z0 expression; first version always true."
+    },
+    "e03b5fbf7935": {
+      "score": 1,
+      "complete": false,
+      "note": "Unclosed re.sub call, missing re import/pattern, and no case normalization."
+    },
+    "c678584132fc": {
+      "score": 1,
+      "complete": true,
+      "note": "Undefined re and r_non_al, incorrect sub arguments, compares lowercase text to itself."
+    },
+    "020bad5dce8f": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed replacement expression and unterminated literal."
+    },
+    "e8bcb5e4d35a": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing re import; slices bound lower method without calling it and never compares palindrome."
+    }
+  },
+  "code_fibonacci": {
+    "aba20147f4e0": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional expression; base case also returns two values for n<=1."
+    },
+    "92c9f084e2f3": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid conditional expression/unmatched bracket, and incorrect base cases."
+    },
+    "875cace05529": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Returns [0,1] for n<=2, even nonpositive n, and [] for every larger n."
+    },
+    "991d9ab35af4": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "fib[i] is out of range on first loop iteration; n=1 also incorrectly returns [0,1]."
+    },
+    "21b962ddf05e": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Ends at for statement without body or result; invalid Python."
+    },
+    "d881b64a7bdf": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional expression and incorrect small-n list."
+    },
+    "eccaed3646ab": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Duplicate unused imports; fib[i] causes IndexError and n=1 returns too many elements."
+    },
+    "5ca0fdc4769d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Loops exactly twice, appends one previous value rather than a sum, and has no final return."
+    },
+    "f41ea1c69990": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished append expression and no return; invalid Python."
+    },
+    "ba91884e8ba1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Corrupt function declaration and incomplete list index/append."
+    },
+    "9ef69b15b701": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed extra function declaration; following recurrence also accesses fib[i] out of range."
+    },
+    "804d7bf36185": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing for keyword, unfinished addition, and no return."
+    },
+    "591f13606fe2": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Indexes both a nonexistent fib[i] and integer 1; also returns too many values for n=1."
+    },
+    "f14a379abe8c": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid n<= condition and incorrect squaring/recurrence updates."
+    },
+    "359116bfbf17": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid condition, malformed else/initialization, and out-of-range recurrence."
+    },
+    "926c846a9f81": {
+      "score": 1,
+      "complete": true,
+      "note": "Returns scalar 0/1 instead of first-n list and fails requested nonpositive behavior."
+    },
+    "8bc89c17fe7c": {
+      "score": 1,
+      "complete": true,
+      "note": "Returns n or [0] rather than the requested Fibonacci prefix; nonpositive behavior wrong."
+    },
+    "4914da59486e": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct for n<=0 and n>=2, but returns [0,1] for n=1 rather than [0]."
+    },
+    "3d904e48decc": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicate empty def, invalid double equals, and fib[i] read before appended."
+    },
+    "0721d5b9f4b3": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid if/else syntax and recursive expression; no list construction."
+    },
+    "489ee29f1835": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing in in for loop, invalid fib1] expression, and out-of-range recurrence."
+    },
+    "76d91750857c": {
+      "score": 1,
+      "complete": true,
+      "note": "Returns n itself for any nonzero n, including negative n; no Fibonacci sequence."
+    },
+    "bdb326454135": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct except n=1 yields two values instead of one."
+    },
+    "13aacaeda0c4": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicate empty def makes code invalid; also returns two values for n=1."
+    }
+  },
+  "code_deduplicate": {
+    "90b8381aec6f": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "set removes duplicates but discards required first-occurrence order; stray closing fence."
+    },
+    "5c8773b08627": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "set removes duplicates but does not preserve first-occurrence order."
+    },
+    "360f8775c402": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Uses undefined Ordered; does not implement ordered deduplication."
+    },
+    "d866993cc3ed": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing closing parenthesis; nested sets still lose required order."
+    },
+    "ed18eaf27df0": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing parenthesis; dict(set(items)) is not a valid general ordered deduplication approach."
+    },
+    "d0a34ab7bf94": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid OrderedDict() import syntax and unmatched return parentheses; nested sets lose order."
+    },
+    "8100d5eb1caa": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "set discards required first-occurrence order."
+    },
+    "4143c15dee86": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Missing closing parenthesis; iterating a set still loses order."
+    },
+    "760a1aa47094": {
+      "score": 1,
+      "complete": false,
+      "note": "Core seen-set loop is appropriate, but import collections = OrderedDict is invalid Python; no repair applied."
+    },
+    "fff26c75fed0": {
+      "score": 1,
+      "complete": true,
+      "note": "seen.add returns None; not not None filters out every item, returning [] for nonempty inputs."
+    },
+    "f9dbdff5fab4": {
+      "score": 1,
+      "complete": false,
+      "note": "Unclosed/invalid map-set construction and no proper seen-set update."
+    },
+    "65027643285e": {
+      "score": 3,
+      "complete": true,
+      "note": "Correct seen-set and append loop preserves first occurrence and empty input."
+    },
+    "5b0da22997c4": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing in in membership condition; otherwise recognizable seen-set loop."
+    },
+    "159587adb216": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid result: statement, uninitialized result, and no append."
+    },
+    "60cee29dc4ad": {
+      "score": 1,
+      "complete": true,
+      "note": "Returning set removes duplicates but loses required first-occurrence order."
+    },
+    "3c6c0290fcac": {
+      "score": 1,
+      "complete": true,
+      "note": "Never adds items to seen, so returns all inputs including duplicates."
+    },
+    "e4a142c48bee": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing def and no duplicate removal, merely list(items)."
+    },
+    "16f1e01a88ec": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid set() import; comprehension retains every duplicate since seen already contains all items."
+    },
+    "cf25f3157a66": {
+      "score": 1,
+      "complete": true,
+      "note": "Immediately returns [] for all inputs; unreachable loop also references undefined seen/result."
+    },
+    "b117f9abeacb": {
+      "score": 1,
+      "complete": false,
+      "note": "Unexpected top-level indent and missing in in membership test."
+    },
+    "14c7c07ebc32": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct first-occurrence seen-set loop, including empty input; extra introductory prose."
+    }
+  },
+  "code_balanced": {
+    "49e8ad6d3d5f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished bracket dictionary and argumentless append; no matching-bracket algorithm."
+    },
+    "bbb9c4fb6b2a": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed dictionary, appends closing brackets without matching, and no return."
+    },
+    "9187b28d9d83": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid stack.append False syntax and no working bracket logic."
+    },
+    "ed8c6f8f687b": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Empty bracket dictionary and repeated condition mean function returns True for every input."
+    },
+    "e1af694cec05": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Double colon is invalid syntax; does not update or validate stack."
+    },
+    "abb73d16a15e": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Only pushes closing brackets and never checks or returns a boolean."
+    },
+    "9dfd82a148dc": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid elif char not stack syntax, wrong stack operations, and no success return."
+    },
+    "9aec4b3d75fb": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid dictionary syntax, unguarded pop, and missing boolean return."
+    },
+    "856ab697af51": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unfinished dictionary prevents execution; bracket matching also not implemented."
+    },
+    "37ac220ef8b1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken dictionary/string literals and incomplete else; no valid bracket check."
+    },
+    "02506f04049c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Only pushes closing brackets and returns None; matching and final boolean absent."
+    },
+    "8360d8d7e1ab": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined brackets variable; tests matching character instead of opener/closer pairs and rejects ordinary text."
+    },
+    "1121d7726eb8": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Empty dictionary makes both branches unreachable; always returns True."
+    },
+    "2703475facad": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid dictionary syntax and no working push/match/success behavior."
+    },
+    "0e26a4573d86": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Uses undefined brackets and invalid elif char not stack.pop() expression."
+    },
+    "5a187fb78848": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed duplicate function header, undefined brackets, repeated condition, and invalid return."
+    },
+    "5a2d9d476b44": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed header, invalid stack stack expression, unmatched parenthesis, undefined brackets."
+    },
+    "e2aafa229535": {
+      "score": 1,
+      "complete": true,
+      "note": "Pushes closing rather than opening brackets and uses undefined pairschar; matching logic wrong."
+    },
+    "feb0dee529df": {
+      "score": 1,
+      "complete": false,
+      "note": "Unmatched brace, malformed for loop, broken indexing, and repeated closing-bracket condition."
+    },
+    "7aed4f66864e": {
+      "score": 1,
+      "complete": false,
+      "note": "Unclosed bracket dictionary; repeated identical branch tests and incorrect bracket comparison."
+    },
+    "23b8d4fcfaef": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid brackets[: expression and empty mapping; no usable matching logic."
+    },
+    "d3792c32e572": {
+      "score": 1,
+      "complete": true,
+      "note": "Empty pairs set makes every nonempty string false, including ignored characters."
+    },
+    "996edc8ffa2e": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid for(s), indentation, undefined char, and incorrect matching."
+    },
+    "37a62799a075": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing colon on pop condition, empty matching map, and unfinished else."
+    },
+    "1ec74e5940e9": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed dictionary keys and repeated identical branch conditions; no valid bracket matching."
+    },
+    "b7f790221559": {
+      "score": 1,
+      "complete": false,
+      "note": "Unterminated dictionary literal and repeated identical branch tests."
+    },
+    "b5e08021c4f6": {
+      "score": 1,
+      "complete": false,
+      "note": "Unterminated dictionary literal and repeated branch tests; also rejects ignored characters."
+    },
+    "62d27cd201f2": {
+      "score": 1,
+      "complete": true,
+      "note": "Never pushes into initially empty stack, duplicate branch tests, and returns integer length instead of bracket validity."
+    },
+    "1b598bcd85c8": {
+      "score": 1,
+      "complete": false,
+      "note": "Unclosed dictionary and repeated branch tests; no valid bracket mapping."
+    },
+    "9975495b6ea8": {
+      "score": 1,
+      "complete": true,
+      "note": "Empty mapping means both branches skipped for all inputs, so always returns True."
+    }
+  },
+  "code_binary_search": {
+    "0ac443d7f95e": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct index-or-minus-one behavior, including empty input. Uses linear membership/index lookup; no explicit complexity constraint in prompt.",
+      "algorithm_issue": true
+    },
+    "bc90e2cd5bbe": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct binary search bounds, comparisons, success and absent result; adds unwanted introduction."
+    },
+    "ce3f4438e8bd": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid from import syntax; bisect insertion index alone also fails absent-target requirement."
+    },
+    "1f12b0770e00": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unfinished conditional expression; invalid Python."
+    },
+    "06a2b895a54d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Malformed nums[ target condition and no success return; invalid search."
+    },
+    "26fa4ca042dd": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Stray bise/semicolon syntax, indexes nums[target] instead of candidate, and omits absent result."
+    },
+    "279d6c74c148": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed import and return syntax; returns comparison rather than required index."
+    },
+    "2cde01d56627": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Returns False or element-minus-one, not index-or-minus-one; unused import and unclosed fence."
+    },
+    "e7dc5c98787f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken annotations, midpoint operator, and incomplete else; no working search."
+    },
+    "a167c04820f2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Unterminated docstring swallows proposed implementation; search itself lacks target comparison/success."
+    },
+    "f43f076c1b03": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid conditional return expression and no target comparison; bounds may never progress."
+    },
+    "5b40128bee1e": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unexpected indentation and invalid return assignment; no target comparison."
+    },
+    "6a72b76f2da7": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Broken indentation/variable name, no success return, and always returns -1."
+    },
+    "afcc6229ebe5": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Duplicate definition, non-progressing bounds on success/less-than, and undefined result."
+    },
+    "0eec389c483c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Incomplete invalid import alias and invalid return colon; no valid search result."
+    },
+    "6c2b2700f4f2": {
+      "score": 1,
+      "complete": true,
+      "note": "Calls nums as a function and subtracts target; no correct index-or-minus-one search."
+    },
+    "0f6525484742": {
+      "score": 1,
+      "complete": false,
+      "note": "Repeated definitions with unfinished return operators and malformed parameter list."
+    },
+    "dd935ce96bc0": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing colon/comparison after if nums[mid] and never returns a found index."
+    },
+    "1a0c10a07b2e": {
+      "score": 1,
+      "complete": true,
+      "note": "Never returns a found index and reverses search bounds; even successful comparisons end in -1."
+    },
+    "3ac48f4bf1c2": {
+      "score": 1,
+      "complete": true,
+      "note": "Loop fails to advance on match and may not advance for left=mid; result undefined when absent."
+    },
+    "67aaa6210dfa": {
+      "score": 1,
+      "complete": true,
+      "note": "Returns sorted values rather than target index or -1; no search."
+    },
+    "d6cc8b6b0700": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid nested-def indentation, undefined left, and recursive call missing target."
+    },
+    "74df1c5fd632": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken indentation for _right and undefined right in while; otherwise recognizable binary search."
+    },
+    "a3ae94e4fce1": {
+      "score": 1,
+      "complete": false,
+      "note": "Else without if, out-of-range midpoint len(nums)//1, and undefined result."
+    },
+    "264f54813759": {
+      "score": 1,
+      "complete": true,
+      "note": "Search directions reversed and match branch never returns mid; returns left rather than -1 when absent."
+    },
+    "8aa9fd893ad1": {
+      "score": 1,
+      "complete": true,
+      "note": "Match never exits, left=mid can stall, right=mid+1 incorrect, and result undefined when absent."
+    }
+  },
+  "code_word_counts": {
+    "9502168af838": {
+      "score": 2,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct lower/split/Counter approach, but missing from collections import Counter prevents standalone execution."
+    },
+    "7d498419aa93": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined word and argumentless str.count; no per-word counting or lowercasing."
+    },
+    "6667e434ab37": {
+      "score": 2,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct frequency aggregation but missing Counter import and required case normalization."
+    },
+    "c7ac337db855": {
+      "score": 2,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct frequency aggregation but missing Counter import and required case normalization."
+    },
+    "4b217001314a": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined word and nonexistent list.word attribute; no valid counting or lowercasing."
+    },
+    "14fee91ddd7f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Stray closing parenthesis makes function invalid; also omits Counter import."
+    },
+    "94923e8a5704": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Multiple unmatched parentheses and attempts lower() on a list; Counter import absent."
+    },
+    "050eacfb0235": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Stray parenthesis plus invalid list.lower() call; Counter import absent."
+    },
+    "0403cdcbdfa4": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid dict Counter expression, no lowercasing or import, and repeated fences."
+    },
+    "d192bfa04786": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Replaces words with nonexistent set.lower(); Counter is unimported."
+    },
+    "95f1a803850c": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Nonexistent set.lower(), missing import, and inconsistent count/counts variable."
+    },
+    "aed318b9a7bf": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Stray closing parenthesis makes otherwise recognizable counting code invalid; Counter import absent."
+    },
+    "22fc7c115308": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid return assignment, dictionary called as a function, and no real counting."
+    },
+    "2c9f01791ba4": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid return/for assignments and text(split) expression; no working counter."
+    },
+    "1cb0893728ad": {
+      "score": 1,
+      "complete": false,
+      "note": "Dictionary called as a function and invalid counts.get] syntax; no working counter."
+    },
+    "31cf0286e8bc": {
+      "score": 1,
+      "complete": true,
+      "note": "Calls dictionary literal as a function and increments missing keys without initialization."
+    },
+    "4611ac59c867": {
+      "score": 1,
+      "complete": false,
+      "note": "Extra closing parenthesis, lower called on split list, and Counter not imported."
+    },
+    "8e4b08d7db78": {
+      "score": 1,
+      "complete": true,
+      "note": "Calls lower on a list, missing Counter import, and returns undefined counts."
+    },
+    "072cfe4efc9d": {
+      "score": 1,
+      "complete": false,
+      "note": "Bad nested-def indentation, missing Counter, and undefined lower."
+    },
+    "fa6a8175ea6f": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed split()word_counts assignment and undefined word__counts; no case normalization."
+    },
+    "b3a65bf51742": {
+      "score": 1,
+      "complete": false,
+      "note": "Extra closing parenthesis, lower called on list, and missing Counter import."
+    },
+    "ef7166805ccb": {
+      "score": 1,
+      "complete": true,
+      "note": "Calls lower on list; dict(words) does not count words and increment may miss keys."
+    },
+    "ae532b92ab0d": {
+      "score": 1,
+      "complete": true,
+      "note": "Missing Counter import, lower on list, and returns undefined counts."
+    },
+    "2fa7a39d59df": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct lower/split/Counter algorithm but missing Counter import prevents standalone execution."
+    },
+    "bbf86f92dbb8": {
+      "score": 1,
+      "complete": false,
+      "note": "Extra parenthesis, lower on list, and reversed increment/initialization branches."
+    },
+    "1081789071f5": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct frequency aggregation but missing Counter import and required case normalization."
+    }
+  },
+  "code_merge_sorted": {
+    "ba5967a4cb91": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Broken imports/parentheses/while syntax and undefined heap operations; unusable merge."
+    },
+    "67817b62c7d1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid function declaration and nonexistent itertools.merge import; no returned list."
+    },
+    "2d72487e7c1c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid extra declaration and explicitly forbidden sorted() approach."
+    },
+    "2e4d07181a89": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Empty extra function definition and nonexistent itertools.merge import; not a valid merge solution."
+    },
+    "a11d7c8ccf03": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid empty function/indentation, undefined heapappush/heap, and wrong merge logic."
+    },
+    "deea00642f78": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid while condition; appends whole lists with no element comparisons or index progress."
+    },
+    "33767730f2fc": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Promising two-pointer start but ends at j +=; no leftover handling or return."
+    },
+    "325ceb4d2351": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid function declaration and forbidden sorted() call with wrong arguments."
+    },
+    "63d6bb763afe": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Incomplete two-pointer merge; appends whole b, no j increment, leftovers, or return."
+    },
+    "56d9d35cb703": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid loops/indentation, and .sort() violates explicit constraint."
+    },
+    "26d8cfc07928": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid empty extra definition, nonexistent itertools.merge, and wrong one-argument merge call."
+    },
+    "470800f20e4c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Incomplete two-pointer merge; no j increment, remaining tails, or returned result."
+    },
+    "d6494d1fb789": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Missing else colon, no j progress, remaining tails, or returned result; unfinished merge."
+    },
+    "ede6e77cd54b": {
+      "score": 1,
+      "complete": false,
+      "note": "Broken duplicate headers/initialization/conditions, appendappend, missing increment operator, and final cutoff."
+    },
+    "dbe614a87cd2": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed duplicate headers, invalid while/assignment expressions, and broken indexing."
+    },
+    "1da2b4d29cff": {
+      "score": 1,
+      "complete": false,
+      "note": "Merge loop recognizable but result. a[i:] and result. b[j:] invalid; tails never extended."
+    },
+    "715065ffd98c": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid combined assignment, compares result list to integer, and missing tails/return."
+    },
+    "51ee7f92ee1d": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct two-pointer merge with remaining tails; handles empty lists and duplicates. Adds unsolicited introduction."
+    },
+    "b2d0d1bdeb38": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct two-pointer merge with remaining tails; handles empty lists and duplicates. Adds unsolicited introduction."
+    },
+    "6055faa17e1d": {
+      "score": 1,
+      "complete": true,
+      "note": "range(len) raises TypeError; concatenation approach also fails to interleave sorted lists."
+    },
+    "8bd5a20f417d": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicate empty function and malformed for loop and indexing."
+    },
+    "0433b033dfb3": {
+      "score": 1,
+      "complete": false,
+      "note": "Unexpected indentation, undefined resultresult, and invalid tail accumulation."
+    },
+    "52e0985b7b62": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid adjacent assignments i=0 j=0; otherwise recognizable correct merge loop and tails."
+    },
+    "2f4cedb704d8": {
+      "score": 1,
+      "complete": false,
+      "note": "Unclosed extend call; uses entire input lists rather than remaining tails."
+    },
+    "555abd58eb4b": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing initial i value and cut off before second tail/return."
+    },
+    "b25eb23a2a18": {
+      "score": 3,
+      "complete": true,
+      "note": "Correct two-pointer merge and remaining tails, including empty lists and duplicates; fence cut after complete code."
+    },
+    "814266b77872": {
+      "score": 3,
+      "complete": true,
+      "note": "Correct two-pointer merge and remaining tails, including empty lists and duplicates; fence cut after complete code."
+    }
+  },
+  "code_flatten": {
+    "b7039c810a4a": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed comprehension with no inner iterable; invalid Python."
+    },
+    "67066614ac30": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid comprehension/list brackets and undefined item."
+    },
+    "eeeca5220499": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid sublist rows iterable syntax and no nested iteration."
+    },
+    "aa7f0df45df8": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Undefined row and item; no outer traversal of rows or inner list traversal."
+    },
+    "1600885a9d46": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Duplicated item syntax and unfinished list comprehension."
+    },
+    "4486c08b5f8f": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Missing iterable after in and no valid nested comprehension."
+    },
+    "d0219beb9216": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct nested traversal but sums flattened elements, returning a number rather than a list."
+    },
+    "2712e887a382": {
+      "score": 1,
+      "complete": true,
+      "format_issue": false,
+      "note": "Undefined item and missing inner iteration; does not flatten."
+    },
+    "bc12bcc42966": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct nested comprehension preserves order and handles empty outer/inner lists."
+    },
+    "a012950fdfae": {
+      "score": 3,
+      "complete": true,
+      "format_issue": false,
+      "note": "Correct nested comprehension preserves list order and handles empty lists."
+    },
+    "17aee780cced": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid list-comprehension bracketing and missing inner iteration."
+    },
+    "12001d00d2a0": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct nested comprehension; missing closing Markdown fence."
+    },
+    "8f51994acf53": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Missing iterable in nested for, duplicated row loop, and undefined item; invalid comprehension."
+    },
+    "5e0bad9a739b": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid extra def annotation and iterates item over itself rather than row."
+    },
+    "774c15f1e5ee": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid extra def annotation and incorrect/undefined inner iterable."
+    },
+    "13510bb27c28": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct comprehension but nonexistent typing.flatten import prevents execution."
+    },
+    "190b3711e3ef": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed duplicate header and invalid comprehension."
+    },
+    "926fe8fc0670": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid import deque() and incorrect enumeration/unpacking."
+    },
+    "df7c3ec93985": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed header and list comprehension."
+    },
+    "ae5bd1fdfa26": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid extra def and comprehension iterates undefined item instead of row."
+    },
+    "44a7543bfdfd": {
+      "score": 1,
+      "complete": true,
+      "note": "Inner comprehension iterates item before binding it rather than current row."
+    },
+    "4b55ac3da278": {
+      "score": 3,
+      "complete": true,
+      "format_issue": true,
+      "note": "Correct ordered one-level flattening, including empty rows and outer list; adds introduction."
+    }
+  },
+  "code_fizzbuzz": {
+    "8ffbc960a783": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid nested conditional/comprehension syntax and no valid divisibility rules."
+    },
+    "8db7a5711737": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional/list expression; no iteration or FizzBuzz case."
+    },
+    "cbc41ac472bf": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid string/number conditions and unfinished comprehension."
+    },
+    "854410fbbfc2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid nested else/quotes and range expression; no executable FizzBuzz."
+    },
+    "24e172b9c35c": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Duplicated nested code fence/function declaration, invalid conditionals, and undefined i."
+    },
+    "1339a40c030d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Malformed string/comprehension and no valid FizzBuzz logic."
+    },
+    "0624e52463e5": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unterminated string rather than a list comprehension."
+    },
+    "319b372511e2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid def typing import and indentation, truncated range, and missing FizzBuzz case."
+    },
+    "a588f53d6a9d": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid indentation/conditional expression and wrong divisibility tests."
+    },
+    "edd0dcbd70f7": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid conditional/comprehension and no FizzBuzz-before-Fizz precedence."
+    },
+    "90eb30854e89": {
+      "score": 1,
+      "complete": true,
+      "format_issue": true,
+      "note": "Undefined i and no iteration over 1..n; literal Fizz i replaces required distinct cases."
+    },
+    "22629ef2e667": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Invalid indentation, unterminated string, and incorrect modulo-30 rule."
+    },
+    "4a5d503027d6": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unterminated string/conditional and no range or string-list output."
+    },
+    "233e03e400d2": {
+      "score": 1,
+      "complete": false,
+      "format_issue": false,
+      "note": "Unfinished conditional/list expression with no iteration or FizzBuzz case."
+    },
+    "19f025cefbe1": {
+      "score": 1,
+      "complete": false,
+      "format_issue": true,
+      "note": "Invalid conditional/comprehension and doubled modulo operator; returns integers rather than specified strings."
+    },
+    "088cf0a01fa6": {
+      "score": 1,
+      "complete": false,
+      "note": "Unterminated string/comprehension, wrong constant divisibility test, and wrong range."
+    },
+    "aec1e1cce928": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed comprehension/conditional, duplicated Buzz/Fizz branches, and wrong FizzBuzz precedence."
+    },
+    "1c9b1a3ff25a": {
+      "score": 1,
+      "complete": false,
+      "note": "Empty solution function, missing comparison, and malformed comprehension."
+    },
+    "6da8224dbd36": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed nested conditional and comprehension; no valid FizzBuzz implementation."
+    },
+    "c2d926dfa05c": {
+      "score": 2,
+      "complete": true,
+      "note": "Correct except multiples of 15 return Fizz rather than FizzBuzz."
+    },
+    "0f28e4398d44": {
+      "score": 2,
+      "complete": true,
+      "note": "FizzBuzz branch unreachable: multiples of 15 match Fizz condition first."
+    },
+    "bb176ed70ad9": {
+      "score": 1,
+      "complete": false,
+      "note": "Empty int function and malformed list/comprehension; no FizzBuzz logic."
+    },
+    "bcaf96a67052": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid def int: List header; otherwise plausible list but lacks FizzBuzz case."
+    },
+    "4dc322e088f8": {
+      "score": 1,
+      "complete": false,
+      "note": "Duplicate empty function and malformed truncated numeric conditional; unusable FizzBuzz logic."
+    },
+    "6eecbb1cb8e5": {
+      "score": 1,
+      "complete": false,
+      "note": "Missing equality comparison, undefined gcd, integers not strings, and no FizzBuzz case."
+    },
+    "13d1eae62f56": {
+      "score": 1,
+      "complete": false,
+      "note": "Malformed join expression and unclosed list; no valid comprehension."
+    },
+    "e79acc9bcd7f": {
+      "score": 1,
+      "complete": false,
+      "note": "Empty extra def int and incorrect modulo 30/else logic."
+    },
+    "71c573f5ee3b": {
+      "score": 1,
+      "complete": false,
+      "note": "Unexpected indent before def, unindented return, and invalid ==0 0 condition; no Buzz/FizzBuzz cases."
+    },
+    "d5e89dcba91e": {
+      "score": 1,
+      "complete": false,
+      "note": "Invalid comprehension if/else syntax and double modulo; no valid Fizz/Buzz string outputs."
+    }
+  }
+}

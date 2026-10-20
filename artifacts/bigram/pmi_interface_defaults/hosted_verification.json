@@ -1,0 +1,17 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "revision": "977a9266f2482a17e03b67eedd1f9b44c7f95f81",
+  "stage": "RUNNING",
+  "hidden_defaults_verified": {
+    "bigram_scoring_method": "PMI bigram",
+    "bigram_remasking_confidence": "Diffusion probability",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0
+  },
+  "ending_delay": {
+    "visible": true,
+    "adjustable": true,
+    "value": 10.0
+  },
+  "gpu_calls": 0
+}

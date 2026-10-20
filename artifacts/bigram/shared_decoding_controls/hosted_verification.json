@@ -1,0 +1,102 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "revision": "4da5ac48ab2d3f00776963867729dd1c0e7c274e",
+  "stage": "RUNNING",
+  "api_verified": true,
+  "parameters": [
+    "question",
+    "system_prompt",
+    "max_new_tokens",
+    "num_steps",
+    "block_length",
+    "temperature",
+    "top_k",
+    "pause_per_step",
+    "trajectory_color_mode",
+    "remasking_strategy",
+    "revisable_tokens",
+    "ar_check_interval",
+    "delay_eos_eot",
+    "early_stopping",
+    "bigram_model_path",
+    "bigram_scoring_method",
+    "pmi_min_count",
+    "pmi_clip",
+    "generation_seed",
+    "measure_decoding",
+    "bigram_eos_delay_penalty",
+    "bigram_remasking_confidence"
+  ],
+  "smoke_runs": [
+    {
+      "options": {
+        "question": "What is 2 + 2? Answer only the number.",
+        "system_prompt": "You are a helpful assistant.",
+        "max_new_tokens": 8,
+        "num_steps": 4,
+        "block_length": 8,
+        "temperature": 0.0,
+        "top_k": 3,
+        "pause_per_step": 0.0,
+        "trajectory_color_mode": "No coloring",
+        "remasking_strategy": "Bigram Viterbi",
+        "revisable_tokens": false,
+        "ar_check_interval": 4,
+        "delay_eos_eot": false,
+        "early_stopping": false,
+        "bigram_scoring_method": "PMI bigram",
+        "pmi_min_count": 1,
+        "pmi_clip": 2.0,
+        "generation_seed": 42,
+        "measure_decoding": true,
+        "bigram_eos_delay_penalty": 1.0,
+        "bigram_remasking_confidence": "Diffusion probability"
+      },
+      "text": "4",
+      "status": "Denoising step 4/4 \u00b7 1 output tokens \u00b7 mean confidence 0.873 \u00b7 retained 6 tokens\n\nDecoding metrics: {\"selector_calls\": 4, \"editable_predictions\": 20, \"changed_predictions\": 0, \"changed_fraction\": 0.0, \"selector_ms\": 71.81371096521616, \"mean_selector_ms\": 17.95342774130404}",
+      "metrics": {
+        "selector_calls": 4,
+        "editable_predictions": 20,
+        "changed_predictions": 0,
+        "changed_fraction": 0.0,
+        "selector_ms": 71.81371096521616,
+        "mean_selector_ms": 17.95342774130404
+      }
+    },
+    {
+      "options": {
+        "question": "What is 2 + 2? Answer only the number.",
+        "system_prompt": "You are a helpful assistant.",
+        "max_new_tokens": 8,
+        "num_steps": 4,
+        "block_length": 8,
+        "temperature": 1.0,
+        "top_k": 3,
+        "pause_per_step": 0.0,
+        "trajectory_color_mode": "No coloring",
+        "remasking_strategy": "Bigram Viterbi",
+        "revisable_tokens": false,
+        "ar_check_interval": 4,
+        "delay_eos_eot": false,
+        "early_stopping": false,
+        "bigram_scoring_method": "PMI bigram",
+        "pmi_min_count": 1,
+        "pmi_clip": 2.0,
+        "generation_seed": 42,
+        "measure_decoding": true,
+        "bigram_eos_delay_penalty": 1.0,
+        "bigram_remasking_confidence": "Diffusion probability"
+      },
+      "text": "4",
+      "status": "Denoising step 4/4 \u00b7 1 output tokens \u00b7 mean confidence 0.873 \u00b7 retained 6 tokens\n\nDecoding metrics: {\"selector_calls\": 4, \"editable_predictions\": 20, \"changed_predictions\": 0, \"changed_fraction\": 0.0, \"selector_ms\": 102.31037950143218, \"mean_selector_ms\": 25.577594875358045}",
+      "metrics": {
+        "selector_calls": 4,
+        "editable_predictions": 20,
+        "changed_predictions": 0,
+        "changed_fraction": 0.0,
+        "selector_ms": 102.31037950143218,
+        "mean_selector_ms": 25.577594875358045
+      }
+    }
+  ]
+}

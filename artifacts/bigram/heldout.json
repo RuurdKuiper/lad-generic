@@ -1,0 +1,12 @@
+{
+  "split": "validation",
+  "response_eos": true,
+  "documents": 10000,
+  "transitions": 736142,
+  "bigram_nll_per_token": 4.755091638987734,
+  "unigram_nll_per_token": 7.324279471073482,
+  "bigram_perplexity": 116.1742987717555,
+  "unigram_perplexity": 1516.6806925563578,
+  "unseen_fraction": 0.05287430957614156,
+  "note": "Response likelihood evaluates the scorer; it is not a diffusion generation quality metric."
+}

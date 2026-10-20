@@ -1,0 +1,18 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "parent": "3e22ca7e38f1380b343928763fe1709b4173e76d",
+  "commit": "4da5ac48ab2d3f00776963867729dd1c0e7c274e",
+  "files_sha256": {
+    "app.py": "5943eeaa6bb3dd3b0728c1e6b5987195d47bfd333788bbc481348f1a10fa303f",
+    "src/diffusion_lm/inference.py": "52cdb7e8d2b9da0f1d5d7bafc96315a44d772c115996d16d7db1f0a96c22d5c9",
+    "src/diffusion_lm/bigram.py": "f9b14f6bf7923e76e706e641de106b050452a46fe5546a546dae03badbe6ae1b"
+  },
+  "validation": "187 passed, 3 CUDA-only skips",
+  "controls": {
+    "bigram_weight": 0.5,
+    "temperature": "shared; effective transition weight 0.5*T; zero ignores transitions",
+    "top_k": "shared candidate count"
+  },
+  "retention_confidence": "original full-vocabulary model probability",
+  "extra_model_forward_passes": 0
+}

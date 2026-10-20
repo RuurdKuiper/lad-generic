@@ -1049,3 +1049,42 @@ def test_official_llada_sampler_also_supports_native_adapter_prompts():
         {"role": "system", "content": "System"},
         {"role": "user", "content": "Question"},
     ]
+
+
+@pytest.mark.parametrize('mode', ['Prediction probability', 'Prediction iteration', 'No coloring'])
+def test_code_rendering_preserves_newlines_indentation_and_copyable_source(mode):
+    from html.parser import HTMLParser
+    pieces = ['```python\n', 'def ', 'fibonacci_sequence(a1, n):\n',
+              '    fib = [a1]\n', '\twhile n > 1:\n', '        fib.append(fib[0] + fib[-1])\n',
+              '        n -= 1\n', '    return fib\n', '```\n',
+              '<script>alert("x & y")</script>\n', 'literal entity: &#x69;\n']
+    class Tokenizer:
+        eos_token_id = 100
+        def decode(self, token_ids, **kwargs):
+            return ''.join(pieces[t] for t in token_ids if t < len(pieces))
+    class Parse(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.in_span = self.in_textarea = False
+            self.tokens = self.plain = ''
+            self.tags = []
+        def handle_starttag(self, tag, attrs):
+            self.tags.append(tag)
+            if tag == 'span': self.in_span = True
+            if tag == 'textarea': self.in_textarea = True
+        def handle_endtag(self, tag):
+            if tag == 'span': self.in_span = False
+            if tag == 'textarea': self.in_textarea = False
+        def handle_data(self, data):
+            if self.in_span: self.tokens += data
+            if self.in_textarea: self.plain += data
+    ids = list(range(len(pieces))) + [100, 0]  # Ignore everything after EOS.
+    html = render_denoising_step(ids, [.9] * len(ids), 0, Tokenizer(), 99, 2, 2, color_mode=mode)
+    parsed = Parse()
+    parsed.feed(html)
+    expected = ''.join(pieces)
+    assert parsed.tokens == parsed.plain == expected
+    assert '\n    fib = [a1]\n\twhile' in parsed.tokens
+    assert '↵' not in html
+    assert 'white-space:pre-wrap' in html and 'white-space:pre' in html
+    assert 'script' not in parsed.tags  # Generated markup remains text.

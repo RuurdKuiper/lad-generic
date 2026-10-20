@@ -1,0 +1,57 @@
+data: {"data":"===== Application Startup at 2026-10-20 11:34:40 =====\n","timestamp":"2026-10-20T11:34:40Z"}
+data: {"data":"WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.","timestamp":"2026-10-20T11:34:48.784Z"}
+data: {"data":"Loading GSAI-ML/LLaDA-8B-Instruct in full precision...","timestamp":"2026-10-20T11:34:55.405Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:55.524Z"}
+data: {"data":"\rtokenizer_config.json:   0%|          | 0.00/51.7k [00:00<?, ?B/s]\u001b[A\rtokenizer_config.json: 100%|██████████| 51.7k/51.7k [00:00<00:00, 123MB/s]","timestamp":"2026-10-20T11:34:55.524Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:55.670Z"}
+data: {"data":"\rtokenizer.json:   0%|          | 0.00/6.10M [00:00<?, ?B/s]\u001b[A\rtokenizer.json: 100%|██████████| 6.10M/6.10M [00:00<00:00, 26.0MB/s]","timestamp":"2026-10-20T11:34:55.904Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:56.012Z"}
+data: {"data":"\rspecial_tokens_map.json:   0%|          | 0.00/747 [00:00<?, ?B/s]\u001b[A\rspecial_tokens_map.json: 100%|██████████| 747/747 [00:00<00:00, 6.37MB/s]","timestamp":"2026-10-20T11:34:56.012Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:56.388Z"}
+data: {"data":"\rconfig.json:   0%|          | 0.00/1.39k [00:00<?, ?B/s]\u001b[A\rconfig.json: 100%|██████████| 1.39k/1.39k [00:00<00:00, 9.35MB/s]","timestamp":"2026-10-20T11:34:56.389Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:56.473Z"}
+data: {"data":"\rconfiguration_llada.py:   0%|          | 0.00/12.0k [00:00<?, ?B/s]\u001b[A\rconfiguration_llada.py: 100%|██████████| 12.0k/12.0k [00:00<00:00, 57.3MB/s]","timestamp":"2026-10-20T11:34:56.473Z"}
+data: {"data":"`torch_dtype` is deprecated! Use `dtype` instead!","timestamp":"2026-10-20T11:34:56.485Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:56.550Z"}
+data: {"data":"\rmodeling_llada.py:   0%|          | 0.00/61.4k [00:00<?, ?B/s]\u001b[A\rmodeling_llada.py: 100%|██████████| 61.4k/61.4k [00:00<00:00, 245MB/s]","timestamp":"2026-10-20T11:34:56.551Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:56.690Z"}
+data: {"data":"\rmodel.safetensors.index.json:   0%|          | 0.00/24.9k [00:00<?, ?B/s]\u001b[A\rmodel.safetensors.index.json: 100%|██████████| 24.9k/24.9k [00:00<00:00, 96.9MB/s]","timestamp":"2026-10-20T11:34:56.691Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:56.781Z"}
+data: {"data":"\rmodel-00001-of-00006.safetensors:   0%|          | 0.00/2.11G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:34:58.547Z"}
+data: {"data":"\rmodel-00001-of-00006.safetensors:  19%|█▉        | 402M/2.11G [00:01<00:07, 228MB/s]\u001b[A","timestamp":"2026-10-20T11:34:59.551Z"}
+data: {"data":"\rmodel-00001-of-00006.safetensors: 100%|██████████| 2.11G/2.11G [00:02<00:00, 888MB/s]\u001b[A\rmodel-00001-of-00006.safetensors: 100%|██████████| 2.11G/2.11G [00:02<00:00, 748MB/s]","timestamp":"2026-10-20T11:34:59.602Z"}
+data: {"data":"","timestamp":"2026-10-20T11:34:59.814Z"}
+data: {"data":"\rmodel-00002-of-00006.safetensors:   0%|          | 0.00/2.95G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:35:01.321Z"}
+data: {"data":"\rmodel-00002-of-00006.safetensors:   7%|▋         | 201M/2.95G [00:01<00:20, 134MB/s]\u001b[A","timestamp":"2026-10-20T11:35:02.821Z"}
+data: {"data":"\rmodel-00002-of-00006.safetensors:  59%|█████▉    | 1.74G/2.95G [00:03<00:01, 659MB/s]\u001b[A\rmodel-00002-of-00006.safetensors: 100%|██████████| 2.95G/2.95G [00:03<00:00, 807MB/s]","timestamp":"2026-10-20T11:35:03.466Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:03.511Z"}
+data: {"data":"\rmodel-00003-of-00006.safetensors:   0%|          | 0.00/2.99G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:35:05.028Z"}
+data: {"data":"\rmodel-00003-of-00006.safetensors:  11%|█         | 335M/2.99G [00:01<00:11, 221MB/s]\u001b[A","timestamp":"2026-10-20T11:35:06.769Z"}
+data: {"data":"\rmodel-00003-of-00006.safetensors:  34%|███▎      | 1.01G/2.99G [00:03<00:06, 323MB/s]\u001b[A","timestamp":"2026-10-20T11:35:07.779Z"}
+data: {"data":"\rmodel-00003-of-00006.safetensors: 100%|██████████| 2.99G/2.99G [00:04<00:00, 880MB/s]\u001b[A\rmodel-00003-of-00006.safetensors: 100%|██████████| 2.99G/2.99G [00:04<00:00, 696MB/s]","timestamp":"2026-10-20T11:35:07.805Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:07.848Z"}
+data: {"data":"\rmodel-00004-of-00006.safetensors:   0%|          | 0.00/2.95G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:35:09.355Z"}
+data: {"data":"\rmodel-00004-of-00006.safetensors:   2%|▏         | 67.1M/2.95G [00:01<01:04, 44.5MB/s]\u001b[A","timestamp":"2026-10-20T11:35:11.355Z"}
+data: {"data":"\rmodel-00004-of-00006.safetensors:  34%|███▍      | 1.01G/2.95G [00:03<00:06, 323MB/s] \u001b[A","timestamp":"2026-10-20T11:35:12.355Z"}
+data: {"data":"\rmodel-00004-of-00006.safetensors:  64%|██████▎   | 1.88G/2.95G [00:04<00:02, 498MB/s]\u001b[A\rmodel-00004-of-00006.safetensors: 100%|██████████| 2.95G/2.95G [00:04<00:00, 624MB/s]","timestamp":"2026-10-20T11:35:12.579Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:12.621Z"}
+data: {"data":"\rmodel-00005-of-00006.safetensors:   0%|          | 0.00/2.92G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:35:15.128Z"}
+data: {"data":"\rmodel-00005-of-00006.safetensors:   5%|▍         | 134M/2.92G [00:02<00:52, 53.5MB/s]\u001b[A","timestamp":"2026-10-20T11:35:16.378Z"}
+data: {"data":"\rmodel-00005-of-00006.safetensors:  34%|███▍      | 1.01G/2.92G [00:03<00:05, 321MB/s]\u001b[A","timestamp":"2026-10-20T11:35:18.128Z"}
+data: {"data":"\rmodel-00005-of-00006.safetensors:  51%|█████     | 1.48G/2.92G [00:05<00:04, 297MB/s]\u001b[A\rmodel-00005-of-00006.safetensors: 100%|██████████| 2.92G/2.92G [00:05<00:00, 511MB/s]","timestamp":"2026-10-20T11:35:18.339Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:18.382Z"}
+data: {"data":"\rmodel-00006-of-00006.safetensors:   0%|          | 0.00/2.11G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:35:21.139Z"}
+data: {"data":"\rmodel-00006-of-00006.safetensors:   3%|▎         | 67.1M/2.11G [00:02<01:24, 24.3MB/s]\u001b[A","timestamp":"2026-10-20T11:35:22.392Z"}
+data: {"data":"\rmodel-00006-of-00006.safetensors: 100%|██████████| 2.11G/2.11G [00:04<00:00, 658MB/s] \u001b[A\rmodel-00006-of-00006.safetensors: 100%|██████████| 2.11G/2.11G [00:04<00:00, 525MB/s]","timestamp":"2026-10-20T11:35:22.406Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:22.601Z"}
+data: {"data":"\rLoading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]\u001b[A\rLoading checkpoint shards: 100%|██████████| 6/6 [00:00<00:00, 19.02it/s]","timestamp":"2026-10-20T11:35:22.917Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:22.980Z"}
+data: {"data":"\rgeneration_config.json:   0%|          | 0.00/128 [00:00<?, ?B/s]\u001b[A\rgeneration_config.json: 100%|██████████| 128/128 [00:00<00:00, 1.20MB/s]","timestamp":"2026-10-20T11:35:22.980Z"}
+data: {"data":"Loaded LLaDA-8B-Instruct (bfloat16, unquantized).","timestamp":"2026-10-20T11:35:23.138Z"}
+data: {"data":"","timestamp":"2026-10-20T11:35:23.453Z"}
+data: {"data":"\rZeroGPU tensors packing:   0%|          | 0.00/16.0G [00:00<?, ?B/s]\u001b[A","timestamp":"2026-10-20T11:35:24.460Z"}
+data: {"data":"\rZeroGPU tensors packing:  26%|██▌       | 4.13G/16.0G [00:01<00:02, 4.10GB/s]\u001b[A","timestamp":"2026-10-20T11:35:25.552Z"}
+data: {"data":"\rZeroGPU tensors packing:  52%|█████▏    | 8.32G/16.0G [00:02<00:01, 3.94GB/s]\u001b[A","timestamp":"2026-10-20T11:35:26.559Z"}
+data: {"data":"\rZeroGPU tensors packing:  81%|████████  | 13.0G/16.0G [00:03<00:00, 4.23GB/s]\u001b[A\rZeroGPU tensors packing: 100%|██████████| 16.0G/16.0G [00:03<00:00, 4.29GB/s]","timestamp":"2026-10-20T11:35:27.189Z"}
+data: {"data":"* Running on local URL:  http://0.0.0.0:7860","timestamp":"2026-10-20T11:35:27.615Z"}
+data: {"data":"* To create a public link, set `share=True` in `launch()`.","timestamp":"2026-10-20T11:35:27.675Z"}

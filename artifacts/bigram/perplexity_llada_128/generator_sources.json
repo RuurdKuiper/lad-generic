@@ -1,0 +1,37 @@
+{
+  "source_hashes": {
+    "gemma": {
+      "app.py": {
+        "sha256": "f94e4923338c7a9381b3486765ae8b79207d2fed8a3a8df0d80936aba8502d79"
+      },
+      "src/diffusion_lm/inference.py": {
+        "sha256": "52cdb7e8d2b9da0f1d5d7bafc96315a44d772c115996d16d7db1f0a96c22d5c9"
+      },
+      "src/diffusion_lm/bigram.py": {
+        "sha256": "f9b14f6bf7923e76e706e641de106b050452a46fe5546a546dae03badbe6ae1b"
+      },
+      "space_model.json": {
+        "sha256": "e4e270898583aa35f66bc83d6290a0689843061d08f21217f6da0436dbf454ac"
+      }
+    },
+    "llada": {
+      "app.py": {
+        "sha256": "25d1473515ac6313675dd6f9404e737df672c1c823eed4919bfe3008691e8e44"
+      },
+      "src/diffusion_lm/inference.py": {
+        "sha256": "46cc48ec2187289278fd87aa72b6f3cab9d85acfd739f4c6b7afad0ea11366b7"
+      },
+      "src/diffusion_lm/bigram.py": {
+        "sha256": "f9b14f6bf7923e76e706e641de106b050452a46fe5546a546dae03badbe6ae1b"
+      },
+      "space_model.json": {
+        "sha256": "f09a5ab72c9d345a617dce08d0328f634b82375d196fe75086a07f64894876ad"
+      }
+    }
+  },
+  "shared_implementation": {
+    "_sample": true,
+    "denoise_stream": true,
+    "bigram_source": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "stage": "complete",
+  "spaces": [
+    "Dovelove/byod-llama-3.1-8b",
+    "Dovelove/byod-ministral-8b",
+    "Dovelove/byod-qwen2.5-7b",
+    "Dovelove/byod-gemma-2-9b"
+  ],
+  "models": 4,
+  "user_authorized_saved_credential": true,
+  "credential_account_verified": "Dovelove",
+  "simplified_ui_verified": true,
+  "ending_delay_strength": 10,
+  "checkpoint_path_hidden": true,
+  "reproducibility_controls_hidden": true,
+  "viterbi_explanation_removed": true,
+  "repository_links_remain_hidden": true,
+  "live_inference_checks_passed": 8,
+  "tests_passed": 126,
+  "cuda_tests_skipped": 2
+}

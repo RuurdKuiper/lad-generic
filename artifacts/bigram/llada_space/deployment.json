@@ -1,0 +1,10 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "commit": "153c673b030abe2a7081b0506e65e6c6264fd1cd",
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "model_revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+  "requested_hardware": "zero-a10g",
+  "visibility": "private",
+  "stage": "BUILDING",
+  "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_space/bundle"
+}

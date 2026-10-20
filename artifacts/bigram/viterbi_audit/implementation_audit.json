@@ -1,0 +1,28 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "revision": "977a9266f2482a17e03b67eedd1f9b44c7f95f81",
+  "source_checks": {
+    "app.py": {
+      "sha256": "7a38d963d7e8617a9f49b2ee8786d4c261ec5a714af63c442f084a50ba04f9d6",
+      "matches_workspace": true
+    },
+    "src/diffusion_lm/bigram.py": {
+      "sha256": "f9b14f6bf7923e76e706e641de106b050452a46fe5546a546dae03badbe6ae1b",
+      "matches_workspace": true
+    },
+    "src/diffusion_lm/inference.py": {
+      "sha256": "52cdb7e8d2b9da0f1d5d7bafc96315a44d772c115996d16d7db1f0a96c22d5c9",
+      "matches_workspace": true
+    }
+  },
+  "temperature_one_exact_parity_cases": 40,
+  "live_defaults": {
+    "temperature": 0.7,
+    "top_k": 3,
+    "bigram_scoring_method": "PMI bigram",
+    "bigram_remasking_confidence": "Diffusion probability",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "bigram_eos_delay_penalty": 10.0
+  }
+}

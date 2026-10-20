@@ -1,0 +1,27 @@
+--- original-retention
++++ experimental-unbiased-retention
+@@ -1107,7 +1107,8 @@
+                 left_id = ids[answer_start + block_start - 1] if answer_start + block_start else None
+                 right_index = answer_start + block_end
+                 right_id = ids[right_index] if right_index < len(ids) and ids[right_index] != session.mask_token_id else None
+-                selection_logits = logits[block_start:block_end]
++                diffusion_logits = logits[block_start:block_end]
++                selection_logits = diffusion_logits
+                 if confidence_eos_eot_inf:
+                     # Retention alone cannot alter a deterministic Viterbi
+                     # winner. Fade this bias away by the final block step.
+@@ -1120,6 +1121,14 @@
+                     top_k=bigram_top_k,
+                     temperature=float(temperature), left_id=left_id, right_id=right_id,
+                 )
++                if selection_logits is not diffusion_logits:
++                    # Ending suppression controls the path, not the model's
++                    # confidence. Renormalizing biased logits can promote a
++                    # token solely because its competing EOS was suppressed.
++                    raw = diffusion_logits.float()
++                    selected_confidence = (
++                        raw.gather(1, selected[:, None]).squeeze(1) - raw.logsumexp(-1)
++                    ).exp()
+                 sampled[block_start:block_end] = selected
+                 confidence[block_start:block_end] = selected_confidence
+                 margins = getattr(bigram_selector, "last_path_margins", None)

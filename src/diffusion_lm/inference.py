@@ -4,6 +4,7 @@ from __future__ import annotations
 import gc
 from html import escape
 import json
+import math
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,6 +15,7 @@ import torch.nn.functional as F
 from peft import PeftModel
 from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 
+from .bigram import BigramViterbiSelector
 from .data import validate_mask_token
 from .legacy_compat import install_legacy_pickle_modules, patch_legacy_lora_modules, restore_legacy_pickle_modules
 from .modeling import TRAINABLE_BASE_STATE_FILENAME, forward_bidirectional, load_trainable_base_state
@@ -364,7 +366,7 @@ def load_hosted_legacy_session(repo_id: str, filename: str, tokenizer_name_or_pa
     )
 
 
-def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: str = "auto") -> InferenceSession:
+def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: str = "auto", *, revision: str | None = None, preflight: bool = True) -> InferenceSession:
     """Load LLaDA Instruct as a mask predictor for this app's denoising loop."""
     if not repo_id.strip():
         raise ValueError("LLaDA loading requires a Hugging Face repository ID.")
@@ -378,15 +380,15 @@ def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: 
     cache_dir = "base_models"
     try:
         tokenizer = AutoTokenizer.from_pretrained(
-            repo_id.strip(), trust_remote_code=True, token=token, cache_dir=cache_dir,
+            repo_id.strip(), trust_remote_code=True, token=token, cache_dir=cache_dir, revision=revision,
         )
         model = AutoModel.from_pretrained(
-            repo_id.strip(), trust_remote_code=True, torch_dtype=dtype, token=token, cache_dir=cache_dir,
+            repo_id.strip(), trust_remote_code=True, torch_dtype=dtype, token=token, cache_dir=cache_dir, revision=revision,
         )
     except Exception as exc:
         raise RuntimeError(
-            "Could not load LLaDA. Its official implementation requires the remote model code "
-            "and is tested with transformers==4.38.2."
+            "Could not load LLaDA. Check the pinned model revision, remote-code files, "
+            "and Transformers compatibility."
         ) from exc
     if tokenizer.pad_token_id == 126336:
         raise ValueError("LLaDA's pad token must differ from its fixed mask token (126336).")
@@ -397,14 +399,15 @@ def load_llada_session(repo_id: str = "GSAI-ML/LLaDA-8B-Instruct", device_name: 
         tokenizer=tokenizer,
         device=device,
         adapter_path=Path(repo_id.strip()),
-        config={"model_source": "huggingface_llada", "repo_id": repo_id.strip()},
+        config={"model_source": "huggingface_llada", "repo_id": repo_id.strip(), "revision": revision},
         mask_token_id=126336,
         quantization="none",
         compute_dtype=str(dtype).removeprefix("torch."),
         prompt_format="llada",
         llada=True,
     )
-    preflight_session(session)
+    if preflight:
+        preflight_session(session)
     return session
 
 
@@ -414,7 +417,11 @@ def _sample(
     top_k: int,
     generator: torch.Generator | None,
 ) -> tuple[torch.Tensor, torch.Tensor]:
-    """Top-k sample token IDs and return their normalized sampling confidence."""
+    """Sample tokens; greedy decoding retains full-vocabulary confidence."""
+    if float(temperature) == 0.0:
+        picked = logits.argmax(dim=-1)
+        probabilities = F.softmax(logits.float(), dim=-1)
+        return picked, probabilities.gather(-1, picked.unsqueeze(-1)).squeeze(-1)
     logits = logits / max(temperature, 1e-5)
     vocab_size = logits.shape[-1]
     k = min(max(int(top_k), 1), vocab_size)
@@ -433,6 +440,9 @@ def _sampling_token_confidence(
     top_k: int,
 ) -> torch.Tensor:
     """Return each existing token's probability under the top-k sampler."""
+    if float(temperature) == 0.0:
+        probabilities = F.softmax(logits.float(), dim=-1)
+        return probabilities.gather(-1, token_ids.unsqueeze(-1)).squeeze(-1)
     scaled = logits / max(float(temperature), 1e-5)
     k = min(max(int(top_k), 1), scaled.shape[-1])
     values, indices = torch.topk(scaled, k, dim=-1)
@@ -640,6 +650,19 @@ def _native_eot_token_id(tokenizer: Any) -> int | None:
         if token_id is not None and token_id != unknown and int(token_id) >= 0:
             return int(token_id)
     return None
+
+
+def _ending_token_ids(tokenizer: Any) -> set[int]:
+    """Recognize EOS and the backbone's native end-of-turn in every strategy."""
+    ids = {int(tokenizer.eos_token_id)}
+    eot = _native_eot_token_id(tokenizer)
+    if eot is not None:
+        ids.add(eot)
+    return ids
+
+
+def _first_ending_offset(tokens: list[int], ending_ids: set[int]) -> int | None:
+    return next((offset for offset, token in enumerate(tokens) if token in ending_ids), None)
 
 
 def forward_denoising(session: InferenceSession, input_ids: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
@@ -863,15 +886,15 @@ def render_denoising_step(
     color_mode: str = "Prediction probability",
 ) -> str:
     """Render one denoising state with optional token coloring."""
-    eos_id = tokenizer.eos_token_id
+    ending_ids = _ending_token_ids(tokenizer)
     pieces = []
     answer = tokens[answer_start:]
     output_token_count = 0
     for offset, token in enumerate(answer):
-        if token == eos_id:
+        if token in ending_ids:
             break
         output_token_count += 1
-        token_text = escape(tokenizer.decode([token], skip_special_tokens=False)).replace("\n", "↵ ")
+        token_text = escape(tokenizer.decode([token], skip_special_tokens=False))
         if token == mask_token_id:
             style, token_text = (
                 "display:inline-block;background:#d1d5db;color:#4b5563;"
@@ -906,6 +929,22 @@ def render_denoising_step(
                 f"sampling probability {confidence:.1%}"
             )
         pieces.append(f"<span style='{style}' title='{title}'>{token_text}</span>")
+    end_offset = _first_ending_offset(answer, ending_ids)
+    visible_answer = answer[:end_offset] if end_offset is not None else answer
+    # A plain textarea copies its value, avoiding rich-text serialization of
+    # per-token color/bold spans. Preserve the complete decoded code verbatim.
+    plain_text = (
+        decode_denoising_state(visible_answer, tokenizer, mask_token_id)
+        if mask_token_id in visible_answer
+        else tokenizer.decode(visible_answer, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+    )
+    copyable = (
+        "<details style='margin-top:10px'><summary>Plain text / copy code</summary>"
+        "<textarea readonly aria-label='Plain text output' spellcheck='false' "
+        "style='box-sizing:border-box;width:100%;min-height:9em;margin-top:6px;"
+        "font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;"
+        "white-space:pre;tab-size:4'>" + escape(plain_text) + "</textarea></details>"
+    )
     pct = int(100 * step / max(total_steps, 1))
     if color_mode == "Prediction iteration":
         legend = "Light-to-dark blue indicates earlier-to-later prediction iterations"
@@ -917,7 +956,7 @@ def render_denoising_step(
             f"<div style='font-weight:700;color:#2563eb;margin-bottom:7px'>Denoising step {step}/{total_steps} · {output_token_count} output tokens</div>"
             f"<div style='background:#e5e7eb;border-radius:4px;height:7px;margin-bottom:10px'><div style='background:#2563eb;width:{pct}%;height:7px;border-radius:4px'></div></div>"
             f"<div style='line-height:2;font-size:15px;white-space:pre-wrap'>{''.join(pieces)}</div>"
-            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>{legend}; gray chips are masks. Hover over a token for its position, prediction iteration, and probability.</div></div>")
+            f"<div style='font-size:11px;color:#6b7280;margin-top:8px'>{legend}; gray chips are masks. Hover over a token for its position, prediction iteration, and probability.</div>{copyable}</div>")
 
 
 def decode_denoising_state(
@@ -929,12 +968,10 @@ def decode_denoising_state(
 ) -> str:
     """Decode one answer state with unresolved positions and optional EOS shown."""
     eos_id = tokenizer.eos_token_id
-    eot_id = _native_eot_token_id(tokenizer) if show_eos_tokens else None
-    visible_end_ids = {int(eos_id)}
-    if eot_id is not None:
-        visible_end_ids.add(int(eot_id))
-    if not show_eos_tokens and eos_id in tokens:
-        tokens = tokens[:tokens.index(eos_id)]
+    visible_end_ids = _ending_token_ids(tokenizer)
+    end_offset = _first_ending_offset(tokens, visible_end_ids)
+    if not show_eos_tokens and end_offset is not None:
+        tokens = tokens[:end_offset]
 
     # Decode contiguous resolved spans so subword spacing remains natural, but
     # make adjacent mask tokens unambiguous and independent of the configured
@@ -972,12 +1009,28 @@ def decode_denoising_state(
     return " ".join(pieces)
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False, block_length: int | None = None, trajectory_color_mode: str = "Prediction probability", autoregressive_guided: bool = False, revisable_tokens: bool = False, autoregressive_check_interval: int = 1):
-    """Yield denoising states with optionally retained positions and locked values."""
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False, block_length: int | None = None, trajectory_color_mode: str = "Prediction probability", autoregressive_guided: bool = False, revisable_tokens: bool = False, autoregressive_check_interval: int = 1, bigram_selector: BigramViterbiSelector | None = None, bigram_top_k: int | None = None, bigram_eos_delay_penalty: float = 10.0):
+    """Yield denoising states with retained positions and optional locked values.
+
+    Delayed endings also receive a fading unary penalty in bigram mode only.
+    With early stopping, a finalized EOS/EOT and resolved prefix finish the
+    whole answer; a converged block without an ending advances to the next.
+    """
     prefix = _prompt_ids(session.tokenizer, question, system_prompt, session.prompt_format)
     max_new_tokens, num_steps = int(max_new_tokens), int(num_steps)
     if max_new_tokens < 1 or num_steps < 1:
         raise ValueError("max_new_tokens and num_steps must both be at least 1.")
+    if bigram_selector is not None:
+        # A separate candidate count is retained for legacy offline callers;
+        # the hosted interface uses the shared top_k control.
+        bigram_top_k = int(top_k) if bigram_top_k is None else int(bigram_top_k)
+        if not math.isfinite(bigram_eos_delay_penalty) or bigram_eos_delay_penalty < 1:
+            raise ValueError("bigram_eos_delay_penalty must be finite and at least 1")
+        if int(bigram_top_k) < 1:
+            raise ValueError("bigram_top_k must be positive")
+        if autoregressive_guided or revisable_tokens:
+            raise ValueError("Bigram selection uses diffusion-confidence remasking without revisable tokens")
+        confidence_guided = True
     if confidence_guided and autoregressive_guided:
         raise ValueError("Choose either diffusion-confidence or autoregressive-confidence remasking, not both.")
     if autoregressive_guided and not hasattr(session.model, "disable_adapter"):
@@ -1003,7 +1056,8 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     frozen_confidences: dict[int, float] = {}
     frozen_steps: dict[int, int] = {}
     last_predictions: list[tuple[int, ...]] = []
-    eot_token_id = _native_eot_token_id(session.tokenizer) if confidence_eos_eot_inf or float(eos_eot_prediction_penalty) > 1.0 else None
+    eot_token_id = _native_eot_token_id(session.tokenizer)
+    ending_ids = _ending_token_ids(session.tokenizer)
     # EOS/EOT delaying and confidence-guided retention are independent. In
     # random mode, endings are still retained last, while ordinary tokens are
     # selected randomly.
@@ -1020,6 +1074,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             or block_step + 2 == block_steps
         )
         tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
+        bigram_retention_scores = None
         with torch.inference_mode():
             answer_ids = tokens[:, answer_start:]
             logits = forward_denoising(session, tokens, padding)[:, answer_start:]
@@ -1037,7 +1092,41 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 session.tokenizer.eos_token_id,
                 eot_token_id,
             )
-            sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
+            if bigram_selector is None:
+                sampled, confidence = _sample(logits, float(temperature), int(top_k), None)
+            else:
+                # Keep every actual sequence position, including intervening
+                # frozen rows; compressing editable positions creates false bigrams.
+                sampled = answer_ids[0].clone()
+                confidence = torch.zeros(logits.shape[0], device=logits.device)
+                current = answer_ids[0, block_start:block_end].clone()
+                editable = torch.ones_like(current, dtype=torch.bool)
+                for offset, token in frozen.items():
+                    if block_start <= offset < block_end:
+                        current[offset - block_start] = token
+                        editable[offset - block_start] = False
+                left_id = ids[answer_start + block_start - 1] if answer_start + block_start else None
+                right_index = answer_start + block_end
+                right_id = ids[right_index] if right_index < len(ids) and ids[right_index] != session.mask_token_id else None
+                selection_logits = logits[block_start:block_end]
+                if confidence_eos_eot_inf:
+                    # Retention alone cannot alter a deterministic Viterbi
+                    # winner. Fade this bias away by the final block step.
+                    delay_penalty = float(bigram_eos_delay_penalty) ** (1.0 - (block_step + 1) / block_steps)
+                    selection_logits = _apply_eos_eot_prediction_penalty(
+                        selection_logits, delay_penalty, session.tokenizer.eos_token_id, eot_token_id,
+                    )
+                selected, selected_confidence = bigram_selector.select_block(
+                    selection_logits, current, editable,
+                    top_k=bigram_top_k,
+                    temperature=float(temperature), left_id=left_id, right_id=right_id,
+                )
+                sampled[block_start:block_end] = selected
+                confidence[block_start:block_end] = selected_confidence
+                margins = getattr(bigram_selector, "last_path_margins", None)
+                if margins is not None:
+                    bigram_retention_scores = torch.zeros_like(confidence)
+                    bigram_retention_scores[block_start:block_end] = margins
         if revisable_tokens:
             # Fill current masks while preserving visible tokens. The complete
             # candidate is scored below, after which any position in the block
@@ -1050,7 +1139,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if freeze_retained_tokens and not revisable_tokens:
             for offset, token in frozen.items():
                 ids[answer_start + offset] = token
-        retention_confidence = confidence
+        retention_confidence = confidence if bigram_retention_scores is None else bigram_retention_scores
         completed_tokens = torch.tensor([ids], device=session.device, dtype=torch.long)
         if revisable_tokens and (confidence_guided or not ar_check_due):
             retention_confidence = _sampling_token_confidence(
@@ -1078,16 +1167,24 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         )
         last_confidence = float(confidence[block_start:block_end].mean().cpu())
         # Compare the visible sampled answer before the next iteration's
-        # re-masking. Tokens after the first EOS are not part of the answer and
-        # must not prevent convergence. Excluding EOS itself still preserves
-        # its position through the tuple length: moving EOS changes the prefix.
+        # re-masking. Tokens after the first EOS/EOT are not part of the answer and
+        # must not prevent convergence. Excluding the ending itself still preserves
+        # its position through the tuple length: moving it changes the prefix.
         prediction = ids[answer_start:]
-        if session.tokenizer.eos_token_id in prediction:
-            prediction = prediction[:prediction.index(session.tokenizer.eos_token_id)]
+        predicted_ending = _first_ending_offset(prediction, ending_ids)
+        if predicted_ending is not None:
+            prediction = prediction[:predicted_ending]
         last_predictions.append(tuple(prediction))
         if len(last_predictions) > 2:
             last_predictions.pop(0)
         stopped_early = early_stopping and len(last_predictions) == 2 and len(set(last_predictions)) == 1
+        if session.mask_token_id in prediction[block_start:block_end]:
+            stopped_early = False
+        if (confidence_eos_eot_inf and predicted_ending is not None and has_followup_step
+                and predicted_ending not in frozen):
+            # Convergence must not bypass delayed retention by accepting an
+            # ending which the normal remasking schedule would still discard.
+            stopped_early = False
         # Progressively reduce corruption. Re-mask independently, retaining the
         # legacy schedule's initial noise_level and ending with a clean sample.
         if block_step + 1 < block_steps and not stopped_early:
@@ -1169,9 +1266,13 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                 for offset in remask_offsets.tolist():
                     ids[answer_start + block_start + offset] = session.mask_token_id
         current_answer = ids[answer_start:]
-        visible_answer = current_answer
-        if session.tokenizer.eos_token_id in visible_answer:
-            visible_answer = visible_answer[:visible_answer.index(session.tokenizer.eos_token_id)]
+        ending_offset = _first_ending_offset(current_answer, ending_ids)
+        visible_answer = current_answer[:ending_offset] if ending_offset is not None else current_answer
+        answer_finished = (
+            early_stopping and ending_offset is not None
+            and session.mask_token_id not in visible_answer
+            and (not has_followup_step or stopped_early or ending_offset in frozen)
+        )
         remasked_text = decode_denoising_state(
             current_answer,
             session.tokenizer,
@@ -1182,7 +1283,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
         if include_pre_remask_prediction:
             remask_label = (
                 "State after re-mask"
-                if block_step + 1 < block_steps and not stopped_early
+                if has_followup_step and not stopped_early and not answer_finished
                 else "State after re-mask (unchanged; final state)"
             )
             current_text = (
@@ -1198,8 +1299,15 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             status += " · revisable tokens"
         if autoregressive_guided:
             status += f" · AR-guided remasking every {autoregressive_check_interval} step(s)"
+        if bigram_retention_scores is not None:
+            status += " · Viterbi-margin remasking"
         if stopped_early:
             status += " · block stopped early (same answer for 2 consecutive iterations)"
+        if answer_finished:
+            ending_name = "EOS" if current_answer[ending_offset] == session.tokenizer.eos_token_id else "EOT"
+            status += f" · answer finished ({ending_name})"
+            if block_index + 1 < num_blocks:
+                status += " · remaining blocks skipped"
         html = render_denoising_step(
             ids,
             confidence.tolist(),
@@ -1215,13 +1323,16 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             trajectory_color_mode,
         )
         yield current_text, status, html
+        if answer_finished:
+            break
         if stopped_early:
             if num_blocks == 1:
                 break
             skip_block_index = block_index
     answer = ids[answer_start:]
-    if session.tokenizer.eos_token_id in answer:
-        answer = answer[:answer.index(session.tokenizer.eos_token_id)]
+    final_ending = _first_ending_offset(answer, ending_ids)
+    if final_ending is not None:
+        answer = answer[:final_ending]
     text = session.tokenizer.decode(answer, skip_special_tokens=True).strip()
     return
 

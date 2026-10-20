@@ -1,0 +1,16 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "parent": "2d5f62fff44a3ac452dafc1220f0d79eb70f133a",
+  "commit": "ec764e8524e9c26e379d94cb3ee08ad4bc017a7b",
+  "files_sha256": {
+    "app.py": "e731032268bf88bae28b29d37cbe6195bfa380ddf71f2ae119cfa0a83ea4fc33",
+    "src/diffusion_lm/inference.py": "52cdb7e8d2b9da0f1d5d7bafc96315a44d772c115996d16d7db1f0a96c22d5c9"
+  },
+  "defaults": {
+    "temperature": 1.0,
+    "top_k": 16
+  },
+  "change": "Retain established ending-adjusted diffusion confidence after the unbiased alternative worsened 16-step Amsterdam output; clarify descriptions and restore tested UI defaults.",
+  "validation": "190 passed, 3 CUDA-only skips",
+  "extra_model_forward_passes": 0
+}

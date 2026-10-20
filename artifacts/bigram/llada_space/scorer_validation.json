@@ -1,0 +1,8 @@
+{
+  "tokenizer_fingerprint_matches": true,
+  "tokenizer_length": 126349,
+  "scorer_vocab_size": 126464,
+  "padded_output_id_scored": 126463,
+  "observed_pairs": 5109347,
+  "pm_unseen_neutral": true
+}

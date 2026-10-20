@@ -1,0 +1,9 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "153c673b030abe2a7081b0506e65e6c6264fd1cd",
+  "visibility": "public",
+  "anonymous_access_verified": true,
+  "stage": "RUNNING",
+  "authorization": "User explicitly approved public activation, including the corpus-trained scorer.",
+  "anonymous_app_api_verified": true
+}

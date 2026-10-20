@@ -1,0 +1,32 @@
+[
+  {
+    "name": "llama",
+    "tokenizer": "meta-llama/Llama-3.1-8B-Instruct",
+    "tokenizer_length": 128256,
+    "model_vocab_size": 128256,
+    "documents": 980000,
+    "observed_pairs": 5895450,
+    "tokenizer_match": true,
+    "cpu_viterbi_valid": true
+  },
+  {
+    "name": "ministral",
+    "tokenizer": "mistralai/Ministral-8B-Instruct-2410",
+    "tokenizer_length": 131072,
+    "model_vocab_size": 131072,
+    "documents": 980000,
+    "observed_pairs": 5793504,
+    "tokenizer_match": true,
+    "cpu_viterbi_valid": true
+  },
+  {
+    "name": "qwen",
+    "tokenizer": "Qwen/Qwen2.5-7B-Instruct",
+    "tokenizer_length": 151665,
+    "model_vocab_size": 152064,
+    "documents": 980000,
+    "observed_pairs": 5681129,
+    "tokenizer_match": true,
+    "cpu_viterbi_valid": true
+  }
+]

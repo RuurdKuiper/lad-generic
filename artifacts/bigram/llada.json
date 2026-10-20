@@ -1,0 +1,20 @@
+{
+  "path": "artifacts/bigram/llada.pt",
+  "checkpoint_version": 2,
+  "successor_tokens": 76084287,
+  "successor_marginal": "additive-beta-smoothed successor counts from observed pairs",
+  "observed_pairs": 5109347,
+  "tokens": 77064287,
+  "tokenizer": "base_models/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+  "tokenizer_sha256": "2d2bab73abe3bf56a7f5d4572eee57e7705387526c05f043b8412a86b6175022",
+  "source": "data/lad-training-1m-256-long",
+  "split": "train",
+  "max_documents": null,
+  "text_column": "output",
+  "response_eos": true,
+  "documents": 980000,
+  "model_vocab_size": 126464,
+  "tokenizer_length": 126349,
+  "tokenizer_model_id": "GSAI-ML/LLaDA-8B-Instruct",
+  "model_revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07"
+}

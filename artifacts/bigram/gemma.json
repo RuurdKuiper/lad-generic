@@ -1,0 +1,16 @@
+{
+  "path": "artifacts/bigram/gemma.pt",
+  "observed_pairs": 6032223,
+  "tokens": 73467371,
+  "tokenizer": "base_models/models--google--gemma-2-9b-it/snapshots/11c9b309abf73637e4b6f9a3fa1e92e615547819",
+  "tokenizer_sha256": "1b50ee7a94eba98290ed0761bafc639306acd75661b925722f4e2e91dbf65789",
+  "source": "data/lad-training-1m-256-long",
+  "split": "train",
+  "max_documents": null,
+  "text_column": "output",
+  "response_eos": true,
+  "documents": 980000,
+  "checkpoint_version": 2,
+  "successor_tokens": 72487371,
+  "successor_marginal": "additive-beta-smoothed successor counts from observed pairs"
+}

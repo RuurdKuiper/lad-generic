@@ -74,6 +74,13 @@ MODELS = (
     ),
 )
 
+BIGRAM_CHECKPOINTS = {
+    "byod-gemma-2-9b": "gemma.pt",
+    "byod-llama-3.1-8b": "llama.pt",
+    "byod-qwen2.5-7b": "qwen.pt",
+    "byod-ministral-8b": "ministral.pt",
+}
+
 
 def _yaml_line(key: str, value: str | None) -> str:
     return f"{key}: {value}\n" if value else ""
@@ -169,17 +176,19 @@ def validate_source(spec: ByodModel, outputs_root: Path) -> tuple[Path, Path, di
 
 
 def make_space_bundle(spec: ByodModel, namespace: str, destination: Path, anonymous_review: bool = False) -> None:
+    bigram_enabled = namespace in {"Ruurd", "Dovelove"}
     template_dir = REPO_ROOT / "huggingface" / "byod_space"
     shutil.copy2(template_dir / "app.py", destination / "app.py")
     shutil.copy2(template_dir / "requirements.txt", destination / "requirements.txt")
     readme = (template_dir / "README.md.template").read_text()
     readme = readme.replace("__TITLE__", spec.display_name).replace(
         "__MODEL_REPO_ID__", f"{namespace}/{spec.model_name}"
-    )
+    ).replace("__SOURCE_CHECKPOINT__", spec.source_checkpoint)
     (destination / "README.md").write_text(readme)
     (destination / "space_model.json").write_text(
         json.dumps(
             {
+                "bigram_enabled": bigram_enabled,
                 "display_name": spec.display_name,
                 "model_repo_id": f"{namespace}/{spec.model_name}",
                 "show_repository_links": not anonymous_review,
@@ -192,9 +201,17 @@ def make_space_bundle(spec: ByodModel, namespace: str, destination: Path, anonym
         )
         + "\n"
     )
+    if bigram_enabled:
+        checkpoint = REPO_ROOT / "artifacts" / "bigram" / BIGRAM_CHECKPOINTS[spec.space_name]
+        if not checkpoint.is_file():
+            raise FileNotFoundError(f"Build {checkpoint} with scripts/build_bigram.py before publishing {spec.display_name}")
+        shutil.copy2(checkpoint, destination / "bigram.pt")
+        if checkpoint.with_suffix('.json').is_file():
+            shutil.copy2(checkpoint.with_suffix('.json'), destination / "bigram.json")
     shutil.copytree(
         REPO_ROOT / "src" / "diffusion_lm",
         destination / "src" / "diffusion_lm",
+        dirs_exist_ok=True,
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
     )
 

@@ -1,0 +1,76 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "153c673b030abe2a7081b0506e65e6c6264fd1cd",
+  "visibility": "private",
+  "api_verified": true,
+  "defaults": {
+    "temperature": 1.0,
+    "top_k": 16,
+    "bigram_scoring_method": "PMI bigram",
+    "bigram_remasking_confidence": "Diffusion probability",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0
+  },
+  "strategies": [
+    [
+      "Confidence-guided",
+      "Confidence-guided"
+    ],
+    [
+      "Random",
+      "Random"
+    ],
+    [
+      "Bigram Viterbi",
+      "Bigram Viterbi"
+    ]
+  ],
+  "smoke_runs": [
+    {
+      "options": {
+        "question": "What is 2 + 2? Answer only the number.",
+        "system_prompt": "You are a helpful assistant.",
+        "max_new_tokens": 16,
+        "num_steps": 8,
+        "block_length": 16,
+        "temperature": 0.0,
+        "top_k": 1,
+        "pause_per_step": 0.0,
+        "trajectory_color_mode": "No coloring",
+        "remasking_strategy": "Confidence-guided",
+        "revisable_tokens": false,
+        "ar_check_interval": 4,
+        "delay_eos_eot": true,
+        "early_stopping": false,
+        "generation_seed": 42,
+        "measure_decoding": true,
+        "bigram_eos_delay_penalty": 1.0
+      },
+      "text": "4",
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 1.000 \u00b7 retained 14 tokens"
+    },
+    {
+      "options": {
+        "question": "What is 2 + 2? Answer only the number.",
+        "system_prompt": "You are a helpful assistant.",
+        "max_new_tokens": 16,
+        "num_steps": 8,
+        "block_length": 16,
+        "temperature": 1.0,
+        "top_k": 16,
+        "pause_per_step": 0.0,
+        "trajectory_color_mode": "No coloring",
+        "remasking_strategy": "Bigram Viterbi",
+        "revisable_tokens": false,
+        "ar_check_interval": 4,
+        "delay_eos_eot": true,
+        "early_stopping": false,
+        "generation_seed": 42,
+        "measure_decoding": true,
+        "bigram_eos_delay_penalty": 1.0
+      },
+      "text": "4",
+      "status": "Denoising step 8/8 \u00b7 1 output tokens \u00b7 mean confidence 1.000 \u00b7 retained 14 tokens\n\nDecoding metrics: {\"selector_calls\": 8, \"editable_predictions\": 72, \"changed_predictions\": 0, \"changed_fraction\": 0.0, \"selector_ms\": 89.03818065300584, \"mean_selector_ms\": 11.12977258162573}"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "C01": {
+    "method": "confidence",
+    "steps": 128
+  },
+  "C02": {
+    "method": "pmi_diffusion",
+    "steps": 32
+  },
+  "C03": {
+    "method": "conditional_diffusion",
+    "steps": 64
+  },
+  "C04": {
+    "method": "confidence",
+    "steps": 64
+  },
+  "C05": {
+    "method": "pmi_diffusion",
+    "steps": 128
+  },
+  "C06": {
+    "method": "conditional_margin",
+    "steps": 32
+  },
+  "C07": {
+    "method": "pmi_margin",
+    "steps": 128
+  },
+  "C08": {
+    "method": "confidence",
+    "steps": 32
+  },
+  "C09": {
+    "method": "pmi_margin",
+    "steps": 64
+  },
+  "C10": {
+    "method": "conditional_diffusion",
+    "steps": 32
+  },
+  "C11": {
+    "method": "conditional_diffusion",
+    "steps": 128
+  },
+  "C12": {
+    "method": "conditional_margin",
+    "steps": 64
+  },
+  "C13": {
+    "method": "conditional_margin",
+    "steps": 128
+  },
+  "C14": {
+    "method": "pmi_diffusion",
+    "steps": 64
+  },
+  "C15": {
+    "method": "pmi_margin",
+    "steps": 32
+  }
+}

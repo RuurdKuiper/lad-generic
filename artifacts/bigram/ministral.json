@@ -1,0 +1,17 @@
+{
+  "path": "artifacts/bigram/ministral.pt",
+  "checkpoint_version": 2,
+  "successor_tokens": 72234218,
+  "successor_marginal": "additive-beta-smoothed successor counts from observed pairs",
+  "observed_pairs": 5793504,
+  "tokens": 73214218,
+  "model_vocab_size": 131072,
+  "tokenizer": "mistralai/Ministral-8B-Instruct-2410",
+  "tokenizer_sha256": "5a03f035286f353bc1539a706768c1ee673d9ecaece5a463a0d9bdd354b25edf",
+  "source": "data/lad-training-1m-256-long",
+  "split": "train",
+  "max_documents": null,
+  "text_column": "output",
+  "response_eos": true,
+  "documents": 980000
+}

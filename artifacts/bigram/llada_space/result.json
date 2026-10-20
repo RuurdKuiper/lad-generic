@@ -1,0 +1,25 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "commit": "153c673b030abe2a7081b0506e65e6c6264fd1cd",
+  "stage": "RUNNING",
+  "visibility": "public",
+  "model": "GSAI-ML/LLaDA-8B-Instruct",
+  "model_revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+  "core_test_suite": "193 passed, 3 CUDA-only skips",
+  "llada_publisher_suite": "5 passed, including 2 additional account/privacy guard checks",
+  "scorer": {
+    "documents": 980000,
+    "tokens": 77064287,
+    "pairs": 5109347,
+    "model_vocab_size": 126464
+  },
+  "live_checks": [
+    "Native BF16 model loaded",
+    "Confidence-guided arithmetic output: 4",
+    "PMI Viterbi arithmetic output: 4",
+    "Open-ended Viterbi with 290 changed predictions",
+    "Native EOT block stopping skipped remaining 3 blocks after 1 forward pass"
+  ],
+  "public_activation": "Explicitly approved by the user; anonymous app access verified",
+  "existing_gemma_revision": "ec764e8524e9c26e379d94cb3ee08ad4bc017a7b"
+}

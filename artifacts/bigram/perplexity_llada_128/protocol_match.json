@@ -1,0 +1,14 @@
+{
+  "matching": {
+    "prompts": true,
+    "steps": true,
+    "shared": true,
+    "methods": true,
+    "total": true
+  },
+  "gemma_space": "Ruurd/byod-gemma-2-9b",
+  "gemma_revision": "e1475f050f46925764cc18a483abb31f6fc29b1e",
+  "llada_space": "Ruurd/llada-8b-instruct",
+  "llada_revision": "0904e3f97dd50eb51ed96a27fabe7f93ca1c19dc",
+  "note": "Same numerical native-token cap; the two model tokenizers may produce different answer word counts."
+}

@@ -1,0 +1,269 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "revision": "c8003db3f4da4569d0915199751c1b7e0f1147d2",
+  "seed": 42,
+  "shared_options": {
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 128,
+    "block_length": 128,
+    "temperature": 1.0,
+    "top_k": 16,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "early_stopping": false,
+    "bigram_top_k": 16,
+    "bigram_weight": 0.5,
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "generation_seed": 42,
+    "measure_decoding": true
+  },
+  "steps": [
+    128,
+    64,
+    32
+  ],
+  "methods": [
+    [
+      "confidence",
+      "Confidence-guided",
+      "Conditional bigram",
+      "Diffusion probability"
+    ],
+    [
+      "conditional_diffusion",
+      "Bigram Viterbi",
+      "Conditional bigram",
+      "Diffusion probability"
+    ],
+    [
+      "pmi_diffusion",
+      "Bigram Viterbi",
+      "PMI bigram",
+      "Diffusion probability"
+    ],
+    [
+      "conditional_margin",
+      "Bigram Viterbi",
+      "Conditional bigram",
+      "Viterbi path margin"
+    ],
+    [
+      "pmi_margin",
+      "Bigram Viterbi",
+      "PMI bigram",
+      "Viterbi path margin"
+    ]
+  ],
+  "tasks": [
+    {
+      "id": "open_01",
+      "task": "open",
+      "prompt": "What do you know about Amsterdam?"
+    },
+    {
+      "id": "open_02",
+      "task": "open",
+      "prompt": "Why is the sky blue?"
+    },
+    {
+      "id": "open_03",
+      "task": "open",
+      "prompt": "How do plants convert sunlight into energy?"
+    },
+    {
+      "id": "open_04",
+      "task": "open",
+      "prompt": "What makes a good friend?"
+    },
+    {
+      "id": "open_05",
+      "task": "open",
+      "prompt": "Explain how a refrigerator keeps food cold."
+    },
+    {
+      "id": "open_06",
+      "task": "open",
+      "prompt": "Why do we have different seasons on Earth?"
+    },
+    {
+      "id": "open_07",
+      "task": "open",
+      "prompt": "How does vaccination help protect a population?"
+    },
+    {
+      "id": "open_08",
+      "task": "open",
+      "prompt": "What is the difference between weather and climate?"
+    },
+    {
+      "id": "open_09",
+      "task": "open",
+      "prompt": "Explain the basic idea behind supply and demand."
+    },
+    {
+      "id": "open_10",
+      "task": "open",
+      "prompt": "How does a search engine find relevant web pages?"
+    },
+    {
+      "id": "open_11",
+      "task": "open",
+      "prompt": "What causes a rainbow?"
+    },
+    {
+      "id": "open_12",
+      "task": "open",
+      "prompt": "How does the human heart circulate blood?"
+    },
+    {
+      "id": "open_13",
+      "task": "open",
+      "prompt": "Why do objects fall toward the ground?"
+    },
+    {
+      "id": "open_14",
+      "task": "open",
+      "prompt": "Explain what machine learning is in simple terms."
+    },
+    {
+      "id": "open_15",
+      "task": "open",
+      "prompt": "What are the main benefits of regular exercise?"
+    },
+    {
+      "id": "open_16",
+      "task": "open",
+      "prompt": "How does the water cycle work?"
+    },
+    {
+      "id": "open_17",
+      "task": "open",
+      "prompt": "Why is sleep important for people?"
+    },
+    {
+      "id": "open_18",
+      "task": "open",
+      "prompt": "Explain the difference between renewable and nonrenewable energy."
+    },
+    {
+      "id": "open_19",
+      "task": "open",
+      "prompt": "How do trees communicate or share resources?"
+    },
+    {
+      "id": "open_20",
+      "task": "open",
+      "prompt": "What is inflation and how does it affect households?"
+    },
+    {
+      "id": "open_21",
+      "task": "open",
+      "prompt": "Why do leaves change color in autumn?"
+    },
+    {
+      "id": "open_22",
+      "task": "open",
+      "prompt": "How does a bicycle stay balanced while moving?"
+    },
+    {
+      "id": "open_23",
+      "task": "open",
+      "prompt": "What are practical ways to reduce household waste?"
+    },
+    {
+      "id": "open_24",
+      "task": "open",
+      "prompt": "Explain how an electric battery stores and releases energy."
+    },
+    {
+      "id": "open_25",
+      "task": "open",
+      "prompt": "What is the purpose of the scientific method?"
+    },
+    {
+      "id": "open_26",
+      "task": "open",
+      "prompt": "How do languages change over time?"
+    },
+    {
+      "id": "open_27",
+      "task": "open",
+      "prompt": "Why are oceans important to the global climate?"
+    },
+    {
+      "id": "open_28",
+      "task": "open",
+      "prompt": "What makes an explanation clear and persuasive?"
+    },
+    {
+      "id": "open_29",
+      "task": "open",
+      "prompt": "How can someone evaluate whether an online claim is reliable?"
+    },
+    {
+      "id": "open_30",
+      "task": "open",
+      "prompt": "Tell a short story about a traveler who learns an unexpected lesson."
+    },
+    {
+      "id": "code_sum_even",
+      "task": "code",
+      "prompt": "Write Python function sum_even(nums) returning the sum of even integers in nums. Handle an empty list. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_palindrome",
+      "task": "code",
+      "prompt": "Write Python function is_palindrome(text) ignoring case and non-alphanumeric characters. Return a boolean. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_fibonacci",
+      "task": "code",
+      "prompt": "Write Python function fibonacci(n) returning a list of the first n Fibonacci numbers, starting with 0, 1. For n <= 0 return []. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_deduplicate",
+      "task": "code",
+      "prompt": "Write Python function deduplicate(items) removing duplicates while preserving first occurrence order. Items are hashable. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_balanced",
+      "task": "code",
+      "prompt": "Write Python function balanced(s) checking balanced parentheses (), brackets [], and braces {}. Ignore other characters. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_binary_search",
+      "task": "code",
+      "prompt": "Write Python function binary_search(nums, target) for sorted nums, returning its index or -1 if absent. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_word_counts",
+      "task": "code",
+      "prompt": "Write Python function word_counts(text) returning a dictionary of word frequencies. Split on whitespace and ignore case. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_merge_sorted",
+      "task": "code",
+      "prompt": "Write Python function merge_sorted(a, b) merging two sorted integer lists into one sorted list. Do not call sorted() or .sort(). Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_flatten",
+      "task": "code",
+      "prompt": "Write Python function flatten(rows) flattening a list of lists by one level. Preserve order and handle empty lists. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "code_fizzbuzz",
+      "task": "code",
+      "prompt": "Write Python function fizzbuzz(n) returning strings for integers 1 through n: Fizz for multiples of 3, Buzz for 5, FizzBuzz for both, otherwise the number as a string. Return only concise Python code, without explanation or examples."
+    }
+  ],
+  "total": 600,
+  "early_stopping_reason": "Fixed forward-pass budget for comparing step counts.",
+  "coding_delay": false,
+  "open_delay": true,
+  "coding_delay_strength": 1.0,
+  "open_delay_strength": 1000.0,
+  "note": "Strength 1 disables ending prediction penalty. Baseline uses no bigram selector. Manual review; no external judge."
+}

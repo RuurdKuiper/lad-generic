@@ -55,3 +55,10 @@ results/
 checkpoints/
 wandb/
 *.log
+
+# Rebuildable checkpoints, tokenizer downloads, and deployment copies.
+# Keep experiment outputs, scorer provenance, benchmarks, and reports versioned.
+artifacts/**/*.pt
+artifacts/tokenizer_cache/
+artifacts/**/bundle/
+artifacts/**/bundles/

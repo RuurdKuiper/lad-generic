@@ -1,0 +1,11 @@
+{
+  "tests_passed": 190,
+  "cuda_tests_skipped": 3,
+  "old_selector_exact_parity_cases": 40,
+  "historical_hosted_output_reproduced": true,
+  "regression_test": {
+    "before": "Passes at neutral penalty 1; fails at penalties 10 and 1000",
+    "after": "Passes at all three penalty strengths",
+    "verifies": "Original diffusion probabilities and the resulting retention order, with no extra model forward passes"
+  }
+}

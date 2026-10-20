@@ -1,0 +1,13 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "commit": "08a73ed0cd27d0c99f2b41320d3327c19df4a493",
+  "files": [
+    "app.py",
+    "src/diffusion_lm/inference.py"
+  ],
+  "bigram_eos_delay_penalty": 10.0,
+  "targeted_passed": 109,
+  "cuda_skipped": 2,
+  "full_passed": 280,
+  "preexisting_training_config_failures": 3
+}

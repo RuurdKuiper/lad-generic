@@ -1,0 +1,9 @@
+{
+  "final_tests_passed": 190,
+  "cuda_tests_skipped": 3,
+  "old_selector_exact_parity_cases": 40,
+  "historical_hosted_output_reproduced": true,
+  "final_retention_policy": "Full-vocabulary probabilities after the fading ending penalty, preserving the prior behavior.",
+  "experimental_unbiased_retention": "Passed the raw-confidence contract but worsened the 16-step user-prompt outputs, so reverted.",
+  "extra_model_forward_passes": 0
+}

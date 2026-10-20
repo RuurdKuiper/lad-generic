@@ -1,0 +1,124 @@
+{
+  "generated": 168,
+  "scored": 168,
+  "planned": 240,
+  "groups": [
+    {
+      "steps": 8,
+      "method": "confidence",
+      "prompts": 21,
+      "perplexity": 27.627877284448456,
+      "reference_tokens": 775,
+      "median_answer_perplexity": 43.80152992014387,
+      "mean_words": 30.523809523809526,
+      "mean_generated_tokens": 37.0,
+      "mean_distinct_1": 0.5781892182927066,
+      "mean_unique_tokens": 19.333333333333332
+    },
+    {
+      "steps": 8,
+      "method": "pmi_diffusion",
+      "prompts": 21,
+      "perplexity": 11.453504991077704,
+      "reference_tokens": 1021,
+      "median_answer_perplexity": 11.905649382953555,
+      "mean_words": 39.95238095238095,
+      "mean_generated_tokens": 48.0,
+      "mean_distinct_1": 0.5426885596917522,
+      "mean_unique_tokens": 24.714285714285715,
+      "paired_ppl_ratio_ci95": [
+        0.2649615980700168,
+        0.6020471673569951
+      ],
+      "per_answer_ppl_wins": 19
+    },
+    {
+      "steps": 16,
+      "method": "confidence",
+      "prompts": 21,
+      "perplexity": 16.81924340224312,
+      "reference_tokens": 891,
+      "median_answer_perplexity": 16.62504914796284,
+      "mean_words": 35.666666666666664,
+      "mean_generated_tokens": 41.523809523809526,
+      "mean_distinct_1": 0.623388048554701,
+      "mean_unique_tokens": 24.857142857142858
+    },
+    {
+      "steps": 16,
+      "method": "pmi_diffusion",
+      "prompts": 21,
+      "perplexity": 8.449492246304525,
+      "reference_tokens": 1125,
+      "median_answer_perplexity": 8.348411374192306,
+      "mean_words": 45.904761904761905,
+      "mean_generated_tokens": 53.333333333333336,
+      "mean_distinct_1": 0.6150886880033236,
+      "mean_unique_tokens": 32.142857142857146,
+      "paired_ppl_ratio_ci95": [
+        0.39714324953311464,
+        0.6162688536471238
+      ],
+      "per_answer_ppl_wins": 19
+    },
+    {
+      "steps": 32,
+      "method": "confidence",
+      "prompts": 21,
+      "perplexity": 8.112222720003443,
+      "reference_tokens": 1025,
+      "median_answer_perplexity": 7.750149463079037,
+      "mean_words": 42.0,
+      "mean_generated_tokens": 48.76190476190476,
+      "mean_distinct_1": 0.6239792430788415,
+      "mean_unique_tokens": 29.523809523809526
+    },
+    {
+      "steps": 32,
+      "method": "pmi_diffusion",
+      "prompts": 21,
+      "perplexity": 4.75937889437449,
+      "reference_tokens": 1093,
+      "median_answer_perplexity": 4.991947140531829,
+      "mean_words": 45.285714285714285,
+      "mean_generated_tokens": 51.714285714285715,
+      "mean_distinct_1": 0.6698157767027384,
+      "mean_unique_tokens": 34.0,
+      "paired_ppl_ratio_ci95": [
+        0.4734582120123523,
+        0.711365629113899
+      ],
+      "per_answer_ppl_wins": 18
+    },
+    {
+      "steps": 64,
+      "method": "confidence",
+      "prompts": 21,
+      "perplexity": 4.834898895696502,
+      "reference_tokens": 1080,
+      "median_answer_perplexity": 4.9560250255307805,
+      "mean_words": 44.04761904761905,
+      "mean_generated_tokens": 50.714285714285715,
+      "mean_distinct_1": 0.6712971159804768,
+      "mean_unique_tokens": 33.19047619047619
+    },
+    {
+      "steps": 64,
+      "method": "pmi_diffusion",
+      "prompts": 21,
+      "perplexity": 3.344691147202237,
+      "reference_tokens": 1165,
+      "median_answer_perplexity": 3.5006251101474786,
+      "mean_words": 48.38095238095238,
+      "mean_generated_tokens": 55.0,
+      "mean_distinct_1": 0.6881669782762774,
+      "mean_unique_tokens": 37.61904761904762,
+      "paired_ppl_ratio_ci95": [
+        0.5840850683055528,
+        0.8122392384283809
+      ],
+      "per_answer_ppl_wins": 17
+    }
+  ],
+  "interpretation": "Lower reference perplexity means more predictable text, not necessarily more factual or useful answers."
+}

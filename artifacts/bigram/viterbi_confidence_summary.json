@@ -1,0 +1,40 @@
+{
+  "hosted_cases": 20,
+  "passed": true,
+  "seed": 42,
+  "weight": 0.5,
+  "timing_summary": [
+    {
+      "method": "Conditional bigram",
+      "length": 32,
+      "selector_ms": {
+        "Diffusion probability": 3.1850177620071918,
+        "Viterbi path margin": 7.75456651172135
+      }
+    },
+    {
+      "method": "Conditional bigram",
+      "length": 128,
+      "selector_ms": {
+        "Diffusion probability": 11.974948822171427,
+        "Viterbi path margin": 27.953186887316406
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "length": 32,
+      "selector_ms": {
+        "Diffusion probability": 3.674165447591804,
+        "Viterbi path margin": 7.579814438940957
+      }
+    },
+    {
+      "method": "PMI bigram",
+      "length": 128,
+      "selector_ms": {
+        "Diffusion probability": 12.241745775099844,
+        "Viterbi path margin": 26.94002016505692
+      }
+    }
+  ]
+}

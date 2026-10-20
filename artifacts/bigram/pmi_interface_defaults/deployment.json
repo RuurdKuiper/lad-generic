@@ -1,0 +1,14 @@
+{
+  "space": "Ruurd/byod-gemma-2-9b",
+  "parent": "4da5ac48ab2d3f00776963867729dd1c0e7c274e",
+  "commit": "977a9266f2482a17e03b67eedd1f9b44c7f95f81",
+  "app_sha256": "7a38d963d7e8617a9f49b2ee8786d4c261ec5a714af63c442f084a50ba04f9d6",
+  "settings": {
+    "bigram_scoring_method": "PMI bigram",
+    "bigram_remasking_confidence": "Diffusion probability",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0
+  },
+  "ending_delay_control": "visible and adjustable",
+  "validation": "51 passed"
+}

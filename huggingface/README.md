@@ -1,5 +1,14 @@
 # Publishing the BYOD models and demos
 
+For the original structural-correction LAD demo, see
+[LAD with optional PMI Viterbi](lad_space/README.md). Its app is maintained in
+`huggingface/lad_space`; prepare an update with
+`python huggingface/publish_lad_viterbi.py`. Add `--execute --expected-revision
+<reviewed-space-commit>` to update only `Ruurd/lad`, preserving model weights
+and existing Space settings. The shared BYOD-Llama scorer must be built first.
+LAD keeps every answer position editable, even without re-noising; its
+correction loop is separate from BYOD's permanently retained tokens.
+
 This directory packages the selected checkpoints as Hugging Face adapter
 repositories and creates one fixed-model ZeroGPU Space per model. Gemma, Qwen,
 and Ministral use their original `best` checkpoints; Llama uses the final
@@ -62,6 +71,49 @@ separate read-only Hugging Face token and add it to each Space as the
 file, notebook, or Git commit.
 
 ### BYOD Viterbi decoding controls
+
+Ruurd's Gemma and native LLaDA Spaces include a default-OFF **Adaptive Parallel
+Decoding (APD)** checkbox. It replaces commitment/remasking decisions after
+the existing token-selection method, leaving sampling and Viterbi scores intact.
+The block-local cosine threshold uses a 15% warmup and decreases from 0.90 to
+0.50. Confidence is the selected token's full-vocabulary diffusion probability,
+including existing ending adjustments, rather than normalized top-k confidence
+or a Viterbi path margin. A highest-confidence fallback commits at least one
+pending token when necessary; the final block step commits all remaining rows.
+If the decoder selects MASK itself, a validity fallback uses the same forward's
+best non-mask prediction for that row. Committed rows stay fixed and completed
+blocks exit without using the remaining planned steps. EOS/EOT retention delay
+and the whole-answer Early stopping control remain supported.
+
+APD uses the DLM commitment probability even with Random or AR-guided retention
+selected; those retention policies and retained-token revision are bypassed while
+APD is ON. In particular, optional AR confidence forwards are not run under APD.
+No token budgets, position factors, grinding detection, extra model passes, or
+weight changes are added. The schedule is inspired by
+[CAI-dLLM](https://arxiv.org/abs/2608.22646), with the fixed endpoint requested
+for this experiment. OFF preserves the prior generation behavior.
+
+Deploy these two Spaces using `python huggingface/enable_repetition_penalty.py
+--feature apd`, inspect its prepared manifest, then add `--execute`. The small
+ON/OFF check is `scripts/evaluate_apd_spaces.py`; results and saved outputs are
+in `artifacts/bigram/apd_rollout`. When decoding measurements are requested,
+`Inference metrics` reports denoising forward count and in-function elapsed
+milliseconds, separate from allocation/queue time and existing selector metrics.
+
+The Ruurd Gemma and native LLaDA Spaces also offer **PMI Viterbi + Repetition
+Penalty**, with a gamma slider defaulting to 1.0. Its edge score is
+`0.5 * temperature * PMI(a,b) - gamma * C(a,b)`, where C sums earlier expected
+pair occurrences within the current block/iteration from full-vocabulary
+diffusion probabilities. EOS/EOT pairs are excluded. Retained positions remain
+fixed; there are no additional model forwards. Gamma zero reproduces the
+original PMI option, which remains the default. The existing Ruurd evaluation
+controls remain visible via `show_bigram_evaluation_controls` in the Space config.
+
+Prepare these two existing Spaces with
+`python huggingface/enable_repetition_penalty.py`, inspect its prepared manifest,
+then run the same command with `--execute` to upload code only. Existing
+dependencies, checkpoints and hardware settings are preserved. Live comparisons
+are recorded by `scripts/verify_repetition_spaces.py`.
 
 The Ruurd and Dovelove BYOD Spaces use the same `temperature` and `top_k` inputs for
 sampling and Viterbi. The hosted bigram weight is fixed at 0.5; the separate

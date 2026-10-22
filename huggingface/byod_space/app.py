@@ -15,13 +15,14 @@ import spaces
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from diffusion_lm.bigram import BigramScorer, BigramViterbiSelector
+from diffusion_lm.bigram import BigramScorer, BigramViterbiSelector, RepetitionPenalizedBigramSelector
 from diffusion_lm.bigram_evaluation import ProfiledBigramSelector
-from diffusion_lm.inference import denoise_stream, load_hub_adapter_session, load_llada_session
+from diffusion_lm.inference import denoise_stream, load_hub_adapter_session, load_llada_session, _ending_token_ids
 
 
 SPACE = json.loads((Path(__file__).parent / "space_model.json").read_text())
 BIGRAM_ENABLED = bool(SPACE.get("bigram_enabled", False))
+SHOW_BIGRAM_EVALUATION_CONTROLS = bool(SPACE.get("show_bigram_evaluation_controls", False))
 BIGRAM_PATH = os.getenv("BIGRAM_MODEL_PATH", str(Path(__file__).parent / "bigram.pt"))
 # Bigram defaults: edit these here to change the hosted configuration.
 # Scoring: "Conditional bigram" or "PMI bigram".
@@ -120,27 +121,37 @@ def generate(
     measure_decoding: bool = False,
     bigram_eos_delay_penalty: float = BIGRAM_ENDING_DELAY_STRENGTH,
     bigram_remasking_confidence: str = BIGRAM_REMASKING_CONFIDENCE,
+    repetition_penalty_strength: float = 1.0,
+    adaptive_parallel_decoding: bool = False,
 ):
     """Stream iterative masked-diffusion generation from the fixed model."""
     question = question.strip() or "What do you know about Amsterdam?"
     block_length = min(int(block_length), int(max_new_tokens))
     seed = secrets.randbelow(2**63 - 1) if int(generation_seed) < 0 else int(generation_seed)
     selector = None
-    if remasking_strategy == "Bigram Viterbi":
+    if remasking_strategy in {"Bigram Viterbi", "PMI Viterbi + Repetition Penalty"}:
         if not BIGRAM_ENABLED:
             raise gr.Error("Bigram Viterbi is not enabled for this Space.")
         try:
             selector = BigramViterbiSelector(
                 _bigram_scorer(bigram_model_path).to(SESSION.device), 0.5,
-                scoring_method={"Conditional bigram": "conditional", "PMI bigram": "pmi"}.get(bigram_scoring_method, ""),
+                scoring_method=("pmi" if remasking_strategy == "PMI Viterbi + Repetition Penalty" else
+                    {"Conditional bigram": "conditional", "PMI bigram": "pmi"}.get(bigram_scoring_method, "")),
                 min_count=int(pmi_min_count), pmi_clip=float(pmi_clip),
                 remasking_confidence={"Diffusion probability": "diffusion", "Viterbi path margin": "viterbi_margin"}.get(bigram_remasking_confidence, ""),
             )
+            if remasking_strategy == "PMI Viterbi + Repetition Penalty":
+                selector = RepetitionPenalizedBigramSelector(
+                    selector, float(repetition_penalty_strength),
+                    excluded_token_ids=_ending_token_ids(SESSION.tokenizer),
+                )
             if measure_decoding:
                 selector = ProfiledBigramSelector(selector)
         except (FileNotFoundError, ValueError) as exc:
             raise gr.Error(str(exc)) from exc
     first_step = True
+    inference_started = time.perf_counter() if measure_decoding else None
+    forward_passes = 0
     for text, status, trajectory_html in denoise_stream(
         SESSION,
         question=question,
@@ -152,7 +163,7 @@ def generate(
         top_k=int(top_k),
         seed=int(seed),
         permanent_unmask=not bool(revisable_tokens),
-        confidence_guided=remasking_strategy in {"Confidence-guided", "Bigram Viterbi"},
+        confidence_guided=remasking_strategy in {"Confidence-guided", "Bigram Viterbi", "PMI Viterbi + Repetition Penalty"},
         proportional_unmask=False,
         early_stopping=bool(early_stopping),
         # Bigram mode also fades an ending-prediction penalty to counter its
@@ -169,12 +180,19 @@ def generate(
         autoregressive_check_interval=int(ar_check_interval),
         bigram_selector=selector,
         bigram_eos_delay_penalty=float(bigram_eos_delay_penalty),
+        adaptive_parallel_decoding=bool(adaptive_parallel_decoding),
     ):
         if not first_step and float(pause_per_step) > 0:
             # The sleep occurs inside this one decorated generator invocation,
             # so ZeroGPU remains allocated for the entire denoising run.
             time.sleep(float(pause_per_step))
         first_step = False
+        forward_passes += 1
+        if measure_decoding:
+            status += "\n\nInference metrics: " + json.dumps(dict(
+                denoising_forward_passes=forward_passes, elapsed_ms=(time.perf_counter() - inference_started) * 1000,
+                adaptive_parallel_decoding=bool(adaptive_parallel_decoding),
+            ))
         if measure_decoding and selector is not None:
             status += "\n\nDecoding metrics: " + json.dumps(selector.metrics())
         yield status, trajectory_html
@@ -236,10 +254,23 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 info="Hover over any token to see its position, prediction iteration, and probability.",
             )
             remasking_strategy = gr.Radio(
-                choices=["Confidence-guided"] + ([] if SESSION.llada else ["Autoregressive-confidence"]) + ["Random"] + (["Bigram Viterbi"] if BIGRAM_ENABLED else []),
+                choices=["Confidence-guided"] + ([] if SESSION.llada else ["Autoregressive-confidence"]) + ["Random"] + (["Bigram Viterbi", "PMI Viterbi + Repetition Penalty"] if BIGRAM_ENABLED else []),
                 value="Bigram Viterbi" if BIGRAM_ENABLED else "Confidence-guided",
                 label="Remasking strategy",
             )
+            repetition_penalty_strength = gr.Slider(
+                0.0, 10.0, value=1.0, step=0.1, label="Repetition penalty strength (γ)",
+                visible=False, info="Penalize expected repeated bigram transitions; EOS/EOT are exempt. At 0, matches PMI Viterbi.",
+            )
+            if SHOW_BIGRAM_EVALUATION_CONTROLS and BIGRAM_ENABLED:
+                with gr.Group():
+                    bigram_eos_delay_penalty = gr.Number(value=BIGRAM_ENDING_DELAY_STRENGTH, minimum=1,
+                        label="Bigram ending delay strength",
+                        info="With Delay EOS/EOT enabled, discourages ending predictions early and fades to 1 at the final block step. Set 1 for retention-only delay.")
+                    bigram_model_path = gr.Textbox(value=BIGRAM_PATH, label="Bigram checkpoint path")
+                    with gr.Accordion("Reproducible evaluation", open=False):
+                        generation_seed = gr.Number(value=-1, minimum=-1, maximum=2**31-1, precision=0, label="Seed (-1 for random)")
+                        measure_decoding = gr.Checkbox(value=False, label="Measure decoding time and changes from argmax")
             revisable_tokens = gr.Checkbox(
                 value=False,
                 label="Allow revising retained tokens",
@@ -267,6 +298,10 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 label="Early stopping",
                 info="Converge a block after two matching answers; stop all remaining blocks when EOS/EOT is finalized with a complete preceding answer.",
             )
+            adaptive_parallel_decoding = gr.Checkbox(
+                value=False, label="Adaptive Parallel Decoding (APD)",
+                info="Commit confident tokens together and finish blocks as soon as all positions are resolved.",
+            )
     footer = "The first request may take longer while the model is loaded."
     if SHOW_REPOSITORY_LINKS:
         footer += f" [Model card](https://huggingface.co/{MODEL_REPO_ID})"
@@ -283,10 +318,11 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
     bigram_remasking_confidence = gr.Textbox(value=BIGRAM_REMASKING_CONFIDENCE, visible=False)
     pmi_min_count = gr.Number(value=PMI_MIN_COUNT, precision=0, visible=False)
     pmi_clip = gr.Number(value=PMI_CLIP, visible=False)
-    bigram_eos_delay_penalty = gr.Number(value=BIGRAM_ENDING_DELAY_STRENGTH, visible=False)
-    bigram_model_path = gr.Textbox(value=BIGRAM_PATH, visible=False)
-    generation_seed = gr.Number(value=-1, precision=0, visible=False)
-    measure_decoding = gr.Checkbox(value=False, visible=False)
+    if not (SHOW_BIGRAM_EVALUATION_CONTROLS and BIGRAM_ENABLED):
+        bigram_eos_delay_penalty = gr.Number(value=BIGRAM_ENDING_DELAY_STRENGTH, visible=False)
+        bigram_model_path = gr.Textbox(value=BIGRAM_PATH, visible=False)
+        generation_seed = gr.Number(value=-1, precision=0, visible=False)
+        measure_decoding = gr.Checkbox(value=False, visible=False)
 
     inputs = [
         question,
@@ -311,17 +347,30 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
         measure_decoding,
         bigram_eos_delay_penalty,
         bigram_remasking_confidence,
+        repetition_penalty_strength,
+        adaptive_parallel_decoding,
     ]
-    def update_ar_controls(strategy):
+    def update_ar_controls(strategy, apd=False):
         """Expose AR-only controls and clear revision when another strategy is selected."""
-        enabled = strategy == "Autoregressive-confidence"
+        enabled = strategy == "Autoregressive-confidence" and not apd
         return gr.update(interactive=enabled, value=False), gr.update(interactive=enabled)
 
     remasking_strategy.change(
         update_ar_controls,
-        inputs=[remasking_strategy],
+        inputs=[remasking_strategy, adaptive_parallel_decoding],
         outputs=[revisable_tokens, ar_check_interval],
         queue=False,
+    )
+    adaptive_parallel_decoding.change(
+        update_ar_controls, inputs=[remasking_strategy, adaptive_parallel_decoding],
+        outputs=[revisable_tokens, ar_check_interval], queue=False,
+    )
+    def update_repetition_control(strategy):
+        return gr.update(visible=strategy == "PMI Viterbi + Repetition Penalty")
+
+    remasking_strategy.change(
+        update_repetition_control, inputs=[remasking_strategy],
+        outputs=[repetition_penalty_strength], queue=False,
     )
     run_event = run.click(show_loading, outputs=[status, trajectory], queue=False)
     run_event.then(generate, inputs=inputs, outputs=[status, trajectory])

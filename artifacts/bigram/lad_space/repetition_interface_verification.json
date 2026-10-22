@@ -1,0 +1,78 @@
+{
+  "runtime": {
+    "stage": "RUNNING",
+    "hardware": {
+      "current": "zero-a10g",
+      "requested": "zero-a10g"
+    },
+    "gcTimeout": 172800,
+    "replicas": {
+      "current": 1,
+      "requested": 1
+    },
+    "devMode": false,
+    "domains": [
+      {
+        "domain": "ruurd-lad.hf.space",
+        "stage": "READY"
+      }
+    ],
+    "sha": "a74c9563d79be7d89f59d6ec31d0e7964c3bdbbf"
+  },
+  "new_controls": [
+    {
+      "value": 2.0,
+      "__type__": "update"
+    },
+    {
+      "value": 16,
+      "__type__": "update"
+    },
+    {
+      "interactive": false,
+      "__type__": "update"
+    },
+    {
+      "visible": true,
+      "__type__": "update"
+    }
+  ],
+  "original_controls": [
+    {
+      "value": 2.0,
+      "__type__": "update"
+    },
+    {
+      "value": 16,
+      "__type__": "update"
+    },
+    {
+      "interactive": false,
+      "__type__": "update"
+    },
+    {
+      "visible": false,
+      "__type__": "update"
+    }
+  ],
+  "sampling_controls": [
+    {
+      "value": 1.0,
+      "__type__": "update"
+    },
+    {
+      "value": 3,
+      "__type__": "update"
+    },
+    {
+      "interactive": true,
+      "__type__": "update"
+    },
+    {
+      "visible": false,
+      "__type__": "update"
+    }
+  ],
+  "gamma_default": 1.0,
+  "context_minimum": 8
+}

@@ -1,0 +1,8 @@
+{
+  "tokenizer": "meta-llama/Llama-3.2-3B",
+  "tokenizer_sha256": "280b8d85c3f201fd3160faae007b3483ddfec41a7f8b257f8fd8a8b0329f1998",
+  "tokenizer_vocab": 128256,
+  "scorer_vocab": 128256,
+  "scorer": "artifacts/bigram/llama.pt",
+  "compatible": true
+}

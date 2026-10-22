@@ -1,0 +1,20 @@
+{
+  "settings": {
+    "question": "What do you know about Amsterdam?",
+    "multiturn_on": false,
+    "max_it": 8,
+    "pause_length": 0,
+    "eos_bias": 0,
+    "sharpness": 1,
+    "noise_start": 0,
+    "use_confidence_noising": false,
+    "use_permanent_unmasking": false,
+    "noise_clipping": 0.01,
+    "top_p": 1,
+    "top_k": 3,
+    "added_tokens": 64,
+    "context_window": 128
+  },
+  "elapsed_seconds": 5.681525624997448,
+  "output": "<b>Final Output (41 tokens after 8 iterations)</b><br><div style='white-space: pre-wrap; line-height:1.8'>Amsterdam is a city in the country of the Netherlands located in Europe. It is known for its can, art, history history history, art art, culture,,,, and and architecture.</div>"
+}

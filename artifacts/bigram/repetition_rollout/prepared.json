@@ -1,0 +1,16 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "parent_revision": "e1475f050f46925764cc18a483abb31f6fc29b1e",
+    "private": false,
+    "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/repetition_rollout/bundles/byod-gemma-2-9b",
+    "model": "Ruurd/BYOD-Gemma-2-9B"
+  },
+  {
+    "space": "Ruurd/llada-8b-instruct",
+    "parent_revision": "0904e3f97dd50eb51ed96a27fabe7f93ca1c19dc",
+    "private": false,
+    "bundle": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/repetition_rollout/bundles/llada-8b-instruct",
+    "model": "GSAI-ML/LLaDA-8B-Instruct"
+  }
+]

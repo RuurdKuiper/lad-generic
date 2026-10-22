@@ -1,0 +1,70 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "revision": "e1475f050f46925764cc18a483abb31f6fc29b1e",
+    "case": "original",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 4,
+      "block_length": 16,
+      "temperature": 2.0,
+      "top_k": 16,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": true,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true
+    },
+    "elapsed_seconds": 6.013291374998516,
+    "text": "Amsterdam is the capital city of the Netherlands, Netherlands. It is the city of canals, and canals and canals and canals and canals, and canals.",
+    "status": "Denoising step 4/4 \u00b7 30 output tokens \u00b7 mean confidence 0.296 \u00b7 block 2/2 \u00b7 retained 16 tokens\n\nDecoding metrics: {\"selector_calls\": 4, \"editable_predictions\": 48, \"changed_predictions\": 21, \"changed_fraction\": 0.4375, \"selector_ms\": 180.61325838789344, \"mean_selector_ms\": 45.15331459697336}",
+    "metrics": {
+      "selector_calls": 4,
+      "editable_predictions": 48,
+      "changed_predictions": 21,
+      "changed_fraction": 0.4375,
+      "selector_ms": 180.61325838789344,
+      "mean_selector_ms": 45.15331459697336
+    }
+  },
+  {
+    "space": "Ruurd/llada-8b-instruct",
+    "revision": "0904e3f97dd50eb51ed96a27fabe7f93ca1c19dc",
+    "case": "original",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 4,
+      "block_length": 16,
+      "temperature": 2.0,
+      "top_k": 16,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": true,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true
+    },
+    "elapsed_seconds": 3.6300100840016967,
+    "text": "Amsterdam is the city of the city of the city of the city of the city of the city of the city of the city of the city.",
+    "status": "Denoising step 4/4 \u00b7 30 output tokens \u00b7 mean confidence 0.906 \u00b7 block 2/2 \u00b7 retained 16 tokens\n\nDecoding metrics: {\"selector_calls\": 4, \"editable_predictions\": 48, \"changed_predictions\": 14, \"changed_fraction\": 0.2916666666666667, \"selector_ms\": 152.33000181615353, \"mean_selector_ms\": 38.08250045403838}",
+    "metrics": {
+      "selector_calls": 4,
+      "editable_predictions": 48,
+      "changed_predictions": 14,
+      "changed_fraction": 0.2916666666666667,
+      "selector_ms": 152.33000181615353,
+      "mean_selector_ms": 38.08250045403838
+    }
+  }
+]

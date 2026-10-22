@@ -1,0 +1,96 @@
+{
+  "space": "Ruurd/lad",
+  "revision": "a74c9563d79be7d89f59d6ec31d0e7964c3bdbbf",
+  "runs": [
+    {
+      "name": "reference_pmi",
+      "settings": {
+        "question": "What do you know about Amsterdam?",
+        "multiturn_on": false,
+        "max_it": 4,
+        "pause_length": 0,
+        "eos_bias": 0,
+        "sharpness": 1,
+        "noise_start": 0.0,
+        "use_confidence_noising": false,
+        "use_permanent_unmasking": false,
+        "noise_clipping": 0.01,
+        "top_p": 1,
+        "top_k": 16,
+        "added_tokens": 64,
+        "context_window": 128,
+        "decoding_strategy": "PMI Viterbi",
+        "temperature": 2.0,
+        "repetition_penalty_strength": 1.0
+      },
+      "elapsed_seconds": 7.131351124990033,
+      "prediction_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "output": "<b>Final Output (51 tokens after 4 iterations)</b><br><div style='white-space: pre-wrap; line-height:1.8'>Amsterdam is the capital city in the city of the Netherlands, Netherlands, Netherlands, Netherlands, Netherlands, and architecture, and architecture, and architecture, and architecture, and architecture, and architecture, Amsterdam, Amsterdam, Amsterdam, Amsterdam, and architecture.</div>"
+    },
+    {
+      "name": "repetition_zero",
+      "settings": {
+        "question": "What do you know about Amsterdam?",
+        "multiturn_on": false,
+        "max_it": 4,
+        "pause_length": 0,
+        "eos_bias": 0,
+        "sharpness": 1,
+        "noise_start": 0.0,
+        "use_confidence_noising": false,
+        "use_permanent_unmasking": false,
+        "noise_clipping": 0.01,
+        "top_p": 1,
+        "top_k": 16,
+        "added_tokens": 64,
+        "context_window": 128,
+        "decoding_strategy": "PMI Viterbi + Repetition Penalty",
+        "temperature": 2.0,
+        "repetition_penalty_strength": 0.0
+      },
+      "elapsed_seconds": 1.0199745839927346,
+      "prediction_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "output": "<b>Final Output (51 tokens after 4 iterations)</b><br><div style='white-space: pre-wrap; line-height:1.8'>Amsterdam is the capital city in the city of the Netherlands, Netherlands, Netherlands, Netherlands, Netherlands, and architecture, and architecture, and architecture, and architecture, and architecture, and architecture, Amsterdam, Amsterdam, Amsterdam, Amsterdam, and architecture.</div>"
+    },
+    {
+      "name": "repetition_one",
+      "settings": {
+        "question": "What do you know about Amsterdam?",
+        "multiturn_on": false,
+        "max_it": 4,
+        "pause_length": 0,
+        "eos_bias": 0,
+        "sharpness": 1,
+        "noise_start": 0.0,
+        "use_confidence_noising": false,
+        "use_permanent_unmasking": false,
+        "noise_clipping": 0.01,
+        "top_p": 1,
+        "top_k": 16,
+        "added_tokens": 64,
+        "context_window": 128,
+        "decoding_strategy": "PMI Viterbi + Repetition Penalty",
+        "temperature": 2.0,
+        "repetition_penalty_strength": 1.0
+      },
+      "elapsed_seconds": 0.8772247910092119,
+      "prediction_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "output": "<b>Final Output (50 tokens after 4 iterations)</b><br><div style='white-space: pre-wrap; line-height:1.8'>Amsterdam is the capital city in the city of the Netherlands, Netherlands, Netherlands, Netherlands, Netherlands, and architecture, and architecture, and architecture, and architecture, and architecture, and architecture, Amsterdam, Amsterdam, Amsterdam, Amsterdam, Amsterdam.</div>"
+    }
+  ]
+}

@@ -1,0 +1,531 @@
+{
+  "named_endpoints": {
+    "/on_generate": {
+      "parameters": [
+        {
+          "label": "User Question",
+          "parameter_name": "question",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Multi-turn dialog",
+          "parameter_name": "multiturn_on",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Number of iterations: \u2191 = more iterations",
+          "parameter_name": "max_it",
+          "parameter_has_default": true,
+          "parameter_default": 64,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1 and 512"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1
+        },
+        {
+          "label": "Pause between iterations \u2191 = longer pause",
+          "parameter_name": "pause_length",
+          "parameter_has_default": true,
+          "parameter_default": 0.01,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0 and 5"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0
+        },
+        {
+          "label": "Generation length: \u2191 = more output tokens by decreasing eos token probability",
+          "parameter_name": "eos_bias",
+          "parameter_has_default": true,
+          "parameter_default": 0.0,
+          "type": {
+            "type": "number",
+            "description": "numeric value between -5.0 and 5.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": -5.0
+        },
+        {
+          "label": "Noise decay sharpness: \u2193 = more noise in later iterations",
+          "parameter_name": "sharpness",
+          "parameter_has_default": true,
+          "parameter_default": 1.0,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1.0 and 20.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1.0
+        },
+        {
+          "label": "Noise start fraction: \u2191 = more noise",
+          "parameter_name": "noise_start",
+          "parameter_has_default": true,
+          "parameter_default": 0.5,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0.0 and 1.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0.0
+        },
+        {
+          "label": "Use confidence-guided noising",
+          "parameter_name": "use_confidence_noising",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Use permanent unmasking",
+          "parameter_name": "use_permanent_unmasking",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Noise clipping: \u2193 = more confidence guidance",
+          "parameter_name": "noise_clipping",
+          "parameter_has_default": true,
+          "parameter_default": 0.01,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0.01 and 1.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0.01
+        },
+        {
+          "label": "Top-p: \u2191 = more random answers",
+          "parameter_name": "top_p",
+          "parameter_has_default": true,
+          "parameter_default": 1.0,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0.0 and 1.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0.0
+        },
+        {
+          "label": "Top-k: \u2191 = more random answers",
+          "parameter_name": "top_k",
+          "parameter_has_default": true,
+          "parameter_default": 3,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1 and 1000"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1
+        },
+        {
+          "label": "Semi-autoregressive generation: number of added tokens per iteration",
+          "parameter_name": "added_tokens",
+          "parameter_has_default": true,
+          "parameter_default": 256,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1 and 256"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1
+        },
+        {
+          "label": "Context window: \u2191 = longer sequences",
+          "parameter_name": "context_window",
+          "parameter_has_default": true,
+          "parameter_default": 256,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 128 and 2048"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 128
+        }
+      ],
+      "returns": [
+        {
+          "label": "Output",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Html"
+        }
+      ],
+      "description": ""
+    },
+    "/on_generate_1": {
+      "parameters": [
+        {
+          "label": "User Question",
+          "parameter_name": "question",
+          "parameter_has_default": false,
+          "parameter_default": null,
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Textbox",
+          "example_input": "Hello!!"
+        },
+        {
+          "label": "Multi-turn dialog",
+          "parameter_name": "multiturn_on",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Number of iterations: \u2191 = more iterations",
+          "parameter_name": "max_it",
+          "parameter_has_default": true,
+          "parameter_default": 64,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1 and 512"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1
+        },
+        {
+          "label": "Pause between iterations \u2191 = longer pause",
+          "parameter_name": "pause_length",
+          "parameter_has_default": true,
+          "parameter_default": 0.01,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0 and 5"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0
+        },
+        {
+          "label": "Generation length: \u2191 = more output tokens by decreasing eos token probability",
+          "parameter_name": "eos_bias",
+          "parameter_has_default": true,
+          "parameter_default": 0.0,
+          "type": {
+            "type": "number",
+            "description": "numeric value between -5.0 and 5.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": -5.0
+        },
+        {
+          "label": "Noise decay sharpness: \u2193 = more noise in later iterations",
+          "parameter_name": "sharpness",
+          "parameter_has_default": true,
+          "parameter_default": 1.0,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1.0 and 20.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1.0
+        },
+        {
+          "label": "Noise start fraction: \u2191 = more noise",
+          "parameter_name": "noise_start",
+          "parameter_has_default": true,
+          "parameter_default": 0.5,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0.0 and 1.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0.0
+        },
+        {
+          "label": "Use confidence-guided noising",
+          "parameter_name": "use_confidence_noising",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Use permanent unmasking",
+          "parameter_name": "use_permanent_unmasking",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        },
+        {
+          "label": "Noise clipping: \u2193 = more confidence guidance",
+          "parameter_name": "noise_clipping",
+          "parameter_has_default": true,
+          "parameter_default": 0.01,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0.01 and 1.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0.01
+        },
+        {
+          "label": "Top-p: \u2191 = more random answers",
+          "parameter_name": "top_p",
+          "parameter_has_default": true,
+          "parameter_default": 1.0,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 0.0 and 1.0"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 0.0
+        },
+        {
+          "label": "Top-k: \u2191 = more random answers",
+          "parameter_name": "top_k",
+          "parameter_has_default": true,
+          "parameter_default": 3,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1 and 1000"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1
+        },
+        {
+          "label": "Semi-autoregressive generation: number of added tokens per iteration",
+          "parameter_name": "added_tokens",
+          "parameter_has_default": true,
+          "parameter_default": 256,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 1 and 256"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 1
+        },
+        {
+          "label": "Context window: \u2191 = longer sequences",
+          "parameter_name": "context_window",
+          "parameter_has_default": true,
+          "parameter_default": 256,
+          "type": {
+            "type": "number",
+            "description": "numeric value between 128 and 2048"
+          },
+          "python_type": {
+            "type": "float",
+            "description": ""
+          },
+          "component": "Slider",
+          "example_input": 128
+        }
+      ],
+      "returns": [
+        {
+          "label": "Output",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Html"
+        }
+      ],
+      "description": ""
+    },
+    "/on_clear": {
+      "parameters": [],
+      "returns": [
+        {
+          "label": "Output",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Html"
+        }
+      ],
+      "description": ""
+    },
+    "/on_toggle": {
+      "parameters": [
+        {
+          "label": "Multi-turn dialog",
+          "parameter_name": "multiturn_on",
+          "parameter_has_default": true,
+          "parameter_default": false,
+          "type": {
+            "type": "boolean"
+          },
+          "python_type": {
+            "type": "bool",
+            "description": ""
+          },
+          "component": "Checkbox",
+          "example_input": true
+        }
+      ],
+      "returns": [
+        {
+          "label": "Output",
+          "type": {
+            "type": "string"
+          },
+          "python_type": {
+            "type": "str",
+            "description": ""
+          },
+          "component": "Html"
+        }
+      ],
+      "description": ""
+    }
+  },
+  "unnamed_endpoints": {}
+}

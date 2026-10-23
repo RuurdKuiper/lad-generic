@@ -1,0 +1,31 @@
+{
+  "device": "cpu",
+  "length": 128,
+  "top_k": 16,
+  "repeats": 30,
+  "threads": 1,
+  "bigram_edge_bytes": 130048,
+  "trigram_additional_bytes": 2064384,
+  "methods": {
+    "bigram_viterbi": {
+      "median_ms": 2.611853997223079,
+      "minimum_ms": 2.3101669794414192,
+      "maximum_ms": 3.516750002745539
+    },
+    "trigram_viterbi": {
+      "median_ms": 5.45699949725531,
+      "minimum_ms": 4.9786250165198,
+      "maximum_ms": 6.7407910246402025
+    },
+    "bigram_sample": {
+      "median_ms": 5.7047915033763275,
+      "minimum_ms": 5.505999986780807,
+      "maximum_ms": 6.088624999392778
+    },
+    "trigram_sample": {
+      "median_ms": 7.900895507191308,
+      "minimum_ms": 7.574999995995313,
+      "maximum_ms": 8.398374979151413
+    }
+  }
+}

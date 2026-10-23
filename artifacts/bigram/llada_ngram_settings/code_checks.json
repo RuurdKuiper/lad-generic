@@ -1,0 +1,3638 @@
+{
+  "sum_even/4/bigram": {
+    "sha256": "4645d2296c1df900ecc3496e96933131b776ef13064050ed663c23dc94d4f66f",
+    "code": "def sum_even(nums):\n    if not nums:\n        return 0\n    return sum % x % x x % % 200)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 4)",
+    "score": 0
+  },
+  "sum_even/4/bigram_rep": {
+    "sha256": "83fefb4ed144256c5099b78636e85ebf39301137460a893db38d625c45dddb9c",
+    "code": "def sum_even(nums):\n    if not nums:\n        return 0\n    return sum % x % x % % % 200)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 4)",
+    "score": 0
+  },
+  "sum_even/4/trigram": {
+    "sha256": "02c679efed644d6de1f6bea7ae34dfa82ed37abed6d7e3118ff9e314c44893a1",
+    "code": "def sum_even(nums):\n    if not nums:\n        return 0\n    return sum % % % % % % 2 == 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 4)",
+    "score": 0
+  },
+  "sum_even/4/trigram_rep": {
+    "sha256": "02c679efed644d6de1f6bea7ae34dfa82ed37abed6d7e3118ff9e314c44893a1",
+    "code": "def sum_even(nums):\n    if not nums:\n        return 0\n    return sum % % % % % % 2 == 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 4)",
+    "score": 0
+  },
+  "sum_even/4/confidence": {
+    "sha256": "2346ae82c6a223a7a3ae343b1cc12503aecf9bcef1cbe5de62b633f01862c28a",
+    "code": "def sum_even(nums):\n    return not: x x in  nums if    x  %0 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 2)",
+    "score": 0
+  },
+  "balanced/4/trigram_rep": {
+    "sha256": "454accf87c413ad86104015637f8b568af87134fbf4d6ec9f1323be23c0f688e",
+    "code": "def balanced_b):\n    stack = stack = []\n    for char in s:\n        if char == '(':\n            if stack:\n            if stack:\n                if stack:\n                if stack:\n                if stack:\n                    if stack:\n                    if stack:\n                    if stack:\n                    if stack:\n                    if stack:\n                        if stack:\n                        if stack:\n                        if stack:\n                        if stack:\n                            if stack:\n                            return stack == '':\n            stack.append(char)\n    return len(stack) == len()",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 1)",
+    "score": 0
+  },
+  "balanced/4/confidence": {
+    "sha256": "66568bb370340dd8da4d0035cb76bd6024c38bd459deb9808dc1babeeb1bf373",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '{[]\n            stack stack stack stack\n        elif elif elif elif elif elif elif                       stack stack stack stack stack stack stack stack stack\n not stack stack stack stack stack",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unterminated string literal (detected at line 4) (<unknown>, line 4)",
+    "score": 0
+  },
+  "balanced/4/bigram": {
+    "sha256": "21b4d8d49e449be873fa483b5ec40a44398ef6700c88fb83aa96ca5fb738f337",
+    "code": "def balanced(s):\n    stack = []\n    ')': ' ' ' ']': '['', '': '}'\n\n    for char in s:\n        if stack:\n            if stack.pop(char)\n        stack:\n            stack != stack.pop():\n            return False\n        return False\n    return True",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ']' (<unknown>, line 3)",
+    "score": 0
+  },
+  "balanced/4/bigram_rep": {
+    "sha256": "4ca6e3e470d8f6bc3ede24433a87086fb51c5905872884d114af8355ed92bfe3",
+    "code": "def balanced(s):\n    stack = []\n    ')': ' ' ' ']': '['', '': '':\n\n    for char in s:\n        if stack:\n            stack.pop(char)\n        elif stack == stack != stack != stack[char]:\n            return False\n\n    \n    return True",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ']' (<unknown>, line 3)",
+    "score": 0
+  },
+  "balanced/4/trigram": {
+    "sha256": "f1968e3bbb8b987d15f836308390e22d12af1b89153a2869916970e68020f944",
+    "code": "def balanced_b):\n    stack = stack = []\n    for char in s:\n        if char == '(':\n            if stack:\n            if stack:\n            if stack:\n            if stack:\n            if stack:\n            if stack:\n        stack = stack:\n            if stack:\n            if stack:\n            if stack:\n        stack = stack:\n            if stack:\n            if stack:\n            if stack:\n        stack = stack:\n            if stack:\n            stack.pop()\n    return len(stack) == len(s",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 1)",
+    "score": 0
+  },
+  "sum_even/128/bigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/128/trigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/128/trigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/128/confidence": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/128/bigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "balanced/128/confidence": {
+    "sha256": "909cb13d7e7ba58a856df812c06c1e2fed0ff432eba48aca4e02e8c75c145a16",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')]':\n            if not stack:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/128/bigram": {
+    "sha256": "909cb13d7e7ba58a856df812c06c1e2fed0ff432eba48aca4e02e8c75c145a16",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')]':\n            if not stack:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/128/bigram_rep": {
+    "sha256": "909cb13d7e7ba58a856df812c06c1e2fed0ff432eba48aca4e02e8c75c145a16",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')]':\n            if not stack:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/128/trigram": {
+    "sha256": "348767d3695e316cc72b71a3056bb29414d14711e8beaa485bb2e4e591281c87",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')}':\n            if not stack:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/128/trigram_rep": {
+    "sha256": "348767d3695e316cc72b71a3056bb29414d14711e8beaa485bb2e4e591281c87",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')}':\n            if not stack:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "sum_even/8/trigram": {
+    "sha256": "933eb9d051f7aff352efcea0f83cfdc7105d5a6bdb95e04010c4aa435d0d576b",
+    "code": "def sum_even(nums):\n    return sum(x for x in nums) if x % 2 == 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 2)",
+    "score": 0
+  },
+  "sum_even/8/trigram_rep": {
+    "sha256": "933eb9d051f7aff352efcea0f83cfdc7105d5a6bdb95e04010c4aa435d0d576b",
+    "code": "def sum_even(nums):\n    return sum(x for x in nums) if x % 2 == 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 2)",
+    "score": 0
+  },
+  "sum_even/8/confidence": {
+    "sha256": "b59c8954165114fbed47f618978113d1af1cf45450f7534559ec1ae0b270b711",
+    "code": "def sum_even(nums):\n    return not sum else x for in nums if x% 2 ))",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 2)",
+    "score": 0
+  },
+  "sum_even/8/bigram": {
+    "sha256": "e6c1a0fc8ae55d6c13ca4e7c2b7e4abdb448b3b78b17423aedfefc1993b2d796",
+    "code": "def sum_even(nums):\n    return sum(x for x in nums) if x % 2 == 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 2)",
+    "score": 0
+  },
+  "sum_even/8/bigram_rep": {
+    "sha256": "e6c1a0fc8ae55d6c13ca4e7c2b7e4abdb448b3b78b17423aedfefc1993b2d796",
+    "code": "def sum_even(nums):\n    return sum(x for x in nums) if x % 2 == 0)",
+    "total": 11,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unmatched ')' (<unknown>, line 2)",
+    "score": 0
+  },
+  "balanced/8/bigram": {
+    "sha256": "c531999c78372302834567116590e9ba2f7549f7d53fb4bdf9406edd6b0bf4a2",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({(':\n            stack.append(char)\n        elif char in ')}]':\n            if not stack:\n                return False\n            stack.pop()\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 10,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/8/bigram_rep": {
+    "sha256": "c531999c78372302834567116590e9ba2f7549f7d53fb4bdf9406edd6b0bf4a2",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({(':\n            stack.append(char)\n        elif char in ')}]':\n            if not stack:\n                return False\n            stack.pop()\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 10,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/8/trigram": {
+    "sha256": "a7dff867f9f9253aa1afc08c41f2e7f7b4707a699819ac53853efb151fc08f29",
+    "code": "def balanced(s):\n    stack = stack = []\n    for char in s:\n        if char in '({[':\n            stack.append(char)\n        elif char in ')}':\n            if not stack or stack.pop() != char: return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/8/trigram_rep": {
+    "sha256": "135ba85b053fce158610d630291ee5e3454129436431588efb6f4de7a710b0dd",
+    "code": "def balanced(s):\n    stack = stack = []\n    for char in s:\n        if char in '({(':\n            stack.append(char)\n        elif char in ')}]':\n            if not stack:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/8/confidence": {
+    "sha256": "73238676eafd585eb991ec8d127dc72a5840547e9607570eeb59f0c099a87919",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([:\n            stack stack(char(char))\n        elif char in '}]:\n            if stack: stack.pop() stack\n\n    return stack stack return stack stack stack",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unterminated string literal (detected at line 4) (<unknown>, line 4)",
+    "score": 0
+  },
+  "sum_even/64/trigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/64/confidence": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/64/bigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/64/bigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/64/trigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "balanced/64/bigram_rep": {
+    "sha256": "2c739cafc0823632797496eaba3b7d1e7b4dd274bb60eed42e1a301a823888df",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')}':\n            if stack.pop() != char:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: pop from empty list"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/64/trigram": {
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([{':\n            stack.append(char)\n        elif char in ')]}':\n            if not stack or char != stack.pop():\n                return False\n    return True",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/64/trigram_rep": {
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([{':\n            stack.append(char)\n        elif char in ')]}':\n            if not stack or char != stack.pop():\n                return False\n    return True",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/64/confidence": {
+    "sha256": "1822497ed5d94c6092a0b8470a8522c1196c0bbaa4f94e8e537bbb5df29f6a91",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([':\n            stack.append(char)\n        elif char in ')]}':\n            if stack.pop() != char:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: pop from empty list"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/64/bigram": {
+    "sha256": "2c739cafc0823632797496eaba3b7d1e7b4dd274bb60eed42e1a301a823888df",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')}':\n            if stack.pop() != char:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: pop from empty list"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "sum_even/16/confidence": {
+    "sha256": "ac21011c2691b5cabe8d4a13d66c8141a8d3f6dcf784da818956c53e3f94c7ff",
+    "code": "def sum_even(nums):\n    return sum(x for x in nums if x % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/16/bigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/16/bigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/16/trigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/16/trigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "balanced/16/trigram": {
+    "sha256": "65cfde02d4129eb943507736018c30e79a19739e2c84e13773f80239d97ad6f0",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([{':\n            stack.append(char)\n        elif char in ')}':\n            if not stack:\n                return False\n    return True",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 10,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/16/trigram_rep": {
+    "sha256": "65cfde02d4129eb943507736018c30e79a19739e2c84e13773f80239d97ad6f0",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([{':\n            stack.append(char)\n        elif char in ')}':\n            if not stack:\n                return False\n    return True",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 10,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/16/confidence": {
+    "sha256": "ffb1f41a648cf8d6b16677d66526437e6827a465b94be34e4807959301b14ea6",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in '}]':\n            if not stack or stack.pop() != char:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/16/bigram": {
+    "sha256": "65562f71e51273b48d3c55fffc58a301dcdee468a3fc0f27cbe7168d81bdff85",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char.lower())\n        elif char in ')]':\n            if not stack or stack.pop() != char.strip(): return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/16/bigram_rep": {
+    "sha256": "65562f71e51273b48d3c55fffc58a301dcdee468a3fc0f27cbe7168d81bdff85",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char.lower())\n        elif char in ')]':\n            if not stack or stack.pop() != char.strip(): return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 9,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "sum_even/32/bigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/32/bigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/32/trigram": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/32/trigram_rep": {
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "code": "def sum_even(nums):\n    return sum(num for num in nums if num % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "sum_even/32/confidence": {
+    "sha256": "ac21011c2691b5cabe8d4a13d66c8141a8d3f6dcf784da818956c53e3f94c7ff",
+    "code": "def sum_even(nums):\n    return sum(x for x in nums if x % 2 == 0)",
+    "total": 11,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 11,
+    "all_pass": true,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "score": 3
+  },
+  "balanced/32/trigram_rep": {
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([{':\n            stack.append(char)\n        elif char in ')}':\n            if stack[-1] != char:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/32/confidence": {
+    "sha256": "f0bca2778b28c8068ff4f28e6e258acc8df390b1d32e93b8e58be2f28968ff3c",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({:\n            stack.append(char(char))\n        elif char in '}]':\n            return not stack stack.pop() != char\n    return not stack",
+    "total": 16,
+    "syntax_valid": false,
+    "executable": false,
+    "passed": 0,
+    "all_pass": false,
+    "error": "unterminated string literal (detected at line 4) (<unknown>, line 4)",
+    "score": 0
+  },
+  "balanced/32/bigram": {
+    "sha256": "d8054b7a943a562c5d01c0b652756bba1cd90043208b0bb8325cb7ce1c1225ca",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')}':\n            if stack[-1] != char:\n                return False\n    return stack == []",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/32/bigram_rep": {
+    "sha256": "d8054b7a943a562c5d01c0b652756bba1cd90043208b0bb8325cb7ce1c1225ca",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '({':\n            stack.append(char)\n        elif char in ')}':\n            if stack[-1] != char:\n                return False\n    return stack == []",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  },
+  "balanced/32/trigram": {
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "code": "def balanced(s):\n    stack = []\n    for char in s:\n        if char in '([{':\n            stack.append(char)\n        elif char in ')}':\n            if stack[-1] != char:\n                return False\n    return not stack",
+    "total": 16,
+    "syntax_valid": true,
+    "executable": true,
+    "passed": 8,
+    "all_pass": false,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "score": 2
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+  "settings": {
+    "question": "What do you know about Amsterdam?",
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 32,
+    "num_steps": 16,
+    "block_length": 32,
+    "temperature": 1.0,
+    "top_k": 100,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "remasking_strategy": "PMI Viterbi + Repetition Penalty",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "delay_eos_eot": false,
+    "early_stopping": false,
+    "generation_seed": 1234,
+    "measure_decoding": true,
+    "repetition_penalty_strength": 1.0,
+    "adaptive_parallel_decoding": false,
+    "bigram_weight": 1.0,
+    "repetition_risk_penalty": true,
+    "decay_repetition_penalty": true,
+    "apd_aggressiveness": 1.0,
+    "ngram_guidance": "Original bigram"
+  },
+  "text": "Amsterdam is the capital and largest city of the Netherlands. It is known for its picturesque canals, historic architecture, art museums, and vibrant nightlife.",
+  "status": "Denoising step 16/16 \u00b7 30 output tokens \u00b7 mean confidence 0.740 \u00b7 retained 30 tokens\n\nInference metrics: {\"denoising_forward_passes\": 16, \"elapsed_ms\": 1250.4391381517053, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 16, \"editable_predictions\": 272, \"changed_predictions\": 130, \"changed_fraction\": 0.47794117647058826, \"selector_ms\": 415.5446947552264, \"mean_selector_ms\": 25.97154342220165}"
+}

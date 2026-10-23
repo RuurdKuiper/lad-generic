@@ -1,0 +1,76 @@
+[
+  {
+    "strategy": "Confidence-guided",
+    "revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 64,
+      "num_steps": 8,
+      "block_length": 64,
+      "temperature": 1.0,
+      "top_k": 16,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Confidence-guided",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": true,
+      "bigram_weight": 1.0,
+      "sequence_sampling": true,
+      "repetition_risk_penalty": true,
+      "decay_repetition_penalty": true,
+      "ngram_guidance": "Expanded bigram + trigram",
+      "apd_aggressiveness": 0.5
+    },
+    "inference": {
+      "denoising_forward_passes": 7,
+      "elapsed_ms": 231.73950612545013,
+      "adaptive_parallel_decoding": true
+    },
+    "text": "Isterdam is the capital and largest city of the Netherlands. It is known in its history.",
+    "status": "Denoising step 7/8 \u00b7 19 output tokens \u00b7 mean confidence 0.937 \u00b7 retained 64 tokens \u00b7 APD threshold 0.264 \u00b7 committed 2 \u00b7 forwards 7 \u00b7 block committed\n\nInference metrics: {\"denoising_forward_passes\": 7, \"elapsed_ms\": 231.73950612545013, \"adaptive_parallel_decoding\": true}"
+  },
+  {
+    "strategy": "PMI Viterbi + Repetition Penalty",
+    "revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 64,
+      "num_steps": 8,
+      "block_length": 64,
+      "temperature": 1.0,
+      "top_k": 16,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "PMI Viterbi + Repetition Penalty",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": true,
+      "bigram_weight": 1.0,
+      "sequence_sampling": true,
+      "repetition_risk_penalty": true,
+      "decay_repetition_penalty": true,
+      "ngram_guidance": "Expanded bigram + trigram",
+      "apd_aggressiveness": 0.5
+    },
+    "inference": {
+      "denoising_forward_passes": 6,
+      "elapsed_ms": 409.8570728674531,
+      "adaptive_parallel_decoding": true
+    },
+    "text": "Amsterdam is the capital and largest city of the Netherlands.",
+    "status": "Denoising step 6/8 \u00b7 12 output tokens \u00b7 mean confidence 0.999 \u00b7 retained 64 tokens \u00b7 APD threshold 0.301 \u00b7 committed 7 \u00b7 forwards 6 \u00b7 block committed\n\nInference metrics: {\"denoising_forward_passes\": 6, \"elapsed_ms\": 409.8570728674531, \"adaptive_parallel_decoding\": true}\n\nDecoding metrics: {\"selector_calls\": 6, \"editable_predictions\": 224, \"changed_predictions\": 120, \"changed_fraction\": 0.5357142857142857, \"selector_ms\": 215.86868865415454, \"mean_selector_ms\": 35.978114775692426}"
+  }
+]

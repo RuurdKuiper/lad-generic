@@ -1,0 +1,6 @@
+{
+  "documents": 980000,
+  "tokens": 71088258,
+  "source": "data/lad-training-1m-256-long",
+  "tokenizer_sha256": "280b8d85c3f201fd3160faae007b3483ddfec41a7f8b257f8fd8a8b0329f1998"
+}

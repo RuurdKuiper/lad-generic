@@ -1,0 +1,50 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "owner": "Ruurd",
+    "parent_revision": "7874a818b36345ece4f92ee709ac7bc701eecb94",
+    "revision": "7f2e4155058b31cf79f78c30fcaf255342795415"
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "owner": "Dovelove",
+    "parent_revision": "1e9f8ca749a1ed4f7aadba8ec88d7fa74d3254b4",
+    "revision": "f69698fbe282a0e626dadb29a9157fd94f0f1eec"
+  },
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "owner": "Ruurd",
+    "parent_revision": "4d5a22c6482b3e90f1e343fe700830c776395b1c",
+    "revision": "26b0cafc3c92178b1e8359e9afe5190ee1712e1e"
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "owner": "Dovelove",
+    "parent_revision": "e3bff44190a76599423362d6e0f5122a0d594d40",
+    "revision": "c9a6e0f209513b7fba6f62e3c7a8cc4180fe4a06"
+  },
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "owner": "Ruurd",
+    "parent_revision": "ecbdae84af42161f686472f42978d1002e080342",
+    "revision": "22327463961003496cdfa182a34f43c3dc82be27"
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "owner": "Dovelove",
+    "parent_revision": "f53b664e54c7b3b3e7454946d72ad42888b2f8ef",
+    "revision": "6aa263a22524038e3ce9193d0fac657ab1a9ba73"
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "owner": "Ruurd",
+    "parent_revision": "65b932bfa607d5718f1fb8c25b11d2dacca1e277",
+    "revision": "943b64ed751967a0d37a35d47fd939d59f3290f3"
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "owner": "Dovelove",
+    "parent_revision": "1678cf910234c98c8dee70de3997d977273d972f",
+    "revision": "7958de6aa1fd0dd160a938d0958466116cec5f03"
+  }
+]

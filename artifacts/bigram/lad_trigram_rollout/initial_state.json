@@ -1,0 +1,82 @@
+{
+  "space": "Ruurd/lad",
+  "revision": "a51224e831820c03732595608ddee8c0e7356bc4",
+  "runtime": {
+    "stage": "RUNNING",
+    "hardware": {
+      "current": "zero-a10g",
+      "requested": "zero-a10g"
+    },
+    "gcTimeout": 172800,
+    "replicas": {
+      "current": 1,
+      "requested": 1
+    },
+    "devMode": false,
+    "domains": [
+      {
+        "domain": "ruurd-lad.hf.space",
+        "stage": "READY"
+      }
+    ],
+    "sha": "a51224e831820c03732595608ddee8c0e7356bc4"
+  },
+  "files": {
+    ".gitattributes": {
+      "size": 1519,
+      "sha256": null
+    },
+    ".gitignore": {
+      "size": 829,
+      "sha256": null
+    },
+    "README.md": {
+      "size": 2821,
+      "sha256": null
+    },
+    "app.py": {
+      "size": 19390,
+      "sha256": null
+    },
+    "bigram.json": {
+      "size": 574,
+      "sha256": null
+    },
+    "bigram.pt": {
+      "size": 71774089,
+      "sha256": "541eb793bc404acfb956a8cc36da85cc825857d178885cfc2fbe02b941fc962d"
+    },
+    "infer.py": {
+      "size": 13680,
+      "sha256": null
+    },
+    "lad_decoding.py": {
+      "size": 2257,
+      "sha256": null
+    },
+    "model_config.py": {
+      "size": 790,
+      "sha256": null
+    },
+    "models.py": {
+      "size": 1975,
+      "sha256": null
+    },
+    "requirements.txt": {
+      "size": 156,
+      "sha256": null
+    },
+    "src/diffusion_lm/__init__.py": {
+      "size": 0,
+      "sha256": null
+    },
+    "src/diffusion_lm/bigram.py": {
+      "size": 22257,
+      "sha256": null
+    },
+    "token_probabilities.json": {
+      "size": 4198221,
+      "sha256": null
+    }
+  }
+}

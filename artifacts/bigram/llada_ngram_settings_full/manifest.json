@@ -1,0 +1,2694 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+  "tasks": [
+    {
+      "id": "amsterdam",
+      "category": "open",
+      "prompt": "What do you know about Amsterdam?",
+      "reference": "Amsterdam is the Dutch capital; relevant landmarks include Anne Frank House, Rijksmuseum, Van Gogh Museum, Royal Palace. Avoid Moscow/Greenwich landmark substitutions.",
+      "split": "development"
+    },
+    {
+      "id": "sum_even",
+      "category": "code",
+      "prompt": "Write Python function sum_even(nums) returning the sum of even integers in nums. Handle an empty list. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "expected": 6
+        },
+        {
+          "args": [
+            [
+              -4,
+              -3,
+              -2,
+              -1
+            ]
+          ],
+          "expected": -6
+        },
+        {
+          "args": [
+            [
+              0
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              2,
+              2
+            ]
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            [
+              -2,
+              2
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              3,
+              5,
+              7
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              -10,
+              -9,
+              -8,
+              -7,
+              -6,
+              -5,
+              -4,
+              -3,
+              -2,
+              -1,
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              1000000000,
+              1,
+              2
+            ]
+          ],
+          "expected": 1000000002
+        },
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              -10,
+              10,
+              12
+            ]
+          ],
+          "expected": 12
+        }
+      ],
+      "function": "sum_even",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "algebra",
+      "category": "math",
+      "prompt": "Solve 3(x - 2) + 4 = 2x + 9. Show your steps briefly.",
+      "answers": [
+        11
+      ],
+      "reference": "x = 11; expand to 3x-2=2x+9, then x-2=9.",
+      "split": "development"
+    },
+    {
+      "id": "sky",
+      "category": "open",
+      "prompt": "Why is the sky blue?",
+      "reference": "Rayleigh scattering favors shorter wavelengths; blue scatters more than red, violet more than blue; perception helps explain the blue appearance.",
+      "split": "development"
+    },
+    {
+      "id": "balanced",
+      "category": "code",
+      "prompt": "Write Python function balanced(s) checking balanced parentheses (), brackets [], and braces {}. Ignore other characters. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "()"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "([]{})"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "([)]"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "("
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            ")"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "a(b[c]{d})e"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "(()"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "[()]"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "()[]{}"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "{[()]}"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "[(])"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "())("
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "text only"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "([{}])"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "{[(])}"
+          ],
+          "expected": false
+        }
+      ],
+      "function": "balanced",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "train",
+      "category": "math",
+      "prompt": "A train travels 120 km at 60 km/h and returns the same 120 km at 40 km/h. What is its average speed for the entire trip? Explain briefly.",
+      "answers": [
+        48
+      ],
+      "reference": "240 km divided by (2+3) hours = 48 km/h.",
+      "split": "validation"
+    },
+    {
+      "id": "open_03",
+      "category": "open",
+      "prompt": "How do plants convert sunlight into energy?",
+      "reference": "Light drives conversion of CO2 and water into sugars, releasing oxygen; chlorophyll absorbs light.",
+      "split": "validation"
+    },
+    {
+      "id": "is_palindrome",
+      "category": "code",
+      "prompt": "Write Python function is_palindrome(text) ignoring case and non-alphanumeric characters. Return a boolean. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "a"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "Aa"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "ab"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "A man, a plan, a canal: Panama!"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "race a car"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "12321"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "12a21"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "No lemon, no melon"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "0P"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "!!!"
+          ],
+          "expected": true
+        }
+      ],
+      "function": "is_palindrome",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "fraction_equation",
+      "category": "math",
+      "prompt": "Solve (3x - 2)/4 = (x + 6)/3. Show your steps briefly.",
+      "answers": [
+        6
+      ],
+      "reference": "9x-6=4x+24, so 5x=30 and x=6.",
+      "split": "validation"
+    },
+    {
+      "id": "open_04",
+      "category": "open",
+      "prompt": "What makes a good friend?",
+      "reference": "A coherent discussion of trust, empathy, reliability, respect and mutual support; subjective question.",
+      "split": "development"
+    },
+    {
+      "id": "fibonacci",
+      "category": "code",
+      "prompt": "Write Python function fibonacci(n) returning a list of the first n Fibonacci numbers, starting with 0, 1. For n <= 0 return []. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            -3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "args": [
+            2
+          ],
+          "expected": [
+            0,
+            1
+          ]
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "args": [
+            4
+          ],
+          "expected": [
+            0,
+            1,
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            7
+          ],
+          "expected": [
+            0,
+            1,
+            1,
+            2,
+            3,
+            5,
+            8
+          ]
+        },
+        {
+          "args": [
+            10
+          ],
+          "expected": [
+            0,
+            1,
+            1,
+            2,
+            3,
+            5,
+            8,
+            13,
+            21,
+            34
+          ]
+        }
+      ],
+      "function": "fibonacci",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "discount_tax",
+      "category": "math",
+      "prompt": "An item costs $80 before a 25% discount. A 10% sales tax is then applied to the discounted price. What is the final price? Explain briefly.",
+      "answers": [
+        66
+      ],
+      "reference": "80*0.75*1.10 = 66 dollars.",
+      "split": "development"
+    },
+    {
+      "id": "open_05",
+      "category": "open",
+      "prompt": "Explain how a refrigerator keeps food cold.",
+      "reference": "A refrigerant cycle absorbs heat inside and rejects it outside, using compressor work; does not create cold from nothing.",
+      "split": "validation"
+    },
+    {
+      "id": "deduplicate",
+      "category": "code",
+      "prompt": "Write Python function deduplicate(items) removing duplicates while preserving first occurrence order. Items are hashable. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              3,
+              1,
+              3,
+              2,
+              1
+            ]
+          ],
+          "expected": [
+            3,
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              "b",
+              "a",
+              "b"
+            ]
+          ],
+          "expected": [
+            "b",
+            "a"
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              -1,
+              0,
+              2,
+              -1
+            ]
+          ],
+          "expected": [
+            0,
+            -1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              "x",
+              "y",
+              "z"
+            ]
+          ],
+          "expected": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "args": [
+            [
+              null,
+              null,
+              1
+            ]
+          ],
+          "expected": [
+            null,
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
+          ],
+          "expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "args": [
+            [
+              2,
+              1,
+              2,
+              1,
+              3,
+              3
+            ]
+          ],
+          "expected": [
+            2,
+            1,
+            3
+          ]
+        }
+      ],
+      "function": "deduplicate",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "rectangle",
+      "category": "math",
+      "prompt": "A rectangle has perimeter 34 cm. Its length is 3 cm greater than its width. Find its width and length. Show brief working.",
+      "answers": [
+        7,
+        10
+      ],
+      "reference": "2(w+w+3)=34; width 7 cm, length 10 cm.",
+      "split": "development"
+    },
+    {
+      "id": "open_06",
+      "category": "open",
+      "prompt": "Why do we have different seasons on Earth?",
+      "reference": "Earth axial tilt changes sunlight angle and day length; distance to the Sun is not the cause of ordinary seasons.",
+      "split": "development"
+    },
+    {
+      "id": "binary_search",
+      "category": "code",
+      "prompt": "Write Python function binary_search(nums, target) for sorted nums, returning its index or -1 if absent. Test lists contain no duplicates. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            1
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            0
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            [
+              1,
+              3
+            ],
+            3
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              1,
+              3
+            ],
+            2
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            [
+              -5,
+              -1,
+              0,
+              4,
+              9
+            ],
+            -5
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              -5,
+              -1,
+              0,
+              4,
+              9
+            ],
+            9
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            [
+              -5,
+              -1,
+              0,
+              4,
+              9
+            ],
+            0
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            [
+              2,
+              4,
+              6,
+              8
+            ],
+            8
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              2,
+              4,
+              6,
+              8
+            ],
+            1
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            [
+              2,
+              4,
+              6,
+              8
+            ],
+            10
+          ],
+          "expected": -1
+        }
+      ],
+      "function": "binary_search",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "marbles",
+      "category": "math",
+      "prompt": "A bag contains 5 red, 3 blue and 2 green marbles. One is drawn uniformly at random. What is the probability it is red? Give a fraction and explain briefly.",
+      "answers": [
+        0.5
+      ],
+      "reference": "5/(5+3+2)=5/10=1/2.",
+      "split": "validation"
+    },
+    {
+      "id": "open_07",
+      "category": "open",
+      "prompt": "How does vaccination help protect a population?",
+      "reference": "Vaccination primes immune memory and can reduce disease/transmission; coverage can protect others. Avoid guarantees of universal infection prevention.",
+      "split": "validation"
+    },
+    {
+      "id": "word_counts",
+      "category": "code",
+      "prompt": "Write Python function word_counts(text) returning a dictionary of word frequencies. Split on whitespace and ignore case. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "  "
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "Hi"
+          ],
+          "expected": {
+            "hi": 1
+          }
+        },
+        {
+          "args": [
+            "Hi hi HI"
+          ],
+          "expected": {
+            "hi": 3
+          }
+        },
+        {
+          "args": [
+            "a b a"
+          ],
+          "expected": {
+            "a": 2,
+            "b": 1
+          }
+        },
+        {
+          "args": [
+            "red\nblue\tred"
+          ],
+          "expected": {
+            "red": 2,
+            "blue": 1
+          }
+        },
+        {
+          "args": [
+            "Hello, hello"
+          ],
+          "expected": {
+            "hello,": 1,
+            "hello": 1
+          }
+        },
+        {
+          "args": [
+            "x  y   x"
+          ],
+          "expected": {
+            "x": 2,
+            "y": 1
+          }
+        }
+      ],
+      "function": "word_counts",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "dice",
+      "category": "math",
+      "prompt": "Two fair six-sided dice are rolled. What is the probability that their sum is 7? Give a fraction and explain briefly.",
+      "answers": [
+        0.16666666666666666
+      ],
+      "reference": "Six ordered outcomes out of 36: 1/6.",
+      "split": "development"
+    },
+    {
+      "id": "open_08",
+      "category": "open",
+      "prompt": "What is the difference between weather and climate?",
+      "reference": "Weather is short-term atmospheric conditions; climate is longer-term statistical patterns.",
+      "split": "validation"
+    },
+    {
+      "id": "merge_sorted",
+      "category": "code",
+      "prompt": "Write Python function merge_sorted(a, b) merging two sorted integer lists into one sorted list. Do not call sorted() or .sort(). Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            []
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              2
+            ]
+          ],
+          "expected": [
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              2
+            ],
+            [
+              1
+            ]
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              2,
+              4,
+              6
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": [
+            1,
+            1,
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              -4,
+              -1,
+              2
+            ],
+            [
+              -3,
+              0,
+              7
+            ]
+          ],
+          "expected": [
+            -4,
+            -3,
+            -1,
+            0,
+            2,
+            7
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              9
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3,
+            9
+          ]
+        },
+        {
+          "args": [
+            [
+              0
+            ],
+            [
+              0
+            ]
+          ],
+          "expected": [
+            0,
+            0
+          ]
+        }
+      ],
+      "function": "merge_sorted",
+      "forbidden_calls": [
+        "sorted",
+        "sort"
+      ],
+      "split": "validation"
+    },
+    {
+      "id": "compound",
+      "category": "math",
+      "prompt": "In a hypothetical arithmetic exercise, $1000 grows by 5% annually, compounded once per year. What is the balance after two years? Show brief working.",
+      "answers": [
+        1102.5
+      ],
+      "reference": "1000*1.05^2 = 1102.50.",
+      "split": "development"
+    },
+    {
+      "id": "open_09",
+      "category": "open",
+      "prompt": "Explain the basic idea behind supply and demand.",
+      "reference": "Supply and demand describe availability and willingness to buy, with price pressures when either changes, holding other things equal.",
+      "split": "validation"
+    },
+    {
+      "id": "flatten",
+      "category": "code",
+      "prompt": "Write Python function flatten(rows) flattening a list of lists by one level. Preserve order and handle empty lists. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              []
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                2
+              ],
+              [],
+              [
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ],
+              [
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "args": [
+            [
+              [],
+              [],
+              []
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "a"
+              ],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          ],
+          "expected": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                null
+              ],
+              [
+                0,
+                false
+              ]
+            ]
+          ],
+          "expected": [
+            null,
+            0,
+            false
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                [
+                  1
+                ]
+              ],
+              [
+                [
+                  2
+                ]
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        }
+      ],
+      "function": "flatten",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "pipes",
+      "category": "math",
+      "prompt": "One pipe fills an empty tank in 6 hours and another in 3 hours. If both operate together at constant rates, how long does filling take? Explain briefly.",
+      "answers": [
+        2
+      ],
+      "reference": "Combined rate 1/6+1/3=1/2 tank/hour, so two hours.",
+      "split": "validation"
+    },
+    {
+      "id": "open_10",
+      "category": "open",
+      "prompt": "How does a search engine find relevant web pages?",
+      "reference": "Crawling discovers pages, indexing organizes content, retrieval/ranking finds relevant results.",
+      "split": "development"
+    },
+    {
+      "id": "fizzbuzz",
+      "category": "code",
+      "prompt": "Write Python function fizzbuzz(n) returning strings for integers 1 through n: Fizz for multiples of 3, Buzz for 5, FizzBuzz for both, otherwise the number as a string. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": [
+            "1"
+          ]
+        },
+        {
+          "args": [
+            2
+          ],
+          "expected": [
+            "1",
+            "2"
+          ]
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz"
+          ]
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz",
+            "4",
+            "Buzz"
+          ]
+        },
+        {
+          "args": [
+            6
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz",
+            "4",
+            "Buzz",
+            "Fizz"
+          ]
+        },
+        {
+          "args": [
+            10
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz",
+            "4",
+            "Buzz",
+            "Fizz",
+            "7",
+            "8",
+            "Fizz",
+            "Buzz"
+          ]
+        },
+        {
+          "args": [
+            15
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz",
+            "4",
+            "Buzz",
+            "Fizz",
+            "7",
+            "8",
+            "Fizz",
+            "Buzz",
+            "11",
+            "Fizz",
+            "13",
+            "14",
+            "FizzBuzz"
+          ]
+        },
+        {
+          "args": [
+            16
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz",
+            "4",
+            "Buzz",
+            "Fizz",
+            "7",
+            "8",
+            "Fizz",
+            "Buzz",
+            "11",
+            "Fizz",
+            "13",
+            "14",
+            "FizzBuzz",
+            "16"
+          ]
+        },
+        {
+          "args": [
+            30
+          ],
+          "expected": [
+            "1",
+            "2",
+            "Fizz",
+            "4",
+            "Buzz",
+            "Fizz",
+            "7",
+            "8",
+            "Fizz",
+            "Buzz",
+            "11",
+            "Fizz",
+            "13",
+            "14",
+            "FizzBuzz",
+            "16",
+            "17",
+            "Fizz",
+            "19",
+            "Buzz",
+            "Fizz",
+            "22",
+            "23",
+            "Fizz",
+            "Buzz",
+            "26",
+            "Fizz",
+            "28",
+            "29",
+            "FizzBuzz"
+          ]
+        }
+      ],
+      "function": "fizzbuzz",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "mixture",
+      "category": "math",
+      "prompt": "Mix 2 litres of a 20% salt solution with 3 litres of a 40% salt solution. What is the salt percentage of the mixture? Explain briefly.",
+      "answers": [
+        32
+      ],
+      "reference": "(2*0.20+3*0.40)/5=0.32, or 32%.",
+      "split": "development"
+    },
+    {
+      "id": "open_11",
+      "category": "open",
+      "prompt": "What causes a rainbow?",
+      "reference": "Refraction, internal reflection and dispersion in water droplets separate sunlight into colors.",
+      "split": "validation"
+    },
+    {
+      "id": "factorial",
+      "category": "code",
+      "prompt": "Write Python function factorial(n) returning n factorial for a nonnegative integer n. Remember that 0! = 1. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            0
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            2
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": 6
+        },
+        {
+          "args": [
+            4
+          ],
+          "expected": 24
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": 120
+        },
+        {
+          "args": [
+            7
+          ],
+          "expected": 5040
+        },
+        {
+          "args": [
+            10
+          ],
+          "expected": 3628800
+        },
+        {
+          "args": [
+            12
+          ],
+          "expected": 479001600
+        }
+      ],
+      "function": "factorial",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "speed_units",
+      "category": "math",
+      "prompt": "A car moves at a constant 72 km/h for 10 seconds. How many metres does it travel? Explain briefly.",
+      "answers": [
+        200
+      ],
+      "reference": "72 km/h =20 m/s; multiply by 10s to get 200m.",
+      "split": "validation"
+    },
+    {
+      "id": "open_12",
+      "category": "open",
+      "prompt": "How does the human heart circulate blood?",
+      "reference": "Right heart pumps blood to lungs; left heart pumps oxygenated blood to body; valves support one-way flow.",
+      "split": "development"
+    },
+    {
+      "id": "count_vowels",
+      "category": "code",
+      "prompt": "Write Python function count_vowels(text) counting occurrences of a, e, i, o and u, ignoring case. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "a"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "AEIOU"
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            "hello"
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            "rhythm"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "Education"
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            "aAa"
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            "123!"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "The quick brown fox"
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            "why?"
+          ],
+          "expected": 0
+        }
+      ],
+      "function": "count_vowels",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "arithmetic_series",
+      "category": "math",
+      "prompt": "An arithmetic sequence starts 5, 9, 13, ... . Find its 20th term and the sum of its first 20 terms. Explain briefly.",
+      "answers": [
+        81,
+        860
+      ],
+      "reference": "20th term 5+19*4=81; sum 20*(5+81)/2=860.",
+      "split": "validation"
+    },
+    {
+      "id": "open_13",
+      "category": "open",
+      "prompt": "Why do objects fall toward the ground?",
+      "reference": "Gravity attracts mass toward Earth; avoid attributing ordinary falling to magnetism.",
+      "split": "development"
+    },
+    {
+      "id": "gcd",
+      "category": "code",
+      "prompt": "Write Python function gcd(a, b) returning the greatest common divisor of two nonnegative integers. Return 0 for gcd(0, 0). Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            0,
+            0
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            0,
+            5
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            7,
+            0
+          ],
+          "expected": 7
+        },
+        {
+          "args": [
+            1,
+            1
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            12,
+            18
+          ],
+          "expected": 6
+        },
+        {
+          "args": [
+            18,
+            12
+          ],
+          "expected": 6
+        },
+        {
+          "args": [
+            17,
+            13
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            100,
+            10
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            48,
+            180
+          ],
+          "expected": 12
+        },
+        {
+          "args": [
+            81,
+            27
+          ],
+          "expected": 27
+        }
+      ],
+      "function": "gcd",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "triangle",
+      "category": "math",
+      "prompt": "A right triangle has perpendicular sides of 6 cm and 8 cm. Find its hypotenuse and area. Explain briefly.",
+      "answers": [
+        10,
+        24
+      ],
+      "reference": "Hypotenuse sqrt(36+64)=10cm; area 6*8/2=24 square cm.",
+      "split": "validation"
+    },
+    {
+      "id": "open_14",
+      "category": "open",
+      "prompt": "Explain what machine learning is in simple terms.",
+      "reference": "Learning patterns from examples/data to make predictions or decisions, with training and new-data use distinguished.",
+      "split": "development"
+    },
+    {
+      "id": "is_prime",
+      "category": "code",
+      "prompt": "Write Python function is_prime(n) returning whether integer n is prime. Integers below 2 are not prime. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            -7
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            2
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            4
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            9
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            17
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            25
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            49
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            97
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            121
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            169
+          ],
+          "expected": false
+        }
+      ],
+      "function": "is_prime",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "mean",
+      "category": "math",
+      "prompt": "Four numbers have mean 12. A fifth number is added, raising the mean of all five to 14. What is the fifth number? Explain briefly.",
+      "answers": [
+        22
+      ],
+      "reference": "5*14 - 4*12=70-48=22.",
+      "split": "development"
+    },
+    {
+      "id": "open_15",
+      "category": "open",
+      "prompt": "What are the main benefits of regular exercise?",
+      "reference": "Exercise can improve cardiovascular fitness, strength, metabolic and mental well-being; avoid cure guarantees.",
+      "split": "development"
+    },
+    {
+      "id": "reverse_words",
+      "category": "code",
+      "prompt": "Write Python function reverse_words(text) reversing the order of whitespace-separated words, joining the result with single spaces. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "a"
+          ],
+          "expected": "a"
+        },
+        {
+          "args": [
+            "a b"
+          ],
+          "expected": "b a"
+        },
+        {
+          "args": [
+            "one two three"
+          ],
+          "expected": "three two one"
+        },
+        {
+          "args": [
+            "  hi  there  "
+          ],
+          "expected": "there hi"
+        },
+        {
+          "args": [
+            "a\nb\tc"
+          ],
+          "expected": "c b a"
+        },
+        {
+          "args": [
+            "Hello, world!"
+          ],
+          "expected": "world! Hello,"
+        },
+        {
+          "args": [
+            "1 2 3 4"
+          ],
+          "expected": "4 3 2 1"
+        }
+      ],
+      "function": "reverse_words",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "ratio",
+      "category": "math",
+      "prompt": "A class has boys and girls in the ratio 3:5, with 32 students total. How many boys and how many girls are there? Explain briefly.",
+      "answers": [
+        12,
+        20
+      ],
+      "reference": "Eight parts, four students each: 12 boys and 20 girls.",
+      "split": "validation"
+    },
+    {
+      "id": "open_16",
+      "category": "open",
+      "prompt": "How does the water cycle work?",
+      "reference": "Evaporation/transpiration, condensation, precipitation and collection/runoff cycle water, powered by sunlight and gravity.",
+      "split": "validation"
+    },
+    {
+      "id": "clamp",
+      "category": "code",
+      "prompt": "Write Python function clamp(x, low, high) returning x limited to the inclusive interval [low, high]. Assume low <= high. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            5,
+            0,
+            10
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            -1,
+            0,
+            10
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            12,
+            0,
+            10
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            0,
+            0,
+            10
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            10,
+            0,
+            10
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            5,
+            3,
+            3
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            -5,
+            -9,
+            -2
+          ],
+          "expected": -5
+        },
+        {
+          "args": [
+            0,
+            -9,
+            -2
+          ],
+          "expected": -2
+        },
+        {
+          "args": [
+            2.5,
+            1.0,
+            2.0
+          ],
+          "expected": 2.0
+        },
+        {
+          "args": [
+            -10,
+            -5,
+            5
+          ],
+          "expected": -5
+        }
+      ],
+      "function": "clamp",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "choose_pair",
+      "category": "math",
+      "prompt": "A club has 7 members. How many different unordered pairs of members can be chosen? Explain briefly.",
+      "answers": [
+        21
+      ],
+      "reference": "7 choose 2 = 7*6/2=21.",
+      "split": "development"
+    },
+    {
+      "id": "open_17",
+      "category": "open",
+      "prompt": "Why is sleep important for people?",
+      "reference": "Sleep supports memory, restoration and regulation; avoid claims of a single universally required exact duration.",
+      "split": "validation"
+    },
+    {
+      "id": "transpose",
+      "category": "code",
+      "prompt": "Write Python function transpose(matrix) returning the transpose as a list of lists. Assume a rectangular matrix. Return [] for an empty matrix. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              []
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [],
+              []
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                2,
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ],
+              [
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                2
+              ],
+              [
+                3,
+                4
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              4
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                4,
+                5,
+                6
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              4
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              3,
+              6
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "c",
+                "d"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "a",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ]
+          ]
+        }
+      ],
+      "function": "transpose",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "percent_change",
+      "category": "math",
+      "prompt": "A quantity increases from 80 to 100. What is the percentage increase relative to the original value? Explain briefly.",
+      "answers": [
+        25
+      ],
+      "reference": "(100-80)/80*100=25%.",
+      "split": "development"
+    },
+    {
+      "id": "open_18",
+      "category": "open",
+      "prompt": "Explain the difference between renewable and nonrenewable energy.",
+      "reference": "Renewables replenish on human timescales (sun/wind); finite fuels deplete. Avoid claims of zero environmental impacts.",
+      "split": "validation"
+    },
+    {
+      "id": "chunk_list",
+      "category": "code",
+      "prompt": "Write Python function chunk_list(items, size) splitting a list into consecutive chunks of at most size elements. size is a positive integer; keep a shorter final chunk. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            1
+          ],
+          "expected": [
+            [
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1
+            ],
+            3
+          ],
+          "expected": [
+            [
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            1
+          ],
+          "expected": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            4
+          ],
+          "expected": [
+            [
+              1,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            3
+          ],
+          "expected": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              5
+            ],
+            [
+              6,
+              7,
+              8
+            ],
+            [
+              9
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            3
+          ],
+          "expected": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            [
+              "d"
+            ]
+          ]
+        }
+      ],
+      "function": "chunk_list",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "exponent",
+      "category": "math",
+      "prompt": "Solve 2^(x + 1) = 32 for x. Explain briefly.",
+      "answers": [
+        4
+      ],
+      "reference": "32=2^5; x+1=5 gives x=4.",
+      "split": "validation"
+    },
+    {
+      "id": "open_19",
+      "category": "open",
+      "prompt": "How do trees communicate or share resources?",
+      "reference": "Roots, fungi and chemical signals can mediate interactions/resources; evidence varies; avoid claiming intentional universal tree-to-tree sharing.",
+      "split": "development"
+    },
+    {
+      "id": "max_run",
+      "category": "code",
+      "prompt": "Write Python function max_run(nums) returning the length of the longest consecutive run of equal values in a list. Return 0 for an empty list. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              1,
+              1
+            ]
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              1,
+              1,
+              2,
+              2,
+              2,
+              1
+            ]
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              2,
+              3,
+              3,
+              3
+            ]
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              1,
+              1,
+              2,
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            [
+              -1,
+              -1,
+              0
+            ]
+          ],
+          "expected": 2
+        }
+      ],
+      "function": "max_run",
+      "forbidden_calls": [],
+      "split": "development"
+    },
+    {
+      "id": "quadratic",
+      "category": "math",
+      "prompt": "Solve x^2 - 5x + 6 = 0 for all real x. Show brief working.",
+      "answers": [
+        2,
+        3
+      ],
+      "reference": "(x-2)(x-3)=0 gives x=2 or x=3.",
+      "split": "validation"
+    },
+    {
+      "id": "open_20",
+      "category": "open",
+      "prompt": "What is inflation and how does it affect households?",
+      "reference": "Inflation is a general rise in prices, reducing purchasing power when incomes lag, affecting household budgets differently.",
+      "split": "validation"
+    },
+    {
+      "id": "unique_sorted",
+      "category": "code",
+      "prompt": "Write Python function unique_sorted(nums) returning the unique integers of nums in ascending order. Return only concise Python code, without explanation or examples.",
+      "cases": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              1
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              3,
+              1,
+              3,
+              2
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "args": [
+            [
+              -1,
+              2,
+              -1,
+              0
+            ]
+          ],
+          "expected": [
+            -1,
+            0,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              0
+            ]
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "args": [
+            [
+              9,
+              8,
+              7,
+              6,
+              5,
+              4,
+              3,
+              2,
+              1,
+              0
+            ]
+          ],
+          "expected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "args": [
+            [
+              1000000000,
+              -1000000000,
+              0,
+              1000000000
+            ]
+          ],
+          "expected": [
+            -1000000000,
+            0,
+            1000000000
+          ]
+        }
+      ],
+      "function": "unique_sorted",
+      "forbidden_calls": [],
+      "split": "validation"
+    },
+    {
+      "id": "ages",
+      "category": "math",
+      "prompt": "Ada is twice as old as Ben. In 6 years their ages will sum to 42. How old is each now? Explain briefly.",
+      "answers": [
+        20,
+        10
+      ],
+      "reference": "Current sum 42-12=30; 2b+b=30 gives Ben10, Ada20.",
+      "split": "development"
+    }
+  ],
+  "methods": [
+    {
+      "id": "confidence",
+      "label": "Confidence guided",
+      "ngram": "Original bigram",
+      "penalty": false
+    },
+    {
+      "id": "bigram",
+      "label": "Expanded bigram",
+      "ngram": "Expanded bigram",
+      "penalty": false
+    },
+    {
+      "id": "bigram_rep",
+      "label": "Expanded bigram + fading repetition",
+      "ngram": "Expanded bigram",
+      "penalty": true
+    },
+    {
+      "id": "trigram",
+      "label": "Expanded bigram + trigram",
+      "ngram": "Expanded bigram + trigram",
+      "penalty": false
+    },
+    {
+      "id": "trigram_rep",
+      "label": "Expanded bigram + trigram + fading repetition",
+      "ngram": "Expanded bigram + trigram",
+      "penalty": true
+    }
+  ],
+  "budgets": [
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "shared_settings": {
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 128,
+    "block_length": 128,
+    "temperature": 0.7,
+    "top_k": 16,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "early_stopping": false,
+    "generation_seed": 42,
+    "measure_decoding": true,
+    "bigram_scoring_method": "PMI bigram",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "bigram_remasking_confidence": "Diffusion probability",
+    "bigram_weight": 1.0,
+    "repetition_penalty_strength": 1.0,
+    "adaptive_parallel_decoding": false,
+    "sequence_sampling": false,
+    "count_all_candidate_bigrams": false,
+    "repetition_risk_penalty": false,
+    "decay_repetition_penalty": true
+  },
+  "main_total": 1800,
+  "sampling_planned_total": 720,
+  "seed": 42,
+  "protocol": {
+    "selection": "Top two n-gram methods per NFE, using development prompts only.",
+    "ranking": "Equal average of open mean manual grade/3, code all-tests pass rate, and math final-answer accuracy. Tie-break: lower mean server latency, then method id.",
+    "uncertainty": "Paired bootstrap resampling prompts within each task category; preserve all budgets for a prompt in overall estimates.",
+    "followup": "Sequence sampling ON at temperature .7; same selected settings and all60 prompts. Primary paired follow-up interpretation uses untouched validation half.",
+    "split": "Predefined stratified random split: 10 development and10 validation prompts per category, seed20261022.",
+    "grading": "Open manual assistant inspection with method/budget labels hidden; code fixed independent edge tests; math answer and reasoning inspection. Exact duplicates share judgments.",
+    "eos": "Open retention delay ON and bigram ending strength10; code/math delayOFF, strength1.",
+    "fade": "Existing absolute six-iteration fade; zero from iteration6.",
+    "temperature": "Main Viterbi deterministic, samplingOFF; independent baseline samples at .7. Follow-up samples full n-gram-guided sequences at .7.",
+    "provenance": "Six original prompts plus54 new; all generations run fresh; no pilot outputs imported.",
+    "scope": "60 prompts, one fixed seed. Confidence baseline retained. Exploratory multiple-method/NFE comparison."
+  }
+}

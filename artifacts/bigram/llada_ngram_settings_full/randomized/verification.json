@@ -1,0 +1,21 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "67a9c62687fcd05f9f02ee4cfd580e3dda3e0822",
+  "runtime": "RUNNING",
+  "files": {
+    "app.py": "00ea849e54ccd20a2f6c5e464f2fedc022177c9d35ddd1f62ddca3585e32e89d",
+    "src/diffusion_lm/bigram.py": "c53c877b4b67c0bb23879eeb9db7f28c7dd02d17aec9a9b654e62e4c22076247"
+  },
+  "local_tests": {
+    "passed": 143,
+    "skipped": 6,
+    "skip_reason": "CUDA unavailable locally"
+  },
+  "hosted": {
+    "matched_cases": 282,
+    "all_requested_nfe": true,
+    "complete_outputs": true,
+    "extra_seed_runs": 4
+  },
+  "report": "REPORT.md"
+}

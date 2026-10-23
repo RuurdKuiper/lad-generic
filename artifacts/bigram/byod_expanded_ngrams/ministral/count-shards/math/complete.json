@@ -1,0 +1,20 @@
+{
+  "name": "math",
+  "repo": "HuggingFaceTB/finemath",
+  "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+  "prefix": "finemath-4plus/",
+  "tokens": 40000000,
+  "files": [
+    "finemath-4plus/train-00000-of-00064.parquet"
+  ],
+  "offline": true,
+  "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+  "documents": 26130,
+  "actual_tokens": 40000000,
+  "pairs": 39973870,
+  "triples": 39947740,
+  "skipped_duplicates": 0,
+  "eos_appended": 26129,
+  "started_at": 1792746272.058221,
+  "seconds": 56.792670011520386
+}

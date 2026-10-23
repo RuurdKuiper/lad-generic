@@ -1,0 +1,11 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "parent_revision": "72df164776e1e724f976185e74eaf1c938885042",
+  "files": {
+    "app.py": {
+      "local": "huggingface/byod_space/app.py",
+      "sha256": "5251a2147ccc6eeb34ab508b79121dbdbd44d96255af94f8a571c4ba7330d91d",
+      "old_sha256": "fa97500a59cbd857f4098f3200fc6d9f7af5ddf611055a819ff62612397992fe"
+    }
+  }
+}

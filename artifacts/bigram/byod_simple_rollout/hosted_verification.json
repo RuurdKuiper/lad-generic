@@ -1,0 +1,234 @@
+{
+  "Ruurd/byod-gemma-2-9b": {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "revision": "d70735cd924e7b7935c31cd8a624c15cb93ece40",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "c026f877a0482e615bf8ea6862fc1f6b8e28a6cdd33393494e19bc5640829726",
+    "tokenizer": "gemma",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello,",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 2233.42914134264,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 7.000078125012806
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 173.58603468164802,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 1.490459542023018
+      }
+    }
+  },
+  "Ruurd/byod-llama-3.1-8b": {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "revision": "0ba16b89facdd3942094f984ecd7469d9a40ece7",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "541eb793bc404acfb956a8cc36da85cc825857d178885cfc2fbe02b941fc962d",
+    "tokenizer": "llama",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello.",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 1682.820554007776,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 5.434971250011586
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 128.76947899349034,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 1.0250384170212783
+      }
+    }
+  },
+  "Ruurd/byod-qwen2.5-7b": {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "revision": "946379fa6b5dabd2d3f1615c7ce52746fa3fc83b",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "4fc54b15bc43a69010cbf1636548f0928aa7c67365176cb4cef290290420cf62",
+    "tokenizer": "qwen",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello,",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 2102.99083404243,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 5.007481333013857
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello there!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 128.6365701816976,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 1.104449124977691
+      }
+    }
+  },
+  "Ruurd/byod-ministral-8b": {
+    "space": "Ruurd/byod-ministral-8b",
+    "revision": "2fc7bff89a57f42745a49b46a7165b1927f0f100",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "e939f0d8aac0a1c6fb9feaa3fe8d8aad0205ebc29e0804836005b1707091f207",
+    "tokenizer": "ministral",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello! How",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 1611.2065711058676,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 3.8603627079864964
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello! How",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 155.6760580278933,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 1.019117332994938
+      }
+    }
+  },
+  "Dovelove/byod-gemma-2-9b": {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "revision": "4780e6db050ab88606f328b2e2724d7456ef99c6",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "c026f877a0482e615bf8ea6862fc1f6b8e28a6cdd33393494e19bc5640829726",
+    "tokenizer": "gemma",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello,",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 2190.0327601470053,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 6.203379415994277
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 245.525024831295,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 1.5501452919852454
+      }
+    }
+  },
+  "Dovelove/byod-llama-3.1-8b": {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "revision": "6a170b472384cb3d5ac1c46ec8d76edbb16aa914",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "541eb793bc404acfb956a8cc36da85cc825857d178885cfc2fbe02b941fc962d",
+    "tokenizer": "llama",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 1955.73946274817,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 8.796677500009537
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 1110.709581989795,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 6.7903097920061555
+      }
+    }
+  },
+  "Dovelove/byod-qwen2.5-7b": {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "revision": "e27fa6eda6eda6b546786cd0d0f356dfeacbee64",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "4fc54b15bc43a69010cbf1636548f0928aa7c67365176cb4cef290290420cf62",
+    "tokenizer": "qwen",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello,",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 2528.6174011416733,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 9.049913791008294
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello there!",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 1173.8561899401248,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 10.701376665994758
+      }
+    }
+  },
+  "Dovelove/byod-ministral-8b": {
+    "space": "Dovelove/byod-ministral-8b",
+    "revision": "cc22da8f430f192b2c172a408adf9beeabc2da63",
+    "runtime": "RUNNING",
+    "ui_verified": true,
+    "config_preserved": true,
+    "original_bigram_sha256": "e939f0d8aac0a1c6fb9feaa3fe8d8aad0205ebc29e0804836005b1707091f207",
+    "tokenizer": "ministral",
+    "smoke": {
+      "Confidence-guided": {
+        "text": "Hello! How",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 1695.893257856369,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 4.025502915988909
+      },
+      "BG + TG Viterbi (Gumbel)": {
+        "text": "Hello! How",
+        "inference": {
+          "denoising_forward_passes": 2,
+          "elapsed_ms": 136.9508490897715,
+          "adaptive_parallel_decoding": false
+        },
+        "client_wall_seconds": 0.9966352920164354
+      }
+    }
+  }
+}

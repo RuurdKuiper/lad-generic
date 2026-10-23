@@ -1010,7 +1010,7 @@ def decode_denoising_state(
     return " ".join(pieces)
 
 
-def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False, block_length: int | None = None, trajectory_color_mode: str = "Prediction probability", autoregressive_guided: bool = False, revisable_tokens: bool = False, autoregressive_check_interval: int = 1, bigram_selector: BigramViterbiSelector | None = None, bigram_top_k: int | None = None, bigram_eos_delay_penalty: float = 10.0, adaptive_parallel_decoding: bool = False):
+def denoise_stream(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, include_pre_remask_prediction: bool = False, block_length: int | None = None, trajectory_color_mode: str = "Prediction probability", autoregressive_guided: bool = False, revisable_tokens: bool = False, autoregressive_check_interval: int = 1, bigram_selector: BigramViterbiSelector | None = None, bigram_top_k: int | None = None, bigram_eos_delay_penalty: float = 10.0, adaptive_parallel_decoding: bool = False, apd_aggressiveness: float = 0.0):
     """Yield denoising states with retained positions and optional locked values.
 
     Delayed endings also receive a fading unary penalty in bigram mode only.
@@ -1022,6 +1022,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     if max_new_tokens < 1 or num_steps < 1:
         raise ValueError("max_new_tokens and num_steps must both be at least 1.")
     if adaptive_parallel_decoding:
+        confidence_threshold(0, 1, apd_aggressiveness)  # Validate before the first forward.
         # APD replaces the retention policy, not the selected-token scorer.
         permanent_unmask, freeze_retained_tokens, revisable_tokens = True, True, False
     if bigram_selector is not None:
@@ -1122,6 +1123,9 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
                     selection_logits = _apply_eos_eot_prediction_penalty(
                         selection_logits, delay_penalty, session.tokenizer.eos_token_id, eot_token_id,
                     )
+                set_context = getattr(bigram_selector, "set_step_context", None)
+                if set_context is not None:
+                    set_context(block_step, block_steps)
                 selected, selected_confidence = bigram_selector.select_block(
                     selection_logits, current, editable,
                     top_k=bigram_top_k,
@@ -1212,6 +1216,8 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             chosen = commitment_mask(
                 confidence[block_start:block_end], pending, block_step, block_steps,
                 endings=special_prediction[block_start:block_end], delay_endings=confidence_eos_eot_inf,
+                aggressiveness=apd_aggressiveness,
+                minimum_tokens=(block_end - block_start + block_steps - 1) // block_steps,
             )
             offsets = (chosen.nonzero(as_tuple=True)[0] + block_start).tolist()
             apd_newly_committed = len(offsets)
@@ -1341,7 +1347,7 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
             if not adaptive_parallel_decoding:
                 status += " · Viterbi-margin remasking"
         if adaptive_parallel_decoding:
-            status += f" · APD threshold {confidence_threshold(block_step, block_steps):.3f} · committed {apd_newly_committed} · forwards {forward_passes}"
+            status += f" · APD threshold {confidence_threshold(block_step, block_steps, apd_aggressiveness):.3f} · committed {apd_newly_committed} · forwards {forward_passes}"
             if apd_block_complete:
                 status += " · block committed"
         if stopped_early:
@@ -1384,10 +1390,10 @@ def denoise_stream(session: InferenceSession, question: str, system_prompt: str,
     return
 
 
-def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, block_length: int | None = None, autoregressive_guided: bool = False, revisable_tokens: bool = False, autoregressive_check_interval: int = 1, adaptive_parallel_decoding: bool = False) -> tuple[str, str]:
+def denoise(session: InferenceSession, question: str, system_prompt: str, max_new_tokens: int, num_steps: int, noise_level: float, temperature: float, top_k: int, seed: int, permanent_unmask: bool = False, confidence_guided: bool = False, proportional_unmask: bool = True, early_stopping: bool = False, progress: Callable[[float, str], None] | None = None, confidence_eos_eot_inf: bool = False, freeze_retained_tokens: bool = True, repetition_penalty: float = 1.0, eos_eot_prediction_penalty: float = 1.0, block_length: int | None = None, autoregressive_guided: bool = False, revisable_tokens: bool = False, autoregressive_check_interval: int = 1, adaptive_parallel_decoding: bool = False, apd_aggressiveness: float = 0.0) -> tuple[str, str]:
     """Run denoising to completion and return only the final text and status."""
     result = ("", "")
-    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty, eos_eot_prediction_penalty, False, block_length, "Prediction probability", autoregressive_guided, revisable_tokens, autoregressive_check_interval, adaptive_parallel_decoding=adaptive_parallel_decoding), start=1):
+    for step, (text, status, _html) in enumerate(denoise_stream(session, question, system_prompt, max_new_tokens, num_steps, noise_level, temperature, top_k, seed, permanent_unmask, confidence_guided, proportional_unmask, early_stopping, confidence_eos_eot_inf, freeze_retained_tokens, repetition_penalty, eos_eot_prediction_penalty, False, block_length, "Prediction probability", autoregressive_guided, revisable_tokens, autoregressive_check_interval, adaptive_parallel_decoding=adaptive_parallel_decoding, apd_aggressiveness=apd_aggressiveness), start=1):
         result = (text, status)
         if progress:
             progress(step / int(num_steps), status)

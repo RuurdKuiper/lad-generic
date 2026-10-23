@@ -1,37 +1,71 @@
-# BYOD bigram Viterbi decoding
+# Decoding studies and scorer provenance
 
-Inference uses a sparse count scorer and exact Viterbi decoding over top-k
-candidates, with no additional model forward passes. The implementation supports
-BYOD Gemma, Llama, Ministral, Qwen, and native LLaDA-Instruct. Each model has a
-separate scorer trained on all 980,000 training responses using its own tokenizer;
-validation and test responses are held out.
+This directory keeps experiment outputs, judgments, reports, scorer provenance,
+and deployment verification. Model checkpoints, downloaded corpora, count caches,
+deployment bundles and generated source backups are excluded from Git. They stay
+available locally; the production scorers are also pinned on Hugging Face.
 
-## Current defaults
+## Current BYOD deployment
 
-The shared Space interface uses PMI bigrams, diffusion-probability retention
-confidence, temperature 2, top-k/candidates 16, fixed bigram weight 0.5, PMI
-minimum count 1, and clipping ±2. New-token limit, block length, and denoising
-steps default to 64. EOS/EOT retention delay and early stopping default on;
-ending prediction delay has strength 10 and fades to 1 at the final block step.
+- [Expanded scorer rollout](byod_expanded_rollout/REPORT.md): all eight Gemma,
+  Llama, Qwen and Ministral Spaces on Ruurd and Dovelove.
+- [Current temperature default](byod_temperature_03/REPORT.md): **0.3** for BYOD.
+- [Per-tokenizer training reports](byod_expanded_ngrams/): the complete original
+  response dataset plus 800M added tokens, with pinned sources and asset hashes.
+- [Pinned production assets](../../huggingface/byod_ngram_assets.json): used by
+  ordinary future Space publishes.
 
-The objective is equivalent to `sum(log_softmax(logits / T)) + 0.5 * sum(PMI)`
-for positive temperature. The implementation uses the numerically stable form
-`sum(log_softmax(logits)) + 0.5 * T * sum(PMI)`. Temperature 0 ignores bigrams;
-top-k 1 leaves only the diffusion argmax candidate. Viterbi is deterministic.
-Retention confidence uses the full-vocabulary diffusion distribution after the
-ending-delay adjustment, without temperature scaling or top-k renormalization.
+The simplified interface offers Confidence-guided and BG + TG Viterbi (Gumbel),
+with APD, early stopping, EOS retention and adjustable bigram weight. Native
+LLaDA retains its separate default temperature of 0.7. Historical experiment
+settings are recorded as actually run; changing production defaults does not
+change those reports.
 
-Already retained positions remain in the Viterbi path as singleton constraints.
-Known tokens immediately outside the current block provide boundary context.
-PMI uses smoothed successor-token marginals; unseen or below-threshold pairs
-receive zero correction. Conditional bigrams and Viterbi path-margin retention
-remain available through the Python/API configuration.
+## Studies
 
-Edit expert defaults near the top of `huggingface/byod_space/app.py`. The shared
-interface hides the scorer path, scoring method, retention method, PMI safeguards,
-ending-delay strength, seed, and measurements. API overrides remain available.
-Deployment records below identify the exact hosted revisions: earlier Ruurd
-revisions still expose some controls hidden by the latest Dovelove interface.
+The original structural-correction LAD Space now also offers the shared guided
+decoder: [LAD BG + TG rollout](lad_trigram_rollout/REPORT.md). Its own noising,
+correction and multi-turn controls remain available.
+
+- [Full LLaDA n-gram study](llada_ngram_settings_full/REPORT.md): eight matched
+  configurations, including deterministic, exact sampled and Gumbel variants.
+- [Math error analysis](llada_ngram_settings_full/HIGH_NFE_MATH_ANALYSIS.md).
+- [Timing analysis](llada_ngram_settings_full/TIMING_NOTES.md).
+- [Decoder speed comparison](llada_ngram_speed/REPORT.md).
+- [Initial smaller study](llada_ngram_settings/REPORT.md).
+- [Expanded LLaDA scorer training](llada_expanded_ngrams/REPORT.md).
+
+Raw JSONL outputs, grades, examples and figures accompany each study. Files
+prefixed `pre_` and `PRE_` preserve earlier analysis stages used by the report
+regenerators; `combined_*` and unprefixed score/summary files intentionally serve
+as compatible entry points. Git deduplicates files with identical contents.
+
+## Earlier deployment records
+
+The `llada_sequence_sampling`, `llada_temperature`, `llada_repetition_risk`,
+`llada_repetition_decay`, `llada_apd_aggressiveness` and `llada_apd_quota` reports
+record the individual feature checks. `byod_simple_rollout` and `byod_trigrams`
+record the initial response-corpus rollout before the expanded scorers.
+
+See [the deployment guide](../../huggingface/README.md) for build, publish,
+verification and report-regeneration commands. Scorer training needs the pinned
+tokenizer snapshots and original prepared dataset; offline expansion also needs
+the shared Hugging Face corpus cache. Install count aggregation dependencies
+with `pip install -e '.[ngrams]'`.
+
+## Current scoring
+
+The guided method maximizes diffusion unary log-probabilities plus `weight * PMI`
+bigram scores and `0.5 * weight` trigram corrections. Positive temperature adds
+`temperature * Gumbel(0,1)` to editable unary scores before fast Viterbi decoding;
+temperature zero selects the deterministic best path. This perturb-and-MAP method
+is an approximate structured sampler, not exact sequence sampling. Bigram weight
+is independent of temperature and defaults to one.
+
+Retained tokens are singleton path constraints. Retention uses full-vocabulary
+diffusion probabilities after the ending-delay adjustment, with no additional
+model forward passes. PMI uses successor-token marginals, minimum count one and
+clipping +/-2; trigram storage and runtime minimum count are two.
 
 ## Build and verify
 
@@ -57,7 +91,7 @@ reconstructing those counts from its sparse pairs.
 See [publishing instructions](../../huggingface/README.md) for per-model builds
 and deployment commands. Publishing is separate from running local checks.
 
-## Experiments and deployment records
+## Earlier experiments and deployment records
 
 - [Gemma and LLaDA perplexity comparison](perplexity_models/REPORT.md): 10 questions,
   128-token answers, NFE 8/16/32/64/128, Phi-4 reference perplexity, Distinct-1,

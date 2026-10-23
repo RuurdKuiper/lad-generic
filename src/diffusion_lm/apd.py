@@ -4,19 +4,25 @@ import math
 import torch
 
 
-def confidence_threshold(step: int, steps: int) -> float:
+def confidence_threshold(step: int, steps: int, aggressiveness: float = 0.0) -> float:
     """CAI-dLLM cosine shape, 15% warmup, endpoints 0.90 and 0.50.
 
     Normalize the discrete block's first/last steps to 0/1 so its final step
     reaches the requested endpoint. A one-step block uses the final threshold.
+    Aggressiveness scales both endpoints by (1-a): 0 preserves the old schedule,
+    1 admits every finite-confidence candidate. Commitment guards still apply.
     """
+    aggressiveness = float(aggressiveness)
+    if not math.isfinite(aggressiveness) or not 0.0 <= aggressiveness <= 1.0:
+        raise ValueError("APD aggressiveness must be finite and between 0 and 1")
     if steps < 1 or not 0 <= step < steps:
         raise ValueError("Expected a valid zero-based step within the block")
     if steps == 1:
-        return 0.50
+        return 0.50 * (1.0 - aggressiveness)
     progress = step / (steps - 1)
     phase = max(0.0, (progress - 0.15) / 0.85)
-    return 0.50 + 0.20 * (1.0 + math.cos(math.pi * phase))
+    original = 0.50 + 0.20 * (1.0 + math.cos(math.pi * phase))
+    return original if aggressiveness == 0 else original * (1.0 - aggressiveness)
 
 
 def selected_token_probabilities(logits, token_ids):
@@ -45,14 +51,17 @@ def resolve_mask_predictions(logits, selected, confidence, pending, mask_token_i
     return selected, confidence
 
 
-def commitment_mask(confidence, pending, step, steps, *, endings=None, delay_endings=False):
+def commitment_mask(confidence, pending, step, steps, *, endings=None, delay_endings=False, aggressiveness=0.0, minimum_tokens=1):
     """Commit all qualifying pending positions; force progress and final cleanup.
 
     With ending retention delay, postpone endings while ordinary predictions
     would remain uncommitted. The fallback prefers an ordinary token in that
-    case. No token budgets, position scaling, or grinding detector are used.
+    case. Fill a minimum per-step quota using highest-confidence pending rows.
+    Ordinary rows precede endings when ending retention is delayed.
     """
-    threshold = confidence_threshold(step, steps)
+    if not isinstance(minimum_tokens, int) or minimum_tokens < 1:
+        raise ValueError("APD minimum tokens must be a positive integer")
+    threshold = confidence_threshold(step, steps, aggressiveness)
     if step == steps - 1:
         return pending.clone()
     finite = torch.isfinite(confidence)
@@ -60,10 +69,21 @@ def commitment_mask(confidence, pending, step, steps, *, endings=None, delay_end
     ordinary = pending if endings is None else pending & ~endings
     if delay_endings and endings is not None and bool((ordinary & ~chosen).any()):
         chosen &= ~endings
-    if not bool(chosen.any()) and bool(pending.any()):
-        pool = ordinary if delay_endings and bool(ordinary.any()) else pending
-        scores = confidence.masked_fill(~pool | ~finite, -torch.inf)
-        # If no finite score exists, choose the first eligible position safely.
-        best = scores.argmax() if bool((pool & finite).any()) else pool.nonzero()[0, 0]
-        chosen[best] = True
+    required = min(minimum_tokens, int(pending.sum()))
+    needed = max(0, required - int(chosen.sum()))
+    if needed:
+        # Preserve the old ending delay while satisfying the mandatory quota:
+        # exhaust ordinary rows before filling from endings. Nonfinite scores
+        # rank last; stable ordering retains the old first-index fallback.
+        pools = [ordinary, pending & ~ordinary] if delay_endings and endings is not None else [pending]
+        for pool in pools:
+            indices = (pool & ~chosen).nonzero(as_tuple=True)[0]
+            count = min(needed, len(indices))
+            if count:
+                scores = confidence[indices].masked_fill(~finite[indices], -torch.inf)
+                ranked = scores.argsort(descending=True, stable=True)
+                chosen[indices[ranked[:count]]] = True
+                needed -= count
+            if needed == 0:
+                break
     return chosen

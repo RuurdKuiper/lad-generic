@@ -1,0 +1,18 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "aee543d748b7250f21d01f462b8fb36ae783eb04",
+  "runtime": "RUNNING",
+  "source_sha256": "f68ff2a7a75893f8b7a4e5a45298a769a673268b6740a00f02cd184f700aa083",
+  "command": ".venv/bin/python -m pytest tests/test_trigram.py tests/test_sequence_sampling.py tests/test_shared_decoding_controls.py -q",
+  "local_tests": {
+    "passed": 136,
+    "skipped": 6,
+    "skip_reason": "CUDA unavailable on local workstation"
+  },
+  "hosted_checks": {
+    "k16_matches_original": "24/24",
+    "k8_matches_previous_k8": "24/24",
+    "all_runs": 120
+  },
+  "report": "REPORT.md"
+}

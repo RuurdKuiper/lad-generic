@@ -1,0 +1,4924 @@
+{
+  "sum_even/128/trigram_randomized": {
+    "code_sha256": "87c93f7fa8cd32e67963649e917fbac786f0168126d81fe172cac2317f6dcac9",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "ac21011c2691b5cabe8d4a13d66c8141a8d3f6dcf784da818956c53e3f94c7ff",
+    "phase": "sample",
+    "task": "sum_even"
+  },
+  "balanced/8/trigram_randomized": {
+    "task": "balanced",
+    "sha256": "707ab4680bc438189b433e5ec513bac1922e17556bc4ed8837063babeca99a58",
+    "all_pass": false,
+    "passed": 6,
+    "total": 16,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "is_palindrome/64/trigram_randomized": {
+    "code_sha256": "e9bdcb8dcc70fc509fe7df99e4e1d19fd75b8d7e66c581a594f0e7738e5a2e56",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "25836a3a0a547c966064ec89b968c3b86a733ca2a0c503fe7fc98fc318b45bbd",
+    "phase": "main",
+    "task": "is_palindrome"
+  },
+  "fibonacci/16/trigram_randomized": {
+    "code_sha256": "14fde49fde1675c6ad674e61c9b966727316f6f1eea5fcf3a35ab0fb0f8f31ea",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1]",
+        "expected": "[0, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1]",
+        "expected": "[0, 1, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2]",
+        "expected": "[0, 1, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2, 3, 5, 8]",
+        "expected": "[0, 1, 1, 2, 3, 5, 8]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]",
+        "expected": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "d7aa6a35e80a011e8ff438977ac4a3652b43d72f87ffdd6b8bbf388bafef2acb",
+    "phase": "confidence_zero",
+    "task": "fibonacci"
+  },
+  "deduplicate/32/trigram_randomized": {
+    "code_sha256": "367224ab701168f96898d4d6f4079a9951166acc9fe1f7c9e09c44f59c2870ac",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[3, 1, 2]",
+        "expected": "[3, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['b', 'a']",
+        "expected": "['b', 'a']"
+      },
+      {
+        "passed": true,
+        "actual": "[0, -1, 2]",
+        "expected": "[0, -1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['x', 'y', 'z']",
+        "expected": "['x', 'y', 'z']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 1]",
+        "expected": "[None, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[2, 1, 3]",
+        "expected": "[2, 1, 3]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "65027643285e16fe509fbe23749b838ebd0587336140d5efa18ebe1200483f18",
+    "phase": "confidence_zero",
+    "task": "deduplicate"
+  },
+  "binary_search/4/trigram_randomized": {
+    "task": "binary_search",
+    "sha256": "fb31035079db82ac3a21001396ffb975e416ff669d8e24b3afa24a579431b516",
+    "all_pass": false,
+    "passed": 0,
+    "total": 11,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      },
+      {
+        "passed": false,
+        "error": "ValueError: too many values to unpack (expected 2, got 3)"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "word_counts/128/trigram_randomized": {
+    "code_sha256": "229364c1f95e723c1f2e2ffc191197777156930af4c25131806b768083fbbf00",
+    "total": 8,
+    "passed": 0,
+    "all_pass": false,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'collections' is not defined"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "2edccbb7a42d57b1163ed2b91b41f32966390cf26bc07d253b9a2f9e106e5d9a",
+    "phase": "main",
+    "task": "word_counts"
+  },
+  "merge_sorted/8/trigram_randomized": {
+    "code_sha256": "7ab955d6d21b616b7ebf8e2fd1c522b8500f6effba5ee3d73836ef3668b71f64",
+    "total": 10,
+    "passed": 7,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[2]",
+        "expected": "[2]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[2, 1]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[1, 3, 5, 2, 4, 6]",
+        "expected": "[1, 2, 3, 4, 5, 6]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 1, 1, 2]",
+        "expected": "[1, 1, 1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[-4, -1, 2, -3, 0, 7]",
+        "expected": "[-4, -3, -1, 0, 2, 7]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3, 9]",
+        "expected": "[1, 2, 3, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 0]",
+        "expected": "[0, 0]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "e39b5d2f99d2d20cb4f4cc186b401abc3019966f1b847184828f565c1354d5ac",
+    "phase": "sample",
+    "task": "merge_sorted"
+  },
+  "flatten/64/trigram_randomized": {
+    "code_sha256": "efd28fdea5f2b52502f75e79db7d612e908dff9c0a6a24e8ae3d5ca81daa720e",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['a', 'b', 'c']",
+        "expected": "['a', 'b', 'c']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 0, False]",
+        "expected": "[None, 0, False]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2]]",
+        "expected": "[[1], [2]]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "e5510c00d432245c3726f7b44dd18a1f23ec0cd86378915cbc3d2446b02fb00b",
+    "phase": "confidence_zero",
+    "task": "flatten"
+  },
+  "fizzbuzz/16/trigram_randomized": {
+    "task": "fizzbuzz",
+    "sha256": "429c497ec3b0824299f0c0fd072de3e26e01eb889f04a1aa8bf396bcfa7d019a",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c09e0>",
+        "expected": "[]"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c0900>",
+        "expected": "['1']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c09e0>",
+        "expected": "['1', '2']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c0900>",
+        "expected": "['1', '2', 'Fizz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c09e0>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c0900>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c09e0>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c0900>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c09e0>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x1078c0900>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16', '17', 'Fizz', '19', 'Buzz', 'Fizz', '22', '23', 'Fizz', 'Buzz', '26', "
+      }
+    ],
+    "constraint_violations": []
+  },
+  "factorial/32/trigram_randomized": {
+    "code_sha256": "4017ed940812d99940a59ad82a7896f2383f30a66c3bfd54a6541b3d7bb704a5",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "24",
+        "expected": "24"
+      },
+      {
+        "passed": true,
+        "actual": "120",
+        "expected": "120"
+      },
+      {
+        "passed": true,
+        "actual": "5040",
+        "expected": "5040"
+      },
+      {
+        "passed": true,
+        "actual": "3628800",
+        "expected": "3628800"
+      },
+      {
+        "passed": true,
+        "actual": "479001600",
+        "expected": "479001600"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4afdd7d66e8ea735442ed33979a0be6b5a14a305cf916e565a14d5f1c1c03a07",
+    "phase": "confidence_zero",
+    "task": "factorial"
+  },
+  "count_vowels/4/trigram_randomized": {
+    "task": "count_vowels",
+    "sha256": "b4ac86fcefd91eb6979ceec71e9825f640824c4d3ebf55f57e63f0917e002b06",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "gcd/128/trigram_randomized": {
+    "code_sha256": "d6504b8326e907b2a6a6e5713d2c940a4696b016b76f7c6c7652209dae77c361",
+    "total": 10,
+    "passed": 5,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": false,
+        "actual": "0",
+        "expected": "7"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": false,
+        "actual": "18",
+        "expected": "6"
+      },
+      {
+        "passed": false,
+        "actual": "12",
+        "expected": "6"
+      },
+      {
+        "passed": false,
+        "actual": "13",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": false,
+        "actual": "180",
+        "expected": "12"
+      },
+      {
+        "passed": true,
+        "actual": "27",
+        "expected": "27"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "29aa534ffc619bcdb745f2dbdcabc605bc53f5a933d525cd97c4b4ad95ef1d4f",
+    "phase": "confidence_zero",
+    "task": "gcd"
+  },
+  "is_prime/8/trigram_randomized": {
+    "code_sha256": "e922ff41c0e994219405d25bf730940dd077652063b75daea8ecb56e586e4202",
+    "total": 13,
+    "passed": 12,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "2974a31f8fd21ace5f86d5d875f16f890dfd88892418267711bfeb33e8a6b3da",
+    "phase": "sample",
+    "task": "is_prime"
+  },
+  "reverse_words/64/trigram_randomized": {
+    "code_sha256": "5bcfb7cc958e721c5596f5f6190114b4ac3f71df35da06093073cba645514922",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "''",
+        "expected": "''"
+      },
+      {
+        "passed": true,
+        "actual": "'a'",
+        "expected": "'a'"
+      },
+      {
+        "passed": true,
+        "actual": "'b a'",
+        "expected": "'b a'"
+      },
+      {
+        "passed": true,
+        "actual": "'three two one'",
+        "expected": "'three two one'"
+      },
+      {
+        "passed": true,
+        "actual": "'there hi'",
+        "expected": "'there hi'"
+      },
+      {
+        "passed": true,
+        "actual": "'c b a'",
+        "expected": "'c b a'"
+      },
+      {
+        "passed": true,
+        "actual": "'world! Hello,'",
+        "expected": "'world! Hello,'"
+      },
+      {
+        "passed": true,
+        "actual": "'4 3 2 1'",
+        "expected": "'4 3 2 1'"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "9fe7749e386084c8b6b268873b01b99cd665822e4b44247e3d69143426ad07b6",
+    "phase": "confidence_zero",
+    "task": "reverse_words"
+  },
+  "clamp/16/trigram_randomized": {
+    "code_sha256": "1e5cb8b5999e760670782cc997649e93b2dde5da541b98fceb2d659737579036",
+    "total": 10,
+    "passed": 1,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": false,
+        "actual": "10",
+        "expected": "5"
+      },
+      {
+        "passed": false,
+        "actual": "10",
+        "expected": "0"
+      },
+      {
+        "passed": false,
+        "actual": "12",
+        "expected": "10"
+      },
+      {
+        "passed": false,
+        "actual": "10",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": false,
+        "actual": "5",
+        "expected": "3"
+      },
+      {
+        "passed": false,
+        "actual": "-2",
+        "expected": "-5"
+      },
+      {
+        "passed": false,
+        "actual": "0",
+        "expected": "-2"
+      },
+      {
+        "passed": false,
+        "actual": "2.5",
+        "expected": "2.0"
+      },
+      {
+        "passed": false,
+        "actual": "5",
+        "expected": "-5"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "df6d5e28f8b7c3d3e1796f150113a2807e6c6d960a349af7ae18550527064f72",
+    "phase": "confidence_zero",
+    "task": "clamp"
+  },
+  "transpose/32/trigram_randomized": {
+    "task": "transpose",
+    "sha256": "541d6e8ee9b7cba339c615589111b51a3d26f24312a61a7d3fe458724a510f59",
+    "all_pass": false,
+    "passed": 0,
+    "total": 9,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "chunk_list/4/trigram_randomized": {
+    "task": "chunk_list",
+    "sha256": "cbc67bce9adbfe92ad5c6923b53d71132f0490d3f7d547d2da0e61fe12069564",
+    "all_pass": false,
+    "passed": 0,
+    "total": 9,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "max_run/128/trigram_randomized": {
+    "task": "max_run",
+    "sha256": "0a32773dc538982ca3127ce8a87ae915440849656bbfe432e1bf33c4948d6578",
+    "all_pass": false,
+    "passed": 7,
+    "total": 9,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": false,
+        "actual": "1",
+        "expected": "3"
+      },
+      {
+        "passed": false,
+        "actual": "6",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "unique_sorted/8/trigram_randomized": {
+    "task": "unique_sorted",
+    "sha256": "8161b609ae390d30e8d5769fc32afa17087146a73bf7f5a066ceb7110f4848fe",
+    "all_pass": true,
+    "passed": 8,
+    "total": 8,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[-1, 0, 2]",
+        "expected": "[-1, 0, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "[0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[-1000000000, 0, 1000000000]",
+        "expected": "[-1000000000, 0, 1000000000]"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "sum_even/8/trigram_randomized": {
+    "task": "sum_even",
+    "sha256": "58454659a43f7b09b2dc23a03c1d97264e5ed8d609b3ee6561cf681817db761d",
+    "all_pass": false,
+    "passed": 0,
+    "total": 11,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "balanced/64/trigram_randomized": {
+    "task": "balanced",
+    "sha256": "2d7d615cb914738009536520ad2d81d8361e01ea8773351a03fce7619a7767f6",
+    "all_pass": false,
+    "passed": 8,
+    "total": 16,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "is_palindrome/16/trigram_randomized": {
+    "task": "is_palindrome",
+    "sha256": "74914b23318b6d28ef103bc83f9dcc18876536a0d3f07b4291b41d5522adb484",
+    "all_pass": false,
+    "passed": 0,
+    "total": 11,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'cleaned' is not defined"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "fibonacci/32/trigram_randomized": {
+    "task": "fibonacci",
+    "sha256": "9a0eb1eb5eaf5b09fe56c1d5bb406206a192f7a25306028114796e5890fc4d05",
+    "all_pass": false,
+    "passed": 0,
+    "total": 8,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "deduplicate/4/trigram_randomized": {
+    "task": "deduplicate",
+    "sha256": "93d155f5dce10f823df2e1c0f9ca5885bb1a49484c219e1442edface3bb3513a",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "binary_search/128/trigram_randomized": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "word_counts/8/trigram_randomized": {
+    "task": "word_counts",
+    "sha256": "ab2916c2d2698026917a4029dc56846a52c0fabbd6a0ca9e406d55d543fae6d9",
+    "all_pass": false,
+    "passed": 0,
+    "total": 8,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'Counter' is not defined"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "merge_sorted/64/trigram_randomized": {
+    "code_sha256": "7ab955d6d21b616b7ebf8e2fd1c522b8500f6effba5ee3d73836ef3668b71f64",
+    "total": 10,
+    "passed": 7,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[2]",
+        "expected": "[2]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[2, 1]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[1, 3, 5, 2, 4, 6]",
+        "expected": "[1, 2, 3, 4, 5, 6]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 1, 1, 2]",
+        "expected": "[1, 1, 1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[-4, -1, 2, -3, 0, 7]",
+        "expected": "[-4, -3, -1, 0, 2, 7]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3, 9]",
+        "expected": "[1, 2, 3, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 0]",
+        "expected": "[0, 0]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "31933bb6848964735a1d3b4209df6dee77250a9aab78cd6d0d860e1538ac7c25",
+    "phase": "confidence_zero",
+    "task": "merge_sorted"
+  },
+  "flatten/16/trigram_randomized": {
+    "code_sha256": "efd28fdea5f2b52502f75e79db7d612e908dff9c0a6a24e8ae3d5ca81daa720e",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['a', 'b', 'c']",
+        "expected": "['a', 'b', 'c']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 0, False]",
+        "expected": "[None, 0, False]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2]]",
+        "expected": "[[1], [2]]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "e5510c00d432245c3726f7b44dd18a1f23ec0cd86378915cbc3d2446b02fb00b",
+    "phase": "confidence_zero",
+    "task": "flatten"
+  },
+  "fizzbuzz/32/trigram_randomized": {
+    "task": "fizzbuzz",
+    "sha256": "6492e6882fc138c7c0a739090f7f1985f20ecbaa06966c9202c391868b91145b",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd89e0>",
+        "expected": "[]"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd8900>",
+        "expected": "['1']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd89e0>",
+        "expected": "['1', '2']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd8900>",
+        "expected": "['1', '2', 'Fizz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd89e0>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd8900>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd89e0>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd8900>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd89e0>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16']"
+      },
+      {
+        "passed": false,
+        "actual": "<generator object fizzbuzz at 0x107cd8900>",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16', '17', 'Fizz', '19', 'Buzz', 'Fizz', '22', '23', 'Fizz', 'Buzz', '26', "
+      }
+    ],
+    "constraint_violations": []
+  },
+  "factorial/4/trigram_randomized": {
+    "task": "factorial",
+    "sha256": "a7a890f0b39b9eac258bc509a25109f917d6b250225ca297e22b483c3d192767",
+    "all_pass": false,
+    "passed": 0,
+    "total": 9,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "count_vowels/128/trigram_randomized": {
+    "code_sha256": "954c86a68b2d88e90ad1891e34f9893b6896dba052148f88826519aa6ab11a13",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "a3da3cbe90aa3656ec715ad0f425d9508ad528fdcf885fd0fc92241da8d1a57e",
+    "phase": "confidence_zero",
+    "task": "count_vowels"
+  },
+  "gcd/8/trigram_randomized": {
+    "task": "gcd",
+    "sha256": "46f273a8568da0a5757e5137bbdada8203b3080ee5179e7a2608c8343b9b96ec",
+    "all_pass": true,
+    "passed": 10,
+    "total": 10,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "7",
+        "expected": "7"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      },
+      {
+        "passed": true,
+        "actual": "27",
+        "expected": "27"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "is_prime/64/trigram_randomized": {
+    "code_sha256": "28f166261950fa956e299a50872f539d490af163c1b0fb6d316d346fd7644685",
+    "total": 13,
+    "passed": 13,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "53cbf743fa45b7a194da0b491879c411b11539b7c8475399ca0818bb5bf9e4c2",
+    "phase": "confidence_zero",
+    "task": "is_prime"
+  },
+  "reverse_words/16/trigram_randomized": {
+    "code_sha256": "5bcfb7cc958e721c5596f5f6190114b4ac3f71df35da06093073cba645514922",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "''",
+        "expected": "''"
+      },
+      {
+        "passed": true,
+        "actual": "'a'",
+        "expected": "'a'"
+      },
+      {
+        "passed": true,
+        "actual": "'b a'",
+        "expected": "'b a'"
+      },
+      {
+        "passed": true,
+        "actual": "'three two one'",
+        "expected": "'three two one'"
+      },
+      {
+        "passed": true,
+        "actual": "'there hi'",
+        "expected": "'there hi'"
+      },
+      {
+        "passed": true,
+        "actual": "'c b a'",
+        "expected": "'c b a'"
+      },
+      {
+        "passed": true,
+        "actual": "'world! Hello,'",
+        "expected": "'world! Hello,'"
+      },
+      {
+        "passed": true,
+        "actual": "'4 3 2 1'",
+        "expected": "'4 3 2 1'"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "9fe7749e386084c8b6b268873b01b99cd665822e4b44247e3d69143426ad07b6",
+    "phase": "confidence_zero",
+    "task": "reverse_words"
+  },
+  "clamp/32/trigram_randomized": {
+    "code_sha256": "1e5cb8b5999e760670782cc997649e93b2dde5da541b98fceb2d659737579036",
+    "total": 10,
+    "passed": 1,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": false,
+        "actual": "10",
+        "expected": "5"
+      },
+      {
+        "passed": false,
+        "actual": "10",
+        "expected": "0"
+      },
+      {
+        "passed": false,
+        "actual": "12",
+        "expected": "10"
+      },
+      {
+        "passed": false,
+        "actual": "10",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": false,
+        "actual": "5",
+        "expected": "3"
+      },
+      {
+        "passed": false,
+        "actual": "-2",
+        "expected": "-5"
+      },
+      {
+        "passed": false,
+        "actual": "0",
+        "expected": "-2"
+      },
+      {
+        "passed": false,
+        "actual": "2.5",
+        "expected": "2.0"
+      },
+      {
+        "passed": false,
+        "actual": "5",
+        "expected": "-5"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "df6d5e28f8b7c3d3e1796f150113a2807e6c6d960a349af7ae18550527064f72",
+    "phase": "confidence_zero",
+    "task": "clamp"
+  },
+  "transpose/4/trigram_randomized": {
+    "task": "transpose",
+    "sha256": "39e256011fc18836b81d2f2acf145a0e431e8888cd9f3f27c3721ac462227db9",
+    "all_pass": false,
+    "passed": 0,
+    "total": 9,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "chunk_list/128/trigram_randomized": {
+    "code_sha256": "023b9071f1a286f53441782986174f442a850b1bc615726d23296b2ed9c1cc43",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1]]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1]]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1, 2], [3]]",
+        "expected": "[[1, 2], [3]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1, 2], [3, 4]]",
+        "expected": "[[1, 2], [3, 4]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2], [3]]",
+        "expected": "[[1], [2], [3]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1, 2, 3]]",
+        "expected": "[[1, 2, 3]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]",
+        "expected": "[[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]"
+      },
+      {
+        "passed": true,
+        "actual": "[['a', 'b', 'c'], ['d']]",
+        "expected": "[['a', 'b', 'c'], ['d']]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "f0a7bb566244bff512e496d7a12de0d6ed4ed29ef0d6f0f94bcec0694e5db5b9",
+    "phase": "confidence_zero",
+    "task": "chunk_list"
+  },
+  "max_run/8/trigram_randomized": {
+    "task": "max_run",
+    "sha256": "12e22878f3a3fdeff5b439b2a8e27979a64f41a505824d989240d83445497e08",
+    "all_pass": false,
+    "passed": 5,
+    "total": 9,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": false,
+        "actual": "2",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": false,
+        "actual": "1",
+        "expected": "3"
+      },
+      {
+        "passed": false,
+        "actual": "5",
+        "expected": "4"
+      },
+      {
+        "passed": false,
+        "actual": "1",
+        "expected": "2"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "unique_sorted/64/trigram_randomized": {
+    "code_sha256": "6ce1d03ed5ef355217dc3052f71bdc01be899edf35b05193ca6c4f918da80456",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[-1, 0, 2]",
+        "expected": "[-1, 0, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "[0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[-1000000000, 0, 1000000000]",
+        "expected": "[-1000000000, 0, 1000000000]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "2ec2e23f8b0cbd00aa17cc5ff8baa3df00404957e6f94e0377852b90fcfa4c11",
+    "phase": "confidence_zero",
+    "task": "unique_sorted"
+  },
+  "sum_even/64/trigram_randomized": {
+    "code_sha256": "a542c78f761534e3eef3db56bca9e1efcf5a10aa63df1b19b6973117ff72488d",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "12c794bba2621b7de1b6bc37ae99d881345c48b8ff0bfc3119cd3df6274a30f6",
+    "phase": "confidence_zero",
+    "task": "sum_even"
+  },
+  "balanced/16/trigram_randomized": {
+    "task": "balanced",
+    "sha256": "cb5ea10c40ad010d4902284a73b2c8fe4673641e4de74fa42b956a33e2cd26e5",
+    "all_pass": false,
+    "passed": 9,
+    "total": 16,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "is_palindrome/32/trigram_randomized": {
+    "task": "is_palindrome",
+    "sha256": "852ee875c9a54ce3f566b61efe3de861b8b885e84f778e5f83f0e81a2e563625",
+    "all_pass": false,
+    "passed": 0,
+    "total": 11,
+    "status": "executed",
+    "score": 1,
+    "checks": [
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      },
+      {
+        "passed": false,
+        "error": "TypeError: 'bool' object is not iterable"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "fibonacci/4/trigram_randomized": {
+    "task": "fibonacci",
+    "sha256": "0512293cce2c4633c213c79ba3b9c9d8c06d8e6a6d4131433f03a452fcdb3c95",
+    "all_pass": false,
+    "passed": 0,
+    "total": 8,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "deduplicate/128/trigram_randomized": {
+    "code_sha256": "33cd318dcaab4259639647dc8df2cc3f23ff010330109a8dcf7ec2df47a83391",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[3, 1, 2]",
+        "expected": "[3, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['b', 'a']",
+        "expected": "['b', 'a']"
+      },
+      {
+        "passed": true,
+        "actual": "[0, -1, 2]",
+        "expected": "[0, -1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['x', 'y', 'z']",
+        "expected": "['x', 'y', 'z']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 1]",
+        "expected": "[None, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[2, 1, 3]",
+        "expected": "[2, 1, 3]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "537c43d94381d76027340789c030b372c8466e5e96a68dcb4257c34200197bfc",
+    "phase": "confidence_zero",
+    "task": "deduplicate"
+  },
+  "binary_search/8/trigram_randomized": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "word_counts/64/trigram_randomized": {
+    "code_sha256": "bd3a7eaca86fdce5d0ea6a95570771b43bc392708939bffabbbf77bd6e50e02f",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "Counter()",
+        "expected": "{}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter()",
+        "expected": "{}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hi': 1})",
+        "expected": "{'hi': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hi': 3})",
+        "expected": "{'hi': 3}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'a': 2, 'b': 1})",
+        "expected": "{'a': 2, 'b': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'red': 2, 'blue': 1})",
+        "expected": "{'red': 2, 'blue': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hello,': 1, 'hello': 1})",
+        "expected": "{'hello,': 1, 'hello': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'x': 2, 'y': 1})",
+        "expected": "{'x': 2, 'y': 1}"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "34bda82838c5cc90f0387bd7482025bc26263388a123e208774981a343cedadc",
+    "phase": "confidence_zero",
+    "task": "word_counts"
+  },
+  "merge_sorted/16/trigram_randomized": {
+    "code_sha256": "7ab955d6d21b616b7ebf8e2fd1c522b8500f6effba5ee3d73836ef3668b71f64",
+    "total": 10,
+    "passed": 7,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[2]",
+        "expected": "[2]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[2, 1]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[1, 3, 5, 2, 4, 6]",
+        "expected": "[1, 2, 3, 4, 5, 6]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 1, 1, 2]",
+        "expected": "[1, 1, 1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[-4, -1, 2, -3, 0, 7]",
+        "expected": "[-4, -3, -1, 0, 2, 7]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3, 9]",
+        "expected": "[1, 2, 3, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 0]",
+        "expected": "[0, 0]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "e39b5d2f99d2d20cb4f4cc186b401abc3019966f1b847184828f565c1354d5ac",
+    "phase": "sample",
+    "task": "merge_sorted"
+  },
+  "flatten/32/trigram_randomized": {
+    "code_sha256": "efd28fdea5f2b52502f75e79db7d612e908dff9c0a6a24e8ae3d5ca81daa720e",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['a', 'b', 'c']",
+        "expected": "['a', 'b', 'c']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 0, False]",
+        "expected": "[None, 0, False]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2]]",
+        "expected": "[[1], [2]]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "e5510c00d432245c3726f7b44dd18a1f23ec0cd86378915cbc3d2446b02fb00b",
+    "phase": "confidence_zero",
+    "task": "flatten"
+  },
+  "fizzbuzz/4/trigram_randomized": {
+    "task": "fizzbuzz",
+    "sha256": "db9eb93931c49dc400d0d7a11f70a381ec79528edf245b2ce0142cd87336044f",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "factorial/128/trigram_randomized": {
+    "code_sha256": "cf764ddbef2a46f2ced04335c901fa9d2f40b38f1ba0b94bdd3054a48ad03d6a",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "24",
+        "expected": "24"
+      },
+      {
+        "passed": true,
+        "actual": "120",
+        "expected": "120"
+      },
+      {
+        "passed": true,
+        "actual": "5040",
+        "expected": "5040"
+      },
+      {
+        "passed": true,
+        "actual": "3628800",
+        "expected": "3628800"
+      },
+      {
+        "passed": true,
+        "actual": "479001600",
+        "expected": "479001600"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "488c1d1cf2e7d3ae607e8103fd507450b06da85921e5adeefbe413268361687b",
+    "phase": "confidence_zero",
+    "task": "factorial"
+  },
+  "count_vowels/8/trigram_randomized": {
+    "task": "count_vowels",
+    "sha256": "b3e3953d916b55f570a1c9c266d17bf11ef7069a3eadb08b8ff7553554b0eed6",
+    "all_pass": true,
+    "passed": 10,
+    "total": 10,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "gcd/64/trigram_randomized": {
+    "code_sha256": "5fc6283c06fd3eb55ee787dad54e8e7fbfd467b476357f7989a50ef4b29ac0c9",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "7",
+        "expected": "7"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      },
+      {
+        "passed": true,
+        "actual": "27",
+        "expected": "27"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "108df8616dd8222bdd749c3e8e143270efc7bb2d7bb4d9eb6dea0cad26cb7cd2",
+    "phase": "confidence_zero",
+    "task": "gcd"
+  },
+  "is_prime/16/trigram_randomized": {
+    "task": "is_prime",
+    "sha256": "8d797d6f108b5b70d6ad7da1165ad8457fa68ece15c4c99ae5c7fa28e905c13b",
+    "all_pass": true,
+    "passed": 13,
+    "total": 13,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "reverse_words/32/trigram_randomized": {
+    "code_sha256": "5bcfb7cc958e721c5596f5f6190114b4ac3f71df35da06093073cba645514922",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "''",
+        "expected": "''"
+      },
+      {
+        "passed": true,
+        "actual": "'a'",
+        "expected": "'a'"
+      },
+      {
+        "passed": true,
+        "actual": "'b a'",
+        "expected": "'b a'"
+      },
+      {
+        "passed": true,
+        "actual": "'three two one'",
+        "expected": "'three two one'"
+      },
+      {
+        "passed": true,
+        "actual": "'there hi'",
+        "expected": "'there hi'"
+      },
+      {
+        "passed": true,
+        "actual": "'c b a'",
+        "expected": "'c b a'"
+      },
+      {
+        "passed": true,
+        "actual": "'world! Hello,'",
+        "expected": "'world! Hello,'"
+      },
+      {
+        "passed": true,
+        "actual": "'4 3 2 1'",
+        "expected": "'4 3 2 1'"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "9fe7749e386084c8b6b268873b01b99cd665822e4b44247e3d69143426ad07b6",
+    "phase": "confidence_zero",
+    "task": "reverse_words"
+  },
+  "clamp/4/trigram_randomized": {
+    "task": "clamp",
+    "sha256": "2d6ff55885d5a0ba0ed9991852ae5e27be6f6fc63ece2f6849b816c39e0715ec",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "transpose/128/trigram_randomized": {
+    "code_sha256": "67d5260e259903435d894eb586a56d25b03df4583e201c3e3d41d40d9ac74310",
+    "total": 9,
+    "passed": 3,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": false,
+        "actual": "[(1,)]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": false,
+        "actual": "[(1,), (2,), (3,)]",
+        "expected": "[[1], [2], [3]]"
+      },
+      {
+        "passed": false,
+        "actual": "[(1, 2, 3)]",
+        "expected": "[[1, 2, 3]]"
+      },
+      {
+        "passed": false,
+        "actual": "[(1, 3), (2, 4)]",
+        "expected": "[[1, 3], [2, 4]]"
+      },
+      {
+        "passed": false,
+        "actual": "[(1, 4), (2, 5), (3, 6)]",
+        "expected": "[[1, 4], [2, 5], [3, 6]]"
+      },
+      {
+        "passed": false,
+        "actual": "[('a', 'c'), ('b', 'd')]",
+        "expected": "[['a', 'c'], ['b', 'd']]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "876c391fd5d3e768122105ac35c7d306c659b670872141f2afc1ee9a93d75ea5",
+    "phase": "confidence_zero",
+    "task": "transpose"
+  },
+  "chunk_list/8/trigram_randomized": {
+    "task": "chunk_list",
+    "sha256": "3e5791e515f54ef872172986dfbc7e8ffc172aedeb5b0af5ff6a20f73301b2ea",
+    "all_pass": false,
+    "passed": 1,
+    "total": 9,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[1, 2], [3]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[1, 2], [3, 4]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[1], [2], [3]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[1, 2, 3]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]"
+      },
+      {
+        "passed": false,
+        "actual": "[]",
+        "expected": "[['a', 'b', 'c'], ['d']]"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "max_run/64/trigram_randomized": {
+    "task": "max_run",
+    "sha256": "88460b7fa40ea1f2f15763dbb86d7af448dacd18cc2d5e7a9d69ff2018427278",
+    "all_pass": false,
+    "passed": 1,
+    "total": 9,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": false,
+        "actual": "2",
+        "expected": "1"
+      },
+      {
+        "passed": false,
+        "actual": "3",
+        "expected": "2"
+      },
+      {
+        "passed": false,
+        "actual": "2",
+        "expected": "1"
+      },
+      {
+        "passed": false,
+        "actual": "4",
+        "expected": "3"
+      },
+      {
+        "passed": false,
+        "actual": "5",
+        "expected": "4"
+      },
+      {
+        "passed": false,
+        "actual": "2",
+        "expected": "3"
+      },
+      {
+        "passed": false,
+        "actual": "7",
+        "expected": "4"
+      },
+      {
+        "passed": false,
+        "actual": "3",
+        "expected": "2"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "unique_sorted/16/trigram_randomized": {
+    "code_sha256": "6ce1d03ed5ef355217dc3052f71bdc01be899edf35b05193ca6c4f918da80456",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[-1, 0, 2]",
+        "expected": "[-1, 0, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "[0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[-1000000000, 0, 1000000000]",
+        "expected": "[-1000000000, 0, 1000000000]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "2ec2e23f8b0cbd00aa17cc5ff8baa3df00404957e6f94e0377852b90fcfa4c11",
+    "phase": "confidence_zero",
+    "task": "unique_sorted"
+  },
+  "sum_even/16/trigram_randomized": {
+    "code_sha256": "87c93f7fa8cd32e67963649e917fbac786f0168126d81fe172cac2317f6dcac9",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "ac21011c2691b5cabe8d4a13d66c8141a8d3f6dcf784da818956c53e3f94c7ff",
+    "phase": "sample",
+    "task": "sum_even"
+  },
+  "balanced/32/trigram_randomized": {
+    "code_sha256": "637c9f8a9c7c0073ee70cb94a3b9a8fe59eed04076e20b8b41870f975618a660",
+    "total": 16,
+    "passed": 9,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "01b90493468adb300da1b6fce3a2987211981761a664deef31c8c698e31dcae0",
+    "phase": "sample",
+    "task": "balanced"
+  },
+  "is_palindrome/4/trigram_randomized": {
+    "task": "is_palindrome",
+    "sha256": "81b736fdfbfc29e0738e4c6890f9307e1140e5aac1f7abf8e52ac7ca2350465d",
+    "all_pass": false,
+    "passed": 0,
+    "total": 11,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "fibonacci/128/trigram_randomized": {
+    "code_sha256": "14fde49fde1675c6ad674e61c9b966727316f6f1eea5fcf3a35ab0fb0f8f31ea",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1]",
+        "expected": "[0, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1]",
+        "expected": "[0, 1, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2]",
+        "expected": "[0, 1, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2, 3, 5, 8]",
+        "expected": "[0, 1, 1, 2, 3, 5, 8]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]",
+        "expected": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "d7aa6a35e80a011e8ff438977ac4a3652b43d72f87ffdd6b8bbf388bafef2acb",
+    "phase": "confidence_zero",
+    "task": "fibonacci"
+  },
+  "deduplicate/8/trigram_randomized": {
+    "code_sha256": "367224ab701168f96898d4d6f4079a9951166acc9fe1f7c9e09c44f59c2870ac",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[3, 1, 2]",
+        "expected": "[3, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['b', 'a']",
+        "expected": "['b', 'a']"
+      },
+      {
+        "passed": true,
+        "actual": "[0, -1, 2]",
+        "expected": "[0, -1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['x', 'y', 'z']",
+        "expected": "['x', 'y', 'z']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 1]",
+        "expected": "[None, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[2, 1, 3]",
+        "expected": "[2, 1, 3]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "65027643285e16fe509fbe23749b838ebd0587336140d5efa18ebe1200483f18",
+    "phase": "confidence_zero",
+    "task": "deduplicate"
+  },
+  "binary_search/64/trigram_randomized": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "word_counts/16/trigram_randomized": {
+    "task": "word_counts",
+    "sha256": "f260cd7e814fa5958553839b48099e98f41ce69610794c02c2dc0801930db02d",
+    "all_pass": true,
+    "passed": 8,
+    "total": 8,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "Counter()",
+        "expected": "{}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter()",
+        "expected": "{}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hi': 1})",
+        "expected": "{'hi': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hi': 3})",
+        "expected": "{'hi': 3}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'a': 2, 'b': 1})",
+        "expected": "{'a': 2, 'b': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'red': 2, 'blue': 1})",
+        "expected": "{'red': 2, 'blue': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hello,': 1, 'hello': 1})",
+        "expected": "{'hello,': 1, 'hello': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'x': 2, 'y': 1})",
+        "expected": "{'x': 2, 'y': 1}"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "merge_sorted/32/trigram_randomized": {
+    "code_sha256": "7ab955d6d21b616b7ebf8e2fd1c522b8500f6effba5ee3d73836ef3668b71f64",
+    "total": 10,
+    "passed": 7,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[2]",
+        "expected": "[2]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[2, 1]",
+        "expected": "[1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[1, 3, 5, 2, 4, 6]",
+        "expected": "[1, 2, 3, 4, 5, 6]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 1, 1, 2]",
+        "expected": "[1, 1, 1, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[-4, -1, 2, -3, 0, 7]",
+        "expected": "[-4, -3, -1, 0, 2, 7]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3, 9]",
+        "expected": "[1, 2, 3, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 0]",
+        "expected": "[0, 0]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "31933bb6848964735a1d3b4209df6dee77250a9aab78cd6d0d860e1538ac7c25",
+    "phase": "confidence_zero",
+    "task": "merge_sorted"
+  },
+  "flatten/4/trigram_randomized": {
+    "task": "flatten",
+    "sha256": "d46c4b54cc9962d49d4f9549f0455fed48c2f7b6845e99717588e4d1a6496a0c",
+    "all_pass": true,
+    "passed": 9,
+    "total": 9,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['a', 'b', 'c']",
+        "expected": "['a', 'b', 'c']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 0, False]",
+        "expected": "[None, 0, False]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2]]",
+        "expected": "[[1], [2]]"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "fizzbuzz/128/trigram_randomized": {
+    "code_sha256": "3558df6e12d0e04cec001958a5e03ad38c29a2723605b322367936ea234d2b3f",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['1']",
+        "expected": "['1']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2']",
+        "expected": "['1', '2']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz']",
+        "expected": "['1', '2', 'Fizz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16', '17', 'Fizz', '19', 'Buzz', 'Fizz', '22', '23', 'Fizz', 'Buzz', '26', ",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16', '17', 'Fizz', '19', 'Buzz', 'Fizz', '22', '23', 'Fizz', 'Buzz', '26', "
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "65c58bcf631cbedc5ad6526a7a0ca7545363d0331530befd9c5fd966ee9e8852",
+    "phase": "confidence_zero",
+    "task": "fizzbuzz"
+  },
+  "factorial/8/trigram_randomized": {
+    "task": "factorial",
+    "sha256": "3361a5cb97a306b7db16b5496bb58680c44b203848039261a5fa9d804b47de0a",
+    "all_pass": false,
+    "passed": 1,
+    "total": 9,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'i' is not defined"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "count_vowels/64/trigram_randomized": {
+    "code_sha256": "9ca3ece7d3ab7e6ab7ac4f8ec851f730dadf5b61a7c5d28f2b0b7d0cb3b4826a",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "41363536eff576263aaeedfb61b0b996d50a8e8300819a6d9c5cdb203e48466b",
+    "phase": "main",
+    "task": "count_vowels"
+  },
+  "gcd/16/trigram_randomized": {
+    "task": "gcd",
+    "sha256": "a7786bf8ce6d74548549be0adfd30d9427b3127ea47d1e8251679211884aa554",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "is_prime/32/trigram_randomized": {
+    "code_sha256": "28f166261950fa956e299a50872f539d490af163c1b0fb6d316d346fd7644685",
+    "total": 13,
+    "passed": 13,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "53cbf743fa45b7a194da0b491879c411b11539b7c8475399ca0818bb5bf9e4c2",
+    "phase": "confidence_zero",
+    "task": "is_prime"
+  },
+  "reverse_words/4/trigram_randomized": {
+    "task": "reverse_words",
+    "sha256": "cb6843b95bca9e3799094c8d1f68b0f7198fab75d39e012ff89661f6325b2ea9",
+    "all_pass": false,
+    "passed": 0,
+    "total": 8,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "clamp/128/trigram_randomized": {
+    "code_sha256": "5d96e8ffef55bd7f16af43e3137a8f6127ba1621cb07c57ba75d7ebb99a3e102",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-5",
+        "expected": "-5"
+      },
+      {
+        "passed": true,
+        "actual": "-2",
+        "expected": "-2"
+      },
+      {
+        "passed": true,
+        "actual": "2.0",
+        "expected": "2.0"
+      },
+      {
+        "passed": true,
+        "actual": "-5",
+        "expected": "-5"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "cbf15d89eb4e01fdbb60fdf326a3750b2e6019643fd08b85ea54ade3bc168523",
+    "phase": "confidence_zero",
+    "task": "clamp"
+  },
+  "transpose/8/trigram_randomized": {
+    "task": "transpose",
+    "sha256": "e5a41e36d24a8236ad0f6b29d470b66f7ed754e48249097abbad7c6c2f815493",
+    "all_pass": false,
+    "passed": 0,
+    "total": 9,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "chunk_list/64/trigram_randomized": {
+    "code_sha256": "023b9071f1a286f53441782986174f442a850b1bc615726d23296b2ed9c1cc43",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1]]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1]]",
+        "expected": "[[1]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1, 2], [3]]",
+        "expected": "[[1, 2], [3]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1, 2], [3, 4]]",
+        "expected": "[[1, 2], [3, 4]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2], [3]]",
+        "expected": "[[1], [2], [3]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1, 2, 3]]",
+        "expected": "[[1, 2, 3]]"
+      },
+      {
+        "passed": true,
+        "actual": "[[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]",
+        "expected": "[[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]"
+      },
+      {
+        "passed": true,
+        "actual": "[['a', 'b', 'c'], ['d']]",
+        "expected": "[['a', 'b', 'c'], ['d']]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "f0a7bb566244bff512e496d7a12de0d6ed4ed29ef0d6f0f94bcec0694e5db5b9",
+    "phase": "confidence_zero",
+    "task": "chunk_list"
+  },
+  "max_run/16/trigram_randomized": {
+    "task": "max_run",
+    "sha256": "95045f259ce5b809d1939473a6b1967209741589562d107748339da4fc2eb994",
+    "all_pass": false,
+    "passed": 1,
+    "total": 9,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      },
+      {
+        "passed": false,
+        "error": "NameError: name 'value' is not defined"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "unique_sorted/32/trigram_randomized": {
+    "task": "unique_sorted",
+    "sha256": "11efd8bb8d67ec48be508792f83a32ae0e1c44f3d08ee236095e8d7b7a15be19",
+    "all_pass": false,
+    "passed": 3,
+    "total": 8,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": false,
+        "actual": "[1, 1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": false,
+        "actual": "[1, 2, 3, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": false,
+        "actual": "[-1, -1, 0, 2]",
+        "expected": "[-1, 0, 2]"
+      },
+      {
+        "passed": false,
+        "actual": "[0, 0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": false,
+        "actual": "[-1000000000, 0, 1000000000, 1000000000]",
+        "expected": "[-1000000000, 0, 1000000000]"
+      }
+    ],
+    "constraint_violations": []
+  },
+  "sum_even/32/trigram_randomized": {
+    "code_sha256": "87c93f7fa8cd32e67963649e917fbac786f0168126d81fe172cac2317f6dcac9",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "-6",
+        "expected": "-6"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1000000002",
+        "expected": "1000000002"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "ac21011c2691b5cabe8d4a13d66c8141a8d3f6dcf784da818956c53e3f94c7ff",
+    "phase": "sample",
+    "task": "sum_even"
+  },
+  "balanced/4/trigram_randomized": {
+    "task": "balanced",
+    "sha256": "34ed086a47d4ea636443138407d9d53d618e9dc286b338061b526f86f4afd9b2",
+    "all_pass": false,
+    "passed": 0,
+    "total": 16,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "is_palindrome/128/trigram_randomized": {
+    "code_sha256": "ce9c502b9cde357e2fc6f2125a440ec9d6feadc176b1ffb826a1ad624f995c66",
+    "total": 11,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "792328a3b511bdf7ccbb5225ccc72a88c0664fbd0738cbba01489b5e77d472a0",
+    "phase": "confidence_zero",
+    "task": "is_palindrome"
+  },
+  "fibonacci/8/trigram_randomized": {
+    "code_sha256": "b5dc4af2d4eefd295d86fa5b39c16f263cbb612702f93111a8f8c86e0336daec",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[0]",
+        "expected": "[0]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1]",
+        "expected": "[0, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1]",
+        "expected": "[0, 1, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2]",
+        "expected": "[0, 1, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2, 3, 5, 8]",
+        "expected": "[0, 1, 1, 2, 3, 5, 8]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]",
+        "expected": "[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "7df0d20069571f7daea2674304fda41fdda92165e279433795f1d4521ec12ef5",
+    "phase": "sample",
+    "task": "fibonacci"
+  },
+  "deduplicate/64/trigram_randomized": {
+    "code_sha256": "367224ab701168f96898d4d6f4079a9951166acc9fe1f7c9e09c44f59c2870ac",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[3, 1, 2]",
+        "expected": "[3, 1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['b', 'a']",
+        "expected": "['b', 'a']"
+      },
+      {
+        "passed": true,
+        "actual": "[0, -1, 2]",
+        "expected": "[0, -1, 2]"
+      },
+      {
+        "passed": true,
+        "actual": "['x', 'y', 'z']",
+        "expected": "['x', 'y', 'z']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 1]",
+        "expected": "[None, 1]"
+      },
+      {
+        "passed": true,
+        "actual": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "expected": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+      },
+      {
+        "passed": true,
+        "actual": "[2, 1, 3]",
+        "expected": "[2, 1, 3]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "65027643285e16fe509fbe23749b838ebd0587336140d5efa18ebe1200483f18",
+    "phase": "confidence_zero",
+    "task": "deduplicate"
+  },
+  "binary_search/16/trigram_randomized": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "word_counts/32/trigram_randomized": {
+    "code_sha256": "178935aa482c47569ff75b982f536959b63716186b4be5978f1d650e95e869eb",
+    "total": 8,
+    "passed": 8,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "Counter()",
+        "expected": "{}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter()",
+        "expected": "{}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hi': 1})",
+        "expected": "{'hi': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hi': 3})",
+        "expected": "{'hi': 3}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'a': 2, 'b': 1})",
+        "expected": "{'a': 2, 'b': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'red': 2, 'blue': 1})",
+        "expected": "{'red': 2, 'blue': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'hello,': 1, 'hello': 1})",
+        "expected": "{'hello,': 1, 'hello': 1}"
+      },
+      {
+        "passed": true,
+        "actual": "Counter({'x': 2, 'y': 1})",
+        "expected": "{'x': 2, 'y': 1}"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "0bfe162e255e9fbd748e8793a934bc4d2826385b93bca90529ea3dbfcacc4364",
+    "phase": "confidence_zero",
+    "task": "word_counts"
+  },
+  "merge_sorted/4/trigram_randomized": {
+    "task": "merge_sorted",
+    "sha256": "e8aa069bdcc599593819b12a2e69f47fc52b091e68bae186be35ef0c74be7059",
+    "all_pass": false,
+    "passed": 0,
+    "total": 10,
+    "status": "syntax_error",
+    "score": 0
+  },
+  "flatten/128/trigram_randomized": {
+    "code_sha256": "efd28fdea5f2b52502f75e79db7d612e908dff9c0a6a24e8ae3d5ca81daa720e",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "[1]",
+        "expected": "[1]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[1, 2, 3]",
+        "expected": "[1, 2, 3]"
+      },
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['a', 'b', 'c']",
+        "expected": "['a', 'b', 'c']"
+      },
+      {
+        "passed": true,
+        "actual": "[None, 0, False]",
+        "expected": "[None, 0, False]"
+      },
+      {
+        "passed": true,
+        "actual": "[[1], [2]]",
+        "expected": "[[1], [2]]"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "e5510c00d432245c3726f7b44dd18a1f23ec0cd86378915cbc3d2446b02fb00b",
+    "phase": "confidence_zero",
+    "task": "flatten"
+  },
+  "fizzbuzz/8/trigram_randomized": {
+    "code_sha256": "3558df6e12d0e04cec001958a5e03ad38c29a2723605b322367936ea234d2b3f",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "[]",
+        "expected": "[]"
+      },
+      {
+        "passed": true,
+        "actual": "['1']",
+        "expected": "['1']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2']",
+        "expected": "['1', '2']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz']",
+        "expected": "['1', '2', 'Fizz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16']",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16']"
+      },
+      {
+        "passed": true,
+        "actual": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16', '17', 'Fizz', '19', 'Buzz', 'Fizz', '22', '23', 'Fizz', 'Buzz', '26', ",
+        "expected": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz', '16', '17', 'Fizz', '19', 'Buzz', 'Fizz', '22', '23', 'Fizz', 'Buzz', '26', "
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "65c58bcf631cbedc5ad6526a7a0ca7545363d0331530befd9c5fd966ee9e8852",
+    "phase": "confidence_zero",
+    "task": "fizzbuzz"
+  },
+  "factorial/64/trigram_randomized": {
+    "code_sha256": "4017ed940812d99940a59ad82a7896f2383f30a66c3bfd54a6541b3d7bb704a5",
+    "total": 9,
+    "passed": 9,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "24",
+        "expected": "24"
+      },
+      {
+        "passed": true,
+        "actual": "120",
+        "expected": "120"
+      },
+      {
+        "passed": true,
+        "actual": "5040",
+        "expected": "5040"
+      },
+      {
+        "passed": true,
+        "actual": "3628800",
+        "expected": "3628800"
+      },
+      {
+        "passed": true,
+        "actual": "479001600",
+        "expected": "479001600"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4afdd7d66e8ea735442ed33979a0be6b5a14a305cf916e565a14d5f1c1c03a07",
+    "phase": "confidence_zero",
+    "task": "factorial"
+  },
+  "count_vowels/16/trigram_randomized": {
+    "code_sha256": "9cc1a60fc8602977cfbd243ce17e7677cb6e0af7c85408e96fa4a3f032713425",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "522c8296e53416db014c5249008e67fdd33e1a6a074ba6bc54b257105984f51a",
+    "phase": "confidence_zero",
+    "task": "count_vowels"
+  },
+  "gcd/32/trigram_randomized": {
+    "code_sha256": "1f39a90d2d991e2318e1daba6d7bbf61bb3efab2122b15c97b85970901575d46",
+    "total": 10,
+    "passed": 10,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "5",
+        "expected": "5"
+      },
+      {
+        "passed": true,
+        "actual": "7",
+        "expected": "7"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "6",
+        "expected": "6"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "10",
+        "expected": "10"
+      },
+      {
+        "passed": true,
+        "actual": "12",
+        "expected": "12"
+      },
+      {
+        "passed": true,
+        "actual": "27",
+        "expected": "27"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "29b4011b0d37d2e16a16499281bd513f94b5178637456511d38d5f09973af7b9",
+    "phase": "confidence_zero",
+    "task": "gcd"
+  },
+  "is_prime/4/trigram_randomized": {
+    "task": "is_prime",
+    "sha256": "e8a4eebf86ed2833eb65febc68cb80dd06c567c2f8886fca1b90a8fcc8f32137",
+    "all_pass": false,
+    "passed": 0,
+    "total": 13,
+    "status": "syntax_error",
+    "score": 0
+  }
+}

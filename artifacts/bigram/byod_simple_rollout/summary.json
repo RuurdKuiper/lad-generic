@@ -1,0 +1,94 @@
+{
+  "spaces": 8,
+  "accounts": [
+    "Ruurd",
+    "Dovelove"
+  ],
+  "methods": [
+    "Confidence-guided",
+    "BG + TG Viterbi (Gumbel)"
+  ],
+  "settings": {
+    "temperature": 0.7,
+    "bigram_weight": 1.0,
+    "ending_delay_strength": 10.0,
+    "trigram_min_count": 2,
+    "trigram_clip": 2.0,
+    "trigram_relative_weight": 0.5
+  },
+  "local_tests": {
+    "passed": 243,
+    "skipped": 6,
+    "skip_reason": "CUDA unavailable locally"
+  },
+  "hosted": {
+    "ui_checks": 8,
+    "short_generations": 16,
+    "forward_passes_per_generation": 2,
+    "all_complete": true
+  },
+  "training": {
+    "corpus": "Full original BYOD response training split",
+    "documents_per_model": 980000,
+    "exact_existing_bigram_and_unigram_counts": true,
+    "larger_llada_expanded_corpus": false
+  },
+  "deployed": [
+    {
+      "space": "Ruurd/byod-gemma-2-9b",
+      "owner": "Ruurd",
+      "model": "gemma",
+      "parent_revision": "1f739e48ed998a6b2d682efff479eb0b3fc5f500",
+      "revision": "d70735cd924e7b7935c31cd8a624c15cb93ece40"
+    },
+    {
+      "space": "Ruurd/byod-llama-3.1-8b",
+      "owner": "Ruurd",
+      "model": "llama",
+      "parent_revision": "c8fd1efb8ef980a182f93f9f53f7c26c31b4eefd",
+      "revision": "0ba16b89facdd3942094f984ecd7469d9a40ece7"
+    },
+    {
+      "space": "Ruurd/byod-qwen2.5-7b",
+      "owner": "Ruurd",
+      "model": "qwen",
+      "parent_revision": "42f4809f51abcead37fe96eaa38d4b4b137e8119",
+      "revision": "946379fa6b5dabd2d3f1615c7ce52746fa3fc83b"
+    },
+    {
+      "space": "Ruurd/byod-ministral-8b",
+      "owner": "Ruurd",
+      "model": "ministral",
+      "parent_revision": "a0b71814ab4f21dfb76963ab19f700e8818d7fac",
+      "revision": "2fc7bff89a57f42745a49b46a7165b1927f0f100"
+    },
+    {
+      "space": "Dovelove/byod-gemma-2-9b",
+      "owner": "Dovelove",
+      "model": "gemma",
+      "parent_revision": "7ad959e3b8102fffa77a11c8ffe65fa74a101963",
+      "revision": "4780e6db050ab88606f328b2e2724d7456ef99c6"
+    },
+    {
+      "space": "Dovelove/byod-llama-3.1-8b",
+      "owner": "Dovelove",
+      "model": "llama",
+      "parent_revision": "82b1a9eeaf574264ef0747711b779c395942b3b1",
+      "revision": "6a170b472384cb3d5ac1c46ec8d76edbb16aa914"
+    },
+    {
+      "space": "Dovelove/byod-qwen2.5-7b",
+      "owner": "Dovelove",
+      "model": "qwen",
+      "parent_revision": "a4fa1b03d230eaa8f5cb5623f81c145dd18583c4",
+      "revision": "e27fa6eda6eda6b546786cd0d0f356dfeacbee64"
+    },
+    {
+      "space": "Dovelove/byod-ministral-8b",
+      "owner": "Dovelove",
+      "model": "ministral",
+      "parent_revision": "0dbf9aa8fc15699d25e7141369fd28aba2de8edf",
+      "revision": "cc22da8f430f192b2c172a408adf9beeabc2da63"
+    }
+  ]
+}

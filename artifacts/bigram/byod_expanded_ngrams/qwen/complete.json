@@ -1,0 +1,85 @@
+{
+  "tokenizer": "Qwen/Qwen2.5-7B-Instruct",
+  "tokenizer_sha256": "0bcfe76c695a7b4b08e77e8b48ebc15335d1afe61759dfec50312fc0dfbaee39",
+  "model_vocab_size": 152064,
+  "tokens": 872705486,
+  "document_boundaries_preserved": true,
+  "original_documents": 980000,
+  "original_tokens": 72705486,
+  "added_tokens": 800000000,
+  "new_corpus_mix": "90% FineWeb-Edu / 5% Python-Edu / 5% FineMath by tokenizer-specific tokens; plus all original responses",
+  "sources": [
+    {
+      "name": "english",
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "prefix": "sample/10BT/",
+      "tokens": 720000000,
+      "files": [
+        "sample/10BT/000_00000.parquet"
+      ],
+      "offline": true,
+      "documents": 698510,
+      "actual_tokens": 720000000,
+      "pairs": 719301490,
+      "triples": 718602980,
+      "skipped_duplicates": 1331,
+      "eos_appended": 698509,
+      "seconds": 1371.0849087238312
+    },
+    {
+      "name": "python",
+      "repo": "Avelina/python-edu-cleaned",
+      "revision": "3fedf55e02e72dd1fd68963f991f5e91adcb0f8d",
+      "prefix": "data/",
+      "tokens": 40000000,
+      "upstream": "HuggingFaceTB/smollm-corpus/python-edu",
+      "files": [
+        "data/train-00000-of-00027.parquet"
+      ],
+      "offline": true,
+      "documents": 92739,
+      "actual_tokens": 40000000,
+      "pairs": 39907261,
+      "triples": 39814522,
+      "skipped_duplicates": 0,
+      "eos_appended": 92738,
+      "seconds": 71.83851385116577
+    },
+    {
+      "name": "math",
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "prefix": "finemath-4plus/",
+      "tokens": 40000000,
+      "files": [
+        "finemath-4plus/train-00000-of-00064.parquet"
+      ],
+      "offline": true,
+      "documents": 26162,
+      "actual_tokens": 40000000,
+      "pairs": 39973838,
+      "triples": 39947676,
+      "skipped_duplicates": 0,
+      "eos_appended": 26161,
+      "seconds": 63.64201378822327
+    }
+  ],
+  "model": "qwen",
+  "retained_trigrams": 64834514,
+  "retained_prefixes": 11860521,
+  "pair_count_sum": 870908075,
+  "triple_count_sum": 869110686,
+  "validation_queries": 10001,
+  "seconds": 149.7,
+  "assets": {
+    "bigram_expanded.pt": {
+      "bytes": 505088429,
+      "sha256": "66c8154faa90f3ea8500b178542e101bd88d69ccd1416685863e4960b32a5314"
+    },
+    "trigram_expanded.pt": {
+      "bytes": 920344695,
+      "sha256": "c8ebe7fc28f7b4e7c85463b66aa90c8a80b86f7dc491803f55c083daa19e94d2"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "storage_min_count": 2,
+  "triples": 62357916,
+  "prefixes": 11531371,
+  "bytes": 886676023,
+  "checked_triples": 30004,
+  "exact_correction_equivalence": true
+}

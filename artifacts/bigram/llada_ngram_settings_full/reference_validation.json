@@ -1,0 +1,148 @@
+{
+  "code_reference_checks": [
+    {
+      "task": "sum_even",
+      "tests": 11,
+      "all_pass": true,
+      "reference_tokens": 25,
+      "fits_128": true
+    },
+    {
+      "task": "balanced",
+      "tests": 16,
+      "all_pass": true,
+      "reference_tokens": 68,
+      "fits_128": true
+    },
+    {
+      "task": "is_palindrome",
+      "tests": 11,
+      "all_pass": true,
+      "reference_tokens": 39,
+      "fits_128": true
+    },
+    {
+      "task": "fibonacci",
+      "tests": 8,
+      "all_pass": true,
+      "reference_tokens": 55,
+      "fits_128": true
+    },
+    {
+      "task": "deduplicate",
+      "tests": 10,
+      "all_pass": true,
+      "reference_tokens": 16,
+      "fits_128": true
+    },
+    {
+      "task": "binary_search",
+      "tests": 11,
+      "all_pass": true,
+      "reference_tokens": 79,
+      "fits_128": true
+    },
+    {
+      "task": "word_counts",
+      "tests": 8,
+      "all_pass": true,
+      "reference_tokens": 30,
+      "fits_128": true
+    },
+    {
+      "task": "merge_sorted",
+      "tests": 10,
+      "all_pass": true,
+      "reference_tokens": 73,
+      "fits_128": true
+    },
+    {
+      "task": "flatten",
+      "tests": 9,
+      "all_pass": true,
+      "reference_tokens": 19,
+      "fits_128": true
+    },
+    {
+      "task": "fizzbuzz",
+      "tests": 10,
+      "all_pass": true,
+      "reference_tokens": 58,
+      "fits_128": true
+    },
+    {
+      "task": "factorial",
+      "tests": 9,
+      "all_pass": true,
+      "reference_tokens": 17,
+      "fits_128": true
+    },
+    {
+      "task": "count_vowels",
+      "tests": 10,
+      "all_pass": true,
+      "reference_tokens": 25,
+      "fits_128": true
+    },
+    {
+      "task": "gcd",
+      "tests": 10,
+      "all_pass": true,
+      "reference_tokens": 25,
+      "fits_128": true
+    },
+    {
+      "task": "is_prime",
+      "tests": 13,
+      "all_pass": true,
+      "reference_tokens": 31,
+      "fits_128": true
+    },
+    {
+      "task": "reverse_words",
+      "tests": 8,
+      "all_pass": true,
+      "reference_tokens": 17,
+      "fits_128": true
+    },
+    {
+      "task": "clamp",
+      "tests": 10,
+      "all_pass": true,
+      "reference_tokens": 20,
+      "fits_128": true
+    },
+    {
+      "task": "transpose",
+      "tests": 9,
+      "all_pass": true,
+      "reference_tokens": 19,
+      "fits_128": true
+    },
+    {
+      "task": "chunk_list",
+      "tests": 9,
+      "all_pass": true,
+      "reference_tokens": 29,
+      "fits_128": true
+    },
+    {
+      "task": "max_run",
+      "tests": 9,
+      "all_pass": true,
+      "reference_tokens": 33,
+      "fits_128": true
+    },
+    {
+      "task": "unique_sorted",
+      "tests": 8,
+      "all_pass": true,
+      "reference_tokens": 13,
+      "fits_128": true
+    }
+  ],
+  "total_code_tests": 199,
+  "all_code_references_pass": true,
+  "all_fit_128": true,
+  "math_references_validated": 20
+}

@@ -1,0 +1,20 @@
+{
+  "fibonacci": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "unique_outputs": 3,
+    "total": 3
+  },
+  "open_14": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "unique_outputs": 3,
+    "total": 3
+  }
+}

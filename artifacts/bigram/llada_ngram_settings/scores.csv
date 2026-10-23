@@ -1,0 +1,181 @@
+key,task,category,steps,method,score,fluency,code_all_pass,math_answer_correct,math_worked_correct,visible_tokens,unique_tokens,distinct_1,server_ms,selector_ms_per_forward,note
+amsterdam/4/confidence,amsterdam,open,4,confidence,0,0,,,,67,13,0.19402985074626866,232.1593607775867,,Mostly repeated articles and punctuation; not a usable answer.
+amsterdam/4/bigram,amsterdam,open,4,bigram,1,1,,,,111,20,0.18018018018018017,192.70224263891578,10.421755607239902,Correct opening followed by a long museum loop.
+amsterdam/4/bigram_rep,amsterdam,open,4,bigram_rep,1,1,,,,118,22,0.1864406779661017,230.13591626659036,18.999226507730782,Relevant opening but severe canals/art/culture/museums loops.
+amsterdam/4/trigram,amsterdam,open,4,trigram,1,1,,,,126,29,0.23015873015873015,208.9210539124906,14.357122709043324,Correct opening and ending question; middle dominated by repeated parks/museums.
+amsterdam/4/trigram_rep,amsterdam,open,4,trigram_rep,1,1,,,,126,31,0.24603174603174602,241.68940261006355,22.34156394843012,Correct opening but extensive parks/museums/water-parks repetition.
+sum_even/4/bigram,sum_even,code,4,bigram,0,,False,,,38,22,0.5789473684210527,197.43811804801226,10.40333928540349,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 4)"
+sum_even/4/bigram_rep,sum_even,code,4,bigram_rep,0,,False,,,38,22,0.5789473684210527,206.65439497679472,14.619154273532331,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 4)"
+sum_even/4/trigram,sum_even,code,4,trigram,0,,False,,,38,22,0.5789473684210527,202.79452204704285,13.550534029491246,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 4)"
+sum_even/4/trigram_rep,sum_even,code,4,trigram_rep,0,,False,,,38,22,0.5789473684210527,226.5854673460126,19.22491961158812,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 4)"
+sum_even/4/confidence,sum_even,code,4,confidence,0,,False,,,32,22,0.6875,144.73458984866738,,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 2)"
+algebra/4/bigram_rep,algebra,math,4,bigram_rep,1,,,False,False,126,46,0.36507936507936506,209.62834870442748,14.951617456972599,Invalid transformations and incorrect x=5.
+algebra/4/trigram,algebra,math,4,trigram,1,,,False,False,126,43,0.3412698412698413,203.5293271765113,13.415720546618104,Invalid expansion and transformations; incorrect x=5.
+algebra/4/trigram_rep,algebra,math,4,trigram_rep,0,,,False,False,126,31,0.24603174603174602,230.76834483072162,19.85889265779406,Long symbol loops; no intelligible calculation or answer.
+algebra/4/confidence,algebra,math,4,confidence,0,,,False,False,121,24,0.19834710743801653,149.41377006471157,,Disconnected symbols and no solution.
+algebra/4/bigram,algebra,math,4,bigram,1,,,False,False,126,46,0.36507936507936506,194.21518221497536,11.350924032740295,Correct first two transformations but invalid later steps and incorrect x=5.
+sky/4/trigram,sky,open,4,trigram,1,1,,,,126,47,0.373015873015873,204.97484598308802,13.691458501853049,Some relevant scattering statements but repetition and malformed sentences dominate.
+sky/4/trigram_rep,sky,open,4,trigram_rep,1,1,,,,126,48,0.38095238095238093,220.1726366765797,17.883690423332155,Relevant topic words but repetitive and incoherent causal explanation.
+sky/4/confidence,sky,open,4,confidence,0,0,,,,113,21,0.18584070796460178,146.7857793904841,,Mostly disconnected repeated words; no usable explanation.
+sky/4/bigram,sky,open,4,bigram,1,1,,,,126,43,0.3412698412698413,186.9593490846455,9.485882124863565,Recognizes Rayleigh scattering but explanation is dominated by wavelength loops.
+sky/4/bigram_rep,sky,open,4,bigram_rep,1,1,,,,126,41,0.3253968253968254,212.33314694836736,14.966196147724986,Contains the key scattering idea but major wavelength loops remain.
+balanced/4/trigram_rep,balanced,code,4,trigram_rep,0,,False,,,125,34,0.272,226.41624975949526,18.692488432861865,"0/16 fixed tests passed. unmatched ')' (<unknown>, line 1)"
+balanced/4/confidence,balanced,code,4,confidence,0,,False,,,58,24,0.41379310344827586,143.32500100135803,,"0/16 fixed tests passed. unterminated string literal (detected at line 4) (<unknown>, line 4)"
+balanced/4/bigram,balanced,code,4,bigram,0,,False,,,74,34,0.4594594594594595,188.43072932213545,10.256256209686399,"0/16 fixed tests passed. unmatched ']' (<unknown>, line 3)"
+balanced/4/bigram_rep,balanced,code,4,bigram_rep,0,,False,,,74,38,0.5135135135135135,216.84768935665488,16.00932900328189,"0/16 fixed tests passed. unmatched ']' (<unknown>, line 3)"
+balanced/4/trigram,balanced,code,4,trigram,0,,False,,,125,29,0.232,202.11454620584846,13.351965695619583,"0/16 fixed tests passed. unmatched ')' (<unknown>, line 1)"
+train/4/confidence,train,math,4,confidence,0,,,False,False,15,12,0.8,145.0351388193667,,Malformed one-line answer with incorrect speed.
+train/4/bigram,train,math,4,bigram,1,,,False,False,34,24,0.7058823529411765,190.44387713074684,10.19623945467174,Incorrect 50 km/h and malformed denominator explanation.
+train/4/bigram_rep,train,math,4,bigram_rep,1,,,False,False,34,24,0.7058823529411765,212.7850349061191,15.614836476743221,Incorrect 50 km/h and malformed denominator explanation.
+train/4/trigram,train,math,4,trigram,1,,,False,False,126,30,0.23809523809523808,222.0740090124309,16.397181432694197,Partly identifies five hours but garbled numbers and incorrect 40 km/h.
+train/4/trigram_rep,train,math,4,trigram_rep,0,,,False,False,71,30,0.4225352112676056,227.0292630419135,18.855443107895553,Incorrect 50 km/h with a long numeric/punctuation loop.
+amsterdam/128/bigram,amsterdam,open,128,bigram,3,3,,,,126,74,0.5873015873015873,6097.62561134994,10.133376719750231,Coherent relevant overview with appropriate Amsterdam landmarks.
+amsterdam/128/bigram_rep,amsterdam,open,128,bigram_rep,3,3,,,,126,74,0.5873015873015873,6080.331536009908,10.572429695457686,Coherent relevant overview with appropriate Amsterdam landmarks.
+amsterdam/128/trigram,amsterdam,open,128,trigram,2,3,,,,126,76,0.6031746031746031,6616.378634702414,14.455610154982423,Fluent overview but lists the Queen's House as an Amsterdam landmark; likely landmark substitution.
+amsterdam/128/trigram_rep,amsterdam,open,128,trigram_rep,2,3,,,,126,76,0.6031746031746031,6417.893636971712,13.637304553412832,Fluent overview but lists the Queen's House as an Amsterdam landmark; likely landmark substitution.
+amsterdam/128/confidence,amsterdam,open,128,confidence,2,3,,,,126,73,0.5793650793650794,4463.280397001654,,"Fluent relevant overview, but incorrectly places Red Square in Amsterdam."
+sum_even/128/bigram_rep,sum_even,code,128,bigram_rep,3,,True,,,29,23,0.7931034482758621,5908.171281218529,10.20509817317361,11/11 fixed tests passed.
+sum_even/128/trigram,sum_even,code,128,trigram,3,,True,,,29,23,0.7931034482758621,6372.37611040473,13.90799694127054,11/11 fixed tests passed.
+sum_even/128/trigram_rep,sum_even,code,128,trigram_rep,3,,True,,,29,23,0.7931034482758621,6445.6074279733,14.19929790426977,11/11 fixed tests passed.
+sum_even/128/confidence,sum_even,code,128,confidence,3,,True,,,29,23,0.7931034482758621,4412.549235858023,,11/11 fixed tests passed.
+sum_even/128/bigram,sum_even,code,128,bigram,3,,True,,,29,23,0.7931034482758621,5885.995374061167,9.76818205890595,11/11 fixed tests passed.
+algebra/128/trigram,algebra,math,128,trigram,1,,,False,False,126,49,0.3888888888888889,6428.573513869196,13.55886499004555,"Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven."
+algebra/128/trigram_rep,algebra,math,128,trigram_rep,1,,,False,False,126,49,0.3888888888888889,6502.592775970697,13.974355151731288,"Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven."
+algebra/128/confidence,algebra,math,128,confidence,1,,,False,False,126,42,0.3333333333333333,4542.216951958835,,"Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven."
+algebra/128/bigram,algebra,math,128,bigram,1,,,False,False,126,49,0.3888888888888889,6014.042160939425,10.106990554049844,"Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven."
+algebra/128/bigram_rep,algebra,math,128,bigram_rep,1,,,False,False,126,49,0.3888888888888889,6033.916800748557,10.26832131537958,"Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven."
+sky/128/trigram_rep,sky,open,128,trigram_rep,2,3,,,,126,72,0.5714285714285714,6594.39032478258,14.321838520118035,"Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet."
+sky/128/confidence,sky,open,128,confidence,2,3,,,,126,75,0.5952380952380952,4488.02774772048,,"Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet."
+sky/128/bigram,sky,open,128,bigram,2,3,,,,126,72,0.5714285714285714,5973.183433059603,10.31539465111564,"Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet."
+sky/128/bigram_rep,sky,open,128,bigram_rep,2,3,,,,126,72,0.5714285714285714,5974.923196714371,10.326963238185272,"Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet."
+sky/128/trigram,sky,open,128,trigram,2,3,,,,126,72,0.5714285714285714,6484.896392095834,13.914543491409859,"Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet."
+balanced/128/confidence,balanced,code,128,confidence,2,,False,,,58,31,0.5344827586206896,4509.972826577723,,9/16 fixed tests passed.
+balanced/128/bigram,balanced,code,128,bigram,2,,False,,,58,31,0.5344827586206896,5941.534326877445,10.234403929644031,9/16 fixed tests passed.
+balanced/128/bigram_rep,balanced,code,128,bigram_rep,2,,False,,,58,31,0.5344827586206896,5939.145470969379,10.17247616982786,9/16 fixed tests passed.
+balanced/128/trigram,balanced,code,128,trigram,2,,False,,,58,31,0.5344827586206896,6411.58232698217,13.922305275627878,9/16 fixed tests passed.
+balanced/128/trigram_rep,balanced,code,128,trigram_rep,2,,False,,,58,31,0.5344827586206896,6499.790943227708,14.290950704889838,9/16 fixed tests passed.
+train/128/bigram,train,math,128,bigram,2,,,True,False,14,14,1.0,6058.723564259708,10.505424284929177,"Correct 48 km/h, but omits the requested brief explanation."
+train/128/bigram_rep,train,math,128,bigram_rep,2,,,True,False,14,14,1.0,6074.197321664542,10.335856764868367,"Correct 48 km/h, but omits the requested brief explanation."
+train/128/trigram,train,math,128,trigram,2,,,True,False,14,14,1.0,6537.219289224595,13.854446486220695,"Correct 48 km/h, but omits the requested brief explanation."
+train/128/trigram_rep,train,math,128,trigram_rep,2,,,True,False,14,14,1.0,6711.692851036787,15.002889380411943,"Correct 48 km/h, but omits the requested brief explanation."
+train/128/confidence,train,math,128,confidence,2,,,True,False,16,16,1.0,4531.961152795702,,Correct 48 km/h but omits the requested explanation.
+amsterdam/8/bigram_rep,amsterdam,open,8,bigram_rep,2,2,,,,126,69,0.5476190476190477,398.23510218411684,12.623998685739934,Mostly coherent historical overview; minor grammar and list problems remain.
+amsterdam/8/trigram,amsterdam,open,8,trigram,2,2,,,,125,57,0.456,414.5556162111461,14.329432975500822,Mostly coherent but repeated art museums/nightlife/cafes and duplicated punctuation.
+amsterdam/8/trigram_rep,amsterdam,open,8,trigram_rep,1,1,,,,125,69,0.552,431.87243584543467,16.84625179041177,Relevant overview but several broken clauses and repeated nightlife/cafes.
+amsterdam/8/confidence,amsterdam,open,8,confidence,1,1,,,,9,8,0.8888888888888888,281.4071448519826,,"Very short malformed fragment, although the basic capital claim is recognizable."
+amsterdam/8/bigram,amsterdam,open,8,bigram,2,2,,,,125,51,0.408,387.74117873981595,9.946224512532353,Mostly intelligible overview with repeated museums/nightlife and awkward cuisine/shop wording.
+sum_even/8/trigram,sum_even,code,8,trigram,0,,False,,,31,23,0.7419354838709677,396.543191280216,12.976582336705178,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 2)"
+sum_even/8/trigram_rep,sum_even,code,8,trigram_rep,0,,False,,,31,23,0.7419354838709677,435.0269911810756,16.255662078037858,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 2)"
+sum_even/8/confidence,sum_even,code,8,confidence,0,,False,,,27,23,0.8518518518518519,284.014402423054,,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 2)"
+sum_even/8/bigram,sum_even,code,8,bigram,0,,False,,,32,23,0.71875,370.19999930635095,9.531830670312047,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 2)"
+sum_even/8/bigram_rep,sum_even,code,8,bigram_rep,0,,False,,,32,23,0.71875,398.9511211402714,12.807981751393527,"0/11 fixed tests passed. unmatched ')' (<unknown>, line 2)"
+algebra/8/trigram_rep,algebra,math,8,trigram_rep,1,,,False,False,126,48,0.38095238095238093,438.3551827631891,17.412508837878704,Incorrect x=5 and invalid algebra after the initial expansion.
+algebra/8/confidence,algebra,math,8,confidence,1,,,False,False,126,44,0.3492063492063492,288.82143879309297,,Incorrect x=5 and invalid algebra after the initial expansion.
+algebra/8/bigram,algebra,math,8,bigram,1,,,False,False,126,47,0.373015873015873,376.7979550175369,9.819849685300142,Incorrect x=5 and invalid algebra after the initial expansion.
+algebra/8/bigram_rep,algebra,math,8,bigram_rep,1,,,False,False,126,47,0.373015873015873,399.3932278826833,12.89012294728309,Incorrect x=5 and invalid algebra after the initial expansion.
+algebra/8/trigram,algebra,math,8,trigram,1,,,False,False,126,48,0.38095238095238093,411.1950439400971,14.110516814980656,Incorrect x=5 and invalid algebra after the initial expansion.
+sky/8/confidence,sky,open,8,confidence,1,1,,,,125,55,0.44,287.3095008544624,,"Relevant scattering words but malformed clauses, Rayleighleigh typo and misleading sun-is-blue statement."
+sky/8/bigram,sky,open,8,bigram,1,1,,,,126,43,0.3412698412698413,404.13087978959084,12.553184642456472,"Coherent opening and close, but most of the output repeats wavelengths."
+sky/8/bigram_rep,sky,open,8,bigram_rep,1,1,,,,126,58,0.4603174603174603,413.90650998800993,14.069814758840948,Severe blue/violet wavelength loops and malformed physical explanation.
+sky/8/trigram,sky,open,8,trigram,2,2,,,,126,62,0.49206349206349204,407.12270699441433,13.647530693560839,"Explains shorter-wavelength scattering, but the violet/vision sentences are malformed and partly contradictory."
+sky/8/trigram_rep,sky,open,8,trigram_rep,1,1,,,,126,66,0.5238095238095238,448.70614632964134,18.716543214395642,"Some correct scattering explanation, but orange loops and contradictory clauses remain."
+balanced/8/bigram,balanced,code,8,bigram,2,,False,,,64,35,0.546875,372.3292499780655,9.61371511220932,10/16 fixed tests passed.
+balanced/8/bigram_rep,balanced,code,8,bigram_rep,2,,False,,,64,35,0.546875,401.09931817278266,13.087272527627647,10/16 fixed tests passed.
+balanced/8/trigram,balanced,code,8,trigram,2,,False,,,65,35,0.5384615384615384,411.4491450600326,13.60300969099626,9/16 fixed tests passed.
+balanced/8/trigram_rep,balanced,code,8,trigram_rep,2,,False,,,64,33,0.515625,442.45501095429063,17.26445445092395,9/16 fixed tests passed.
+balanced/8/confidence,balanced,code,8,confidence,0,,False,,,62,29,0.46774193548387094,289.30570324882865,,"0/16 fixed tests passed. unterminated string literal (detected at line 4) (<unknown>, line 4)"
+train/8/bigram_rep,train,math,8,bigram_rep,2,,,True,False,31,23,0.7419354838709677,416.74584336578846,13.902854465413839,Correct 48 km/h but explanation incorrectly defines total distance rather than average speed.
+train/8/trigram,train,math,8,trigram,1,,,False,False,126,43,0.3412698412698413,409.0243810787797,13.319862715434283,Incorrect 40 km/h with inconsistent calculation and formulas.
+train/8/trigram_rep,train,math,8,trigram_rep,2,,,True,False,32,24,0.75,441.51723105460405,17.67139876028523,Correct 48 km/h but explanation incorrectly defines total distance rather than average speed.
+train/8/confidence,train,math,8,confidence,1,,,False,False,16,16,1.0,296.8819998204708,,Incorrect 40 km/h and no explanation.
+train/8/bigram,train,math,8,bigram,2,,,True,False,31,23,0.7419354838709677,376.54883321374655,9.676715242676437,Correct 48 km/h but explanation incorrectly defines total distance rather than average speed.
+amsterdam/64/trigram,amsterdam,open,64,trigram,2,3,,,,126,71,0.5634920634920635,3263.5988919064403,13.719265909458045,"Fluent relevant overview, but lists Anne Frank House and Anne Frank Museum as separate landmarks."
+amsterdam/64/trigram_rep,amsterdam,open,64,trigram_rep,2,3,,,,126,71,0.5634920634920635,3296.440502628684,14.434688731853385,"Fluent relevant overview, but lists Anne Frank House and Anne Frank Museum as separate landmarks."
+amsterdam/64/confidence,amsterdam,open,64,confidence,2,2,,,,125,70,0.56,2272.6198439486325,,Relevant and coherent but duplicated comma and missing is in the final sentence.
+amsterdam/64/bigram,amsterdam,open,64,bigram,3,3,,,,126,70,0.5555555555555556,2997.57619202137,9.852496332314331,"Coherent relevant overview with canals, arts, nightlife and public culture."
+amsterdam/64/bigram_rep,amsterdam,open,64,bigram_rep,3,3,,,,126,70,0.5555555555555556,3063.3990950882435,10.767967680294532,"Coherent relevant overview with canals, arts, nightlife and public culture."
+sum_even/64/trigram_rep,sum_even,code,64,trigram_rep,3,,True,,,29,23,0.7931034482758621,3263.9279663562775,14.236432245525066,11/11 fixed tests passed.
+sum_even/64/confidence,sum_even,code,64,confidence,3,,True,,,29,23,0.7931034482758621,2268.229514826089,,11/11 fixed tests passed.
+sum_even/64/bigram,sum_even,code,64,bigram,3,,True,,,29,23,0.7931034482758621,2951.464347075671,9.966450845240615,11/11 fixed tests passed.
+sum_even/64/bigram_rep,sum_even,code,64,bigram_rep,3,,True,,,29,23,0.7931034482758621,2965.81387007609,10.382648615632206,11/11 fixed tests passed.
+sum_even/64/trigram,sum_even,code,64,trigram,3,,True,,,29,23,0.7931034482758621,3203.157458920032,14.038279485248495,11/11 fixed tests passed.
+algebra/64/confidence,algebra,math,64,confidence,1,,,False,False,126,42,0.3333333333333333,2246.254088357091,,Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.
+algebra/64/bigram,algebra,math,64,bigram,1,,,False,False,126,42,0.3333333333333333,3040.784794371575,10.605247356579639,Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.
+algebra/64/bigram_rep,algebra,math,64,bigram_rep,1,,,False,False,126,42,0.3333333333333333,3040.214493870735,11.170921818120405,Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.
+algebra/64/trigram,algebra,math,64,trigram,1,,,False,False,126,52,0.4126984126984127,3259.487420320511,14.316441935079638,Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.
+algebra/64/trigram_rep,algebra,math,64,trigram_rep,1,,,False,False,126,52,0.4126984126984127,3258.602447807789,14.406382899323944,Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.
+sky/64/bigram,sky,open,64,bigram,2,2,,,,125,68,0.544,2993.809541221708,10.11670093430439,"Main scattering idea is sound, but violet explanation and wording are confused; duplicated punctuation."
+sky/64/bigram_rep,sky,open,64,bigram_rep,2,2,,,,125,68,0.544,3017.523034941405,10.336679821193684,"Main scattering idea is sound, but violet explanation and wording are confused; duplicated punctuation."
+sky/64/trigram,sky,open,64,trigram,2,3,,,,126,73,0.5793650793650794,3365.9488260746,15.18936877255328,Fluent basic scattering explanation but misleading greater-atmospheric-thickness-during-day claim.
+sky/64/trigram_rep,sky,open,64,trigram_rep,2,3,,,,126,73,0.5793650793650794,3308.6563209071755,14.824672463873867,Fluent basic scattering explanation but misleading greater-atmospheric-thickness-during-day claim.
+sky/64/confidence,sky,open,64,confidence,2,3,,,,126,71,0.5634920634920635,2244.774252176285,,"Fluent, but incorrectly says blue scatters more easily than violet."
+balanced/64/bigram_rep,balanced,code,64,bigram_rep,2,,False,,,61,34,0.5573770491803278,3026.8152747303247,10.879378685785923,8/16 fixed tests passed.
+balanced/64/trigram,balanced,code,64,trigram,2,,False,,,64,38,0.59375,3266.8697061017156,14.271335428929888,8/16 fixed tests passed.
+balanced/64/trigram_rep,balanced,code,64,trigram_rep,2,,False,,,64,38,0.59375,3241.820499766618,14.381581939233001,8/16 fixed tests passed.
+balanced/64/confidence,balanced,code,64,confidence,2,,False,,,62,35,0.5645161290322581,2238.7609658762813,,8/16 fixed tests passed.
+balanced/64/bigram,balanced,code,64,bigram,2,,False,,,61,34,0.5573770491803278,3107.852508313954,11.570279828447383,8/16 fixed tests passed.
+train/64/trigram,train,math,64,trigram,2,,,True,False,14,14,1.0,3275.8887647651136,13.882485116482712,"Correct 48 km/h, but omits the requested brief explanation."
+train/64/trigram_rep,train,math,64,trigram_rep,2,,,True,False,14,14,1.0,3269.385312218219,14.104643923928961,"Correct 48 km/h, but omits the requested brief explanation."
+train/64/confidence,train,math,64,confidence,2,,,True,False,12,12,1.0,2724.678148049861,,Correct 48 km/h but no requested explanation.
+train/64/bigram,train,math,64,bigram,2,,,True,False,14,14,1.0,3118.8498940318823,11.487368792586494,"Correct 48 km/h, but omits the requested brief explanation."
+train/64/bigram_rep,train,math,64,bigram_rep,2,,,True,False,14,14,1.0,3079.718636814505,11.215351565624587,"Correct 48 km/h, but omits the requested brief explanation."
+amsterdam/16/trigram_rep,amsterdam,open,16,trigram_rep,2,2,,,,126,63,0.5,934.6913378685713,17.66078287619166,"Mostly intelligible but repeated canals, museums and cultural-attraction lists."
+amsterdam/16/confidence,amsterdam,open,16,confidence,1,1,,,,122,54,0.4426229508196721,563.4846780449152,,"Relevant opening but long and-loop, malformed grammar and R Museum fragment."
+amsterdam/16/bigram,amsterdam,open,16,bigram,2,2,,,,125,56,0.448,744.5418532006443,9.84941195929423,Mostly coherent overview but repeated canals/clubs/museums/music and duplicated punctuation.
+amsterdam/16/bigram_rep,amsterdam,open,16,bigram_rep,2,2,,,,123,76,0.6178861788617886,785.5118857696652,11.578954581636935,"Mostly coherent overview, but Red Square is misplaced in Amsterdam and commas repeat."
+amsterdam/16/trigram,amsterdam,open,16,trigram,2,2,,,,126,63,0.5,808.0775868147612,13.47363117383793,"Mostly intelligible but repeated canals, museums and cultural-attraction lists."
+sum_even/16/confidence,sum_even,code,16,confidence,3,,True,,,29,23,0.7931034482758621,565.3349417261779,,11/11 fixed tests passed.
+sum_even/16/bigram,sum_even,code,16,bigram,3,,True,,,29,23,0.7931034482758621,736.0552391037345,9.506275353487581,11/11 fixed tests passed.
+sum_even/16/bigram_rep,sum_even,code,16,bigram_rep,3,,True,,,29,23,0.7931034482758621,787.5952776521444,12.032943341182545,11/11 fixed tests passed.
+sum_even/16/trigram,sum_even,code,16,trigram,3,,True,,,29,23,0.7931034482758621,789.3712623044848,12.756622716551647,11/11 fixed tests passed.
+sum_even/16/trigram_rep,sum_even,code,16,trigram_rep,3,,True,,,29,23,0.7931034482758621,809.7885251045227,14.503937069093809,11/11 fixed tests passed.
+algebra/16/bigram,algebra,math,16,bigram,1,,,False,False,128,51,0.3984375,739.2277726903558,9.953651169780642,Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.
+algebra/16/bigram_rep,algebra,math,16,bigram_rep,1,,,False,False,128,51,0.3984375,750.068040098995,10.68881808896549,Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.
+algebra/16/trigram,algebra,math,16,trigram,1,,,False,False,126,52,0.4126984126984127,795.0831269845366,13.313159492099658,Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.
+algebra/16/trigram_rep,algebra,math,16,trigram_rep,1,,,False,False,126,52,0.4126984126984127,827.7315087616444,14.93128901347518,Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.
+algebra/16/confidence,algebra,math,16,confidence,1,,,False,False,125,45,0.36,571.4197922497988,,Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.
+sky/16/bigram_rep,sky,open,16,bigram_rep,2,2,,,,126,70,0.5555555555555556,831.8704050034285,14.673015830339864,"Key blue-versus-red scattering idea present, but several broken clauses and confused violet/absorption sentence."
+sky/16/trigram,sky,open,16,trigram,2,2,,,,126,67,0.5317460317460317,815.5907462351024,14.303840667707846,Mostly meaningful scattering explanation but duplicated absorbed and awkward/imprecise violet conclusion.
+sky/16/trigram_rep,sky,open,16,trigram_rep,2,2,,,,126,70,0.5555555555555556,861.3128480501473,16.98060959461145,"Mostly meaningful scattering opening, but duplicated words and confused sunrise/sunset explanation."
+sky/16/confidence,sky,open,16,confidence,2,2,,,,125,71,0.568,578.0111183412373,,Mostly sound explanation but awkward duplicated punctuation and an unconvincing lower-sun ending.
+sky/16/bigram,sky,open,16,bigram,2,2,,,,126,70,0.5555555555555556,768.2033888995647,10.71322979987599,"Key blue-versus-red scattering idea present, but several broken clauses and confused violet/absorption sentence."
+balanced/16/trigram,balanced,code,16,trigram,2,,False,,,58,33,0.5689655172413793,805.8337331749499,13.766362011665478,10/16 fixed tests passed.
+balanced/16/trigram_rep,balanced,code,16,trigram_rep,2,,False,,,58,33,0.5689655172413793,822.2703821957111,15.201890200842172,10/16 fixed tests passed.
+balanced/16/confidence,balanced,code,16,confidence,2,,False,,,64,35,0.546875,566.1507076583803,,8/16 fixed tests passed.
+balanced/16/bigram,balanced,code,16,bigram,2,,False,,,64,37,0.578125,729.3668040074408,9.375156136229634,9/16 fixed tests passed.
+balanced/16/bigram_rep,balanced,code,16,bigram_rep,2,,False,,,64,37,0.578125,789.5447039045393,12.51388032687828,9/16 fixed tests passed.
+train/16/trigram_rep,train,math,16,trigram_rep,2,,,True,False,16,16,1.0,833.947999868542,15.09644469479099,Correct 48 km/h but omits the requested explanation.
+train/16/confidence,train,math,16,confidence,0,,,False,False,11,9,0.8181818181818182,564.0996131114662,,Truncated malformed fragment without a numeric answer.
+train/16/bigram,train,math,16,bigram,2,,,True,False,16,16,1.0,756.1449473723769,10.515693371417001,Correct 48 km/h but omits the requested explanation.
+train/16/bigram_rep,train,math,16,bigram_rep,2,,,True,False,16,16,1.0,771.9208230264485,11.271853843936697,Correct 48 km/h but omits the requested explanation.
+train/16/trigram,train,math,16,trigram,2,,,True,False,126,45,0.35714285714285715,834.0094578452408,14.526704209856689,"Correct 48 km/h, but says outbound time is 22 hours and 22+3=5; the worked solution is invalid."
+amsterdam/32/confidence,amsterdam,open,32,confidence,2,2,,,,126,64,0.5079365079365079,1126.2631579302251,,Recognizable relevant overview but several malformed phrases and repeated canals/bridges.
+amsterdam/32/bigram,amsterdam,open,32,bigram,2,2,,,,126,75,0.5952380952380952,1488.416928332299,9.56851129012648,Mostly coherent but misspells a museum name and incorrectly calls canals the current primary transportation mode.
+amsterdam/32/bigram_rep,amsterdam,open,32,bigram_rep,2,2,,,,126,75,0.5952380952380952,1510.491696652025,10.468619002494961,Mostly coherent but misspells a museum name and incorrectly calls canals the current primary transportation mode.
+amsterdam/32/trigram,amsterdam,open,32,trigram,2,3,,,,126,74,0.5873015873015873,1603.3409098163247,13.26670587877743,Fluent overview but current-primary-transport canals claim and unsupported Red House landmark.
+amsterdam/32/trigram_rep,amsterdam,open,32,trigram_rep,2,3,,,,126,74,0.5873015873015873,1658.4995733574033,14.560703799361363,Fluent overview but current-primary-transport canals claim and unsupported Red House landmark.
+sum_even/32/bigram,sum_even,code,32,bigram,3,,True,,,29,23,0.7931034482758621,1494.4622381590307,9.94748693483416,11/11 fixed tests passed.
+sum_even/32/bigram_rep,sum_even,code,32,bigram_rep,3,,True,,,29,23,0.7931034482758621,1508.129308000207,10.37032064050436,11/11 fixed tests passed.
+sum_even/32/trigram,sum_even,code,32,trigram,3,,True,,,29,23,0.7931034482758621,1623.7777853384614,13.902448816224933,11/11 fixed tests passed.
+sum_even/32/trigram_rep,sum_even,code,32,trigram_rep,3,,True,,,29,23,0.7931034482758621,1664.3147761933506,15.19055243988987,11/11 fixed tests passed.
+sum_even/32/confidence,sum_even,code,32,confidence,3,,True,,,29,23,0.7931034482758621,1132.4001182802022,,11/11 fixed tests passed.
+algebra/32/bigram_rep,algebra,math,32,bigram_rep,1,,,False,False,126,49,0.3888888888888889,1575.5663779564202,12.314494175370783,Incorrect x=5; invalid transformation after the initial expansion.
+algebra/32/trigram,algebra,math,32,trigram,1,,,False,False,126,51,0.40476190476190477,1654.3412716127932,14.898666559020057,Incorrect x=5; invalid transformation after the initial expansion.
+algebra/32/trigram_rep,algebra,math,32,trigram_rep,1,,,False,False,126,51,0.40476190476190477,1682.1132069453597,15.85074518516194,Incorrect x=5; invalid transformation after the initial expansion.
+algebra/32/confidence,algebra,math,32,confidence,1,,,False,False,126,44,0.3492063492063492,1131.8477899767458,,Incorrect x=5; invalid transformation after the initial expansion.
+algebra/32/bigram,algebra,math,32,bigram,1,,,False,False,126,49,0.3888888888888889,1541.8731980025768,11.558499187231064,Incorrect x=5; invalid transformation after the initial expansion.
+sky/32/trigram,sky,open,32,trigram,2,3,,,,126,75,0.5952380952380952,1646.488392725587,14.708837843500078,"Fluent scattering overview but repeatedly overgeneralizes blue as scattering more than other colors, without excluding violet."
+sky/32/trigram_rep,sky,open,32,trigram_rep,2,3,,,,126,75,0.5952380952380952,1689.8121791891754,15.637601871276274,"Fluent scattering overview but repeatedly overgeneralizes blue as scattering more than other colors, without excluding violet."
+sky/32/confidence,sky,open,32,confidence,2,2,,,,126,69,0.5476190476190477,1113.64376405254,,"Mostly useful explanation, with grammatical slips such as like as and from the distance."
+sky/32/bigram,sky,open,32,bigram,2,3,,,,126,67,0.5317460317460317,1532.500355038792,11.15981953626033,"Fluent scattering overview but overgeneralizes blue as shorter-wavelength than other colors, including no violet exception."
+sky/32/bigram_rep,sky,open,32,bigram_rep,2,3,,,,126,67,0.5317460317460317,1592.864050064236,12.08296834374778,"Fluent scattering overview but overgeneralizes blue as shorter-wavelength than other colors, including no violet exception."
+balanced/32/trigram_rep,balanced,code,32,trigram_rep,2,,False,,,63,36,0.5714285714285714,1705.2157907746732,16.466219487483613,8/16 fixed tests passed.
+balanced/32/confidence,balanced,code,32,confidence,0,,False,,,59,32,0.5423728813559322,1125.3432962112129,,"0/16 fixed tests passed. unterminated string literal (detected at line 4) (<unknown>, line 4)"
+balanced/32/bigram,balanced,code,32,bigram,2,,False,,,63,35,0.5555555555555556,1484.6695084124804,9.916668845107779,8/16 fixed tests passed.
+balanced/32/bigram_rep,balanced,code,32,bigram_rep,2,,False,,,63,35,0.5555555555555556,1509.9086328409612,10.780048978631385,8/16 fixed tests passed.
+balanced/32/trigram,balanced,code,32,trigram,2,,False,,,63,36,0.5714285714285714,1616.8949119746685,13.861205021385103,8/16 fixed tests passed.
+train/32/confidence,train,math,32,confidence,0,,,False,False,9,8,0.8888888888888888,1128.5125431604683,,Malformed fragment without numeric answer.
+train/32/bigram,train,math,32,bigram,3,,,True,True,126,35,0.2777777777777778,1502.795638050884,9.603747181245126,"Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h."
+train/32/bigram_rep,train,math,32,bigram_rep,3,,,True,True,126,35,0.2777777777777778,1579.2633229866624,11.579743892070837,"Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h."
+train/32/trigram,train,math,32,trigram,3,,,True,True,126,35,0.2777777777777778,1600.0270959921181,13.283044274430722,"Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h."
+train/32/trigram_rep,train,math,32,trigram_rep,3,,,True,True,126,35,0.2777777777777778,1706.4319741912186,15.595829536323436,"Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h."

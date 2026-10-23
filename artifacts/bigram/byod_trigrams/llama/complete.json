@@ -1,0 +1,16 @@
+{
+  "documents": 980000,
+  "tokens": 71088258,
+  "source": "data/lad-training-1m-256-long",
+  "tokenizer_sha256": "280b8d85c3f201fd3160faae007b3483ddfec41a7f8b257f8fd8a8b0329f1998",
+  "model": "llama",
+  "vocab_size": 128256,
+  "retained_trigrams": 5746261,
+  "retained_prefixes": 1808792,
+  "checkpoint_bytes": 90663671,
+  "checkpoint_sha256": "532f09694652d13b03509b8321f4d5c3e8176b9bfaf1ee723608875fbd1cade2",
+  "exact_bigram_match": true,
+  "exact_unigram_match": true,
+  "correction_queries": 10011,
+  "seconds": 112.4
+}

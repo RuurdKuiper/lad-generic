@@ -140,8 +140,9 @@ def test_low_confidence_and_mask_predictions_resolve_by_final_step(distribution)
     states = list(denoise_stream(s, "Q", "S", 5, 3, 1., 0., 1, 42,
         adaptive_parallel_decoding=True, early_stopping=True))
     assert len(states) == len(s.model.inputs) == 3
-    assert s.model.inputs[1][0].tolist() == [0, 0, 7, 7, 7, 7]
-    assert s.model.inputs[2][0].tolist() == [0, 0, 0, 7, 7, 7]
+    # ceil(5/3)=2: commit 2, then 2, leaving only 1 for the last pass.
+    assert s.model.inputs[1][0].tolist() == [0, 0, 0, 7, 7, 7]
+    assert s.model.inputs[2][0].tolist() == [0, 0, 0, 0, 0, 7]
     assert "7" not in states[-1][0].split()
 
 

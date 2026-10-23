@@ -1,0 +1,22 @@
+{
+  "sum_even": "def sum_even(nums):\n    return sum(x for x in nums if x % 2 == 0)\n",
+  "balanced": "def balanced(s):\n    stack = []\n    pairs = dict(zip(')]}', '([{'))\n    for c in s:\n        if c in '([{': stack.append(c)\n        elif c in pairs and (not stack or stack.pop() != pairs[c]): return False\n    return not stack\n",
+  "is_palindrome": "def is_palindrome(text):\n    s = ''.join(c.lower() for c in text if c.isalnum())\n    return s == s[::-1]\n",
+  "fibonacci": "def fibonacci(n):\n    result = []\n    a, b = 0, 1\n    for _ in range(max(0, n)):\n        result.append(a)\n        a, b = b, a + b\n    return result\n",
+  "deduplicate": "def deduplicate(items):\n    return list(dict.fromkeys(items))\n",
+  "binary_search": "def binary_search(nums, target):\n    low, high = 0, len(nums)-1\n    while low <= high:\n        mid = (low+high)//2\n        if nums[mid] == target: return mid\n        if nums[mid] < target: low = mid+1\n        else: high = mid-1\n    return -1\n",
+  "word_counts": "def word_counts(text):\n    words = text.lower().split()\n    return {w: words.count(w) for w in words}\n",
+  "merge_sorted": "def merge_sorted(a, b):\n    if not a: return b.copy()\n    if not b: return a.copy()\n    if a[0] <= b[0]: return [a[0]] + merge_sorted(a[1:], b)\n    return [b[0]] + merge_sorted(a, b[1:])\n",
+  "flatten": "def flatten(rows):\n    return [x for row in rows for x in row]\n",
+  "fizzbuzz": "def fizzbuzz(n):\n    return ['FizzBuzz' if i%15==0 else 'Fizz' if i%3==0 else 'Buzz' if i%5==0 else str(i) for i in range(1,n+1)]\n",
+  "factorial": "import math\ndef factorial(n):\n    return math.factorial(n)\n",
+  "count_vowels": "def count_vowels(text):\n    return sum(c.lower() in 'aeiou' for c in text)\n",
+  "gcd": "def gcd(a, b):\n    while b: a, b = b, a%b\n    return a\n",
+  "is_prime": "def is_prime(n):\n    return n>1 and all(n%d for d in range(2,int(n**0.5)+1))\n",
+  "reverse_words": "def reverse_words(text):\n    return ' '.join(reversed(text.split()))\n",
+  "clamp": "def clamp(x, low, high):\n    return min(max(x, low), high)\n",
+  "transpose": "def transpose(matrix):\n    return [list(row) for row in zip(*matrix)]\n",
+  "chunk_list": "def chunk_list(items, size):\n    return [items[i:i+size] for i in range(0,len(items),size)]\n",
+  "max_run": "from itertools import groupby\ndef max_run(nums):\n    return max((len(list(g)) for _,g in groupby(nums)),default=0)\n",
+  "unique_sorted": "def unique_sorted(nums):\n    return sorted(set(nums))\n"
+}

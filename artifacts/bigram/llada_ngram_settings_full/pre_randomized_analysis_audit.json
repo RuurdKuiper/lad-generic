@@ -1,0 +1,20 @@
+{
+  "retained": 1974,
+  "matched_cases": 282,
+  "methods": [
+    "confidence",
+    "bigram",
+    "bigram_rep",
+    "trigram",
+    "trigram_rep",
+    "trigram_sample",
+    "confidence_zero"
+  ],
+  "cases_per_domain_method": 94,
+  "representative_examples": 378,
+  "main_raw_unchanged": true,
+  "source_subset_unchanged": true,
+  "all_report_links_valid": true,
+  "forward_counts_match": true,
+  "all_graded": true
+}

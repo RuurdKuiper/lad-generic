@@ -1,0 +1,34 @@
+[
+  {
+    "model": "gemma",
+    "vocab_size": 256000,
+    "retained_trigrams": 5234558,
+    "finite": true,
+    "fixed_tokens_preserved": true,
+    "temperature_zero_deterministic": true
+  },
+  {
+    "model": "llama",
+    "vocab_size": 128256,
+    "retained_trigrams": 5746261,
+    "finite": true,
+    "fixed_tokens_preserved": true,
+    "temperature_zero_deterministic": true
+  },
+  {
+    "model": "qwen",
+    "vocab_size": 152064,
+    "retained_trigrams": 5600583,
+    "finite": true,
+    "fixed_tokens_preserved": true,
+    "temperature_zero_deterministic": true
+  },
+  {
+    "model": "ministral",
+    "vocab_size": 131072,
+    "retained_trigrams": 5609705,
+    "finite": true,
+    "fixed_tokens_preserved": true,
+    "temperature_zero_deterministic": true
+  }
+]

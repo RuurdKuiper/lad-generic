@@ -1,0 +1,76 @@
+{
+  "0837bd3085ab": {
+    "category": "math",
+    "sha256": "dd8f38763a49b53a402b7077bef52bb5672a31741060eed5fc0e30d9cd6c67d3",
+    "score": 3,
+    "note": "Correct combined rate1/2 andtwo-hour fill time withvalid working.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "0b140d2a1544": {
+    "category": "math",
+    "sha256": "e7183a638b3b63f648c508798d8c995af6638fe7e15281780e8276466c9d7666",
+    "score": 3,
+    "note": "Correct sums48/70 anddifference22; stray mathdelimiter doesnotinvalidate working.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "c7bb72f923b2": {
+    "category": "open",
+    "sha256": "19bb2c7e9288fc649293ec0a05e2c0ba7eee8f532d136bc6e90f77110d69968a",
+    "score": 2,
+    "note": "Coherent Amsterdam overview but wrongly calls canals current primarytransport andlists RedHouse aslandmark.",
+    "fluency": 3
+  },
+  "1e178111f4a5": {
+    "category": "open",
+    "sha256": "a46b5e8ef2e5ce11edbc634480631d57d8eb860eb0aaed2a874a0b4b09422a52",
+    "score": 2,
+    "note": "Relevant Dutch landmarks and city description, but repeated nightlife/Anne Frank House, stray commas and broken phrases.",
+    "fluency": 1
+  },
+  "3022207699fe": {
+    "category": "math",
+    "sha256": "5163520e998745b8cd80ab1298f042e20a7b04e17492ada8d1119f4a797c338a",
+    "score": 3,
+    "note": "Correct fifth number 22 and correct sums 48 and 70; minor unmatched math delimiter.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "41e4a57c0ff8": {
+    "category": "open",
+    "sha256": "2beb619bcf2b9b17985e5e1f38b7f74425ad700e5629577c9f73b1816f75dacc",
+    "score": 2,
+    "note": "Correct core definition and applications, interrupted by a very long comma run.",
+    "fluency": 1
+  },
+  "4a500d78f5a4": {
+    "category": "math",
+    "sha256": "e2c45ccc549af9dac2401103ca70fb4d1edc33d849442eff028972f6d66c1d39",
+    "score": 1,
+    "note": "Correct combined rate 1/2 but never gives the requested filling time; duplicated rate units.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "9f25534382d3": {
+    "category": "open",
+    "sha256": "59a6042471cb1c034f0804982ba7b1d0cfdf14da86180311761702b3c2d297ad",
+    "score": 2,
+    "note": "Readable and relevant but falsely describes canals as primary transportation and invents a Red House landmark.",
+    "fluency": 3
+  },
+  "a4e58dbb7298": {
+    "category": "open",
+    "sha256": "d5127df97780496530274e90f56d00639250d15db24560fc688f0c94255f969f",
+    "score": 3,
+    "note": "Clear data-learning definition, example training followed by new objects, and useful applications.",
+    "fluency": 3
+  },
+  "dc7f842cbc3d": {
+    "category": "open",
+    "sha256": "14d988393bcd05ca29570c8aac3dca6bd7f4477e14d56a7b89439c185cc4d5f7",
+    "score": 2,
+    "note": "Clear broad learning definition, but bicycle analogy poorly distinguishes learning from examples and ends with an incomplete comparison.",
+    "fluency": 3
+  }
+}

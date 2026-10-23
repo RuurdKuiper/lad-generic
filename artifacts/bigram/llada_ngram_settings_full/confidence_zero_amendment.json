@@ -1,0 +1,16 @@
+{
+  "configuration": "confidence_zero",
+  "base_method": "confidence",
+  "total": 282,
+  "source": "matched_results.jsonl",
+  "source_sha256": "cac7fd319b1d766adf251923501758a641227b0581a64984c7d4bda9cf0293e8",
+  "revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+  "changes": {
+    "temperature": 0.0
+  },
+  "seed": 42,
+  "repetition_penalty": false,
+  "scope": "User-requested confidence-guided temperature-zero arm on all282 retained cases; all other settings unchanged.",
+  "selection": "Requested after inspecting earlier arms; exploratory paired comparison, one fixed seed.",
+  "prior_six_method_results_sha256": "235b90aee0afeae2d63e664ae4201314ae4e4465e098f6ba4fd199b30cd0fa09"
+}

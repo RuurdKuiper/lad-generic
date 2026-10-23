@@ -1,0 +1,20 @@
+{
+  "name": "english",
+  "repo": "HuggingFaceFW/fineweb-edu",
+  "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+  "prefix": "sample/10BT/",
+  "tokens": 720000000,
+  "files": [
+    "sample/10BT/000_00000.parquet"
+  ],
+  "offline": true,
+  "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+  "documents": 703678,
+  "actual_tokens": 720000000,
+  "pairs": 719296322,
+  "triples": 718592644,
+  "skipped_duplicates": 1347,
+  "eos_appended": 703677,
+  "started_at": 1792744868.1032891,
+  "seconds": 1053.1792018413544
+}

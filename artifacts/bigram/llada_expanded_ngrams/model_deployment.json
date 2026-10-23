@@ -1,0 +1,14 @@
+{
+  "repo": "Ruurd/llada-ngram-guidance-877m",
+  "revision": "5ad854a30691e137d78cac78a091f0834bd4ac8f",
+  "assets": {
+    "bigram_expanded.pt": {
+      "sha256": "7abbc16b6d69092def60f33fdec69fa7e09da1f223934af64d13af583af845d5",
+      "bytes": 486493165
+    },
+    "trigram_expanded.pt": {
+      "sha256": "1e87970181b4d94084772e219913ece1082d5e28bec0d6710e719e1dde2d5178",
+      "bytes": 886676023
+    }
+  }
+}

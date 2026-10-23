@@ -1,0 +1,12 @@
+{
+  "phase": "main",
+  "completed": 1413,
+  "total": 1800,
+  "new": 1413,
+  "quota_blocked_budgets": [],
+  "failed": [],
+  "status": "stopped_by_user",
+  "retained_for_analysis": 1410,
+  "grading_complete_for_retained": true,
+  "sampling_cancelled": true
+}

@@ -1,0 +1,1414 @@
+{
+  "status": "complete",
+  "generated": 282,
+  "target": 282,
+  "graded": 282,
+  "pending": 0,
+  "category_generated": {
+    "open": 94,
+    "code": 94,
+    "math": 94
+  },
+  "groups": [
+    {
+      "budget": null,
+      "method": "confidence",
+      "n": 282,
+      "latency_ms": 1514.821895188487,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.3936170212765957,
+        "mean_normalized": 0.4645390070921986,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 1.6063829787234043,
+        "mean_normalized": 0.3829787234042553,
+        "correct": 36.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.6702127659574468,
+        "mean_normalized": 0.5106382978723404,
+        "correct": 48.0
+      },
+      "macro_score": 0.45271867612293143
+    },
+    {
+      "budget": null,
+      "method": "confidence_zero",
+      "n": 282,
+      "latency_ms": 1500.0143412959676,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.3191489361702127,
+        "mean_normalized": 0.43971631205673756,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 1.8829787234042554,
+        "mean_normalized": 0.4787234042553192,
+        "correct": 45.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.6382978723404256,
+        "mean_normalized": 0.48936170212765956,
+        "correct": 46.0
+      },
+      "macro_score": 0.46926713947990545
+    },
+    {
+      "budget": null,
+      "method": "bigram",
+      "n": 282,
+      "latency_ms": 2016.489458054053,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.8297872340425532,
+        "mean_normalized": 0.6099290780141844,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 2,
+        "mean_normalized": 0.5212765957446809,
+        "correct": 49.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.7446808510638299,
+        "mean_normalized": 0.4787234042553192,
+        "correct": 45.0
+      },
+      "macro_score": 0.5366430260047281
+    },
+    {
+      "budget": null,
+      "method": "bigram_rep",
+      "n": 282,
+      "latency_ms": 2048.1979425811596,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.8191489361702127,
+        "mean_normalized": 0.6063829787234042,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 1.9574468085106382,
+        "mean_normalized": 0.5106382978723404,
+        "correct": 48.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.8617021276595744,
+        "mean_normalized": 0.5638297872340425,
+        "correct": 53.0
+      },
+      "macro_score": 0.5602836879432623
+    },
+    {
+      "budget": null,
+      "method": "trigram",
+      "n": 282,
+      "latency_ms": 2195.080885676839,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.9574468085106382,
+        "mean_normalized": 0.652482269503546,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 2.021276595744681,
+        "mean_normalized": 0.5212765957446809,
+        "correct": 49.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.8936170212765957,
+        "mean_normalized": 0.5531914893617021,
+        "correct": 52.0
+      },
+      "macro_score": 0.5756501182033097
+    },
+    {
+      "budget": null,
+      "method": "trigram_rep",
+      "n": 282,
+      "latency_ms": 2214.713913165627,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.9787234042553192,
+        "mean_normalized": 0.6595744680851063,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 1.9680851063829787,
+        "mean_normalized": 0.5106382978723404,
+        "correct": 48.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.8617021276595744,
+        "mean_normalized": 0.5319148936170213,
+        "correct": 50.0
+      },
+      "macro_score": 0.5673758865248226
+    },
+    {
+      "budget": null,
+      "method": "trigram_sample",
+      "n": 282,
+      "latency_ms": 3190.2333293853208,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.797872340425532,
+        "mean_normalized": 0.599290780141844,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 1.9148936170212767,
+        "mean_normalized": 0.4787234042553192,
+        "correct": 45.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.8085106382978724,
+        "mean_normalized": 0.5531914893617021,
+        "correct": 52.0
+      },
+      "macro_score": 0.5437352245862884
+    },
+    {
+      "budget": null,
+      "method": "trigram_randomized",
+      "n": 282,
+      "latency_ms": 1810.827269317939,
+      "open": {
+        "n": 94,
+        "mean_grade": 1.9148936170212767,
+        "mean_normalized": 0.6382978723404256,
+        "correct": null
+      },
+      "code": {
+        "n": 94,
+        "mean_grade": 2.0531914893617023,
+        "mean_normalized": 0.5106382978723404,
+        "correct": 48.0
+      },
+      "math": {
+        "n": 94,
+        "mean_grade": 1.6170212765957446,
+        "mean_normalized": 0.4787234042553192,
+        "correct": 45.0
+      },
+      "macro_score": 0.5425531914893618
+    },
+    {
+      "budget": 4,
+      "method": "confidence",
+      "n": 46,
+      "latency_ms": 173.45416033640504,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.06666666666666667,
+        "mean_normalized": 0.02222222222222222,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.13333333333333333,
+        "mean_normalized": 0.0,
+        "correct": 0.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 0.5625,
+        "mean_normalized": 0.0625,
+        "correct": 1.0
+      },
+      "macro_score": 0.02824074074074074
+    },
+    {
+      "budget": 4,
+      "method": "confidence_zero",
+      "n": 46,
+      "latency_ms": 157.37331671761754,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.06666666666666667,
+        "mean_normalized": 0.02222222222222222,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.13333333333333333,
+        "mean_normalized": 0.0,
+        "correct": 0.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 0.8125,
+        "mean_normalized": 0.3125,
+        "correct": 5.0
+      },
+      "macro_score": 0.11157407407407408
+    },
+    {
+      "budget": 4,
+      "method": "bigram",
+      "n": 46,
+      "latency_ms": 196.91118973550266,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.5333333333333333,
+        "mean_normalized": 0.17777777777777776,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.4,
+        "mean_normalized": 0.0,
+        "correct": 0.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.125,
+        "mean_normalized": 0.1875,
+        "correct": 3.0
+      },
+      "macro_score": 0.12175925925925925
+    },
+    {
+      "budget": 4,
+      "method": "bigram_rep",
+      "n": 46,
+      "latency_ms": 216.1196726779251,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.5333333333333333,
+        "mean_normalized": 0.17777777777777776,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.3333333333333333,
+        "mean_normalized": 0.0,
+        "correct": 0.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.375,
+        "mean_normalized": 0.375,
+        "correct": 6.0
+      },
+      "macro_score": 0.18425925925925926
+    },
+    {
+      "budget": 4,
+      "method": "trigram",
+      "n": 46,
+      "latency_ms": 211.71477618222326,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.6,
+        "mean_normalized": 0.19999999999999998,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.6666666666666666,
+        "mean_normalized": 0.06666666666666667,
+        "correct": 1.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.3125,
+        "mean_normalized": 0.3125,
+        "correct": 5.0
+      },
+      "macro_score": 0.19305555555555554
+    },
+    {
+      "budget": 4,
+      "method": "trigram_rep",
+      "n": 46,
+      "latency_ms": 244.9314368625536,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.7333333333333333,
+        "mean_normalized": 0.24444444444444444,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.5333333333333333,
+        "mean_normalized": 0.06666666666666667,
+        "correct": 1.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.25,
+        "mean_normalized": 0.25,
+        "correct": 4.0
+      },
+      "macro_score": 0.18703703703703703
+    },
+    {
+      "budget": 4,
+      "method": "trigram_sample",
+      "n": 46,
+      "latency_ms": 364.78390858468157,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.6,
+        "mean_normalized": 0.19999999999999998,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.26666666666666666,
+        "mean_normalized": 0.0,
+        "correct": 0.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.25,
+        "mean_normalized": 0.375,
+        "correct": 6.0
+      },
+      "macro_score": 0.19166666666666665
+    },
+    {
+      "budget": 4,
+      "method": "trigram_randomized",
+      "n": 46,
+      "latency_ms": 188.43358513170287,
+      "open": {
+        "n": 15,
+        "mean_grade": 0.6,
+        "mean_normalized": 0.19999999999999998,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 0.26666666666666666,
+        "mean_normalized": 0.06666666666666667,
+        "correct": 1.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 0.8125,
+        "mean_normalized": 0.25,
+        "correct": 4.0
+      },
+      "macro_score": 0.17222222222222222
+    },
+    {
+      "budget": 8,
+      "method": "confidence",
+      "n": 47,
+      "latency_ms": 313.5780753627261,
+      "open": {
+        "n": 16,
+        "mean_grade": 0.625,
+        "mean_normalized": 0.20833333333333331,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 0.8125,
+        "mean_normalized": 0.125,
+        "correct": 2.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.3333333333333333,
+        "mean_normalized": 0.4666666666666667,
+        "correct": 7.0
+      },
+      "macro_score": 0.26666666666666666
+    },
+    {
+      "budget": 8,
+      "method": "confidence_zero",
+      "n": 47,
+      "latency_ms": 287.36379768382363,
+      "open": {
+        "n": 16,
+        "mean_grade": 0.375,
+        "mean_normalized": 0.125,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.125,
+        "mean_normalized": 0.25,
+        "correct": 4.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.3333333333333333,
+        "mean_normalized": 0.4,
+        "correct": 6.0
+      },
+      "macro_score": 0.25833333333333336
+    },
+    {
+      "budget": 8,
+      "method": "bigram",
+      "n": 47,
+      "latency_ms": 424.80698829278987,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.1875,
+        "mean_normalized": 0.3958333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.75,
+        "mean_normalized": 0.4375,
+        "correct": 7.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.4,
+        "mean_normalized": 0.4,
+        "correct": 6.0
+      },
+      "macro_score": 0.4111111111111111
+    },
+    {
+      "budget": 8,
+      "method": "bigram_rep",
+      "n": 47,
+      "latency_ms": 456.1852298657152,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.3125,
+        "mean_normalized": 0.4375,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.5625,
+        "mean_normalized": 0.375,
+        "correct": 6.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.6,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.4708333333333333
+    },
+    {
+      "budget": 8,
+      "method": "trigram",
+      "n": 47,
+      "latency_ms": 430.0168577997767,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.5625,
+        "mean_normalized": 0.5208333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.4375,
+        "correct": 7.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.8666666666666667,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.5194444444444444
+    },
+    {
+      "budget": 8,
+      "method": "trigram_rep",
+      "n": 47,
+      "latency_ms": 449.2333887858277,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.5,
+        "mean_normalized": 0.5,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.75,
+        "mean_normalized": 0.375,
+        "correct": 6.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.7333333333333334,
+        "mean_normalized": 0.5333333333333333,
+        "correct": 8.0
+      },
+      "macro_score": 0.46944444444444444
+    },
+    {
+      "budget": 8,
+      "method": "trigram_sample",
+      "n": 47,
+      "latency_ms": 672.036069098543,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.4375,
+        "mean_normalized": 0.47916666666666663,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.125,
+        "mean_normalized": 0.25,
+        "correct": 4.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.6,
+        "mean_normalized": 0.5333333333333333,
+        "correct": 8.0
+      },
+      "macro_score": 0.42083333333333334
+    },
+    {
+      "budget": 8,
+      "method": "trigram_randomized",
+      "n": 47,
+      "latency_ms": 376.2010122708818,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.4375,
+        "mean_normalized": 0.47916666666666663,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.125,
+        "mean_normalized": 0.4375,
+        "correct": 7.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.5333333333333334,
+        "mean_normalized": 0.5333333333333333,
+        "correct": 8.0
+      },
+      "macro_score": 0.48333333333333334
+    },
+    {
+      "budget": 16,
+      "method": "confidence",
+      "n": 48,
+      "latency_ms": 598.9409829101836,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.1875,
+        "mean_normalized": 0.3958333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.375,
+        "mean_normalized": 0.25,
+        "correct": 4.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.75,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.4027777777777778
+    },
+    {
+      "budget": 16,
+      "method": "confidence_zero",
+      "n": 48,
+      "latency_ms": 583.8600783317816,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.0625,
+        "mean_normalized": 0.35416666666666663,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.4375,
+        "correct": 7.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.625,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "macro_score": 0.4305555555555555
+    },
+    {
+      "budget": 16,
+      "method": "bigram",
+      "n": 48,
+      "latency_ms": 789.7444497211836,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.6458333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.625,
+        "correct": 10.0
+      },
+      "macro_score": 0.5902777777777778
+    },
+    {
+      "budget": 16,
+      "method": "bigram_rep",
+      "n": 48,
+      "latency_ms": 812.9604167091505,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.75,
+        "mean_normalized": 0.5833333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "macro_score": 0.5902777777777778
+    },
+    {
+      "budget": 16,
+      "method": "trigram",
+      "n": 48,
+      "latency_ms": 876.0301006453423,
+      "open": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.6666666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.8125,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.125,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "macro_score": 0.6180555555555556
+    },
+    {
+      "budget": 16,
+      "method": "trigram_rep",
+      "n": 48,
+      "latency_ms": 862.3566949681845,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.6875,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 1.8125,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.125,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "macro_score": 0.625
+    },
+    {
+      "budget": 16,
+      "method": "trigram_sample",
+      "n": 48,
+      "latency_ms": 1257.4230043198138,
+      "open": {
+        "n": 16,
+        "mean_grade": 1.6875,
+        "mean_normalized": 0.5625,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.125,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "macro_score": 0.6041666666666666
+    },
+    {
+      "budget": 16,
+      "method": "trigram_randomized",
+      "n": 48,
+      "latency_ms": 697.3054186188771,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.6875,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.3125,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.6875,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "macro_score": 0.5833333333333334
+    },
+    {
+      "budget": 32,
+      "method": "confidence",
+      "n": 47,
+      "latency_ms": 1166.5901982800124,
+      "open": {
+        "n": 15,
+        "mean_grade": 1.8666666666666667,
+        "mean_normalized": 0.6222222222222222,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.75,
+        "mean_normalized": 0.4375,
+        "correct": 7.0
+      },
+      "macro_score": 0.5407407407407407
+    },
+    {
+      "budget": 32,
+      "method": "confidence_zero",
+      "n": 47,
+      "latency_ms": 1159.414212823786,
+      "open": {
+        "n": 15,
+        "mean_grade": 1.6666666666666667,
+        "mean_normalized": 0.5555555555555556,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.5625,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.75,
+        "mean_normalized": 0.4375,
+        "correct": 7.0
+      },
+      "macro_score": 0.5601851851851852
+    },
+    {
+      "budget": 32,
+      "method": "bigram",
+      "n": 47,
+      "latency_ms": 1540.9536371602023,
+      "open": {
+        "n": 15,
+        "mean_grade": 2.2,
+        "mean_normalized": 0.7333333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.4375,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "macro_score": 0.6402777777777777
+    },
+    {
+      "budget": 32,
+      "method": "bigram_rep",
+      "n": 47,
+      "latency_ms": 1580.8913855456767,
+      "open": {
+        "n": 15,
+        "mean_grade": 2.2,
+        "mean_normalized": 0.7333333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.4375,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.125,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.6611111111111111
+    },
+    {
+      "budget": 32,
+      "method": "trigram",
+      "n": 47,
+      "latency_ms": 1707.0628292660447,
+      "open": {
+        "n": 15,
+        "mean_grade": 2.2666666666666666,
+        "mean_normalized": 0.7555555555555555,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.25,
+        "mean_normalized": 0.625,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.6476851851851851
+    },
+    {
+      "budget": 32,
+      "method": "trigram_rep",
+      "n": 47,
+      "latency_ms": 1705.350354393112,
+      "open": {
+        "n": 15,
+        "mean_grade": 2.2666666666666666,
+        "mean_normalized": 0.7555555555555555,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.25,
+        "mean_normalized": 0.625,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.6476851851851851
+    },
+    {
+      "budget": 32,
+      "method": "trigram_sample",
+      "n": 47,
+      "latency_ms": 2445.3926379396084,
+      "open": {
+        "n": 15,
+        "mean_grade": 2,
+        "mean_normalized": 0.6666666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.5,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "macro_score": 0.5763888888888888
+    },
+    {
+      "budget": 32,
+      "method": "trigram_randomized",
+      "n": 47,
+      "latency_ms": 1427.0291387876298,
+      "open": {
+        "n": 15,
+        "mean_grade": 2.466666666666667,
+        "mean_normalized": 0.8222222222222222,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.125,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.8125,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "macro_score": 0.6074074074074074
+    },
+    {
+      "budget": 64,
+      "method": "confidence",
+      "n": 48,
+      "latency_ms": 2283.498375346729,
+      "open": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.6666666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.625,
+        "mean_normalized": 0.6875,
+        "correct": 11.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2.3125,
+        "mean_normalized": 0.75,
+        "correct": 12.0
+      },
+      "macro_score": 0.7013888888888888
+    },
+    {
+      "budget": 64,
+      "method": "confidence_zero",
+      "n": 48,
+      "latency_ms": 2279.198914184235,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.0625,
+        "mean_normalized": 0.6875,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.6875
+    },
+    {
+      "budget": 64,
+      "method": "bigram",
+      "n": 48,
+      "latency_ms": 3068.5734487293907,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.375,
+        "mean_normalized": 0.7916666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.7222222222222222
+    },
+    {
+      "budget": 64,
+      "method": "bigram_rep",
+      "n": 48,
+      "latency_ms": 3107.7172875229735,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.375,
+        "mean_normalized": 0.7916666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.7222222222222222
+    },
+    {
+      "budget": 64,
+      "method": "trigram",
+      "n": 48,
+      "latency_ms": 3339.862212383499,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.5625,
+        "mean_normalized": 0.8541666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.7430555555555556
+    },
+    {
+      "budget": 64,
+      "method": "trigram_rep",
+      "n": 48,
+      "latency_ms": 3361.517017115451,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.5625,
+        "mean_normalized": 0.8541666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.7430555555555556
+    },
+    {
+      "budget": 64,
+      "method": "trigram_sample",
+      "n": 48,
+      "latency_ms": 4821.711901837261,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.375,
+        "mean_normalized": 0.7916666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 2,
+        "mean_normalized": 0.5625,
+        "correct": 9.0
+      },
+      "macro_score": 0.7222222222222222
+    },
+    {
+      "budget": 64,
+      "method": "trigram_randomized",
+      "n": 48,
+      "latency_ms": 2734.983065223787,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.5625,
+        "mean_normalized": 0.8541666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 16,
+        "mean_grade": 2.8125,
+        "mean_normalized": 0.8125,
+        "correct": 13.0
+      },
+      "math": {
+        "n": 16,
+        "mean_grade": 1.9375,
+        "mean_normalized": 0.5,
+        "correct": 8.0
+      },
+      "macro_score": 0.7222222222222222
+    },
+    {
+      "budget": 128,
+      "method": "confidence",
+      "n": 46,
+      "latency_ms": 4592.954021959525,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.5625,
+        "mean_normalized": 0.8541666666666666,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2.3333333333333335,
+        "mean_normalized": 0.8,
+        "correct": 12.0
+      },
+      "macro_score": 0.7736111111111111
+    },
+    {
+      "budget": 128,
+      "method": "confidence_zero",
+      "n": 46,
+      "latency_ms": 4572.597250909261,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.625,
+        "mean_normalized": 0.875,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2.3333333333333335,
+        "mean_normalized": 0.7333333333333333,
+        "correct": 11.0
+      },
+      "macro_score": 0.7583333333333333
+    },
+    {
+      "budget": 128,
+      "method": "bigram",
+      "n": 46,
+      "latency_ms": 6130.480520032427,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.6875,
+        "mean_normalized": 0.8958333333333334,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.7208333333333333
+    },
+    {
+      "budget": 128,
+      "method": "bigram_rep",
+      "n": 46,
+      "latency_ms": 6167.721394287503,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.6875,
+        "mean_normalized": 0.8958333333333334,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.7208333333333333
+    },
+    {
+      "budget": 128,
+      "method": "trigram",
+      "n": 46,
+      "latency_ms": 6662.355516065398,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.6875,
+        "mean_normalized": 0.8958333333333334,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.7208333333333333
+    },
+    {
+      "budget": 128,
+      "method": "trigram_rep",
+      "n": 46,
+      "latency_ms": 6723.284854513147,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.6875,
+        "mean_normalized": 0.8958333333333334,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.7208333333333333
+    },
+    {
+      "budget": 128,
+      "method": "trigram_sample",
+      "n": 46,
+      "latency_ms": 9664.089442726792,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.625,
+        "mean_normalized": 0.875,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 2.066666666666667,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "macro_score": 0.736111111111111
+    },
+    {
+      "budget": 128,
+      "method": "trigram_randomized",
+      "n": 46,
+      "latency_ms": 5488.775667552229,
+      "open": {
+        "n": 16,
+        "mean_grade": 2.3125,
+        "mean_normalized": 0.7708333333333333,
+        "correct": null
+      },
+      "code": {
+        "n": 15,
+        "mean_grade": 2.6,
+        "mean_normalized": 0.6666666666666666,
+        "correct": 10.0
+      },
+      "math": {
+        "n": 15,
+        "mean_grade": 1.9333333333333333,
+        "mean_normalized": 0.6,
+        "correct": 9.0
+      },
+      "macro_score": 0.6791666666666666
+    }
+  ]
+}

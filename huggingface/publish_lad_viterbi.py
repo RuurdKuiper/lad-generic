@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare or update the existing Ruurd/lad Space with optional PMI Viterbi."""
+"""Prepare or update Ruurd/lad with expanded BG + TG Gumbel decoding."""
 from __future__ import annotations
 
 import argparse
@@ -22,7 +22,7 @@ def make_space_bundle(destination: Path, checkpoint: Path = ROOT / "artifacts/bi
             shutil.copy2(path, destination / path.name)
     package = destination / "src/diffusion_lm"
     package.mkdir(parents=True, exist_ok=True)
-    for name in ("__init__.py", "bigram.py"):
+    for name in ("__init__.py", "bigram.py", "trigram.py", "repetition_risk.py", "repetition_schedule.py"):
         shutil.copy2(ROOT / "src/diffusion_lm" / name, package / name)
     shutil.copy2(checkpoint, destination / "bigram.pt")
     if checkpoint.with_suffix(".json").is_file():
@@ -52,7 +52,7 @@ def main():
     commit = api.upload_folder(
         repo_id=SPACE_ID, repo_type="space", folder_path=str(args.output),
         parent_commit=info.sha,
-        commit_message="Apply repetition correction directly to Viterbi transitions; exempt EOS/EOT",
+        commit_message="Update LAD decoding options and default settings",
         ignore_patterns=["__pycache__/*", "*.pyc"],
     )
     record = dict(space=SPACE_ID, parent_revision=info.sha, revision=commit.oid,

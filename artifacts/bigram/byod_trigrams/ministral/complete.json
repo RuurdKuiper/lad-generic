@@ -1,0 +1,16 @@
+{
+  "documents": 980000,
+  "tokens": 73214218,
+  "source": "data/lad-training-1m-256-long",
+  "tokenizer_sha256": "5a03f035286f353bc1539a706768c1ee673d9ecaece5a463a0d9bdd354b25edf",
+  "model": "ministral",
+  "vocab_size": 131072,
+  "retained_trigrams": 5609705,
+  "retained_prefixes": 1768964,
+  "checkpoint_bytes": 88547127,
+  "checkpoint_sha256": "7482c6a16008682e65671463d9004624ca66a51e3c85c9f45bbe75a57acaa050",
+  "exact_bigram_match": true,
+  "exact_unigram_match": true,
+  "correction_queries": 10018,
+  "seconds": 113.8
+}

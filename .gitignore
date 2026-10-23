@@ -62,3 +62,29 @@ artifacts/**/*.pt
 artifacts/tokenizer_cache/
 artifacts/**/bundle/
 artifacts/**/bundles/
+# Rebuildable expanded n-gram corpus and external aggregation files.
+artifacts/bigram/llada_expanded_ngrams/hf-cache/
+artifacts/bigram/llada_expanded_ngrams/count-shards/
+artifacts/bigram/llada_expanded_ngrams/spill/
+artifacts/bigram/llada_expanded_ngrams/*.parquet
+artifacts/bigram/llada_expanded_ngrams/*.duckdb*
+artifacts/bigram/llada_expanded_ngrams/model-bundle/
+# Rebuildable per-tokenizer BYOD n-gram aggregation files.
+artifacts/bigram/byod_trigrams/*/shards/
+artifacts/bigram/byod_trigrams/*/spill/
+artifacts/bigram/byod_trigrams/*/*.parquet
+artifacts/bigram/byod_trigrams/*/*.duckdb*
+artifacts/bigram/byod_trigrams/*/*.npy
+artifacts/bigram/byod_expanded_ngrams/*/count-shards/*/*.parquet
+artifacts/bigram/byod_expanded_ngrams/*/count-shards/*/*.npy
+artifacts/bigram/byod_expanded_ngrams/*/*.parquet
+artifacts/bigram/byod_expanded_ngrams/*/*.duckdb*
+artifacts/bigram/byod_expanded_ngrams/*/spill/
+artifacts/bigram/byod_expanded_ngrams/aggregation.lock
+
+# Generated deployment source snapshots; keep plans, revisions and verification.
+artifacts/bigram/byod_simple_rollout/before/
+artifacts/bigram/**/*.before
+artifacts/bigram/**/*.diff
+artifacts/bigram/llada_sequence_sampling/before_app.py.txt
+artifacts/bigram/lad_trigram_rollout/before/

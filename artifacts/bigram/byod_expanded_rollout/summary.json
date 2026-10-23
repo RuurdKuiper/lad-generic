@@ -1,0 +1,61 @@
+{
+  "spaces": 8,
+  "expanded_assets": true,
+  "hosted_smoke_generations": 16,
+  "local_tests_passed": 88,
+  "local_tests_skipped": 6,
+  "models": {
+    "gemma": {
+      "tokens": 873467371,
+      "assets": {
+        "bigram_expanded.pt": {
+          "bytes": 550234861,
+          "sha256": "b0c278d0d77f4da0155e5ab2960e80ad6f1bf03eef93ed54bb5eac2b051fa899"
+        },
+        "trigram_expanded.pt": {
+          "bytes": 879277559,
+          "sha256": "f899d3cab44ac2ec67af984db441fa4fd556c52907a9f5e828cfd5a56b9e25c4"
+        }
+      }
+    },
+    "llama": {
+      "tokens": 871088258,
+      "assets": {
+        "bigram_expanded.pt": {
+          "bytes": 526884589,
+          "sha256": "686c4ea4c01e55c79daeb44ad6bab012ca883762b4ec5859284743e764dd5372"
+        },
+        "trigram_expanded.pt": {
+          "bytes": 954623351,
+          "sha256": "cf7d09e7e0a3e4b7de205de0b53eb012ddbe36e3406b8d02e1c7461b62a71f94"
+        }
+      }
+    },
+    "qwen": {
+      "tokens": 872705486,
+      "assets": {
+        "bigram_expanded.pt": {
+          "bytes": 505088429,
+          "sha256": "66c8154faa90f3ea8500b178542e101bd88d69ccd1416685863e4960b32a5314"
+        },
+        "trigram_expanded.pt": {
+          "bytes": 920344695,
+          "sha256": "c8ebe7fc28f7b4e7c85463b66aa90c8a80b86f7dc491803f55c083daa19e94d2"
+        }
+      }
+    },
+    "ministral": {
+      "tokens": 873214218,
+      "assets": {
+        "bigram_expanded.pt": {
+          "bytes": 484693677,
+          "sha256": "7c8f160eed2953a440e13d41451d0881c96f10c5d12158dafb2ea164723c9852"
+        },
+        "trigram_expanded.pt": {
+          "bytes": 914733047,
+          "sha256": "9b48365118dcf9d413748985241cecff40965563b66061bb04a092a649beacd2"
+        }
+      }
+    }
+  }
+}

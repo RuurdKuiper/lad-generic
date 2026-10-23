@@ -1,0 +1,1268 @@
+{
+  "0824d4f4e032": {
+    "category": "open",
+    "sha256": "c4cb55a4194cb072d8f8346071791964ae56f43fbd8f1f33ad992a7eed8b7d0b",
+    "score": 2,
+    "note": "Correct Rayleigh scattering and eye sensitivity, but falsely says atmosphere absorbs more blue than violet and uses that as causal explanation.",
+    "fluency": 3
+  },
+  "11a07443c2c0": {
+    "category": "open",
+    "sha256": "bb53eab7f45dbe5cd56a64cf5cc617b6625f808cdd3c67f959cf99f1f690761e",
+    "score": 2,
+    "note": "Relevant friendship traits, but repeated adjectives throughout and broken put-in-your-shoes phrasing.",
+    "fluency": 2
+  },
+  "80cb4f1b0d30": {
+    "category": "open",
+    "sha256": "2e0850139d4097ce835c7dd2b1fd1373e2de7fc739b54e35c76d381dff6155a9",
+    "score": 1,
+    "note": "Identifies photosynthesis and glucose, but garbled reaction reverses source materials, including oxygen from air and carbon dioxide from soil.",
+    "fluency": 1
+  },
+  "838aba16208b": {
+    "category": "math",
+    "sha256": "c39cb8bdeb89b436467571a27fce0f3c51d582f3960b498f1bd0deee01d862a6",
+    "score": 1,
+    "note": "Correct cross multiplication then jumps to incorrect x=-1 instead of 6.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "a4cc03e037d0": {
+    "category": "math",
+    "sha256": "2a7ed9e5bcfb3ad994de53ac1066e7f4ef34cb210bd4c4f70395dbdbfeddb7f6",
+    "score": 3,
+    "note": "Correct total distance 240, travel time five hours and average 48 km/h.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "b781954164d3": {
+    "category": "math",
+    "sha256": "d7536a145a8e7a50f9fdefef0f7906ee33c50f4cb348213031211a33fdabbaa8",
+    "score": 1,
+    "note": "Begins with correct expansion but loses equality and derives wrong x=5 instead of 11.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "ccadfbfefe82": {
+    "category": "open",
+    "sha256": "fb01681f0638db2fe6faf0b701de8d53171af911f0aa0fc1c4bf51c5d478a350",
+    "score": 1,
+    "note": "Mentions refrigerant and heat absorption, but confuses compression/condensation and says condenser absorbs heat inside; never explains heat rejection outside.",
+    "fluency": 2
+  },
+  "d77b7c265cc1": {
+    "category": "open",
+    "sha256": "81ba2aaa4f82d1ca3fd74f2b3e7a92dd4126c1794f1940d47a467982fed52b7a",
+    "score": 0,
+    "note": "Capital fact followed by long comma/conjunction/culture loops; unusable answer.",
+    "fluency": 0
+  },
+  "f398e87c2677": {
+    "category": "math",
+    "sha256": "a62868e88b701a8db581c5ef0df8007da7aabca1790961e96c14c47c8f98f94e",
+    "score": 1,
+    "note": "Correct discount to $60, then applies tax to unexplained $66 and concludes wrong $72.60 instead of $66.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "250ddec12349": {
+    "category": "open",
+    "sha256": "a2d90d0ecf07e86ff9165c3c91cbba4278ab776b2456c5efc37b3d48ce798a24",
+    "score": 2,
+    "note": "Correct axial-tilt/opposite-hemisphere mechanism, with repeated words and misleading claim that tilt itself changes throughout the year.",
+    "fluency": 2
+  },
+  "68f4c020051a": {
+    "category": "math",
+    "sha256": "a0cd6cc7cecaf54da6c90940f1413ebe14766805869c2240c321f7701410611b",
+    "score": 2,
+    "note": "Final width 7 cm and length 10 cm are correct; preceding equations are incoherent so no valid working.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "17bd23344d8b": {
+    "category": "open",
+    "sha256": "b7fa9a5aee8d4dfefcc29db939e9cb6a60e470114159b47a4befca6ab3f73076",
+    "score": 2,
+    "note": "Correct evaporation-condensation-precipitation-return loop; one broken water-vapor fragment and no explicit energy source.",
+    "fluency": 2
+  },
+  "19e29e9ddacf": {
+    "category": "open",
+    "sha256": "383b7c5077dbaa064e139be4b420753405845ce02f9e24b167e906ca0d089b17",
+    "score": 1,
+    "note": "Mentions immune priming and reduced spread, but falsely introduces immune-system components and says antibodies mimic disease effects.",
+    "fluency": 2
+  },
+  "200f66b7a4d5": {
+    "category": "math",
+    "sha256": "018fa22c1883fb52ed29ad5a4ad9510bef4229f37577d4fd61cd8c5d427338f5",
+    "score": 3,
+    "note": "Correct eight parts, four each, yielding 12 boys and 20 girls.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "24279b52a684": {
+    "category": "open",
+    "sha256": "58623174ef12b556a79596baffc23e00e8776167954ef82d340498c0ec7ab9d0",
+    "score": 1,
+    "note": "Identifies gravity and Earth attraction, but remainder is repetitive malformed prose with nonsensical force/velocity statements.",
+    "fluency": 1
+  },
+  "43ee391f5622": {
+    "category": "open",
+    "sha256": "5337a3aa90cdb43714108ec6feaade21555774650acc02f9951f77d93e1a7bfd",
+    "score": 1,
+    "note": "Confuses pulmonary veins with outflow to lungs and pulmonary artery with body supply; only final left ventricle/aorta fragment is correct.",
+    "fluency": 2
+  },
+  "46ebeff917c3": {
+    "category": "math",
+    "sha256": "15d8072b3fbb0f18c8424109deacb32a9a3e2c61e79c21a3f0e67507290bea31",
+    "score": 0,
+    "note": "Long digit runs without a calculation or percentage answer.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "49276fac3a3d": {
+    "category": "open",
+    "sha256": "07379edc2c77b98d7a3f86f325b450b0a5a65044bb1c7d92ce479d337999d787",
+    "score": 3,
+    "note": "Clear account of crawled pages, indexing, query matching, ranking and results.",
+    "fluency": 3
+  },
+  "59921529df55": {
+    "category": "open",
+    "sha256": "fc263866e2d3913043f53a95312da8c31c49a2f95d75fe97044fd4ad04b8d554",
+    "score": 2,
+    "note": "Correct short-term versus long-term contrast, but misleadingly includes a single year as a climate averaging period; somewhat repetitive.",
+    "fluency": 3
+  },
+  "621b6df09305": {
+    "category": "math",
+    "sha256": "cce17ce5ec235cc025c4e8d1aa802b460073c8881c6bc2e93a6fbf831d6cee46",
+    "score": 1,
+    "note": "Uses appropriate formulas but computes term 79 instead of 81 and sum 420 instead of 860.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "642ca80be919": {
+    "category": "open",
+    "sha256": "048358195f12d5f4ece776af155b0438b9dfc575a79e20e082ce7f601fe5803e",
+    "score": 2,
+    "note": "Correct droplets/refraction/dispersion, but reflection is misplaced and observer explanation degenerates into fragments and repetition.",
+    "fluency": 1
+  },
+  "6ea2b3a29d21": {
+    "category": "open",
+    "sha256": "7042af06c9c707a513014973a2b7e1ae135e85d2d3abbffb6fd200edd3c7aabd",
+    "score": 2,
+    "note": "Covers physical and mental benefits but long diabetes/hypertension repeats, double punctuation and malformed obesity/concentration claim.",
+    "fluency": 1
+  },
+  "708cf4c44ca3": {
+    "category": "open",
+    "sha256": "8595e640870a017e9cc1bf9bd2969ea32fba897d98a1450a4fba584c67f8cfa1",
+    "score": 3,
+    "note": "Clear learning-from-examples explanation and cat training/generalization example.",
+    "fluency": 3
+  },
+  "754349774fc9": {
+    "category": "math",
+    "sha256": "5523d35367076c7b8d0817d522e5b1b738b7ca03dc38a2571b2123c5a449e242",
+    "score": 2,
+    "note": "Final distance 200 m is correct; working contains a long incoherent digit run instead of valid unit conversion.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "953412b0a4e7": {
+    "category": "math",
+    "sha256": "15e98a2185519911ecaac6c131ef2bc91b06e0b953fa2a48a8c692a989d672d7",
+    "score": 2,
+    "note": "Correct probability 1/6 and six-over-36 ratio, but outcome enumeration is corrupt and repetitive.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "9cea62e7c3e2": {
+    "category": "open",
+    "sha256": "e811232d31bfac1e21be5431261cd959a051e1f51f2a6e6a823413c5f877dc89",
+    "score": 3,
+    "note": "Relevant restorative, memory and health functions with minor malformed word and double punctuation.",
+    "fluency": 2
+  },
+  "aa4fc734bebf": {
+    "category": "open",
+    "sha256": "7241cb634e4afb43e38768d90ca9912e7056c80b2d86812fcb40ba7e779b99d4",
+    "score": 2,
+    "note": "Correct basic scarcity/price relationships, but availability and willingness definitions are awkward and garbled.",
+    "fluency": 2
+  },
+  "b8fd158d848e": {
+    "category": "math",
+    "sha256": "355f1533f3ea7363e412a8a4f00487c6aca378ed77fc3ccd7ec7702e3432762e",
+    "score": 0,
+    "note": "Incorrect bare result 2.5 hours; correct answer is two.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "c2fd9cf93abb": {
+    "category": "open",
+    "sha256": "ba41cc6d0ff0c35eb47b025354535d6d5f26270d23e7266d1451087c348d02b7",
+    "score": 3,
+    "note": "Correct replenishing-versus-finite contrast and examples, with minor repeated word and grammatical errors.",
+    "fluency": 2
+  },
+  "2be4602facd3": {
+    "category": "open",
+    "sha256": "774a91f60a695cf5f7b5d42924350d12153b69b9e7ccde92715c5e8abf09bef8",
+    "score": 0,
+    "note": "Repeated chemical-signal/tree loops dominate; no coherent answer.",
+    "fluency": 0
+  },
+  "92dae81257dc": {
+    "category": "math",
+    "sha256": "df7dad2d59d41cd1ae82d9af3135fc318897e18becfa8657867df21df9cdbe4d",
+    "score": 1,
+    "note": "Correct setup 3B+12=42, then subtracts incorrectly to get Ben12/Ada24 instead of 10/20.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "a7ef5b3485d8": {
+    "category": "open",
+    "sha256": "de933a6bd8a317d511700d87e12dcb2ff3da0ca6ead1e5ada230981f2d1ca347",
+    "score": 3,
+    "note": "Clear general price-rise/purchasing-power account with savings and borrowing effects.",
+    "fluency": 3
+  },
+  "cc0bd38de531": {
+    "category": "math",
+    "sha256": "f40aa2683b0546247a001fd96b19d68a44e02621d090816ec1439df7cacd960e",
+    "score": 1,
+    "note": "Correct first-year balance 1050, but second-year interest and final balance are wrong.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "ccc872a91938": {
+    "category": "math",
+    "sha256": "338ee546dc79c04eb986990a79b6dd5a28cd302666d011490f5fc7153c513ed6",
+    "score": 1,
+    "note": "Garbled radical loop omits hypotenuse; area24 is correct but both requested answers are not supplied.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "d05cfb0a535d": {
+    "category": "math",
+    "sha256": "0fd4587e88a9d6559ba0aa7b3e620b86b50dae594c064b0cede27bc6674eda6d",
+    "score": 2,
+    "note": "Roots 2 and 3 remain identifiable, but factorization and final notation are corrupted by repeated x tokens.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "d06e88a28e46": {
+    "category": "math",
+    "sha256": "1ebb385e3e22f9e697a9d86fd79749f9202c38045a40ad7a17ffa23e147c512b",
+    "score": 1,
+    "note": "Contradicts initial fifth number20 with correct calculation22; inconsistent final answer.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "77c36a4c7441": {
+    "category": "open",
+    "sha256": "efb58532fef8d51232c23bfdb427fc89f1b611c6e6247afc4010c00c6d9a02ac",
+    "score": 3,
+    "note": "Coherent trust/empathy/reliability and boundaries discussion, with minor agreement errors and repeated experiences.",
+    "fluency": 2
+  },
+  "d292ec1521c4": {
+    "category": "open",
+    "sha256": "8419ed080b3346ca42f234a5dc0981ed2b3e3d45a1e3be5c41ba5de8460ce799",
+    "score": 3,
+    "note": "Coherent and relevant capital/canals/arts/nightlife overview without the earlier invented landmarks.",
+    "fluency": 3
+  },
+  "d6981f6b269e": {
+    "category": "open",
+    "sha256": "87f542f783c5d138e1844d3c1af1a0347cdb212778a1e41f47a79fbabc842d6d",
+    "score": 1,
+    "note": "Identifies Rayleigh scattering and shorter blue wavelength, but explanation becomes malformed with invented upper/lower-sky segregation.",
+    "fluency": 1
+  },
+  "e549b76c4ffc": {
+    "category": "open",
+    "sha256": "5c7de1efcf3eb186017d3b3ac3ab14535c08bd7a497268a43f784e5924f904e1",
+    "score": 3,
+    "note": "Correct chlorophyll/photosynthesis explanation, balanced reaction and sugar energy use.",
+    "fluency": 3
+  },
+  "f3a128a23ff3": {
+    "category": "math",
+    "sha256": "563df56a6a52c08dd95086e924f775f93cb6e2fb9de99080b5caa6d4c5e6b926",
+    "score": 1,
+    "note": "Correctly reaches 5x=30, then incorrectly states x=30 instead of6.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "fecf65813a4d": {
+    "category": "math",
+    "sha256": "826625db528fafe2b1dacc43e7dea311902c8c70ad9421f98807428ff9a3a315",
+    "score": 0,
+    "note": "No numerical speed or meaningful working; unfinished repeated-distance fragment.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "01d3e98ebfd2": {
+    "category": "math",
+    "sha256": "12ed7be3175229434bf58e47319aa62557d1293d29ede02ec1259604b4f0d7cc",
+    "score": 2,
+    "note": "Correct width7/length10 but invalid step 4x=7 before x=7, so working is not fully correct.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "17b63a2ea28b": {
+    "category": "open",
+    "sha256": "97d8d09b40fe46ddf145137ced0c77c9ed82bccdab9dde6036ccf2f8a9b24cc0",
+    "score": 1,
+    "note": "Correct refrigerant evaporation absorbs heat, but confuses moisture transfer and heat release into/around the inside coils, omitting clear outside rejection.",
+    "fluency": 2
+  },
+  "5c9599e9bf87": {
+    "category": "math",
+    "sha256": "9120f56a60dbcd3a3728b4bf26a27618afda1ce887373235a5f0f7fec9b5c124",
+    "score": 0,
+    "note": "Malformed percentages and long digit runs; final $60 omits tax and is wrong.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "e2e4493b66aa": {
+    "category": "open",
+    "sha256": "ca66a1c981e960247bdf1555489b71a2a075c772c7968c9a3006ddb963c5d5c8",
+    "score": 1,
+    "note": "Mentions axial tilt and northern summer orientation, but most text repeats Earth/hemisphere fragments and mixes rotation/orbit and seasons.",
+    "fluency": 1
+  },
+  "8ffe2c913f30": {
+    "category": "math",
+    "sha256": "f7736f902a911409a9e5ebdc3f8c7bd49020ee4d4cc08506fdf72c8b4e5b3014",
+    "score": 1,
+    "note": "Omits (1,6), giving five favorable outcomes and wrong5/36 instead of1/6.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "92729c8bed54": {
+    "category": "math",
+    "sha256": "3a022a76f10ab76491a8b4e66836f6175420df676391099d5ab1d81b12ef09aa",
+    "score": 1,
+    "note": "First-year1050 is right but switches principal to1055 and computes wrong final1105.25.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "a2c33f63bfa9": {
+    "category": "open",
+    "sha256": "26ce2f4f9876c9db6d91d37cc9ba9747108a36d6a895ed114e54805e4c4c9060",
+    "score": 2,
+    "note": "Correct short-term versus long-term distinction, with repeated words/lists and missing verbs in the concluding phrase.",
+    "fluency": 2
+  },
+  "c490e858e833": {
+    "category": "open",
+    "sha256": "d11e30e4f67b11f96b1295e5528d4ca06f2ce1482e189bae3d86156b4a6ee47c",
+    "score": 3,
+    "note": "Coherent population-coverage and reduced-spread account, including protection of people unable to vaccinate.",
+    "fluency": 3
+  },
+  "c60713a695ab": {
+    "category": "math",
+    "sha256": "b9773f045bcd27e55e430490d19a4d8ff23c9975b9ca04f5e8cd8f51050a9f17",
+    "score": 2,
+    "note": "Correct fraction5/10 and total10, but explanatory sum is truncated mid-parenthesis.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "16d1ea97233a": {
+    "category": "math",
+    "sha256": "c59dd529654b8f2fcedaa46fe9341e06ad2bbac6d08b082062b748b20713e77d",
+    "score": 3,
+    "note": "Correct conversion72km/h=20m/s and distance200m.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "24774c3b178a": {
+    "category": "open",
+    "sha256": "9b775fd6e6dadfad8f9a6c4196915c6b608720b3a44ac73790637aab690662d3",
+    "score": 0,
+    "note": "Confused/repetitive heart-side/artery/vein routing throughout; no usable circulation explanation.",
+    "fluency": 0
+  },
+  "470495637bd4": {
+    "category": "math",
+    "sha256": "5489f099aa51615ff295a784e3f1283cfaacb8451456bcef109208bdb9d46b30",
+    "score": 1,
+    "note": "Working gets10cm and24cm\u00b2 but final hypotenuse8cm contradicts it, so requested pair is not correct.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "5153e3a65c97": {
+    "category": "math",
+    "sha256": "0a77b5b43c3d84dad68d5ffedb7c09dffc2f33b6724da7ad18a09987645f6c6a",
+    "score": 0,
+    "note": "Malformed arithmetic and digit runs yield wrong term53 and sum400.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "8b171b0d46c6": {
+    "category": "open",
+    "sha256": "5573925e132c08a0b583b68807f0812f559897b162bbc1e9d18bbb71ce0c8e2c",
+    "score": 2,
+    "note": "Correct droplet refraction/internal reflection and separated colors; final sun-direction explanation is confused.",
+    "fluency": 3
+  },
+  "a39b9ae22380": {
+    "category": "open",
+    "sha256": "b867fc7af2b04dae6034b81848a5b59b6d95c4092deeb872bde8954b166e81a5",
+    "score": 2,
+    "note": "Explains relevance matching/ranking, but omits crawling/indexing and includes a repeated-web fragment.",
+    "fluency": 2
+  },
+  "be1edbf36ecc": {
+    "category": "open",
+    "sha256": "935c3f591694ff0aa7b4983df065d7b87458938c91eef048417237c724e4a070",
+    "score": 2,
+    "note": "Correct learning-from-data idea, but awkward child analogy, excessive blank lines and repetitive wording reduce clarity.",
+    "fluency": 2
+  },
+  "db5907123dff": {
+    "category": "open",
+    "sha256": "4949ecb49a6fb14583b80badba587cc3030fe7ae1dc25aa9cc8b2df16a3eeae8",
+    "score": 2,
+    "note": "Clear gravitational attraction account but incorrectly claims greater-mass objects fall faster.",
+    "fluency": 3
+  },
+  "e139e7b38a65": {
+    "category": "math",
+    "sha256": "cb195656501f7d2584aaa7949972d3b3a3490c5811cc172f29c5d2eb283b79e8",
+    "score": 2,
+    "note": "Correct final32%, but inconsistent/gibberish preceding percentages and volumes mean no valid working.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "e69d4160f98a": {
+    "category": "open",
+    "sha256": "9af454f61a33124e173c9139d5ed92123ce8a7d0ed62ba3a3b13f79a9398cc6c",
+    "score": 2,
+    "note": "Good supply/demand/equilibrium definitions but reverses shortage and surplus above/below equilibrium.",
+    "fluency": 3
+  },
+  "fb6ef890f9e7": {
+    "category": "math",
+    "sha256": "24063ff5e742ea50884a582ba8e1522542185c195595b646d379e7545eb4f982",
+    "score": 1,
+    "note": "Correct individual rates, but adds them as5/12 and concludes wrong2.4hours.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "4040ad9c5b9c": {
+    "category": "math",
+    "sha256": "0a5ce757aa1bc2109844b44aaaca6b4a01b4ab6d35022229e176c5ee525bbbf6",
+    "score": 3,
+    "note": "Correct eightparts and fourstudents perpart, yielding12boys20girls; minor repeated word only.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "7cf7aa9ef585": {
+    "category": "open",
+    "sha256": "5075249bfd96c9410bcaacca39d92ff5a54c8e41156d7ae5cb7a8c967c7eb5ce",
+    "score": 2,
+    "note": "Mostly correct evaporation/condensation/transpiration/precipitation loop, but calls cloud droplets vapor and omits heat source/land collection.",
+    "fluency": 3
+  },
+  "920651a7459f": {
+    "category": "math",
+    "sha256": "dd0ca758a85b7542db3e9cb82ad7ad31f99d42cfdbad697dfc878ad4ba6c2fe3",
+    "score": 1,
+    "note": "Correct sums48and70 but subtracts them as20; wrong answer.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "a61496a6baf3": {
+    "category": "open",
+    "sha256": "fafb2fb5ae500b72b0604029ccf997bfd7ed4dff62552366e8b7079e9737c555",
+    "score": 3,
+    "note": "Clear relevant physical and mental exercise benefits without cure guarantees.",
+    "fluency": 3
+  },
+  "d1994fac8c37": {
+    "category": "math",
+    "sha256": "87a1a4570dd5fee931119a65dcced3ce24ebb54caf5c6d49ed0b0631f421dd0d",
+    "score": 0,
+    "note": "Broken combinations formula and blank lines; never supplies21pairs or valid computation.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "4a586519a53d": {
+    "category": "open",
+    "sha256": "54b7d68af52738fe2df5ede67367679f20e8123775016005ff91da0507fc625b",
+    "score": 3,
+    "note": "Clear restoration, memory, mood, regulation and health account with no universal-duration claim.",
+    "fluency": 3
+  },
+  "91cebc3c39d7": {
+    "category": "math",
+    "sha256": "dee72887888986dfeaa417434716be3919259fc432012ada07944edbdc3304ef",
+    "score": 3,
+    "note": "Correct factorization and both roots2and3; minor duplicated equality only.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "a514e16b3619": {
+    "category": "open",
+    "sha256": "fd92d3232cef6cbc580893216494a3149227f8552ce7cba2dc21f9993fb3629e",
+    "score": 3,
+    "note": "Correct price-rise/purchasing-power/income-lag explanation with household budget implications; minor awkward grammar.",
+    "fluency": 2
+  },
+  "c7dfcb653b43": {
+    "category": "open",
+    "sha256": "ef175c118ba6d51ea0306d9e8a8133acd0ebaa8b38739580dfbfc338603e26cc",
+    "score": 2,
+    "note": "Relevant mycorrhizal/root exchange, but presents stress signaling and intentional neighbor support as settled universal mechanisms without caveats.",
+    "fluency": 3
+  },
+  "ca3b2d8e9ec4": {
+    "category": "open",
+    "sha256": "e971d51827b1b5db7c879bdddec5e44339ef7ae3cb2b3aa6db04069130311b3e",
+    "score": 0,
+    "note": "Severe energy/replenished loops and wrongly lists geothermal as nonrenewable; incoherent comparison.",
+    "fluency": 0
+  },
+  "2f35e56214bf": {
+    "category": "math",
+    "sha256": "c55c361807d69580115c439583776b1aa99bbf909b785a32c6b3357075c3b107",
+    "score": 2,
+    "note": "Final7cm/10cm correct, but preceding perimeter algebra is malformed/inconsistent.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "63c1f411284a": {
+    "category": "math",
+    "sha256": "e66829e66fddd261c6b1e7245ea700239d0a10e4fa998db6ac9eec1baa3bfc7f",
+    "score": 1,
+    "note": "Correct age setup but sums12as16 and concludes wrong12/24.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "6d64c1496d4f": {
+    "category": "open",
+    "sha256": "e4d0165ade40d93c73771461606ba86de36e9ce29ed7ef2e2770057cc00f7729",
+    "score": 1,
+    "note": "Initial refrigerant heat-absorption fact is correct, but most of answer is an air/temperature repetition loop with no usable cycle explanation.",
+    "fluency": 0
+  },
+  "8080ae3b556e": {
+    "category": "open",
+    "sha256": "deffb1e9cc0665b86eb16fb9aee8cf37f6d801dbf990e1c01ff0723fefa4c058",
+    "score": 3,
+    "note": "Relevant trust/support/respect account with minor repeated trustworthy and agreement/punctuation flaws.",
+    "fluency": 2
+  },
+  "9b8d9129f2ae": {
+    "category": "open",
+    "sha256": "e2315e3754b841d4907a04ecd0752e016da91dc76123a20b45a8077b6e519568",
+    "score": 2,
+    "note": "Correct core photosynthesis and chlorophyll mechanism, but writes waterH2 and incorrectly says energy is stored in atmosphere.",
+    "fluency": 3
+  },
+  "a3de03d3d216": {
+    "category": "math",
+    "sha256": "8339cf5b1070b84c53246153e9bf7c2598d2fb3bbb293d91da8230ce06c4ea06",
+    "score": 0,
+    "note": "Bare incorrect speed40 with no useful working.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "ac6e707c3897": {
+    "category": "math",
+    "sha256": "bd95ebec237500a23aa7d4d11dc4e474026fbf0688773b16f395149100b91c41",
+    "score": 1,
+    "note": "Correctly simplifies to3x-2=2x+9, then jumps to wrongx5.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "c0e75680150e": {
+    "category": "math",
+    "sha256": "f23f8c4aca4faea8a242600c325457a83d53398a960f5e4ae9f160f6d567eb90",
+    "score": 1,
+    "note": "Contains some correct expanded terms but inconsistent manipulation yields wrongx=-10.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "f0f12102fb5c": {
+    "category": "open",
+    "sha256": "811f8a81ac8d0b6a11e6ab8d5c713ad1311180b5b7d7339a59289c6b2dabd4f5",
+    "score": 1,
+    "note": "Relevant capital/culture facts but lengthy canals/bridges/music repetition undermines the answer.",
+    "fluency": 1
+  },
+  "fc0f147997b0": {
+    "category": "open",
+    "sha256": "00f100bf1c6365fbf2da232b117260ecc78c9ace47e6a421c05e63d7c82e9bc5",
+    "score": 3,
+    "note": "Coherent shorter-wavelength Rayleigh scattering account and scattered-sky versus direct-sun distinction.",
+    "fluency": 3
+  },
+  "fc6279fbd27d": {
+    "category": "open",
+    "sha256": "ff9d34b27031e68d1d9a1b8f395d2c788ce4747e60fa9af46d5b98c02a32ae62",
+    "score": 2,
+    "note": "Correct axial tilt/sunlight season mechanism, but incorrectly measures23.5degrees relative to orbital plane rather than its normal; repeated explanation.",
+    "fluency": 3
+  },
+  "2e815f0f47c7": {
+    "category": "math",
+    "sha256": "96dd0105844f5c17c91514c7237d6744bf7c151a48ef8ac765261c899798be4e",
+    "score": 2,
+    "note": "Correct1/6 and36outcomes, but favorable-count explanation is a long6digit run.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "2fcf8f601f30": {
+    "category": "math",
+    "sha256": "871b61af684159b0bfa030f05d8aaa431232c867c9a2e8a81504467bc48225f1",
+    "score": 2,
+    "note": "Final200m and20m/s times10 correct, but displayed unit-conversion divisor336/00m/s is corrupt.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "6fbdd5e7ff53": {
+    "category": "open",
+    "sha256": "f67c3b09372916ed2c8195ca9c4577f4868b7381070c00d1060090e9c513ae3f",
+    "score": 2,
+    "note": "Reasonable priming/herd-immunity idea but falsely claims measles/polio eradication and repeats polio; awkward grammar.",
+    "fluency": 2
+  },
+  "885d43b8ec34": {
+    "category": "math",
+    "sha256": "a33b8bb4067d5c91b25dd1ed6410c802a7e393181e01424a38f3a4975fbac835",
+    "score": 3,
+    "note": "Correct weighted salt amounts0.4+1.2=1.6 in5litres, yielding32%.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "97c40a462454": {
+    "category": "open",
+    "sha256": "3060d9f3a4aba5aad9419528480f446780bab34785d61e0111ad8e00d8f51ec9",
+    "score": 3,
+    "note": "Covers crawling, searchable index, query matching and relevance ranking; minor repeated/awkward wording.",
+    "fluency": 2
+  },
+  "9de1797e78de": {
+    "category": "open",
+    "sha256": "0593d7142b86a1262fac03ec6e3581591837f50cfbdb0e5009cc770d4ac060e6",
+    "score": 2,
+    "note": "Correct initial supply/demand price relationships but final demand sentence is contradictory and definitions use people counts.",
+    "fluency": 2
+  },
+  "a4939a66c71e": {
+    "category": "math",
+    "sha256": "1f2b1f8f0aab154d66b700a9906207d0a2fb00cdcd554585d7bf303f662e2d58",
+    "score": 1,
+    "note": "Correct compounding setup, but computes1050*1.05 as1100.25 instead of1102.50.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "c7e771296d81": {
+    "category": "open",
+    "sha256": "e6b6a80a30b0f32656361d2735a56fdb63e1406dcb13109a82a6cdc3e55fe849",
+    "score": 3,
+    "note": "Correct short-term versus30-year-pattern distinction; small malformed concluding word.",
+    "fluency": 2
+  },
+  "e5a239658cc3": {
+    "category": "open",
+    "sha256": "5afad5f134cc67c197808eda072d83ea8885e66de71febbde52c46540ef2779a",
+    "score": 0,
+    "note": "Droplet/sunlight opening collapses into extensive article/comma loops; no coherent explanation.",
+    "fluency": 0
+  },
+  "fe8c06b5c7cb": {
+    "category": "math",
+    "sha256": "d5279b6909d3ff24dc96e228297e6396d0cb0dcd3f48d247f44e4e9579a3d972",
+    "score": 1,
+    "note": "Some correct1/6+1/3=1/2 terms survive, but rate arithmetic is corrupted and requested time is missing.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "09de180f605d": {
+    "category": "open",
+    "sha256": "cd2ba2588c3c85b6122c1810b2f39cf37c65669a3efc6564a63ce246c64a30ee",
+    "score": 1,
+    "note": "Identifies gravity/mass attraction, but most explanation devolves into malformed center/mass/radius proportionality claims.",
+    "fluency": 1
+  },
+  "16b3db03cdd1": {
+    "category": "open",
+    "sha256": "caa091be43519a9c70806a5fd445e2609286eb7f079c26c261c5c9f0708a3a58",
+    "score": 3,
+    "note": "Clear human-timescale replenishing versus finite resources distinction with appropriate examples.",
+    "fluency": 3
+  },
+  "25613f9d7ac1": {
+    "category": "open",
+    "sha256": "e0e0457386c7075921afd6a096a4e7e40b60f613de22c69f67a1ce28f226ed20",
+    "score": 1,
+    "note": "Some sleep health/memory relevance, but very short answer degenerates into memory/comma repetition.",
+    "fluency": 1
+  },
+  "380f9197ac37": {
+    "category": "math",
+    "sha256": "5062025ed85527d157c6bc556d603cae4514f958b6edb6eff09aad1bdb9708b2",
+    "score": 0,
+    "note": "Malformed ratio arithmetic and wrong14boys10girls; no valid solution.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "620e7dac9fe6": {
+    "category": "math",
+    "sha256": "4ea2f0117903b202088869db45f1ef89a44c534593f397c3ae1ed1df3a2b1d90",
+    "score": 2,
+    "note": "Final25% is correct, but substitutes100/80*100 instead of subtracting80; working inconsistent.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "64c693d42dca": {
+    "category": "open",
+    "sha256": "cda9a7a36ff53a2b14d1d19e2512accf82820ad1d02cea1953dcfce7265127e2",
+    "score": 3,
+    "note": "Relevant broad exercise benefits with minor repeated mood/stress ideas and missing conjunction at end.",
+    "fluency": 2
+  },
+  "84511b896f3e": {
+    "category": "math",
+    "sha256": "d42b3877e2a52fe4de11aee27e9fa31b8f2b8b51919c440081d356ad69e5280a",
+    "score": 3,
+    "note": "Correct Pythagorean10cm and area24cm\u00b2 with valid computations.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "97d5618f39c6": {
+    "category": "math",
+    "sha256": "317ae0112ba61e765260e9cc7332d592445243b51cb9cce6e35963077f1d646d",
+    "score": 1,
+    "note": "Correct sums48and70, but subtraction and final number20 are wrong.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "99b87b68de50": {
+    "category": "open",
+    "sha256": "f588fe0fb8cde170a8bf642ff8001f234bfb2530b4008654ac904f60a74adadc",
+    "score": 3,
+    "note": "Clear learning-from-examples explanation with animal training and new-picture generalization.",
+    "fluency": 3
+  },
+  "c39db9a4574f": {
+    "category": "open",
+    "sha256": "73cba13c7ddfc996528c45c49b1310289a052ae4b83eaf27eda94fdbd951d204",
+    "score": 3,
+    "note": "Correct evaporation/condensation/precipitation/collection loop; minor malformed droplets/clouds phrase.",
+    "fluency": 2
+  },
+  "c63e2ea96048": {
+    "category": "open",
+    "sha256": "7486c29dbc0adf362a593d35af6aff53c3ad778bdb0c27a04032a6bf8949138d",
+    "score": 0,
+    "note": "Words/resources/and loops dominate with no coherent fungal/root mechanism.",
+    "fluency": 0
+  },
+  "d8736d8ca84a": {
+    "category": "open",
+    "sha256": "daf62bed737382e3cbc8ac878ae9481d9fc1e0d42a7e57340d6efa47438ee296",
+    "score": 1,
+    "note": "Mentions contractions and oxygenated/deoxygenated blood, but confuses blood pushed through veins and lung/body routing; omits chambers.",
+    "fluency": 2
+  },
+  "fdec486c06c6": {
+    "category": "math",
+    "sha256": "8aabb1f6f481c94b8b024206399b365b47f2565ab4f424840c5fbf93577d954f",
+    "score": 3,
+    "note": "Correct32=2^5, exponent equality andx4.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "1c7974d6858d": {
+    "category": "math",
+    "sha256": "10c44983ada6b7b35c7b7964e40eef075d51db28ace124a91a13939919c0b1cf",
+    "score": 2,
+    "note": "Correct roots2and3, but quadratic formula and intermediate factorizationx(x-5) are wrong.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "58b98f7816ba": {
+    "category": "math",
+    "sha256": "7408d56fa6070018841d6a4a8af4c269735343cf9caf727bf1edf23f3a4c0b92",
+    "score": 3,
+    "note": "Correct age equation, Ben10 and Ada20 with valid algebra.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "6192ed2ff75b": {
+    "category": "open",
+    "sha256": "5c4abfb3b1c3b65dc2879da23e00474db6de870e3a8a34bf74f7a8d3ee862d54",
+    "score": 3,
+    "note": "Relevant capital/canals/cultural overview with correct Rijksmuseum and VanGoghMuseum landmarks.",
+    "fluency": 3
+  },
+  "e3fda93694d9": {
+    "category": "open",
+    "sha256": "e1dc9eb447eb4d12395a77ecfb92265333278c9d1072e86cca30aaf60dcd6630",
+    "score": 3,
+    "note": "Clear price-rise/purchasing-power explanation linked to essentials, budgets and savings.",
+    "fluency": 3
+  },
+  "2f716eaa9337": {
+    "category": "open",
+    "sha256": "3a6a0ea41e55ba550ee3b3c0385a1fec1944f239f4f6eaa387343987fbb5f21a",
+    "score": 2,
+    "note": "Correct overall light/chlorophyll/CO2-to-sugar account, but inaccurately describes water splitting as producing molecularH2 for glucose formation.",
+    "fluency": 3
+  },
+  "33daf4e40934": {
+    "category": "open",
+    "sha256": "2161a85f7ec111cad9de6afce4915d63ebc0a07e4ebab034a34efa9f4dc6e46e",
+    "score": 2,
+    "note": "Correct immune-training and coverage ideas, but duplicated immunity and overly absolute prevention/herd-spread claims.",
+    "fluency": 2
+  },
+  "3a6b89785761": {
+    "category": "open",
+    "sha256": "3f0f6cbed2d57970a7e3d137fd2c6a2cabd14fa4178d550bdac88be9cdef8e58",
+    "score": 0,
+    "note": "Initial friendship traits collapse into extensive and/punctuation loops; unusable answer.",
+    "fluency": 0
+  },
+  "3de4b61d0d98": {
+    "category": "open",
+    "sha256": "89b95ff3f9efeaa7dc3b94014bc945447ee7d130b5f0ec257f071e1809a2f716",
+    "score": 2,
+    "note": "Correct broad tilt/sunlight seasonal mechanism but malformed opening, repeated Earth phrases and sentence fragments.",
+    "fluency": 1
+  },
+  "50379f7af379": {
+    "category": "math",
+    "sha256": "f3ce24e590bcf7311b9fab6ccd7630d6d35f83a40d0a57437da132f86c81f2fe",
+    "score": 1,
+    "note": "Initial44km/h contradicts later correct48; time divisions have corrupted200/300km/h labels.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "544bfcafdc76": {
+    "category": "open",
+    "sha256": "fa9eb467511d38166dcccc3c1ce74e4c1a71f1e4694afeddc683a3058414e0d2",
+    "score": 3,
+    "note": "Correct immediate variable weather versus long-term regional patterns; some duplicated words and awkward grammar.",
+    "fluency": 2
+  },
+  "7689ae21f519": {
+    "category": "math",
+    "sha256": "c3f920c2bc217e01e147a63b02bc5e6c7c63ab42670b2d30c1f6f055786168b1",
+    "score": 1,
+    "note": "Wrong simplification changes9to3 and finalx5 is incorrect.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "7697a0f37d6a": {
+    "category": "math",
+    "sha256": "8e5e27b37a37d6bc4756e0659e5ea07c5e8c8f76fe7836ecfb9efb1cc03d305f",
+    "score": 1,
+    "note": "Correct discounted60 appears, but tax calculation/formatting and final60 are wrong.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "88e4a2cd58ba": {
+    "category": "math",
+    "sha256": "7ca1a39a0a96005fc58427ad7e5dfdb8918e313ad3f683aad523a703f3674dd5",
+    "score": 1,
+    "note": "Correct3/6 combined-rate intermediate then converts it to1/1.8, yielding wrong1.8hours.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "9cb801afb07d": {
+    "category": "math",
+    "sha256": "21a3f310c2e9aa8c5306e13cbc61da615674e32d662c6acd21f198f0a124f322",
+    "score": 2,
+    "note": "Correct1/6 and6/36, but favorable-outcome list duplicates(1,6) and omits(6,1).",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "a880968f1b23": {
+    "category": "math",
+    "sha256": "f86e31454765d38fdce2bc5bc38e30ba421c36f36beb566fad084f50651ae23f",
+    "score": 0,
+    "note": "Long digit run and wrong1111.25; no usable compounding calculation.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "b0e88737b864": {
+    "category": "open",
+    "sha256": "9b4424d7818fe3d161ad6bf3f9ebd79b63440b4e03eee3c5f0d291421e0e8bd7",
+    "score": 3,
+    "note": "Clear quantities-at-prices definitions and correct supply/demand price pressures.",
+    "fluency": 3
+  },
+  "cdc565e0de52": {
+    "category": "open",
+    "sha256": "0e50ae4fc5a03849efb1a90acc76372d82e21911c37dc1e58a849119f6f60aa1",
+    "score": 1,
+    "note": "Some correct shorter-wavelength scattering, but garbled blue/violet explanation and false sunrise/sunset claim.",
+    "fluency": 1
+  },
+  "cf59bab0988d": {
+    "category": "math",
+    "sha256": "076c1bc0febc164e55754906462ad7dd8f0a82160d8a3c3589e3e4f2087ce172",
+    "score": 3,
+    "note": "Correct5/10 with valid five-out-of-ten explanation.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "e54fee28de45": {
+    "category": "open",
+    "sha256": "cb4ed09d257d5290f9fb62a541628b661d6e1b25673b525aced4d6746a35fde6",
+    "score": 0,
+    "note": "Long repeated-web loops and broken relevance explanation dominate the answer.",
+    "fluency": 0
+  },
+  "ef0818f0c69b": {
+    "category": "open",
+    "sha256": "57f3ef23202afceed3d056d423fc1bc1fe8319a7e7a89d4deca0d1ec8a9ade57",
+    "score": 1,
+    "note": "Readable but incorrect compressor liquid-to-gas and condenser-cools-interior mechanism; some correct outside heat-rejection detail.",
+    "fluency": 3
+  },
+  "0438d842201c": {
+    "category": "math",
+    "sha256": "376cd8c03e259c241feec550e173a3953c6515bdae14eb0950dadb74e7387b93",
+    "score": 3,
+    "note": "Correct72km/h=20m/s and200m with complete valid unit conversion.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "4042e0ba0279": {
+    "category": "open",
+    "sha256": "364e6860a786de8aff02a0175cedfe7302be05527184aaef57ebce3f67c9d9fc",
+    "score": 1,
+    "note": "Misroutes left ventricle to lungs, right outflow through pulmonary veins and body supply through coronary arteries; only some chamber terms are correct.",
+    "fluency": 1
+  },
+  "472f07d75354": {
+    "category": "open",
+    "sha256": "cc4a1878142a8d99c240193731132b5e78b971e1df096062daae04557d9e809b",
+    "score": 2,
+    "note": "Correct learning/generalization definition and uses, but word/picture analogy is confused and punctuation/phrasing is awkward.",
+    "fluency": 2
+  },
+  "79a5c1ae0ad6": {
+    "category": "open",
+    "sha256": "432519bb1aa35a2449ae4981aa36d706134c4cb58333e33aff2ad13634fcbe3c",
+    "score": 2,
+    "note": "Correct gravity/mass attraction but gives distance-squared proportionality instead of inverse-square.",
+    "fluency": 3
+  },
+  "827709a42da5": {
+    "category": "math",
+    "sha256": "23f13393fa67fa270c2eb4268aedde550800411b481ca8744acf6f510c98187b",
+    "score": 1,
+    "note": "Correct term formula but arithmetic71instead of81 and invalid sum200instead of860.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "bbaed93db9dc": {
+    "category": "math",
+    "sha256": "5632e51aec15617cf838972ec0923fa0c660f2a20f4cd38e2dc9a2102cd6e1c5",
+    "score": 2,
+    "note": "Correct10cm and24cm\u00b2 computations, but initial c\u00b2=sqrt(a\u00b2+b\u00b2) equation is wrong.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "e22649dbb4f6": {
+    "category": "open",
+    "sha256": "18d751b20c3113a2af5951a7e96d14e50b32aebacc8fa72783e9589367f266f0",
+    "score": 2,
+    "note": "Relevant refraction/internal reflection/color arc account, but wrongly attributes color dispersion to reflection and has muddled geometry wording.",
+    "fluency": 3
+  },
+  "e54d39d87754": {
+    "category": "math",
+    "sha256": "3379228ef1794221b74fb27f91f2e0fbc743044740b29a7bc07f8e246c3707bd",
+    "score": 2,
+    "note": "Correct final32% and volume5, but preceding salt formulas/addition are malformed and do not justify1.6.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "789fac4afae6": {
+    "category": "open",
+    "sha256": "e27e8794037fb7a3d6e1ceb90430838ddc50c62a0ba309f06733eef976e2aa66",
+    "score": 3,
+    "note": "Relevant physical and mental benefits; one merged list line and repeated self-esteem are minor fluency issues.",
+    "fluency": 2
+  },
+  "94af47a92e5a": {
+    "category": "math",
+    "sha256": "8331ec829f8f416dec8375736143f3ae4f023e30b880e256bfb715e4caffabd9",
+    "score": 0,
+    "note": "Long malformed number/expression sequence and wrong final20; no valid sum-based solution.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "b31bef0d2ec0": {
+    "category": "math",
+    "sha256": "3e381e6a0c30c1b2d969aec3ff945a02fc8de76f36a0c944b339b17201600226",
+    "score": 3,
+    "note": "Correct eightparts, fourstudents perpart and12boys20girls.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "be94d2a1fa62": {
+    "category": "open",
+    "sha256": "7b79eab695d715ce189aa02321d486f812828ed2515de43a8ab71d82dee1b5eb",
+    "score": 2,
+    "note": "Recognizable solar heating/evaporation/cloud/precipitation/return loop, but broken syntax and repeated clouds/hail throughout.",
+    "fluency": 1
+  },
+  "f38958efb02c": {
+    "category": "math",
+    "sha256": "b1836575d0a0bcfcd95eba5748a80946d4af04503dddd08e6f7c5d54b05f76da",
+    "score": 1,
+    "note": "IdentifiesC(7,2), but evaluates it as11 rather than21.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "11ae2b1da1f0": {
+    "category": "math",
+    "sha256": "a60b9dd4c7a9e7249e1c1068b358b6d206a253bc76bd3f979e9c96354056227a",
+    "score": 1,
+    "note": "Correct initial age equation but repeated malformed algebra and wrong12/24ages.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "39339db20230": {
+    "category": "math",
+    "sha256": "211fa91d1c005e4f17ade49fcb16b9a41587381a143084feb85062ca4e85085a",
+    "score": 3,
+    "note": "Correct factorization and both roots2and3 with valid explanation.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "3e0e06d6ad0f": {
+    "category": "open",
+    "sha256": "357cf209bbe4a05b0b6b3ca7727c352ecbb1ae2e4f2a559e7038064a3560fbfc",
+    "score": 2,
+    "note": "Relevant canals/culture and real Rijksmuseum/Jordaan, but inventsKeaanaanDistrict/StNicholasMarket and duplicatesVanGoghMuseum.",
+    "fluency": 2
+  },
+  "6360d0f8474e": {
+    "category": "open",
+    "sha256": "67464e0beaa817cde545d6c23afbff350eb17fe4fa982050ca42a35b4d5498b8",
+    "score": 1,
+    "note": "Photosynthesis/chlorophyll/glucose identified, but long chemical-energy/glucose loops replace a coherent mechanism.",
+    "fluency": 0
+  },
+  "761ade8e87cf": {
+    "category": "open",
+    "sha256": "8f6f96922901cb089bf35bdd6e9818dbc28473fb7144a400082997596292c85c",
+    "score": 2,
+    "note": "Basic replenishing/finite distinction and examples mostly right, but repeated lists and false claim nonrenewables are more sustainable.",
+    "fluency": 1
+  },
+  "8a89bac02261": {
+    "category": "open",
+    "sha256": "7c97157a06a58a40ee4d2325a5f924108ec1c88429b8746ab6db3ab66caa1405",
+    "score": 2,
+    "note": "Relevant fungi/root exchanges but overstates coordinated tree defense/support and has repeated nutrients wording.",
+    "fluency": 2
+  },
+  "8b8f5700c88b": {
+    "category": "open",
+    "sha256": "57cdb08746dcdb0b340e0286777cff835c32d0197b1b4da40809d8b3e92e0c48",
+    "score": 3,
+    "note": "Clear rest, memory, hormonal and health consequences account.",
+    "fluency": 3
+  },
+  "8d544e82217f": {
+    "category": "math",
+    "sha256": "968fc6177454c5514a0f4b3bb19028170a9adaeb050cb48d5edf82a001a25143",
+    "score": 0,
+    "note": "Corrupted equation, nonsensical chained algebra and wrongx=-1.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "8f1f5926c9e1": {
+    "category": "math",
+    "sha256": "17b0397d2c10dd6815591305ede3f35b410db5592dd817c62a03e540b11969db",
+    "score": 1,
+    "note": "Correct steps through5x30 but concludes wrongx18.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "b8edd11ed33b": {
+    "category": "open",
+    "sha256": "e02217e5979b8716783233b9de034360e5112ba963ff4210b75b903ccaa05285",
+    "score": 2,
+    "note": "Recognizable inflation/purchasing-power/budget impact but malformed definition and repeated/nonsensical money phrases.",
+    "fluency": 1
+  },
+  "bf863e2d0317": {
+    "category": "math",
+    "sha256": "ceabf1a132566f3cf9027f48f60a5e946ab0740821522e57603804ab06a57983",
+    "score": 3,
+    "note": "Correct power-of-two/exponent reasoning givesx4.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "db4c9d056a88": {
+    "category": "open",
+    "sha256": "fda856796eda47005ae086cfe019d85c9013067223cd11c9e9e333c544d5b651",
+    "score": 2,
+    "note": "Correct basic Rayleigh account but false claim sunrise/sunset yields more blue reaching eyes; repeated scattering.",
+    "fluency": 2
+  },
+  "14c0931e11df": {
+    "category": "math",
+    "sha256": "599691498bd2c6ef89c8ad6e733ca83bc2f26de8a2ecf158bc06fcb642de81c2",
+    "score": 2,
+    "note": "Correct stated1/6, but malformed outcome enumeration and false6/66=1/6 arithmetic.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "2a01a9ba4b1a": {
+    "category": "open",
+    "sha256": "be27dd6cbb9af3eba971dadcfffa5b1d760817bbabcc5278b0b96a6c587b91df",
+    "score": 2,
+    "note": "Relevant immune-memory/antibody/coverage account, but repeated weakened-virus wording and awkward immune-response sentence.",
+    "fluency": 2
+  },
+  "46f8bb9988af": {
+    "category": "math",
+    "sha256": "1062a2dd0d4d604667d786ccfe8e4426469f135c8d9776b77344a3d1cf1e3607",
+    "score": 2,
+    "note": "Correct final7and10 and later4x+6 equation, but initial substituted2(x+x+x) expression is wrong.",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "68907757f184": {
+    "category": "open",
+    "sha256": "915a095b9dcc9d3c87eadd917152fceeae63b110c9b305274b8dac06a413812b",
+    "score": 3,
+    "note": "Clear short-term weather versus30-year climate averages with examples.",
+    "fluency": 3
+  },
+  "82abc033d629": {
+    "category": "open",
+    "sha256": "0fcede13a8f43cec25be1ee643cfcef7752d9cb79a79acd7896b7ced5e29bf42",
+    "score": 3,
+    "note": "Coherent axial-tilt/direct-sunlight explanation of opposite summer/winter conditions.",
+    "fluency": 3
+  },
+  "9f562897978c": {
+    "category": "open",
+    "sha256": "a8baa51d5fe1a798452c180e8227fe495dc6ae0589da9c15520e3758e6a78d68",
+    "score": 3,
+    "note": "Coherent loyalty, support, trust, vulnerability and mutual-growth friendship discussion.",
+    "fluency": 3
+  },
+  "fbd858ee6a69": {
+    "category": "open",
+    "sha256": "f893e7cd3a77fe49ff67f291a2fb73ffecc3997d13ba768535b96c6683cf1605",
+    "score": 1,
+    "note": "Mentions refrigerant and interior heat absorption, but repeated/fractured refrigerant prose and incorrect heat-direction/cooling explanation.",
+    "fluency": 1
+  },
+  "6e4951dc0a8a": {
+    "category": "open",
+    "sha256": "e8383306d03607bc63e8b81554dff279853c44430b1f71f342e224b95f5d3adf",
+    "score": 1,
+    "note": "Some correct initial price pressures, but repetitive malformed definitions and incorrect lower-supply/price decrease claim.",
+    "fluency": 1
+  },
+  "a9a5d3e15da3": {
+    "category": "open",
+    "sha256": "9c9ac161755000c45a90075279409f9f4ab739830e07c14a97a572bd1b248a36",
+    "score": 2,
+    "note": "Readable relevance/index retrieval account, but omits crawling and wrongly says other-user data creates the page index.",
+    "fluency": 3
+  },
+  "de1b65ac1ee2": {
+    "category": "math",
+    "sha256": "659a5b43d2645fbda28f07174d5f1462198360cd34b7580d5d7e1fb0bc752e80",
+    "score": 1,
+    "note": "Conflicting malformed time6/33333hours and trailingin2; no unambiguous valid two-hour solution.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "1aabc7633eff": {
+    "category": "math",
+    "sha256": "7061332a9ffe53e97fd7f7b7237ab8205c8a48336509d0d989668c5dc33ff9d4",
+    "score": 1,
+    "note": "Correct term formula appears but evaluates5+19*4 as57; sum570 is also wrong.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "296fd582a337": {
+    "category": "math",
+    "sha256": "254d7c3ba4c4583c8af92622360a80cf6bcb7ae12da8f334d5e653c690563344",
+    "score": 3,
+    "note": "Correct0.4and1.2salt volumes, total1.6of5 and32%.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "69077f19c542": {
+    "category": "open",
+    "sha256": "821633d9ddc16e07631ded049efffcc02d6da96b3fbac8b07446f9ce20e43d0b",
+    "score": 2,
+    "note": "Useful atria/ventricle contraction/filling account, but omits lung/body circuits and right/left roles; some malformed vessel wording.",
+    "fluency": 2
+  },
+  "76e2ca7a0cfc": {
+    "category": "open",
+    "sha256": "97fe32d615c1e67e171dabd123aa53738cc8e70a49e84e1c14a107f97b6414a8",
+    "score": 0,
+    "note": "Refraction opening collapses into a long observer repetition loop.",
+    "fluency": 0
+  },
+  "9add30fa82e7": {
+    "category": "math",
+    "sha256": "24484bbeda568d5dfa7d9d9982a3ed9cadcc6be0f33fb49f13e8f665f09c8a89",
+    "score": 1,
+    "note": "Correct totals48and70 but wrong subtraction/final20 instead of22.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "c43937bf6da9": {
+    "category": "math",
+    "sha256": "0e8737a8ae129d9201e16866ef2f0c0b83067d16ddfcda146bb62f54090c5f85",
+    "score": 3,
+    "note": "Correct72000/3600=20m/s and200m final distance with clear steps.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "d005204aa149": {
+    "category": "open",
+    "sha256": "994a1fd2de93a1abd3c2fd0c34b394bb3641284eb14f8d3f10e7c524a0e40be2",
+    "score": 1,
+    "note": "Initial gravity attraction statement is relevant but remainder is an acceleration/weight repetition loop.",
+    "fluency": 0
+  },
+  "d2f13c3bae1b": {
+    "category": "math",
+    "sha256": "6571e52662ad356e4cbe5f280fa832069c85ceddaa2bb404ba772cfee972d1e2",
+    "score": 1,
+    "note": "Area24 is correct, but long radical loop omits requested hypotenuse.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "f64c2a8dd254": {
+    "category": "open",
+    "sha256": "1e5d25559a7d026dd0cc3049afbe1e5aa3a98fdc0eae943fbca3596a54006629",
+    "score": 3,
+    "note": "Clear learning from data/statistical models contrast with explicit programming and relevant applications.",
+    "fluency": 3
+  }
+}

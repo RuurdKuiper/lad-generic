@@ -1,0 +1,3087 @@
+{
+  "before/balanced/8/0": {
+    "code_sha256": "1dd418fe8b678e18c6e71cfc0df5c5a32822f38503b1698d3279c3321d79dc80",
+    "total": 16,
+    "passed": 9,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "a7dff867f9f9253aa1afc08c41f2e7f7b4707a699819ac53853efb151fc08f29",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "before/binary_search/8/0": {
+    "code_sha256": "7cb2db436e0ee3619c99c3cec41bdab819ed9abdd7742389c3e30c7909d78394",
+    "total": 11,
+    "passed": 0,
+    "all_pass": false,
+    "status": "runtime_error",
+    "score": 0,
+    "error": "",
+    "sha256": "8c3938028b828635e091145fffc08de5bdd3e6e232b16c5154421034cc19e81a",
+    "phase": "main",
+    "task": "binary_search"
+  },
+  "before/balanced/32/0": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "before/binary_search/32/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "before/balanced/64/0": {
+    "code_sha256": "d24f34e6506b13deecc28d37b33cbc13a0e6afa2f79f730dcf90480e8064ea28",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "phase": "sample",
+    "task": "balanced"
+  },
+  "before/binary_search/64/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "before/balanced/32/1": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "before/balanced/32/2": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k16/balanced/8/0": {
+    "code_sha256": "1dd418fe8b678e18c6e71cfc0df5c5a32822f38503b1698d3279c3321d79dc80",
+    "total": 16,
+    "passed": 9,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "a7dff867f9f9253aa1afc08c41f2e7f7b4707a699819ac53853efb151fc08f29",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k16/binary_search/8/0": {
+    "code_sha256": "7cb2db436e0ee3619c99c3cec41bdab819ed9abdd7742389c3e30c7909d78394",
+    "total": 11,
+    "passed": 0,
+    "all_pass": false,
+    "status": "runtime_error",
+    "score": 0,
+    "error": "",
+    "sha256": "8c3938028b828635e091145fffc08de5bdd3e6e232b16c5154421034cc19e81a",
+    "phase": "main",
+    "task": "binary_search"
+  },
+  "after_k16/balanced/32/0": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k16/binary_search/32/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_k16/balanced/64/0": {
+    "code_sha256": "d24f34e6506b13deecc28d37b33cbc13a0e6afa2f79f730dcf90480e8064ea28",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "phase": "sample",
+    "task": "balanced"
+  },
+  "after_k16/binary_search/64/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_k16/balanced/32/1": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k16/balanced/32/2": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k8/balanced/8/0": {
+    "code_sha256": "1dd418fe8b678e18c6e71cfc0df5c5a32822f38503b1698d3279c3321d79dc80",
+    "total": 16,
+    "passed": 9,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "a7dff867f9f9253aa1afc08c41f2e7f7b4707a699819ac53853efb151fc08f29",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k8/binary_search/8/0": {
+    "code_sha256": "7cb2db436e0ee3619c99c3cec41bdab819ed9abdd7742389c3e30c7909d78394",
+    "total": 11,
+    "passed": 0,
+    "all_pass": false,
+    "status": "runtime_error",
+    "score": 0,
+    "error": "",
+    "sha256": "8c3938028b828635e091145fffc08de5bdd3e6e232b16c5154421034cc19e81a",
+    "phase": "main",
+    "task": "binary_search"
+  },
+  "after_k8/balanced/32/0": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k8/binary_search/32/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_k8/balanced/64/0": {
+    "code_sha256": "d24f34e6506b13deecc28d37b33cbc13a0e6afa2f79f730dcf90480e8064ea28",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "phase": "sample",
+    "task": "balanced"
+  },
+  "after_k8/binary_search/64/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_k8/balanced/32/1": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_k8/balanced/32/2": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k16/balanced/8/0": {
+    "code_sha256": "1dd418fe8b678e18c6e71cfc0df5c5a32822f38503b1698d3279c3321d79dc80",
+    "total": 16,
+    "passed": 9,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "a7dff867f9f9253aa1afc08c41f2e7f7b4707a699819ac53853efb151fc08f29",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k16/binary_search/8/0": {
+    "code_sha256": "7cb2db436e0ee3619c99c3cec41bdab819ed9abdd7742389c3e30c7909d78394",
+    "total": 11,
+    "passed": 0,
+    "all_pass": false,
+    "status": "runtime_error",
+    "score": 0,
+    "error": "",
+    "sha256": "8c3938028b828635e091145fffc08de5bdd3e6e232b16c5154421034cc19e81a",
+    "phase": "main",
+    "task": "binary_search"
+  },
+  "after_host_k16/balanced/32/0": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k16/binary_search/32/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_host_k16/balanced/64/0": {
+    "code_sha256": "d24f34e6506b13deecc28d37b33cbc13a0e6afa2f79f730dcf90480e8064ea28",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "phase": "sample",
+    "task": "balanced"
+  },
+  "after_host_k16/binary_search/64/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_host_k16/balanced/32/1": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k16/balanced/32/2": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k8/balanced/8/0": {
+    "code_sha256": "1dd418fe8b678e18c6e71cfc0df5c5a32822f38503b1698d3279c3321d79dc80",
+    "total": 16,
+    "passed": 9,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "a7dff867f9f9253aa1afc08c41f2e7f7b4707a699819ac53853efb151fc08f29",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k8/binary_search/8/0": {
+    "code_sha256": "7cb2db436e0ee3619c99c3cec41bdab819ed9abdd7742389c3e30c7909d78394",
+    "total": 11,
+    "passed": 0,
+    "all_pass": false,
+    "status": "runtime_error",
+    "score": 0,
+    "error": "",
+    "sha256": "8c3938028b828635e091145fffc08de5bdd3e6e232b16c5154421034cc19e81a",
+    "phase": "main",
+    "task": "binary_search"
+  },
+  "after_host_k8/balanced/32/0": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k8/binary_search/32/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_host_k8/balanced/64/0": {
+    "code_sha256": "d24f34e6506b13deecc28d37b33cbc13a0e6afa2f79f730dcf90480e8064ea28",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "True",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "1863c81e5fa0841fdb366c2433f5a5bb89f6237462f14ac19f64602fc457a3df",
+    "phase": "sample",
+    "task": "balanced"
+  },
+  "after_host_k8/binary_search/64/0": {
+    "code_sha256": "182676986ceacf833d1d5cd78983c8caa47b0d312590a4a4bd8266afb1902921",
+    "total": 11,
+    "passed": 11,
+    "all_pass": true,
+    "status": "executed",
+    "score": 3,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "1",
+        "expected": "1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "0",
+        "expected": "0"
+      },
+      {
+        "passed": true,
+        "actual": "4",
+        "expected": "4"
+      },
+      {
+        "passed": true,
+        "actual": "2",
+        "expected": "2"
+      },
+      {
+        "passed": true,
+        "actual": "3",
+        "expected": "3"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      },
+      {
+        "passed": true,
+        "actual": "-1",
+        "expected": "-1"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "4c019a94a3c53e99cb49af2ffc414e220bd37c2f099c6fdf419588635718f5d7",
+    "phase": "confidence_zero",
+    "task": "binary_search"
+  },
+  "after_host_k8/balanced/32/1": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  },
+  "after_host_k8/balanced/32/2": {
+    "code_sha256": "e772bc26cd7d299ffd54b12baf5e7e60b82fdb5ef1911ab85d7996f06bac174c",
+    "total": 16,
+    "passed": 8,
+    "all_pass": false,
+    "status": "executed",
+    "score": 2,
+    "checks": [
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "error": "IndexError: list index out of range"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      },
+      {
+        "passed": true,
+        "actual": "True",
+        "expected": "True"
+      },
+      {
+        "passed": false,
+        "actual": "False",
+        "expected": "True"
+      },
+      {
+        "passed": true,
+        "actual": "False",
+        "expected": "False"
+      }
+    ],
+    "constraint_violations": [],
+    "sha256": "286d63ddc62e8e9159ac1923df28cbe1910f7c810934f8f69f08217a4928e278",
+    "phase": "main",
+    "task": "balanced"
+  }
+}

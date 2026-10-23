@@ -9,7 +9,6 @@ from pathlib import Path
 from transformers import AutoTokenizer
 import os
 import importlib
-import os
 from huggingface_hub import hf_hub_download
 
 import spaces
@@ -27,17 +26,32 @@ from models import CustomTransformerModel
 from model_config import CustomTransformerConfig
 from lad_decoding import select_lad_answer
 from diffusion_lm.bigram import BigramScorer
+from diffusion_lm.trigram import TrigramScorer
 
 # Match the preferred BYOD configuration without adding expert UI controls.
 BIGRAM_PATH = os.getenv("BIGRAM_MODEL_PATH", str(Path(__file__).parent / "bigram.pt"))
 BIGRAM_WEIGHT = 0.5
 PMI_MIN_COUNT = 1
 PMI_CLIP = 2.0
+TRIGRAM_WEIGHT = 0.5
+TRIGRAM_MIN_COUNT = 2
+TRIGRAM_CLIP = 2.0
+SHOW_LEGACY_DECODING_CONTROLS = False
 
 
 @lru_cache(maxsize=1)
 def _bigram_scorer():
     return BigramScorer.load(BIGRAM_PATH, tokenizer=tokenizer)
+
+
+@lru_cache(maxsize=1)
+def _expanded_bigram_scorer():
+    return BigramScorer.load(EXPANDED_BIGRAM_PATH, tokenizer=tokenizer)
+
+
+@lru_cache(maxsize=1)
+def _trigram_scorer():
+    return TrigramScorer.load(TRIGRAM_PATH, bigram=_expanded_bigram_scorer())
 
 # Load .env only when running locally
 if os.getenv("HF_TOKEN") is None:
@@ -48,10 +62,20 @@ hf_token = os.getenv("HF_TOKEN")
 if hf_token is None:
     raise ValueError("HF_TOKEN is not set")
 
+# Pin both matching scorer files; download outside the timed GPU inference.
+NGRAM_ASSETS = json.loads((Path(__file__).parent / "ngram_assets.json").read_text())
+EXPANDED_BIGRAM_PATH = hf_hub_download(
+    NGRAM_ASSETS["repo"], "bigram_expanded.pt", revision=NGRAM_ASSETS["revision"], token=hf_token
+)
+TRIGRAM_PATH = hf_hub_download(
+    NGRAM_ASSETS["repo"], "trigram_expanded.pt", revision=NGRAM_ASSETS["revision"], token=hf_token
+)
+
 rng = np.random.default_rng()
 
 def _generate_step(input_ids, top_p, top_k, eos_bias=0.0, *, answer_start=0,
-                   decoding_strategy="Sampling", temperature=1.0, repetition_penalty_strength=1.0):
+                   decoding_strategy="Sampling", temperature=1.0, repetition_penalty_strength=1.0,
+                   bigram_weight=1.0):
     """Single diffusion inference step. Must be called inside a @spaces.GPU context."""
     with torch.no_grad():
         input_tensor = torch.tensor([input_ids], dtype=torch.long).to(model.device)
@@ -62,6 +86,17 @@ def _generate_step(input_ids, top_p, top_k, eos_bias=0.0, *, answer_start=0,
         if eos_bias != 0.0:
             logits[0, :, eos_token_id] += eos_bias
 
+        if decoding_strategy == "BG + TG Viterbi (Gumbel)":
+            sampled, conf = select_lad_answer(
+                logits[0], input_ids, answer_start, _expanded_bigram_scorer().to(logits.device),
+                top_k=int(top_k), temperature=float(temperature), weight=float(bigram_weight),
+                min_count=PMI_MIN_COUNT, pmi_clip=PMI_CLIP,
+                trigram_scorer=_trigram_scorer().to(logits.device),
+                trigram_weight=TRIGRAM_WEIGHT, trigram_min_count=TRIGRAM_MIN_COUNT,
+                trigram_clip=TRIGRAM_CLIP, randomized_viterbi=True, independent_temperature=True,
+            )
+            return sampled, conf.cpu().numpy()
+        # Retain historical strategies for programmatic replay; hide them in the UI.
         if decoding_strategy in {"PMI Viterbi", "PMI Viterbi + Repetition Penalty"}:
             sampled, conf = select_lad_answer(
                 logits[0], input_ids, answer_start, _bigram_scorer().to(logits.device),
@@ -98,7 +133,8 @@ def _generate_step(input_ids, top_p, top_k, eos_bias=0.0, *, answer_start=0,
 def run_diffusion_loop(input_ids, answer_start, max_it, pause_length, eos_bias,
                        sharpness, noise_start, use_confidence_noising,
                        use_permanent_unmasking, noise_clipping, top_p, top_k, added_tokens, context_window,
-                       decoding_strategy="Sampling", temperature=1.0, repetition_penalty_strength=1.0):
+                       decoding_strategy="Sampling", temperature=1.0, repetition_penalty_strength=1.0,
+                       bigram_weight=1.0):
     """Full diffusion loop held inside a single GPU context to avoid repeated re-acquisition."""
     ori_input_tokens = input_ids[:]
 
@@ -122,6 +158,7 @@ def run_diffusion_loop(input_ids, answer_start, max_it, pause_length, eos_bias,
             current_tokens, top_p, top_k, eos_bias=eos_bias, answer_start=answer_start,
             decoding_strategy=decoding_strategy, temperature=temperature,
             repetition_penalty_strength=repetition_penalty_strength,
+            bigram_weight=bigram_weight,
         )
         current_tokens = ori_input_tokens[:answer_start] + generated_tokens[answer_start:]
 
@@ -269,7 +306,8 @@ def highlight_tokens(token_ids, answer_start, changed_indices, color):
 def on_generate(question, history, multiturn_on, max_it, pause_length, eos_bias,
                 sharpness, noise_start, use_confidence_noising,
                 use_permanent_unmasking, noise_clipping, top_p, top_k, added_tokens, context_window,
-                decoding_strategy="Sampling", temperature=1.0, repetition_penalty_strength=1.0):
+                decoding_strategy="Sampling", temperature=1.0, repetition_penalty_strength=1.0,
+                bigram_weight=1.0):
 
     eos_bias = -eos_bias
     q = question.strip() or "What do you know about the city of Amsterdam?"
@@ -295,6 +333,7 @@ def on_generate(question, history, multiturn_on, max_it, pause_length, eos_bias,
         sharpness, noise_start, use_confidence_noising,
         use_permanent_unmasking, noise_clipping, top_p, top_k, added_tokens, context_window,
         decoding_strategy, temperature, repetition_penalty_strength,
+        bigram_weight,
     ):
         if final is not None:
             final_answer = final
@@ -365,14 +404,20 @@ with gr.Blocks(title="Diffusion Language Model Chat") as demo:
             confidence_noising_cb = gr.Checkbox(value=False, label="Use confidence-guided noising")
             permanent_unmasking_cb= gr.Checkbox(value=False, label="Use permanent unmasking")
             noise_clipping_slider = gr.Slider(0.01, 1.0, value=0.01, step=0.01, label="Noise clipping: ↓ = more confidence guidance")
-            decoding_radio = gr.Radio(["Sampling", "PMI Viterbi", "PMI Viterbi + Repetition Penalty"], value="Sampling", label="Decoding strategy")
+            decoding_radio = gr.Radio(
+                ["Sampling", "BG + TG Viterbi (Gumbel)"] +
+                (["PMI Viterbi", "PMI Viterbi + Repetition Penalty"] if SHOW_LEGACY_DECODING_CONTROLS else []),
+                value="Sampling", label="Decoding strategy")
             repetition_penalty_slider = gr.Slider(0.0, 10.0, value=1.0, step=0.1,
                 label="Repetition penalty strength (γ)", visible=False,
                 info="Penalize expected repeated candidate bigrams. At 0, matches PMI Viterbi exactly.")
-            temperature_slider = gr.Slider(0.0, 2.0, value=1.0, step=0.05, label="Temperature",
-                info="For Viterbi, higher values give bigrams more influence; decoding remains deterministic.")
-            topk_slider           = gr.Slider(1, 1000, value=3,   step=1,    label="Top-k / Viterbi candidates")
-            topp_slider           = gr.Slider(0.0, 1.0, value=1.0, step=0.01, label="Top-p: ↑ = more random answers")
+            temperature_slider = gr.Slider(0.0, 2.0, value=0.7, step=0.05, label="Temperature",
+                info="Sampling uses ordinary temperature. BG + TG uses Gumbel noise: 0 selects the best sequence; higher values add randomness. Bigram weight controls guidance independently.")
+            bigram_weight_slider = gr.Slider(0.0, 5.0, value=1.0, step=0.05, label="Bigram weight", interactive=False,
+                info="N-gram influence: 0 disables guidance; 1 gives equal diffusion and PMI coefficients. Independent of temperature.")
+            topk_slider           = gr.Slider(1, 100, value=16,   step=1,    label="Top-k / Viterbi candidates",
+                info="Candidate count for both methods. Larger BG + TG candidate sets require more memory; start at 16.")
+            topp_slider           = gr.Slider(0.0, 1.0, value=1.0, step=0.01, label="Top-p: ↑ = more random answers", interactive=True)
             added_tokens_slider   = gr.Slider(1, 256, value=256,  step=1,    label="Semi-autoregressive generation: number of added tokens per iteration")
             context_window_slider = gr.Slider(8, 2048, value=256, step=1, label="Context window: ↑ = longer sequences")
 
@@ -385,17 +430,18 @@ with gr.Blocks(title="Diffusion Language Model Chat") as demo:
         noise_start_slider, confidence_noising_cb, permanent_unmasking_cb,
         noise_clipping_slider, topp_slider, topk_slider, added_tokens_slider, context_window_slider,
         decoding_radio, temperature_slider, repetition_penalty_slider,
+        bigram_weight_slider,
     ]
     all_outputs = [chat_history_state, output_html]
 
     def update_decoding_controls(strategy):
-        viterbi = strategy in {"PMI Viterbi", "PMI Viterbi + Repetition Penalty"}
-        return (gr.update(value=2.0 if viterbi else 1.0), gr.update(value=16 if viterbi else 3),
-                gr.update(interactive=not viterbi),
-                gr.update(visible=strategy == "PMI Viterbi + Repetition Penalty"))
+        # Method changes preserve user-selected temperature and candidate count.
+        return (gr.update(interactive=strategy == "Sampling"),
+                gr.update(interactive=strategy == "BG + TG Viterbi (Gumbel)"),
+                gr.update(visible=SHOW_LEGACY_DECODING_CONTROLS and strategy == "PMI Viterbi + Repetition Penalty"))
 
     decoding_radio.change(update_decoding_controls, inputs=[decoding_radio],
-                          outputs=[temperature_slider, topk_slider, topp_slider, repetition_penalty_slider])
+                          outputs=[topp_slider, bigram_weight_slider, repetition_penalty_slider])
 
     gen_event  = submit_btn.click(on_generate, inputs=all_inputs, outputs=all_outputs)
     sub_event  = question_input.submit(on_generate, inputs=all_inputs, outputs=all_outputs)

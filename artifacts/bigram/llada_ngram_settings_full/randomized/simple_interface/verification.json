@@ -1,0 +1,16 @@
+{
+  "revision": "5f399f6c9ef9212d7dfeae6d4dcff311dc57581d",
+  "runtime": "RUNNING",
+  "methods": [
+    "Confidence-guided",
+    "BG + TG Viterbi (Gumbel)"
+  ],
+  "default": "BG + TG Viterbi (Gumbel)",
+  "ending_delay": 10,
+  "legacy_controls_switch": "SHOW_LEGACY_DECODING_CONTROLS",
+  "tests": {
+    "passed": 130,
+    "skipped": 6
+  },
+  "inference_requests": 0
+}

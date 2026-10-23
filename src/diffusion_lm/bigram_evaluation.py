@@ -16,6 +16,11 @@ class ProfiledBigramSelector:
         self.calls = self.changed = self.editable = 0
         self.elapsed_ms = 0.0
 
+    def set_step_context(self, block_step, block_steps):
+        setter = getattr(self.selector, 'set_step_context', None)
+        if setter is not None:
+            setter(block_step, block_steps)
+
     def select_block(self, logits, current_ids, editable, **kwargs):
         if logits.device.type == 'cuda':
             torch.cuda.synchronize(logits.device)

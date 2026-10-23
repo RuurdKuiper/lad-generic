@@ -1,0 +1,40 @@
+{
+  "space": "Ruurd/lad",
+  "revision": "419caab327584fa2e7bf51254a450e326fc1ae23",
+  "runtime_revision": "419caab327584fa2e7bf51254a450e326fc1ae23",
+  "methods": [
+    "Sampling",
+    "BG + TG Viterbi (Gumbel)"
+  ],
+  "temperature": 0.7,
+  "default_method": "Sampling",
+  "bigram_weight": 1.0,
+  "preserved_controls": [
+    "Multi-turn dialog",
+    "Number of iterations: \u2191 = more iterations",
+    "Pause between iterations \u2191 = longer pause",
+    "Generation length: \u2191 = more output tokens by decreasing eos token probability",
+    "Noise decay sharpness: \u2193 = more noise in later iterations",
+    "Noise start fraction: \u2191 = more noise",
+    "Use confidence-guided noising",
+    "Use permanent unmasking",
+    "Noise clipping: \u2193 = more confidence guidance",
+    "Top-p: \u2191 = more random answers",
+    "Semi-autoregressive generation: number of added tokens per iteration",
+    "Context window: \u2191 = longer sequences"
+  ],
+  "unchanged_model_files": [
+    "infer.py",
+    "models.py",
+    "model_config.py",
+    "requirements.txt"
+  ],
+  "hardware_preserved": true,
+  "pinned_assets": {
+    "repo": "Ruurd/byod-llama-ngram-guidance-expanded",
+    "revision": "6063da3df9412f0becd6ed553c0025c42ee3c00c"
+  },
+  "asset_hashes_verified": true,
+  "endpoint": "/on_generate",
+  "smoke": []
+}

@@ -83,18 +83,20 @@ def test_invalid_temperature(temperature):
         selector.select_block(torch.ones(1, 2), torch.tensor([0]), torch.tensor([True]), temperature=temperature)
 
 
-def test_hosted_generate_routes_shared_controls_and_fixed_weight_without_loading_model():
+@pytest.mark.parametrize("native", [False, True])
+def test_hosted_generate_routes_shared_controls_and_model_specific_weight_without_loading_model(native):
     source = Path(__file__).parents[1] / 'huggingface/byod_space/app.py'
     tree = ast.parse(source.read_text())
     generate = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'generate')
     generate.decorator_list = []
-    assert not {'bigram_weight', 'bigram_top_k'} & {a.arg for a in generate.args.args}
+    assert 'bigram_weight' in {a.arg for a in generate.args.args}
+    assert 'bigram_top_k' not in {a.arg for a in generate.args.args}
     captured = {}
     def stream(session, **kwargs):
         captured.update(kwargs)
         yield 'status', 'text', 'html'
     scorer = SimpleNamespace(to=lambda device: PairReward())
-    namespace = dict(BIGRAM_PATH='test.pt', BIGRAM_ENABLED=True, SESSION=SimpleNamespace(device='cpu'),
+    namespace = dict(BIGRAM_PATH='test.pt', BIGRAM_ENABLED=True, SESSION=SimpleNamespace(device='cpu', llada=native),
                      _bigram_scorer=lambda path: scorer, BigramViterbiSelector=BigramViterbiSelector,
                      denoise_stream=stream)
     settings = {'BIGRAM_SCORING_METHOD', 'BIGRAM_REMASKING_CONFIDENCE', 'PMI_MIN_COUNT', 'PMI_CLIP', 'BIGRAM_ENDING_DELAY_STRENGTH'}
@@ -103,11 +105,12 @@ def test_hosted_generate_routes_shared_controls_and_fixed_weight_without_loading
                       and n.targets[0].id in settings})
     exec(compile(ast.Module(body=[generate], type_ignores=[]), str(source), 'exec'), namespace)
     actual = list(namespace['generate']('Q', 'S', 128, 32, 128, .25, 7, 0., 'No coloring',
-                                       'Bigram Viterbi', False, 4, False, False, generation_seed=42))
+                                       'Bigram Viterbi', False, 4, False, False, generation_seed=42, bigram_weight=3.))
     assert actual == [('text', 'html')]
     assert captured['temperature'] == .25 and captured['top_k'] == 7
     selector = captured['bigram_selector']
-    assert selector.weight == .5
+    assert selector.weight == (3. if native else .5)
+    assert selector.independent_temperature == native
     assert selector.scoring_method == 'pmi' and selector.remasking_confidence == 'diffusion'
     assert selector.min_count == 1 and selector.pmi_clip == 2.
     assert 'bigram_top_k' not in captured

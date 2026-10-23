@@ -51,6 +51,15 @@ def test_owner_spaces_bundle_their_own_tokenizer_scorer(tmp_path, monkeypatch):
     (source / 'huggingface').mkdir()
     (source / 'huggingface' / 'byod_space').symlink_to(ROOT / 'huggingface' / 'byod_space', target_is_directory=True)
     (source / 'src').symlink_to(ROOT / 'src', target_is_directory=True)
+    pins = {
+        f'{owner}/{publish_byod.MODELS[index].space_name}': {
+            'trigram_enabled': True,
+            'ngram_scorer_repo': f'{owner}/expanded-{index}',
+            'ngram_scorer_revision': 'a' * 40,
+        }
+        for owner in ['Ruurd', 'Dovelove'] for index in range(4)
+    }
+    (source / 'huggingface/byod_ngram_assets.json').write_text(json.dumps(pins))
     monkeypatch.setattr(publish_byod, 'REPO_ROOT', source)
     cases = [(namespace, i, True) for namespace in ['Ruurd','Dovelove'] for i in range(4)] + [('Example', 0, False)]
     for namespace, index, expected in cases:
@@ -60,6 +69,8 @@ def test_owner_spaces_bundle_their_own_tokenizer_scorer(tmp_path, monkeypatch):
         publish_byod.make_space_bundle(publish_byod.MODELS[index], namespace, dest)
         config = json.loads((dest / 'space_model.json').read_text())
         assert config['bigram_enabled'] is expected
+        for key, value in pins.get(f'{namespace}/{publish_byod.MODELS[index].space_name}', {}).items():
+            assert config[key] == value
         assert (dest / 'bigram.pt').exists() is expected
         if expected:
             expected_name = publish_byod.BIGRAM_CHECKPOINTS[publish_byod.MODELS[index].space_name]

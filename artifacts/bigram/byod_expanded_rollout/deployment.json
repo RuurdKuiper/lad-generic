@@ -1,0 +1,324 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "owner": "Ruurd",
+    "model": "gemma",
+    "parent_revision": "d70735cd924e7b7935c31cd8a624c15cb93ece40",
+    "revision": "7874a818b36345ece4f92ee709ac7bc701eecb94",
+    "asset_repo": "Ruurd/byod-gemma-ngram-guidance-expanded",
+    "asset_revision": "625b95fa1e62e0a2ef588290b22717329029e140",
+    "config_before": {
+      "display_name": "BYOD-Gemma-2-9B",
+      "model_repo_id": "Ruurd/BYOD-Gemma-2-9B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-gemma-2-9b",
+      "bigram_enabled": true,
+      "show_bigram_evaluation_controls": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Gemma-2-9B",
+      "model_repo_id": "Ruurd/BYOD-Gemma-2-9B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-gemma-2-9b",
+      "bigram_enabled": true,
+      "show_bigram_evaluation_controls": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Ruurd/byod-gemma-ngram-guidance-expanded",
+      "ngram_scorer_revision": "625b95fa1e62e0a2ef588290b22717329029e140"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 550234861,
+        "sha256": "b0c278d0d77f4da0155e5ab2960e80ad6f1bf03eef93ed54bb5eac2b051fa899"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 879277559,
+        "sha256": "f899d3cab44ac2ec67af984db441fa4fd556c52907a9f5e828cfd5a56b9e25c4"
+      }
+    },
+    "tokens": 873467371
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "owner": "Dovelove",
+    "model": "gemma",
+    "parent_revision": "4780e6db050ab88606f328b2e2724d7456ef99c6",
+    "revision": "1e9f8ca749a1ed4f7aadba8ec88d7fa74d3254b4",
+    "asset_repo": "Dovelove/byod-gemma-ngram-guidance-expanded",
+    "asset_revision": "b4b9fd91ea8d619ae8ff7885c43be547cee4f671",
+    "config_before": {
+      "display_name": "BYOD-Gemma-2-9B",
+      "model_repo_id": "Dovelove/BYOD-Gemma-2-9B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-gemma-2-9b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Gemma-2-9B",
+      "model_repo_id": "Dovelove/BYOD-Gemma-2-9B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-gemma-2-9b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Dovelove/byod-gemma-ngram-guidance-expanded",
+      "ngram_scorer_revision": "b4b9fd91ea8d619ae8ff7885c43be547cee4f671"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 550234861,
+        "sha256": "b0c278d0d77f4da0155e5ab2960e80ad6f1bf03eef93ed54bb5eac2b051fa899"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 879277559,
+        "sha256": "f899d3cab44ac2ec67af984db441fa4fd556c52907a9f5e828cfd5a56b9e25c4"
+      }
+    },
+    "tokens": 873467371
+  },
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "owner": "Ruurd",
+    "model": "llama",
+    "parent_revision": "0ba16b89facdd3942094f984ecd7469d9a40ece7",
+    "revision": "4d5a22c6482b3e90f1e343fe700830c776395b1c",
+    "asset_repo": "Ruurd/byod-llama-ngram-guidance-expanded",
+    "asset_revision": "6063da3df9412f0becd6ed553c0025c42ee3c00c",
+    "config_before": {
+      "display_name": "BYOD-Llama-3.1-8B",
+      "model_repo_id": "Ruurd/BYOD-Llama-3.1-8B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-llama-3.1-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Llama-3.1-8B",
+      "model_repo_id": "Ruurd/BYOD-Llama-3.1-8B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-llama-3.1-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Ruurd/byod-llama-ngram-guidance-expanded",
+      "ngram_scorer_revision": "6063da3df9412f0becd6ed553c0025c42ee3c00c"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 526884589,
+        "sha256": "686c4ea4c01e55c79daeb44ad6bab012ca883762b4ec5859284743e764dd5372"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 954623351,
+        "sha256": "cf7d09e7e0a3e4b7de205de0b53eb012ddbe36e3406b8d02e1c7461b62a71f94"
+      }
+    },
+    "tokens": 871088258
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "owner": "Dovelove",
+    "model": "llama",
+    "parent_revision": "6a170b472384cb3d5ac1c46ec8d76edbb16aa914",
+    "revision": "e3bff44190a76599423362d6e0f5122a0d594d40",
+    "asset_repo": "Dovelove/byod-llama-ngram-guidance-expanded",
+    "asset_revision": "f1c078f191f5dc0993d95e67d47049c6049b7f76",
+    "config_before": {
+      "display_name": "BYOD-Llama-3.1-8B",
+      "model_repo_id": "Dovelove/BYOD-Llama-3.1-8B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-llama-3.1-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Llama-3.1-8B",
+      "model_repo_id": "Dovelove/BYOD-Llama-3.1-8B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-llama-3.1-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Dovelove/byod-llama-ngram-guidance-expanded",
+      "ngram_scorer_revision": "f1c078f191f5dc0993d95e67d47049c6049b7f76"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 526884589,
+        "sha256": "686c4ea4c01e55c79daeb44ad6bab012ca883762b4ec5859284743e764dd5372"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 954623351,
+        "sha256": "cf7d09e7e0a3e4b7de205de0b53eb012ddbe36e3406b8d02e1c7461b62a71f94"
+      }
+    },
+    "tokens": 871088258
+  },
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "owner": "Ruurd",
+    "model": "ministral",
+    "parent_revision": "2fc7bff89a57f42745a49b46a7165b1927f0f100",
+    "revision": "ecbdae84af42161f686472f42978d1002e080342",
+    "asset_repo": "Ruurd/byod-ministral-ngram-guidance-expanded",
+    "asset_revision": "14b72d85ad9f1a3a74943940825cdcfdb949086c",
+    "config_before": {
+      "display_name": "BYOD-Ministral-8B",
+      "model_repo_id": "Ruurd/BYOD-Ministral-8B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-ministral-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Ministral-8B",
+      "model_repo_id": "Ruurd/BYOD-Ministral-8B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-ministral-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Ruurd/byod-ministral-ngram-guidance-expanded",
+      "ngram_scorer_revision": "14b72d85ad9f1a3a74943940825cdcfdb949086c"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 484693677,
+        "sha256": "7c8f160eed2953a440e13d41451d0881c96f10c5d12158dafb2ea164723c9852"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 914733047,
+        "sha256": "9b48365118dcf9d413748985241cecff40965563b66061bb04a092a649beacd2"
+      }
+    },
+    "tokens": 873214218
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "owner": "Dovelove",
+    "model": "ministral",
+    "parent_revision": "cc22da8f430f192b2c172a408adf9beeabc2da63",
+    "revision": "f53b664e54c7b3b3e7454946d72ad42888b2f8ef",
+    "asset_repo": "Dovelove/byod-ministral-ngram-guidance-expanded",
+    "asset_revision": "2b7712df6e6c6840a14e71acfc0bc0a1adbe1879",
+    "config_before": {
+      "display_name": "BYOD-Ministral-8B",
+      "model_repo_id": "Dovelove/BYOD-Ministral-8B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-ministral-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Ministral-8B",
+      "model_repo_id": "Dovelove/BYOD-Ministral-8B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-ministral-8b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Dovelove/byod-ministral-ngram-guidance-expanded",
+      "ngram_scorer_revision": "2b7712df6e6c6840a14e71acfc0bc0a1adbe1879"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 484693677,
+        "sha256": "7c8f160eed2953a440e13d41451d0881c96f10c5d12158dafb2ea164723c9852"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 914733047,
+        "sha256": "9b48365118dcf9d413748985241cecff40965563b66061bb04a092a649beacd2"
+      }
+    },
+    "tokens": 873214218
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "owner": "Ruurd",
+    "model": "qwen",
+    "parent_revision": "946379fa6b5dabd2d3f1615c7ce52746fa3fc83b",
+    "revision": "65b932bfa607d5718f1fb8c25b11d2dacca1e277",
+    "asset_repo": "Ruurd/byod-qwen-ngram-guidance-expanded",
+    "asset_revision": "f7be5ddf9d04208cd648e754aa897ad295096df4",
+    "config_before": {
+      "display_name": "BYOD-Qwen2.5-7B",
+      "model_repo_id": "Ruurd/BYOD-Qwen2.5-7B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-qwen2.5-7b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Qwen2.5-7B",
+      "model_repo_id": "Ruurd/BYOD-Qwen2.5-7B",
+      "show_repository_links": true,
+      "source_url": "https://github.com/RuurdKuiper/lad-generic",
+      "visitor_counter_id": "Ruurd.byod-qwen2.5-7b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Ruurd/byod-qwen-ngram-guidance-expanded",
+      "ngram_scorer_revision": "f7be5ddf9d04208cd648e754aa897ad295096df4"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 505088429,
+        "sha256": "66c8154faa90f3ea8500b178542e101bd88d69ccd1416685863e4960b32a5314"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 920344695,
+        "sha256": "c8ebe7fc28f7b4e7c85463b66aa90c8a80b86f7dc491803f55c083daa19e94d2"
+      }
+    },
+    "tokens": 872705486
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "owner": "Dovelove",
+    "model": "qwen",
+    "parent_revision": "e27fa6eda6eda6b546786cd0d0f356dfeacbee64",
+    "revision": "1678cf910234c98c8dee70de3997d977273d972f",
+    "asset_repo": "Dovelove/byod-qwen-ngram-guidance-expanded",
+    "asset_revision": "6b96a74bb01b25f3edd06da83c25048c7314cc6f",
+    "config_before": {
+      "display_name": "BYOD-Qwen2.5-7B",
+      "model_repo_id": "Dovelove/BYOD-Qwen2.5-7B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-qwen2.5-7b",
+      "bigram_enabled": true,
+      "trigram_enabled": true
+    },
+    "config_after": {
+      "display_name": "BYOD-Qwen2.5-7B",
+      "model_repo_id": "Dovelove/BYOD-Qwen2.5-7B",
+      "show_repository_links": false,
+      "source_url": null,
+      "visitor_counter_id": "Dovelove.byod-qwen2.5-7b",
+      "bigram_enabled": true,
+      "trigram_enabled": true,
+      "ngram_scorer_repo": "Dovelove/byod-qwen-ngram-guidance-expanded",
+      "ngram_scorer_revision": "6b96a74bb01b25f3edd06da83c25048c7314cc6f"
+    },
+    "assets": {
+      "bigram_expanded.pt": {
+        "bytes": 505088429,
+        "sha256": "66c8154faa90f3ea8500b178542e101bd88d69ccd1416685863e4960b32a5314"
+      },
+      "trigram_expanded.pt": {
+        "bytes": 920344695,
+        "sha256": "c8ebe7fc28f7b4e7c85463b66aa90c8a80b86f7dc491803f55c083daa19e94d2"
+      }
+    },
+    "tokens": 872705486
+  }
+]

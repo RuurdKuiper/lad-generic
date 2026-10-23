@@ -1,0 +1,16 @@
+{
+  "documents": 980000,
+  "tokens": 73467371,
+  "source": "data/lad-training-1m-256-long",
+  "tokenizer_sha256": "1b50ee7a94eba98290ed0761bafc639306acd75661b925722f4e2e91dbf65789",
+  "model": "gemma",
+  "vocab_size": 256000,
+  "retained_trigrams": 5234558,
+  "retained_prefixes": 1695932,
+  "checkpoint_bytes": 83168951,
+  "checkpoint_sha256": "6e6d6f65a3cff13e72c5b5956cc613b3f473bc1f25b75b3ac974def97ba7ee95",
+  "exact_bigram_match": true,
+  "exact_unigram_match": true,
+  "correction_queries": 10009,
+  "seconds": 101.5
+}

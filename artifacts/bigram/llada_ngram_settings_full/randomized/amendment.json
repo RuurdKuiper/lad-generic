@@ -1,0 +1,17 @@
+{
+  "configuration": "trigram_randomized",
+  "source_sha256": "cac7fd319b1d766adf251923501758a641227b0581a64984c7d4bda9cf0293e8",
+  "comparison_sha256": "e5d76966f544d73e7ad454ea3482d15373ec50b99498b502c0f73a4f0f946505",
+  "revision": "67a9c62687fcd05f9f02ee4cfd580e3dda3e0822",
+  "space": "Ruurd/llada-8b-instruct",
+  "total": 282,
+  "seed": 42,
+  "changes": {
+    "randomized_viterbi": true,
+    "sequence_sampling": false,
+    "temperature": 0.7
+  },
+  "noise": "independent unit Gumbels on editable candidate unary log scores, multiplied by .7, redrawn every iteration",
+  "caveat": "Approximate perturb-and-MAP, not an exact T=.7 sequence sample",
+  "repetition_penalty": false
+}

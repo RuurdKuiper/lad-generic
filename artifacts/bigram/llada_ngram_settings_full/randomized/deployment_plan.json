@@ -1,0 +1,16 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "parent_revision": "aee543d748b7250f21d01f462b8fb36ae783eb04",
+  "files": {
+    "app.py": {
+      "local": "huggingface/byod_space/app.py",
+      "sha256": "00ea849e54ccd20a2f6c5e464f2fedc022177c9d35ddd1f62ddca3585e32e89d",
+      "old_sha256": "2b4f5aca17d9841dba337f767638c647c3fd85284392070d040aa4ea5fb1c961"
+    },
+    "src/diffusion_lm/bigram.py": {
+      "local": "src/diffusion_lm/bigram.py",
+      "sha256": "c53c877b4b67c0bb23879eeb9db7f28c7dd02d17aec9a9b654e62e4c22076247",
+      "old_sha256": "ad523a9a2f7792912cd1823617e3b3c0a4a71bc1f8276eac426d77fd30a90688"
+    }
+  }
+}

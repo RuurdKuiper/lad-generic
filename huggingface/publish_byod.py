@@ -177,6 +177,9 @@ def validate_source(spec: ByodModel, outputs_root: Path) -> tuple[Path, Path, di
 
 def make_space_bundle(spec: ByodModel, namespace: str, destination: Path, anonymous_review: bool = False) -> None:
     bigram_enabled = namespace in {"Ruurd", "Dovelove"}
+    # Keep ordinary republishing on the same validated, pinned scorer assets.
+    asset_manifest = REPO_ROOT / "huggingface" / "byod_ngram_assets.json"
+    ngram_settings = json.loads(asset_manifest.read_text()).get(f"{namespace}/{spec.space_name}", {}) if asset_manifest.exists() else {}
     template_dir = REPO_ROOT / "huggingface" / "byod_space"
     shutil.copy2(template_dir / "app.py", destination / "app.py")
     shutil.copy2(template_dir / "requirements.txt", destination / "requirements.txt")
@@ -189,6 +192,7 @@ def make_space_bundle(spec: ByodModel, namespace: str, destination: Path, anonym
         json.dumps(
             {
                 "bigram_enabled": bigram_enabled,
+                **ngram_settings,
                 "display_name": spec.display_name,
                 "model_repo_id": f"{namespace}/{spec.model_name}",
                 "show_repository_links": not anonymous_review,

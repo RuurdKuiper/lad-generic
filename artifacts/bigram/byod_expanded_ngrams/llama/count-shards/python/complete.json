@@ -1,0 +1,21 @@
+{
+  "name": "python",
+  "repo": "Avelina/python-edu-cleaned",
+  "revision": "3fedf55e02e72dd1fd68963f991f5e91adcb0f8d",
+  "prefix": "data/",
+  "tokens": 40000000,
+  "upstream": "HuggingFaceTB/smollm-corpus/python-edu",
+  "files": [
+    "data/train-00000-of-00027.parquet"
+  ],
+  "offline": true,
+  "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+  "documents": 94466,
+  "actual_tokens": 40000000,
+  "pairs": 39905534,
+  "triples": 39811068,
+  "skipped_duplicates": 0,
+  "eos_appended": 94465,
+  "started_at": 1792746039.684785,
+  "seconds": 64.9634211063385
+}

@@ -1,0 +1,287 @@
+[
+  {
+    "case": "default_viterbi",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 1.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0
+    },
+    "text": "Amsterdam is the city of the city of the city known for its history, and canals, and canals, and canals, you know about it?",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 503.3745183609426,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "default_sampler",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 1.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0,
+      "sequence_sampling": true
+    },
+    "text": "I'm so the city of the history with rich and its city of canals canals of its culture history history for something with something you in the city?",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 133.01605870947242,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "sampler_zero_temperature",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 0.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0,
+      "sequence_sampling": true
+    },
+    "text": "Amsterdam is the city of the city of the city known for its history, and canals, and canals, and canals, you know about it?",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 40.49345292150974,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "viterbi_temperature_zero",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 0.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0
+    },
+    "text": "Amsterdam is the city of the city of the city known for its history, and canals, and canals, and canals, you know about it?",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 32.841448206454515,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "sample_other_seed",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 1.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 5678,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0,
+      "sequence_sampling": true
+    },
+    "text": "Amsterdam is a city beautiful about that information Netherlands., vibrant and its rich know beautiful city known city, you with.",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 37.389691919088364,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "sample_low_temperature",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 0.5,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0,
+      "sequence_sampling": true
+    },
+    "text": "Amsterdam is the city of the city,, and its history, and its history, and its history, you would like you about the city?",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 37.98205126076937,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "sample_weight_zero",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 1.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 0.0,
+      "sequence_sampling": true
+    },
+    "text": "I'm knowledge to in. you. with to on its in of canals the, It the history. specific and with the you",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 55.194564163684845,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "sample_weight_five",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 1.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "Bigram Viterbi",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 5.0,
+      "sequence_sampling": true
+    },
+    "text": "I'm so the city of the city known for its rich in a specific cultural history of the vibrant history? I do you like you with its culture.",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 37.83346666023135,
+      "adaptive_parallel_decoding": false
+    }
+  },
+  {
+    "case": "expected_penalty",
+    "revision": "35914ffa96f3e2687f06de44f1dee45078f61d8a",
+    "settings": {
+      "question": "What do you know about Amsterdam?",
+      "system_prompt": "You are a helpful assistant.",
+      "max_new_tokens": 32,
+      "num_steps": 1,
+      "block_length": 32,
+      "temperature": 1.0,
+      "top_k": 100,
+      "pause_per_step": 0.0,
+      "trajectory_color_mode": "No coloring",
+      "remasking_strategy": "PMI Viterbi + Repetition Penalty",
+      "revisable_tokens": false,
+      "ar_check_interval": 4,
+      "delay_eos_eot": false,
+      "early_stopping": false,
+      "generation_seed": 1234,
+      "measure_decoding": true,
+      "repetition_penalty_strength": 1.0,
+      "adaptive_parallel_decoding": false,
+      "bigram_weight": 1.0
+    },
+    "text": "Amsterdam is the city of the city of the city known for its history, and canals, and canals, you would like you know about it?",
+    "metrics": {
+      "denoising_forward_passes": 1,
+      "elapsed_ms": 538.1095120683312,
+      "adaptive_parallel_decoding": false
+    }
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "space": "Ruurd/lad",
+  "parent_revision": "7ea16d7a1ff9638f5c153da81dd31e19da060f40",
+  "revision": "419caab327584fa2e7bf51254a450e326fc1ae23",
+  "private": false,
+  "bundle": "artifacts/bigram/lad_trigram_rollout/bundle"
+}

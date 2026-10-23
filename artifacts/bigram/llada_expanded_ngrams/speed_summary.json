@@ -1,0 +1,66 @@
+[
+  {
+    "mode": "viterbi",
+    "choice": "Original bigram",
+    "runs": 2,
+    "forwards": 8,
+    "median_server_ms": 302.31158970855176,
+    "median_selector_ms_per_forward": 5.609399609966204
+  },
+  {
+    "mode": "viterbi",
+    "choice": "Expanded bigram",
+    "runs": 2,
+    "forwards": 8,
+    "median_server_ms": 302.9537561815232,
+    "median_selector_ms_per_forward": 5.735878512496129
+  },
+  {
+    "mode": "viterbi",
+    "choice": "Expanded bigram + trigram",
+    "runs": 2,
+    "forwards": 8,
+    "median_server_ms": 321.10670767724514,
+    "median_selector_ms_per_forward": 7.614903355715796
+  },
+  {
+    "mode": "sample",
+    "choice": "Original bigram",
+    "runs": 2,
+    "forwards": 8,
+    "median_server_ms": 383.2437724340707,
+    "median_selector_ms_per_forward": 15.983381570549682
+  },
+  {
+    "mode": "sample",
+    "choice": "Expanded bigram",
+    "runs": 2,
+    "forwards": 8,
+    "median_server_ms": 376.7428030259907,
+    "median_selector_ms_per_forward": 15.186506323516369
+  },
+  {
+    "mode": "sample",
+    "choice": "Expanded bigram + trigram",
+    "runs": 2,
+    "forwards": 8,
+    "median_server_ms": 405.5563199799508,
+    "median_selector_ms_per_forward": 18.716001126449555
+  },
+  {
+    "mode": "sample_risk",
+    "choice": "Expanded bigram",
+    "runs": 1,
+    "forwards": 8,
+    "median_server_ms": 478.82453305646777,
+    "median_selector_ms_per_forward": 28.02322170464322
+  },
+  {
+    "mode": "sample_risk",
+    "choice": "Expanded bigram + trigram",
+    "runs": 1,
+    "forwards": 8,
+    "median_server_ms": 504.42518573254347,
+    "median_selector_ms_per_forward": 31.120628817006946
+  }
+]

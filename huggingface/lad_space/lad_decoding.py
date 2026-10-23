@@ -4,14 +4,17 @@ import sys
 
 import torch
 
-# The publication bundle includes only the shared sparse scorer module.
+# The publication bundle includes the shared n-gram decoding modules.
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 from diffusion_lm.bigram import BigramViterbiSelector
 
 
 def select_lad_answer(logits, input_ids, answer_start, scorer, *, top_k=16,
                       temperature=2.0, weight=0.5, min_count=1, pmi_clip=2.0,
-                      repetition_penalty_strength=0.0, repetition_excluded_token_ids=()):
+                      repetition_penalty_strength=0.0, repetition_excluded_token_ids=(),
+                      trigram_scorer=None, trigram_weight=0.5, trigram_min_count=2,
+                      trigram_clip=2.0, randomized_viterbi=False,
+                      independent_temperature=False):
     """Replace every answer position, including visible, previously retained IDs.
 
     LAD was trained to correct unmasked tokens. No answer row becomes a frozen
@@ -28,6 +31,10 @@ def select_lad_answer(logits, input_ids, answer_start, scorer, *, top_k=16,
     selector = BigramViterbiSelector(
         scorer, weight, scoring_method="pmi", min_count=min_count, pmi_clip=pmi_clip,
         remasking_confidence="diffusion",
+        trigram_scorer=trigram_scorer, trigram_weight=trigram_weight,
+        trigram_min_count=trigram_min_count, trigram_clip=trigram_clip,
+        randomized_viterbi=randomized_viterbi,
+        independent_temperature=independent_temperature,
     )
     current = torch.as_tensor(input_ids[answer_start:], dtype=torch.long, device=logits.device)
     selected, confidence = selector.select_block(

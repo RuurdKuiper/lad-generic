@@ -1,0 +1,42 @@
+{
+  "Ruurd/byod-llama-3.1-8b": {
+    "revision": "26b0cafc3c92178b1e8359e9afe5190ee1712e1e",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Dovelove/byod-ministral-8b": {
+    "revision": "6aa263a22524038e3ce9193d0fac657ab1a9ba73",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Dovelove/byod-llama-3.1-8b": {
+    "revision": "c9a6e0f209513b7fba6f62e3c7a8cc4180fe4a06",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Ruurd/byod-ministral-8b": {
+    "revision": "22327463961003496cdfa182a34f43c3dc82be27",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Ruurd/byod-qwen2.5-7b": {
+    "revision": "943b64ed751967a0d37a35d47fd939d59f3290f3",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Dovelove/byod-qwen2.5-7b": {
+    "revision": "7958de6aa1fd0dd160a938d0958466116cec5f03",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Ruurd/byod-gemma-2-9b": {
+    "revision": "7f2e4155058b31cf79f78c30fcaf255342795415",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  },
+  "Dovelove/byod-gemma-2-9b": {
+    "revision": "f69698fbe282a0e626dadb29a9157fd94f0f1eec",
+    "ui_temperature": 0.3,
+    "api_temperature": 0.3
+  }
+}

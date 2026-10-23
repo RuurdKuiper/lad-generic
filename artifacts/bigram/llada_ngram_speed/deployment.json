@@ -1,0 +1,9 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "parent_revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+  "path_in_repo": "src/diffusion_lm/trigram.py",
+  "source": "/Users/rkuiper/Documents/Code/lad-generic/src/diffusion_lm/trigram.py",
+  "source_sha256": "326f3b8f69b8b7e2ce191238125336ba2fd6dcbd1765c7274e42779ce79bdc27",
+  "original_sha256": "7dd697aad27aab4e0e10c5b76c50a296b777b65c3cc5609146625c5854cefa11",
+  "revision": "945f6480fc0ce5f42f660a3cc803700de001ce0d"
+}

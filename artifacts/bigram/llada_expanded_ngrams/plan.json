@@ -1,0 +1,29 @@
+[
+  {
+    "name": "english",
+    "repo": "HuggingFaceFW/fineweb-edu",
+    "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+    "prefix": "sample/10BT/",
+    "tokens": 720000000
+  },
+  {
+    "name": "python",
+    "repo": "Avelina/python-edu-cleaned",
+    "revision": "3fedf55e02e72dd1fd68963f991f5e91adcb0f8d",
+    "prefix": "data/",
+    "tokens": 40000000,
+    "upstream": "HuggingFaceTB/smollm-corpus/python-edu"
+  },
+  {
+    "name": "math",
+    "repo": "HuggingFaceTB/finemath",
+    "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+    "prefix": "finemath-4plus/",
+    "tokens": 40000000
+  },
+  {
+    "name": "responses",
+    "local": "/Users/rkuiper/Documents/Code/lad-generic/data/lad-training-1m-256-long",
+    "tokens": null
+  }
+]

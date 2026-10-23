@@ -1,0 +1,14 @@
+{
+  "revision": "72df164776e1e724f976185e74eaf1c938885042",
+  "runtime": "RUNNING",
+  "api_defaults": {
+    "temperature": 0.7,
+    "randomized_viterbi": true,
+    "sequence_sampling": false
+  },
+  "local_tests": {
+    "passed": 149,
+    "skipped": 6
+  },
+  "inference_requests": 0
+}

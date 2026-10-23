@@ -1,0 +1,85 @@
+{
+  "tokenizer": "mistralai/Ministral-8B-Instruct-2410",
+  "tokenizer_sha256": "5a03f035286f353bc1539a706768c1ee673d9ecaece5a463a0d9bdd354b25edf",
+  "model_vocab_size": 131072,
+  "tokens": 873214218,
+  "document_boundaries_preserved": true,
+  "original_documents": 980000,
+  "original_tokens": 73214218,
+  "added_tokens": 800000000,
+  "new_corpus_mix": "90% FineWeb-Edu / 5% Python-Edu / 5% FineMath by tokenizer-specific tokens; plus all original responses",
+  "sources": [
+    {
+      "name": "english",
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "prefix": "sample/10BT/",
+      "tokens": 720000000,
+      "files": [
+        "sample/10BT/000_00000.parquet"
+      ],
+      "offline": true,
+      "documents": 694138,
+      "actual_tokens": 720000000,
+      "pairs": 719305862,
+      "triples": 718611724,
+      "skipped_duplicates": 1291,
+      "eos_appended": 694137,
+      "seconds": 1180.4782299995422
+    },
+    {
+      "name": "python",
+      "repo": "Avelina/python-edu-cleaned",
+      "revision": "3fedf55e02e72dd1fd68963f991f5e91adcb0f8d",
+      "prefix": "data/",
+      "tokens": 40000000,
+      "upstream": "HuggingFaceTB/smollm-corpus/python-edu",
+      "files": [
+        "data/train-00000-of-00027.parquet"
+      ],
+      "offline": true,
+      "documents": 86262,
+      "actual_tokens": 40000000,
+      "pairs": 39913738,
+      "triples": 39827476,
+      "skipped_duplicates": 0,
+      "eos_appended": 86261,
+      "seconds": 51.44419026374817
+    },
+    {
+      "name": "math",
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "prefix": "finemath-4plus/",
+      "tokens": 40000000,
+      "files": [
+        "finemath-4plus/train-00000-of-00064.parquet"
+      ],
+      "offline": true,
+      "documents": 26130,
+      "actual_tokens": 40000000,
+      "pairs": 39973870,
+      "triples": 39947740,
+      "skipped_duplicates": 0,
+      "eos_appended": 26129,
+      "seconds": 56.792670011520386
+    }
+  ],
+  "model": "ministral",
+  "retained_trigrams": 64568580,
+  "retained_prefixes": 11658816,
+  "pair_count_sum": 871427688,
+  "triple_count_sum": 869641182,
+  "validation_queries": 10002,
+  "seconds": 264.4,
+  "assets": {
+    "bigram_expanded.pt": {
+      "bytes": 484693677,
+      "sha256": "7c8f160eed2953a440e13d41451d0881c96f10c5d12158dafb2ea164723c9852"
+    },
+    "trigram_expanded.pt": {
+      "bytes": 914733047,
+      "sha256": "9b48365118dcf9d413748985241cecff40965563b66061bb04a092a649beacd2"
+    }
+  }
+}

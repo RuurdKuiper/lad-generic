@@ -1,0 +1,42 @@
+{
+  "Ruurd/byod-gemma-2-9b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Ruurd/byod-gemma-ngram-guidance-expanded",
+    "ngram_scorer_revision": "625b95fa1e62e0a2ef588290b22717329029e140"
+  },
+  "Dovelove/byod-gemma-2-9b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Dovelove/byod-gemma-ngram-guidance-expanded",
+    "ngram_scorer_revision": "b4b9fd91ea8d619ae8ff7885c43be547cee4f671"
+  },
+  "Ruurd/byod-llama-3.1-8b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Ruurd/byod-llama-ngram-guidance-expanded",
+    "ngram_scorer_revision": "6063da3df9412f0becd6ed553c0025c42ee3c00c"
+  },
+  "Dovelove/byod-llama-3.1-8b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Dovelove/byod-llama-ngram-guidance-expanded",
+    "ngram_scorer_revision": "f1c078f191f5dc0993d95e67d47049c6049b7f76"
+  },
+  "Ruurd/byod-ministral-8b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Ruurd/byod-ministral-ngram-guidance-expanded",
+    "ngram_scorer_revision": "14b72d85ad9f1a3a74943940825cdcfdb949086c"
+  },
+  "Dovelove/byod-ministral-8b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Dovelove/byod-ministral-ngram-guidance-expanded",
+    "ngram_scorer_revision": "2b7712df6e6c6840a14e71acfc0bc0a1adbe1879"
+  },
+  "Ruurd/byod-qwen2.5-7b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Ruurd/byod-qwen-ngram-guidance-expanded",
+    "ngram_scorer_revision": "f7be5ddf9d04208cd648e754aa897ad295096df4"
+  },
+  "Dovelove/byod-qwen2.5-7b": {
+    "trigram_enabled": true,
+    "ngram_scorer_repo": "Dovelove/byod-qwen-ngram-guidance-expanded",
+    "ngram_scorer_revision": "6b96a74bb01b25f3edd06da83c25048c7314cc6f"
+  }
+}

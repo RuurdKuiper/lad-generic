@@ -151,7 +151,7 @@ class BigramScorer(torch.nn.Module):
 
 
 def expected_bigram_repetition_penalties(token_ids, probabilities, vocab_size, strength=1.0,
-                                        excluded_token_ids=()):
+                                        excluded_token_ids=(), count_mode="expected"):
     """Return transition penalties gamma*C(a,b), shape [B-1,K,K].
 
     Inputs are the legal candidate lattice [B,K] and *full-vocabulary*
@@ -160,7 +160,11 @@ def expected_bigram_repetition_penalties(token_ids, probabilities, vocab_size, s
     updating it, so its first occurrence contributes zero. State is local to
     this call/block; boundary-context transitions are never counted.
     Pairs containing excluded tokens (e.g. EOS/EOT) are neither scored nor counted.
+    count_mode="candidate_occurrences" counts candidate-set membership once per
+    edge instead of probability products; dummy fixed-row columns count once.
     """
+    if count_mode not in {"expected", "candidate_occurrences"}:
+        raise ValueError("Unknown repetition count mode")
     strength = float(strength)
     if not math.isfinite(strength) or strength < 0:
         raise ValueError("Repetition penalty strength must be finite and nonnegative")
@@ -178,6 +182,13 @@ def expected_bigram_repetition_penalties(token_ids, probabilities, vocab_size, s
     unique, inverse = torch.unique(keys.reshape(-1), return_inverse=True)
     indices = inverse.reshape_as(keys)
     expected = probabilities[:-1, :, None] * probabilities[1:, None, :]
+    if count_mode == "candidate_occurrences":
+        # Set membership, independent of probability. Duplicate dummy columns
+        # in fixed rows represent one candidate, not additional occurrences.
+        legal = ~((token_ids[:, :, None] == token_ids[:, None, :]) &
+                  torch.ones((token_ids.shape[1], token_ids.shape[1]),
+                             dtype=torch.bool, device=token_ids.device).tril(-1)).any(-1)
+        expected = (legal[:-1, :, None] & legal[1:, None, :]).float()
     if excluded_token_ids:
         excluded = torch.as_tensor(tuple(excluded_token_ids), device=token_ids.device, dtype=torch.long)
         eligible = ~torch.isin(token_ids, excluded)
@@ -194,13 +205,28 @@ def expected_bigram_repetition_penalties(token_ids, probabilities, vocab_size, s
 
 
 class BigramViterbiSelector:
-    def __init__(self, scorer, weight=0.5, *, scoring_method="conditional", min_count=5, pmi_clip=5.0, remasking_confidence="diffusion"):
+    def __init__(self, scorer, weight=0.5, *, scoring_method="conditional", min_count=5, pmi_clip=5.0, remasking_confidence="diffusion", sequence_sampling=False, independent_temperature=False,
+                 trigram_scorer=None, trigram_weight=0.5, trigram_min_count=2, trigram_clip=2.0,
+                 randomized_viterbi=False):
         if not math.isfinite(weight) or weight < 0:
             raise ValueError("Bigram weight must be finite and nonnegative")
         BigramScorer.validate_scoring(scoring_method, min_count, pmi_clip)
         if remasking_confidence not in {"diffusion", "viterbi_margin"}:
             raise ValueError("Remasking confidence must be 'diffusion' or 'viterbi_margin'")
         self.remasking_confidence = remasking_confidence
+        self.sequence_sampling = bool(sequence_sampling)
+        self.randomized_viterbi = bool(randomized_viterbi)
+        if self.sequence_sampling and self.randomized_viterbi:
+            raise ValueError("Choose either exact sequence sampling or randomized Viterbi")
+        self.independent_temperature = bool(independent_temperature)
+        if not math.isfinite(trigram_weight) or trigram_weight < 0 or not isinstance(trigram_min_count,int) or trigram_min_count < 1 or not math.isfinite(trigram_clip) or trigram_clip < 0:
+            raise ValueError("Invalid trigram correction settings")
+        if trigram_scorer is not None and trigram_scorer.vocab_size != scorer.vocab_size:
+            raise ValueError("Trigram vocabulary mismatch")
+        self.trigram_scorer = trigram_scorer
+        self.trigram_weight = float(trigram_weight)
+        self.trigram_min_count = trigram_min_count
+        self.trigram_clip = float(trigram_clip)
         self.last_path_margins = None
         self.scorer, self.weight = scorer, float(weight)
         self.scoring_method, self.min_count, self.pmi_clip = scoring_method, min_count, float(pmi_clip)
@@ -228,6 +254,44 @@ class BigramViterbiSelector:
         path[-1] = scores.argmax()
         for t in range(length - 2, -1, -1):
             path[t] = back[t, path[t + 1]]
+        return token_ids.gather(1, path[:, None]).squeeze(1)
+
+    @staticmethod
+    def sample_sequence(token_ids, emissions, transitions, weight=1.0, temperature=1.0):
+        """Exact forward-filter/backward sampling from exp(total path score).
+
+        No score perturbations or model calls. Centering each forward row
+        preserves probabilities while avoiding accumulation of large constants.
+        Uses torch's seeded RNG, like the existing diffusion sampler.
+        """
+        if token_ids.ndim != 2 or token_ids.shape != emissions.shape or min(token_ids.shape) < 1:
+            raise ValueError("Expected nonempty candidate lattice [B,K]")
+        length, k = emissions.shape
+        if transitions.shape != (length - 1, k, k):
+            raise ValueError("Expected transitions [B-1,K,K]")
+        temperature = float(temperature)
+        if not math.isfinite(temperature) or temperature < 0:
+            raise ValueError("Sequence temperature must be finite and nonnegative")
+        if temperature == 0:
+            return BigramViterbiSelector.decode(token_ids, emissions, transitions, weight)
+        # Global path temperature changes entropy without changing the relative
+        # diffusion/PMI/repetition weights. Tiny positive T approaches argmax.
+        scale = max(temperature, 1e-6)
+        edges = transitions.float() * weight if weight else torch.zeros_like(transitions, dtype=torch.float32)
+        if edges.numel():
+            edges = (edges - edges.amax(dim=(1, 2), keepdim=True)) / scale
+        emissions = (emissions.float() - emissions.float().amax(-1, keepdim=True)) / scale
+        forward = torch.empty_like(emissions, dtype=torch.float32)
+        row = emissions[0].float()
+        forward[0] = row - row.max()
+        for t in range(1, length):
+            row = emissions[t].float() + torch.logsumexp(forward[t-1, :, None] + edges[t-1], dim=0)
+            forward[t] = row - row.max()
+        path = torch.empty(length, device=token_ids.device, dtype=torch.long)
+        path[-1] = torch.multinomial(forward[-1].softmax(-1), 1).squeeze(0)
+        for t in range(length - 2, -1, -1):
+            scores = forward[t] + edges[t, :, path[t+1]]
+            path[t] = torch.multinomial(scores.softmax(-1), 1).squeeze(0)
         return token_ids.gather(1, path[:, None]).squeeze(1)
 
     def __call__(self, token_ids, logits):
@@ -270,7 +334,8 @@ class BigramViterbiSelector:
         return (best_selected - best_alternative).clamp_min(0.)
 
     def select_block(self, logits, current_ids, editable, *, top_k=16, temperature=1.0, left_id=None, right_id=None,
-                     repetition_penalty_strength=0.0, repetition_excluded_token_ids=()):
+                     repetition_penalty_strength=0.0, repetition_excluded_token_ids=(),
+                     repetition_count_mode="expected"):
         """Decode a contiguous block; fixed rows and external neighbors constrain it.
 
         Full-vocabulary log_softmax precedes top-k extraction. Fixed rows have
@@ -281,6 +346,9 @@ class BigramViterbiSelector:
         raw log probabilities + (weight * T) * transitions. The latter avoids
         division by tiny T and has the exact greedy limit at T=0. Margins use
         these common rescaled units, preserving their retention ranking.
+        With independent_temperature=True, weight directly multiplies PMI and
+        temperature only sets the sequence sampling distribution exp(S/T).
+        Maximum-path decoding is temperature-independent; T=0 samples its argmax.
         Returned diffusion confidence always uses raw full-vocabulary p_t.
         Optional repetition penalties subtract gamma*C(a,b) directly from each
         edge, independently of the PMI weight and temperature. Expected counts
@@ -296,12 +364,13 @@ class BigramViterbiSelector:
         temperature = float(temperature)
         if not math.isfinite(temperature) or temperature < 0:
             raise ValueError("temperature must be finite and nonnegative")
-        weight = self.weight * temperature
+        weight = self.weight if self.independent_temperature else self.weight * temperature
         if not math.isfinite(weight):
             raise ValueError("temperature times bigram weight must be finite")
         self.last_path_margins = None
         log_probs = logits.float().log_softmax(-1)
-        if weight == 0 and self.remasking_confidence == "diffusion" and repetition_penalty_strength == 0:
+        randomize = self.randomized_viterbi and temperature > 0
+        if weight == 0 and self.remasking_confidence == "diffusion" and repetition_penalty_strength == 0 and not self.sequence_sampling and not randomize:
             # topk need not break tied maxima like argmax (common for BF16).
             # The zero-weight baseline must exactly match full-vocabulary argmax.
             selected = torch.where(editable, logits.argmax(-1), current_ids)
@@ -318,7 +387,9 @@ class BigramViterbiSelector:
         fixed_scores = torch.full_like(emissions, -torch.inf)
         fixed_scores[:, 0] = 0.0
         emissions = torch.where(editable[:, None], emissions, fixed_scores)
-        if repetition_penalty_strength:
+        if repetition_count_mode not in {"expected", "candidate_occurrences", "risk"}:
+            raise ValueError("Unknown repetition count mode")
+        if repetition_penalty_strength and repetition_count_mode != "risk":
             probabilities = log_probs.gather(1, candidates).exp()
             # Truly fixed positions contribute exactly one observed token, not K
             # duplicate candidates. Visible LAD positions remain fully editable.
@@ -327,7 +398,7 @@ class BigramViterbiSelector:
             probabilities = torch.where(editable[:, None], probabilities, fixed_probabilities)
             penalties = expected_bigram_repetition_penalties(
                 candidates, probabilities, self.scorer.vocab_size, repetition_penalty_strength,
-                excluded_token_ids=repetition_excluded_token_ids,
+                excluded_token_ids=repetition_excluded_token_ids, count_mode=repetition_count_mode,
             )
         if weight:
             if left_id is not None:
@@ -336,18 +407,57 @@ class BigramViterbiSelector:
             if right_id is not None:
                 right = torch.as_tensor(right_id, device=logits.device, dtype=torch.long)
                 emissions[-1] += weight * self._score(candidates[-1], right)
-        if repetition_penalty_strength:
+        use_trigrams = self.trigram_scorer is not None and self.trigram_weight > 0 and weight > 0 and len(emissions) >= 3
+        if repetition_penalty_strength or self.sequence_sampling or use_trigrams or randomize:
             transitions = (
                 self.scorer(candidates, emissions, scoring_method=self.scoring_method,
                             min_count=self.min_count, pmi_clip=self.pmi_clip)
-                if weight else torch.zeros_like(penalties)
+                if weight else emissions.new_zeros((len(emissions)-1, emissions.shape[1], emissions.shape[1]))
             )
             # Combine in raw log-score units so gamma is never multiplied by
             # the PMI weight or temperature (and still applies when either is 0).
-            edges = weight * transitions - penalties
-            selected = self.decode(candidates, emissions, edges, 1.0)
-            if self.remasking_confidence == "viterbi_margin":
-                self.last_path_margins = self.path_margins(candidates, emissions, edges, selected, 1.0)
+            edges = weight * transitions
+            triple_scores = None
+            if use_trigrams:
+                triple_scores = weight * self.trigram_weight * self.trigram_scorer.lattice_corrections(
+                    candidates, self.scorer, min_count=self.trigram_min_count, clip=self.trigram_clip,
+                )
+            if repetition_penalty_strength:
+                if repetition_count_mode == "risk":
+                    from .repetition_risk import repetition_risk_penalties
+                    risk_marginals = None
+                    if use_trigrams:
+                        from .trigram import second_order_marginals
+                        risk_marginals = second_order_marginals(
+                            emissions, edges, triple_scores,
+                            temperature=(temperature if self.sequence_sampling and self.independent_temperature else 1.0),
+                        )
+                    penalties = repetition_risk_penalties(
+                        candidates, emissions, edges, self.scorer.vocab_size,
+                        repetition_penalty_strength, repetition_excluded_token_ids,
+                        temperature=(temperature if self.sequence_sampling and self.independent_temperature else 1.0),
+                        marginals=risk_marginals,
+                    )
+                edges = edges - penalties
+            if randomize:
+                emissions = self.perturb_unaries(emissions, editable, temperature)
+            if use_trigrams:
+                from .trigram import decode_second_order, sample_second_order, second_order_path_margins
+                if self.sequence_sampling:
+                    selected = sample_second_order(candidates, emissions, edges, triple_scores,
+                        temperature=temperature if self.independent_temperature else 1.0)
+                else:
+                    selected = decode_second_order(candidates, emissions, edges, triple_scores)
+                if self.remasking_confidence == "viterbi_margin":
+                    self.last_path_margins = second_order_path_margins(candidates, emissions, edges, triple_scores, selected)
+            else:
+                decoder = self.sample_sequence if self.sequence_sampling else self.decode
+                if self.sequence_sampling and self.independent_temperature:
+                    selected = decoder(candidates, emissions, edges, 1.0, temperature=temperature)
+                else:
+                    selected = decoder(candidates, emissions, edges, 1.0)
+                if self.remasking_confidence == "viterbi_margin":
+                    self.last_path_margins = self.path_margins(candidates, emissions, edges, selected, 1.0)
         elif self.remasking_confidence == "viterbi_margin":
             transitions = (
                 self.scorer(candidates, emissions, scoring_method=self.scoring_method,
@@ -366,23 +476,55 @@ class BigramViterbiSelector:
         confidence = log_probs.gather(1, selected[:, None]).squeeze(1).exp()
         return selected, confidence
 
+    @staticmethod
+    def perturb_unaries(emissions, editable, temperature):
+        """Low-dimensional perturb-and-MAP; not exact joint sequence sampling.
+
+        Temperature scales independent unit Gumbels in raw log-score units.
+        Candidate support, transition scores and fixed positions stay unchanged.
+        """
+        if temperature == 0:
+            return emissions
+        eps = torch.finfo(emissions.dtype).eps
+        uniform = torch.rand_like(emissions).clamp(min=torch.finfo(emissions.dtype).tiny, max=1-eps)
+        noise = -torch.log(-torch.log(uniform))
+        return emissions + torch.where(editable[:, None], temperature * noise, 0.)
+
 
 class RepetitionPenalizedBigramSelector:
     """Add block-local transition penalties to an existing selector interface."""
 
-    def __init__(self, selector, strength=1.0, *, excluded_token_ids=()):
+    def __init__(self, selector, strength=1.0, *, excluded_token_ids=(), count_mode="expected", decay_steps=0):
         strength = float(strength)
         if not math.isfinite(strength) or strength < 0:
             raise ValueError("Repetition penalty strength must be finite and nonnegative")
+        if count_mode not in {"expected", "candidate_occurrences", "risk"}:
+            raise ValueError("Unknown repetition count mode")
+        from .repetition_schedule import repetition_strength_factor
+        repetition_strength_factor(0, decay_steps)  # Validate configuration.
+        self.decay_steps = decay_steps
+        self.block_step = 0
+        self.count_mode = count_mode
         self.selector = selector
         self.strength = strength
         self.excluded_token_ids = tuple(sorted(set(excluded_token_ids)))
 
+    def set_step_context(self, block_step, block_steps):
+        from .repetition_schedule import repetition_strength_factor
+        repetition_strength_factor(block_step, self.decay_steps)
+        self.block_step = block_step
+
+    @property
+    def effective_strength(self):
+        from .repetition_schedule import repetition_strength_factor
+        return self.strength * repetition_strength_factor(self.block_step, self.decay_steps)
+
     def select_block(self, logits, current_ids, editable, **kwargs):
         return self.selector.select_block(
             logits, current_ids, editable,
-            repetition_penalty_strength=self.strength,
+            repetition_penalty_strength=self.effective_strength,
             repetition_excluded_token_ids=self.excluded_token_ids,
+            repetition_count_mode=self.count_mode,
             **kwargs,
         )
 

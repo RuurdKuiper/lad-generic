@@ -1,0 +1,118 @@
+{
+  "space": "Ruurd/lad",
+  "revision": "7ea16d7a1ff9638f5c153da81dd31e19da060f40",
+  "runtime_revision": "7ea16d7a1ff9638f5c153da81dd31e19da060f40",
+  "methods": [
+    "Sampling",
+    "BG + TG Viterbi (Gumbel)"
+  ],
+  "temperature": 0.3,
+  "bigram_weight": 1.0,
+  "preserved_controls": [
+    "Multi-turn dialog",
+    "Number of iterations: \u2191 = more iterations",
+    "Pause between iterations \u2191 = longer pause",
+    "Generation length: \u2191 = more output tokens by decreasing eos token probability",
+    "Noise decay sharpness: \u2193 = more noise in later iterations",
+    "Noise start fraction: \u2191 = more noise",
+    "Use confidence-guided noising",
+    "Use permanent unmasking",
+    "Noise clipping: \u2193 = more confidence guidance",
+    "Top-p: \u2191 = more random answers",
+    "Semi-autoregressive generation: number of added tokens per iteration",
+    "Context window: \u2191 = longer sequences"
+  ],
+  "unchanged_model_files": [
+    "infer.py",
+    "models.py",
+    "model_config.py",
+    "requirements.txt"
+  ],
+  "hardware_preserved": true,
+  "pinned_assets": {
+    "repo": "Ruurd/byod-llama-ngram-guidance-expanded",
+    "revision": "6063da3df9412f0becd6ed553c0025c42ee3c00c"
+  },
+  "asset_hashes_verified": true,
+  "endpoint": "/on_generate",
+  "smoke": [
+    {
+      "settings": {
+        "question": "Reply with one short greeting.",
+        "multiturn_on": false,
+        "max_it": 2,
+        "pause_length": 0.0,
+        "eos_bias": 0.0,
+        "sharpness": 1.0,
+        "noise_start": 0.5,
+        "use_confidence_noising": true,
+        "use_permanent_unmasking": false,
+        "noise_clipping": 0.01,
+        "top_p": 1.0,
+        "top_k": 16,
+        "added_tokens": 32,
+        "context_window": 96,
+        "decoding_strategy": "Sampling",
+        "temperature": 0.3,
+        "repetition_penalty_strength": 0.0,
+        "bigram_weight": 1.0
+      },
+      "text": "Final Output (3 tokens after 2 iterations)Hello!",
+      "completed_generation_iterations": 2,
+      "observed_generation_updates": 2,
+      "client_wall_seconds": 6.800056582986144
+    },
+    {
+      "settings": {
+        "question": "Reply with one short greeting.",
+        "multiturn_on": false,
+        "max_it": 2,
+        "pause_length": 0.0,
+        "eos_bias": 0.0,
+        "sharpness": 1.0,
+        "noise_start": 0.5,
+        "use_confidence_noising": true,
+        "use_permanent_unmasking": false,
+        "noise_clipping": 0.01,
+        "top_p": 1.0,
+        "top_k": 16,
+        "added_tokens": 32,
+        "context_window": 96,
+        "decoding_strategy": "BG + TG Viterbi (Gumbel)",
+        "temperature": 0.3,
+        "repetition_penalty_strength": 0.0,
+        "bigram_weight": 1.0
+      },
+      "text": "Final Output (4 tokens after 2 iterations)Hello! How",
+      "completed_generation_iterations": 2,
+      "observed_generation_updates": 2,
+      "client_wall_seconds": 2.7135427499888465
+    },
+    {
+      "settings": {
+        "question": "Reply with one short greeting.",
+        "multiturn_on": false,
+        "max_it": 2,
+        "pause_length": 0.0,
+        "eos_bias": 0.0,
+        "sharpness": 1.0,
+        "noise_start": 0.0,
+        "use_confidence_noising": true,
+        "use_permanent_unmasking": true,
+        "noise_clipping": 0.01,
+        "top_p": 1.0,
+        "top_k": 16,
+        "added_tokens": 32,
+        "context_window": 96,
+        "decoding_strategy": "BG + TG Viterbi (Gumbel)",
+        "temperature": 0.0,
+        "repetition_penalty_strength": 0.0,
+        "bigram_weight": 1.0
+      },
+      "text": "Final Output (3 tokens after 2 iterations)Hello!",
+      "completed_generation_iterations": 2,
+      "observed_generation_updates": 2,
+      "client_wall_seconds": 0.6508538750058506
+    }
+  ]
+}

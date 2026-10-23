@@ -1,0 +1,17 @@
+{
+  "original_lad_bigram_sha256": "541eb793bc404acfb956a8cc36da85cc825857d178885cfc2fbe02b941fc962d",
+  "matches_original_byod_llama": true,
+  "expanded_tokenizer_sha256": "280b8d85c3f201fd3160faae007b3483ddfec41a7f8b257f8fd8a8b0329f1998",
+  "vocab_size": 128256,
+  "expanded_tokens": 871088258,
+  "assets": {
+    "bigram_expanded.pt": {
+      "bytes": 526884589,
+      "sha256": "686c4ea4c01e55c79daeb44ad6bab012ca883762b4ec5859284743e764dd5372"
+    },
+    "trigram_expanded.pt": {
+      "bytes": 954623351,
+      "sha256": "cf7d09e7e0a3e4b7de205de0b53eb012ddbe36e3406b8d02e1c7461b62a71f94"
+    }
+  }
+}

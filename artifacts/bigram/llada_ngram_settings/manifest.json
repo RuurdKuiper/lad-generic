@@ -1,0 +1,119 @@
+{
+  "space": "Ruurd/llada-8b-instruct",
+  "revision": "b31a17ae5d4b017ffad71798ea5f35949416e4d2",
+  "shared_settings": {
+    "system_prompt": "You are a helpful assistant.",
+    "max_new_tokens": 128,
+    "block_length": 128,
+    "temperature": 0.7,
+    "top_k": 16,
+    "pause_per_step": 0.0,
+    "trajectory_color_mode": "No coloring",
+    "revisable_tokens": false,
+    "ar_check_interval": 4,
+    "early_stopping": false,
+    "generation_seed": 42,
+    "measure_decoding": true,
+    "bigram_scoring_method": "PMI bigram",
+    "pmi_min_count": 1,
+    "pmi_clip": 2.0,
+    "bigram_remasking_confidence": "Diffusion probability",
+    "bigram_weight": 1.0,
+    "repetition_penalty_strength": 1.0,
+    "adaptive_parallel_decoding": false,
+    "sequence_sampling": false,
+    "count_all_candidate_bigrams": false,
+    "repetition_risk_penalty": false,
+    "decay_repetition_penalty": true
+  },
+  "tasks": [
+    {
+      "id": "amsterdam",
+      "category": "open",
+      "prompt": "What do you know about Amsterdam?"
+    },
+    {
+      "id": "sum_even",
+      "category": "code",
+      "prompt": "Write Python function sum_even(nums) returning the sum of even integers in nums. Handle an empty list. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "algebra",
+      "category": "math",
+      "prompt": "Solve 3(x - 2) + 4 = 2x + 9. Show your steps briefly."
+    },
+    {
+      "id": "sky",
+      "category": "open",
+      "prompt": "Why is the sky blue?"
+    },
+    {
+      "id": "balanced",
+      "category": "code",
+      "prompt": "Write Python function balanced(s) checking balanced parentheses (), brackets [], and braces {}. Ignore other characters. Return only concise Python code, without explanation or examples."
+    },
+    {
+      "id": "train",
+      "category": "math",
+      "prompt": "A train travels 120 km at 60 km/h and returns the same 120 km at 40 km/h. What is its average speed for the entire trip? Explain briefly."
+    }
+  ],
+  "methods": [
+    {
+      "id": "confidence",
+      "label": "Confidence guided",
+      "ngram": "Original bigram",
+      "penalty": false
+    },
+    {
+      "id": "bigram",
+      "label": "Expanded bigram",
+      "ngram": "Expanded bigram",
+      "penalty": false
+    },
+    {
+      "id": "bigram_rep",
+      "label": "Expanded bigram + fading repetition",
+      "ngram": "Expanded bigram",
+      "penalty": true
+    },
+    {
+      "id": "trigram",
+      "label": "Expanded bigram + trigram",
+      "ngram": "Expanded bigram + trigram",
+      "penalty": false
+    },
+    {
+      "id": "trigram_rep",
+      "label": "Expanded bigram + trigram + fading repetition",
+      "ngram": "Expanded bigram + trigram",
+      "penalty": true
+    }
+  ],
+  "budgets": [
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "execution_budget_order": [
+    4,
+    128,
+    8,
+    64,
+    16,
+    32
+  ],
+  "total": 180,
+  "seed_policy": "One fixed seed (42) for every matched run; no seed selection.",
+  "eos_policy": "Open: delay retention ON and bigram ending strength 10. Code/math: delay OFF and strength 1.",
+  "fade_policy": "Existing absolute six-iteration logistic fade; zero from iteration six, not stretched with NFE.",
+  "sampling_policy": "UI-default deterministic Viterbi; sequence sampling OFF. Temperature .7 affects independent diffusion sampling, not MAP Viterbi.",
+  "budget_policy": "APD and early stopping OFF; require exactly the requested model forwards, even if visible text ends earlier.",
+  "trigram_min_count": 2,
+  "trigram_clip": 2.0,
+  "trigram_relative_weight": 0.5,
+  "scope": "Two open, two code, two math prompts; exploratory settings comparison, not a representative benchmark."
+}

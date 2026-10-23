@@ -151,7 +151,8 @@ def test_default_sampling_preserves_legacy_distribution_and_seeded_draws():
 
 
 @pytest.mark.parametrize("permanent_unmasking", [False, True])
-def test_lad_loop_keeps_visible_tokens_editable_and_aligns_noising_confidence(permanent_unmasking):
+@pytest.mark.parametrize("strategy", ["PMI Viterbi", "BG + TG Viterbi (Gumbel)"])
+def test_lad_loop_keeps_visible_tokens_editable_and_aligns_noising_confidence(permanent_unmasking, strategy):
     seen, noising_confidence = [], []
     tokenizer = SimpleNamespace(
         convert_ids_to_tokens=lambda ids: list(map(str, ids)),
@@ -176,7 +177,7 @@ def test_lad_loop_keeps_visible_tokens_editable_and_aligns_noising_confidence(pe
     ))
     list(namespace["run_diffusion_loop"](
         [0, 9, 9], 1, 2, 0, 0, 1, 0, True, permanent_unmasking,
-        .01, 1., 16, 2, 3, "PMI Viterbi", 2.,
+        .01, 1., 16, 2, 3, strategy, .3,
     ))
     assert seen == [[0, 9, 9], [0, 1, 3]]
     assert noising_confidence == [[.2, .7]]
@@ -192,6 +193,8 @@ def test_lad_bundle_contains_shared_scorer_and_can_be_rebuilt(tmp_path):
     assert (destination / "bigram.pt").read_bytes() == checkpoint.read_bytes()
     assert (destination / "src/diffusion_lm/bigram.py").read_bytes() == (ROOT / "src/diffusion_lm/bigram.py").read_bytes()
     assert not (destination / "src/diffusion_lm/inference.py").exists()
+    assert (destination / "src/diffusion_lm/trigram.py").read_bytes() == (ROOT / "src/diffusion_lm/trigram.py").read_bytes()
+    assert (destination / "ngram_assets.json").read_bytes() == (ROOT / "huggingface/lad_space/ngram_assets.json").read_bytes()
     assert (destination / "models.py").is_file()
 
 
@@ -199,3 +202,120 @@ def test_missing_lad_checkpoint_stops_publication(tmp_path):
     publisher = load_module("publish_lad_missing_test", ROOT / "huggingface/publish_lad_viterbi.py")
     with pytest.raises(FileNotFoundError):
         publisher.make_space_bundle(tmp_path / "bundle", tmp_path / "missing.pt")
+
+
+def lad_toy_ngrams():
+    from collections import Counter
+    from diffusion_lm.trigram import TrigramScorer
+    sequences = [[0, 1, 2]] * 100 + [[2, 2, 2]] * 100
+    bigram = BigramScorer.from_sequences(sequences, 3)
+    triples = Counter((a * 3 + b) * 3 + c for s in sequences for a, b, c in zip(s, s[1:], s[2:]))
+    prefixes = Counter(a * 3 + b for s in sequences for a, b, c in zip(s, s[1:], s[2:]))
+    trigram = TrigramScorer(3, sorted(triples), [triples[k] for k in sorted(triples)],
+                            sorted(prefixes), [prefixes[k] for k in sorted(prefixes)])
+    return bigram, trigram
+
+
+@pytest.mark.parametrize('temperature', [0., .3, .7])
+def test_lad_trigram_wrapper_matches_shared_gumbel_decoder(temperature):
+    from diffusion_lm.bigram import BigramViterbiSelector
+    bg, tg = lad_toy_ngrams()
+    logits = torch.tensor([[0., 0., 0.]] + [[.1, 0., .2]] * 5)
+    current = [0] + [2] * 5
+    kwargs = dict(trigram_scorer=tg, randomized_viterbi=True, independent_temperature=True)
+    torch.manual_seed(13)
+    before = torch.random.get_rng_state()
+    selected, confidence = DECODING.select_lad_answer(logits, current, 1, bg,
+        top_k=3, temperature=temperature, weight=1., **kwargs)
+    if temperature == 0:
+        assert torch.equal(before, torch.random.get_rng_state())
+    torch.manual_seed(13)
+    reference = BigramViterbiSelector(bg, 1., scoring_method='pmi', min_count=1, pmi_clip=2., **kwargs)
+    tokens, conf = reference.select_block(logits[1:], torch.tensor(current[1:]),
+        torch.ones(5, dtype=torch.bool), top_k=3, temperature=temperature, left_id=0)
+    assert selected == [0] + tokens.tolist()
+    torch.testing.assert_close(confidence[1:], conf)
+    expected = logits[1:].softmax(-1).gather(1, tokens[:, None]).squeeze(1)
+    torch.testing.assert_close(confidence[1:], expected)
+
+
+def test_lad_trigram_zero_temperature_keeps_guidance_and_weight_zero_is_argmax():
+    bg, tg = lad_toy_ngrams()
+    logits = torch.tensor([[0., 0., 0.], [.1, 0., .2], [0., 0., .2]])
+    kwargs = dict(top_k=3, temperature=0., trigram_scorer=tg,
+                  randomized_viterbi=True, independent_temperature=True)
+    baseline, _ = DECODING.select_lad_answer(logits, [0, 2, 2], 1, bg, weight=0., **kwargs)
+    guided, _ = DECODING.select_lad_answer(logits, [0, 2, 2], 1, bg, weight=2., **kwargs)
+    assert baseline == [0, 2, 2]
+    assert guided == [0, 1, 2]  # Visible 2 is corrected directly at temperature zero.
+
+
+def test_lad_positive_gumbel_temperature_allows_different_answers():
+    bg, tg = lad_toy_ngrams()
+    outputs = set()
+    for seed in range(8):
+        torch.manual_seed(seed)
+        selected, _ = DECODING.select_lad_answer(torch.zeros(9, 3), [0] * 9, 1, bg,
+            top_k=3, temperature=.3, weight=0., trigram_scorer=tg,
+            randomized_viterbi=True, independent_temperature=True)
+        outputs.add(tuple(selected))
+    assert len(outputs) > 1
+
+
+def test_lad_trigram_step_uses_one_model_forward_and_preserves_prompt():
+    bg, tg = lad_toy_ngrams()
+    calls = []
+    class Model:
+        device = torch.device('cpu')
+        def __call__(self, *, input_ids):
+            calls.append(input_ids[0].tolist())
+            return {'logits': torch.tensor([[[0., 0., 0.], [.1, 0., .2], [0., 0., .2]]])}
+    ns = app_functions({'_generate_step'}, dict(torch=torch, model=Model(), eos_token_id=2,
+        _expanded_bigram_scorer=lambda: bg, _trigram_scorer=lambda: tg,
+        select_lad_answer=DECODING.select_lad_answer, PMI_MIN_COUNT=1, PMI_CLIP=2.,
+        TRIGRAM_WEIGHT=.5, TRIGRAM_MIN_COUNT=2, TRIGRAM_CLIP=2.))
+    selected, conf = ns['_generate_step']([0, 2, 2], 1., 3, answer_start=1,
+        decoding_strategy='BG + TG Viterbi (Gumbel)', temperature=0., bigram_weight=2.)
+    assert selected == [0, 1, 2]
+    assert calls == [[0, 2, 2]]
+    assert conf.shape == (3,)
+
+
+def lad_ui(source):
+    import gradio as gr
+    tree = ast.parse(source)
+    ui = next(n for n in tree.body if isinstance(n, ast.With) and
+              any(isinstance(x.context_expr, ast.Call) and isinstance(x.context_expr.func, ast.Attribute)
+                  and x.context_expr.func.attr == 'Blocks' for x in n.items))
+    ns = dict(gr=gr, on_generate=lambda *args: None, render_chat_history=lambda history: '',
+              SHOW_LEGACY_DECODING_CONTROLS=False)
+    exec(compile(ast.Module(body=[ui], type_ignores=[]), 'lad_ui', 'exec'), ns)
+    return ns
+
+
+def test_lad_simple_interface_preserves_specific_controls_and_user_temperature():
+    ns = lad_ui((ROOT / 'huggingface/lad_space/app.py').read_text())
+    props = [c['props'] for c in ns['demo'].get_config_file()['components']]
+    by_label = {p.get('label'): p for p in props if p.get('label')}
+    radio = by_label['Decoding strategy']
+    assert [c[1] for c in radio['choices']] == ['Sampling', 'BG + TG Viterbi (Gumbel)']
+    assert radio['value'] == 'Sampling'
+    assert by_label['Temperature']['value'] == .7
+    assert by_label['Top-p: ↑ = more random answers']['interactive']
+    assert not by_label['Bigram weight']['interactive']
+    assert by_label['Bigram weight']['value'] == 1.
+    assert by_label['Bigram weight']['maximum'] == 5.
+    assert by_label['Top-k / Viterbi candidates']['value'] == 16
+    for label, value in [('Noise start fraction: ↑ = more noise', .5),
+                         ('Noise decay sharpness: ↓ = more noise in later iterations', 1.),
+                         ('Use confidence-guided noising', False), ('Use permanent unmasking', False),
+                         ('Noise clipping: ↓ = more confidence guidance', .01),
+                         ('Semi-autoregressive generation: number of added tokens per iteration', 256),
+                         ('Context window: ↑ = longer sequences', 256), ('Multi-turn dialog', False)]:
+        assert by_label[label]['value'] == value
+        assert by_label[label].get('visible', True)
+    assert not by_label['Repetition penalty strength (γ)']['visible']
+    changes = ns['update_decoding_controls']('Sampling')
+    assert changes[0]['interactive'] and not changes[1]['interactive']
+    assert all('value' not in update for update in changes)
+    assert ns['bigram_weight_slider'] is ns['all_inputs'][-1]

@@ -1,0 +1,74 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "owner": "Ruurd",
+    "parent_revision": "7874a818b36345ece4f92ee709ac7bc701eecb94",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "f9b91a50a627fb3d900739f2e54db1b56a94dbf0e83d637e324a4bbf24cb4528",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "owner": "Dovelove",
+    "parent_revision": "1e9f8ca749a1ed4f7aadba8ec88d7fa74d3254b4",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "7db08fe8e4c6f793e972a833f1400114b5aace168ccf57006dfdd4b1ad668af1",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "owner": "Ruurd",
+    "parent_revision": "4d5a22c6482b3e90f1e343fe700830c776395b1c",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "dcc2c1a37079bbf960e549a30a9c1886a848bd5674510e09af2eff8016588ab6",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "owner": "Dovelove",
+    "parent_revision": "e3bff44190a76599423362d6e0f5122a0d594d40",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "36bc4952346456260654317613bfc17303ff428bbd9dc1baabc1ce040ea32a51",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "owner": "Ruurd",
+    "parent_revision": "ecbdae84af42161f686472f42978d1002e080342",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "288408bb5f8345308a89f9333ff8b8415a72c9e9a971b048fa693e388b35ff57",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "owner": "Dovelove",
+    "parent_revision": "f53b664e54c7b3b3e7454946d72ad42888b2f8ef",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "5a3cb86b6b07ef26cc9a51cbd8cf4e0cbedb02aa11c17a4047827e1e9434b035",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "owner": "Ruurd",
+    "parent_revision": "65b932bfa607d5718f1fb8c25b11d2dacca1e277",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "168dbd3d1109307a0e94d54faef9d241dc9d8089f9ceea9ccaec6f14f838dc62",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "owner": "Dovelove",
+    "parent_revision": "1678cf910234c98c8dee70de3997d977273d972f",
+    "app_sha256": "a264d4dc92b0719745fd7bcc4861c07ece029e9a42fe391cd46b918136677518",
+    "readme_sha256": "9f34fab1de3f10a4781a58c5549130b63db7a1dce5cce16606fe1212dd71a7df",
+    "default_temperature_before": 0.7,
+    "default_temperature_after": 0.3
+  }
+]

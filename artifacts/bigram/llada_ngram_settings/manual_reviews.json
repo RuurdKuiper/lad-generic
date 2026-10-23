@@ -1,0 +1,782 @@
+{
+  "amsterdam/4/confidence": {
+    "score": 0,
+    "note": "Mostly repeated articles and punctuation; not a usable answer.",
+    "sha256": "eb598690a545690ffe6af1710455354daf63a7879aaa9d04bc574aae80c57970",
+    "fluency": 0
+  },
+  "amsterdam/4/bigram": {
+    "score": 1,
+    "note": "Correct opening followed by a long museum loop.",
+    "sha256": "89475e989e54312e239bf4c47e631c5de0767b73b56a63069ca4cc7ba44a0bcd",
+    "fluency": 1
+  },
+  "amsterdam/4/bigram_rep": {
+    "score": 1,
+    "note": "Relevant opening but severe canals/art/culture/museums loops.",
+    "sha256": "d10666a253acfcf20d52fd141e9a77b152bd77a4bbe2149d482b7493cbfa6487",
+    "fluency": 1
+  },
+  "amsterdam/4/trigram": {
+    "score": 1,
+    "note": "Correct opening and ending question; middle dominated by repeated parks/museums.",
+    "sha256": "461301851f3ed118630f616c9ae0491e34db0ed4286883efe7c6dbbcfebefa5b",
+    "fluency": 1
+  },
+  "amsterdam/4/trigram_rep": {
+    "score": 1,
+    "note": "Correct opening but extensive parks/museums/water-parks repetition.",
+    "sha256": "67218a8b6b167a02be76b6a781d752524bb46628d0db1938ba55dec01dd02c90",
+    "fluency": 1
+  },
+  "sky/4/confidence": {
+    "score": 0,
+    "note": "Mostly disconnected repeated words; no usable explanation.",
+    "sha256": "b32756cd94b07412897e106f2c09de1d602c88046211a35ca2adb4ff470b9611",
+    "fluency": 0
+  },
+  "sky/4/bigram": {
+    "score": 1,
+    "note": "Recognizes Rayleigh scattering but explanation is dominated by wavelength loops.",
+    "sha256": "81fc60193677dda5a6e34754388b44ffca862798657f583cdd36c7d1bfa74747",
+    "fluency": 1
+  },
+  "sky/4/bigram_rep": {
+    "score": 1,
+    "note": "Contains the key scattering idea but major wavelength loops remain.",
+    "sha256": "7dcc4313311587131131922748d2d2adc93c95c620f81f575431874042d6a3c5",
+    "fluency": 1
+  },
+  "sky/4/trigram": {
+    "score": 1,
+    "note": "Some relevant scattering statements but repetition and malformed sentences dominate.",
+    "sha256": "4bff1658c7925266f19a056a1babd5a551e88d2348c68e575dda2a72ad86f56a",
+    "fluency": 1
+  },
+  "sky/4/trigram_rep": {
+    "score": 1,
+    "note": "Relevant topic words but repetitive and incoherent causal explanation.",
+    "sha256": "1087c995fcd1bd5a1a696eba17ed0a653004c478b068ff70820b3f1ab0b1d28d",
+    "fluency": 1
+  },
+  "algebra/4/confidence": {
+    "score": 0,
+    "note": "Disconnected symbols and no solution.",
+    "sha256": "a3cf884f198620a7dc37e1393d97924fa8ccdf16af5b908f1f274cdb43ae2602",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/4/bigram": {
+    "score": 1,
+    "note": "Correct first two transformations but invalid later steps and incorrect x=5.",
+    "sha256": "b6f5e1604807854ec96e03f1b0c879125395a7c694acf8bedf44d040d016a549",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/4/bigram_rep": {
+    "score": 1,
+    "note": "Invalid transformations and incorrect x=5.",
+    "sha256": "0ceac1e8b560add8259544abe08d2558833332133638747a6096b104b4e5e379",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/4/trigram": {
+    "score": 1,
+    "note": "Invalid expansion and transformations; incorrect x=5.",
+    "sha256": "046c9e616575d9696ce1db8f85f9c175a15e26027213a2a38f5a37069c1cf713",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/4/trigram_rep": {
+    "score": 0,
+    "note": "Long symbol loops; no intelligible calculation or answer.",
+    "sha256": "7b8d36acb6bf53c6e51414bc5a68fd6096563b5347ed2e109d54838bafec11d5",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/4/confidence": {
+    "score": 0,
+    "note": "Malformed one-line answer with incorrect speed.",
+    "sha256": "ebd39b10898f810c1fec9b3fe1182ead7351be13582ceaaedd9237420d5690ce",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/4/bigram": {
+    "score": 1,
+    "note": "Incorrect 50 km/h and malformed denominator explanation.",
+    "sha256": "1049e65eb11e8a1af99166ba72abebb323c6dc566a79070d9591244997211823",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/4/bigram_rep": {
+    "score": 1,
+    "note": "Incorrect 50 km/h and malformed denominator explanation.",
+    "sha256": "1049e65eb11e8a1af99166ba72abebb323c6dc566a79070d9591244997211823",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/4/trigram": {
+    "score": 1,
+    "note": "Partly identifies five hours but garbled numbers and incorrect 40 km/h.",
+    "sha256": "78524b69ad7b623d5b6943d4ffae5905a69f019332a91fe9e8710b7e813764b6",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/4/trigram_rep": {
+    "score": 0,
+    "note": "Incorrect 50 km/h with a long numeric/punctuation loop.",
+    "sha256": "0d48b2655c617f3634df6eb6f6c6bc21df09fa4d828b62a7c192cc343375e8d0",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/128/confidence": {
+    "score": 1,
+    "note": "Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven.",
+    "sha256": "7878f66029860078fd4def869607178762864ccb15b387d13a77c03006bce2f0",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "sky/128/confidence": {
+    "score": 2,
+    "note": "Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet.",
+    "sha256": "333d2e54e6cdf4bb9722a313e18d7b96faf3b0b92f4a3967105ed12ee3fe8838",
+    "fluency": 3
+  },
+  "algebra/128/bigram": {
+    "score": 1,
+    "note": "Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven.",
+    "sha256": "47d9e5c17e3ee467d9ed660a5a4cb78136fb96a0cdcea449530997415b74477f",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "sky/128/bigram": {
+    "score": 2,
+    "note": "Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet.",
+    "sha256": "9cbef3218393ae539c63940a2b1b903e328cabcf2da04fc3eb142d7ffcc761b1",
+    "fluency": 3
+  },
+  "algebra/128/bigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven.",
+    "sha256": "47d9e5c17e3ee467d9ed660a5a4cb78136fb96a0cdcea449530997415b74477f",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "sky/128/bigram_rep": {
+    "score": 2,
+    "note": "Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet.",
+    "sha256": "9cbef3218393ae539c63940a2b1b903e328cabcf2da04fc3eb142d7ffcc761b1",
+    "fluency": 3
+  },
+  "algebra/128/trigram": {
+    "score": 1,
+    "note": "Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven.",
+    "sha256": "47d9e5c17e3ee467d9ed660a5a4cb78136fb96a0cdcea449530997415b74477f",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "sky/128/trigram": {
+    "score": 2,
+    "note": "Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet.",
+    "sha256": "9cbef3218393ae539c63940a2b1b903e328cabcf2da04fc3eb142d7ffcc761b1",
+    "fluency": 3
+  },
+  "algebra/128/trigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=7; correct simplification 3x-2=2x+9 should give x=11, not seven.",
+    "sha256": "47d9e5c17e3ee467d9ed660a5a4cb78136fb96a0cdcea449530997415b74477f",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "sky/128/trigram_rep": {
+    "score": 2,
+    "note": "Fluent and explains scattering, but says blue has a shorter wavelength than other colors without excluding violet.",
+    "sha256": "9cbef3218393ae539c63940a2b1b903e328cabcf2da04fc3eb142d7ffcc761b1",
+    "fluency": 3
+  },
+  "amsterdam/128/confidence": {
+    "score": 2,
+    "note": "Fluent relevant overview, but incorrectly places Red Square in Amsterdam.",
+    "sha256": "fadd4c0d4db4a57095296fd2ae0e075792e3831e725d282ad543ca80b949b779",
+    "fluency": 3
+  },
+  "amsterdam/128/bigram": {
+    "score": 3,
+    "note": "Coherent relevant overview with appropriate Amsterdam landmarks.",
+    "sha256": "e8e54eadca2de301d1cfc3fcc120fde28f5042efb70a21208ad9d02873be462f",
+    "fluency": 3
+  },
+  "amsterdam/128/bigram_rep": {
+    "score": 3,
+    "note": "Coherent relevant overview with appropriate Amsterdam landmarks.",
+    "sha256": "e8e54eadca2de301d1cfc3fcc120fde28f5042efb70a21208ad9d02873be462f",
+    "fluency": 3
+  },
+  "amsterdam/128/trigram": {
+    "score": 2,
+    "note": "Fluent overview but lists the Queen's House as an Amsterdam landmark; likely landmark substitution.",
+    "sha256": "a90ca9f2e475fcb879e784221d8ec4b5e5c0c6a3bfd8ffa2a63f232a502b98d3",
+    "fluency": 3
+  },
+  "amsterdam/128/trigram_rep": {
+    "score": 2,
+    "note": "Fluent overview but lists the Queen's House as an Amsterdam landmark; likely landmark substitution.",
+    "sha256": "a90ca9f2e475fcb879e784221d8ec4b5e5c0c6a3bfd8ffa2a63f232a502b98d3",
+    "fluency": 3
+  },
+  "train/128/bigram": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/128/bigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/128/trigram": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/128/trigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/128/confidence": {
+    "score": 2,
+    "note": "Correct 48 km/h but omits the requested explanation.",
+    "sha256": "787e2f94b2c7b2d4f204943ad4058e171a2d715ad5f5bdf16583bfdd9726056e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "amsterdam/8/confidence": {
+    "score": 1,
+    "note": "Very short malformed fragment, although the basic capital claim is recognizable.",
+    "sha256": "1990783a58dee4dbb9c91aec26f8fe74c5d69aba7c5ff663231aa1fcb3eaa25b",
+    "fluency": 1
+  },
+  "amsterdam/8/bigram": {
+    "score": 2,
+    "note": "Mostly intelligible overview with repeated museums/nightlife and awkward cuisine/shop wording.",
+    "sha256": "684d3938eaf9c7ec032f9c25067943eeb241eeac06467148ffabb4b9639c30e0",
+    "fluency": 2
+  },
+  "amsterdam/8/bigram_rep": {
+    "score": 2,
+    "note": "Mostly coherent historical overview; minor grammar and list problems remain.",
+    "sha256": "e211446ca354234752761422a32d715a55c3d34e6193945911f3ad13c269ecc6",
+    "fluency": 2
+  },
+  "amsterdam/8/trigram": {
+    "score": 2,
+    "note": "Mostly coherent but repeated art museums/nightlife/cafes and duplicated punctuation.",
+    "sha256": "e06431737059176d96252aa4ca6b8b79c3aae22d33455150ddb3cacb4d0837dd",
+    "fluency": 2
+  },
+  "amsterdam/8/trigram_rep": {
+    "score": 1,
+    "note": "Relevant overview but several broken clauses and repeated nightlife/cafes.",
+    "sha256": "b5c34f1104b7b71b92b6a833528fc91d99b5d9beade7c9f9b7ea55fa2a623d77",
+    "fluency": 1
+  },
+  "sky/8/confidence": {
+    "score": 1,
+    "note": "Relevant scattering words but malformed clauses, Rayleighleigh typo and misleading sun-is-blue statement.",
+    "sha256": "195241b97ff8b7b43cfc95d58b341a17da97fac2321375e70803d4856d6a4f9c",
+    "fluency": 1
+  },
+  "algebra/8/confidence": {
+    "score": 1,
+    "note": "Incorrect x=5 and invalid algebra after the initial expansion.",
+    "sha256": "b96f986daa3fb30e90656056a216aeff72c96237423d1f4fcabe0194dd315f86",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/8/bigram": {
+    "score": 1,
+    "note": "Incorrect x=5 and invalid algebra after the initial expansion.",
+    "sha256": "5c4dce5f14913f50d4b6b130e0c0220f2f064c992f589422870e21d74bbd2079",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/8/bigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=5 and invalid algebra after the initial expansion.",
+    "sha256": "5c4dce5f14913f50d4b6b130e0c0220f2f064c992f589422870e21d74bbd2079",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/8/trigram": {
+    "score": 1,
+    "note": "Incorrect x=5 and invalid algebra after the initial expansion.",
+    "sha256": "5c33c40dbd09c4d7a16588ffbb2b25e7e34580a1a53968f5c0d9fc36b464d821",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/8/trigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=5 and invalid algebra after the initial expansion.",
+    "sha256": "5c33c40dbd09c4d7a16588ffbb2b25e7e34580a1a53968f5c0d9fc36b464d821",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "sky/8/bigram": {
+    "score": 1,
+    "note": "Coherent opening and close, but most of the output repeats wavelengths.",
+    "sha256": "8c586873809b4c7ba7fd5feadb154eea7d125c2cb3dac937c748ccda73a7767a",
+    "fluency": 1
+  },
+  "sky/8/bigram_rep": {
+    "score": 1,
+    "note": "Severe blue/violet wavelength loops and malformed physical explanation.",
+    "sha256": "46ccc9de6d09f52dfb4fae90b5fa44a3cc73791a99a0b039165a2f0069e951ed",
+    "fluency": 1
+  },
+  "sky/8/trigram": {
+    "score": 2,
+    "note": "Explains shorter-wavelength scattering, but the violet/vision sentences are malformed and partly contradictory.",
+    "sha256": "56cb365814a0a52fbe0370997bb3ca63ebb206b1f18545b4bbcb30f00cef2312",
+    "fluency": 2
+  },
+  "sky/8/trigram_rep": {
+    "score": 1,
+    "note": "Some correct scattering explanation, but orange loops and contradictory clauses remain.",
+    "sha256": "5b2603966d6ced37699b829663a25d2712dac628cf532cc20949c39eb5cdb128",
+    "fluency": 1
+  },
+  "train/8/confidence": {
+    "score": 1,
+    "note": "Incorrect 40 km/h and no explanation.",
+    "sha256": "be883f253aa84a8236f2a691144a76ca7527c631adb409aebacf7d871ea1fae7",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/8/bigram": {
+    "score": 2,
+    "note": "Correct 48 km/h but explanation incorrectly defines total distance rather than average speed.",
+    "sha256": "be5302714611f3617f8ef7073bdac7a0139206b10acdf1df986b76d023e54760",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/8/bigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h but explanation incorrectly defines total distance rather than average speed.",
+    "sha256": "be5302714611f3617f8ef7073bdac7a0139206b10acdf1df986b76d023e54760",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/8/trigram": {
+    "score": 1,
+    "note": "Incorrect 40 km/h with inconsistent calculation and formulas.",
+    "sha256": "981423b20ed94ed445d8c1915de54df6f1f07838a539d7152736e54ca59c6b11",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/8/trigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h but explanation incorrectly defines total distance rather than average speed.",
+    "sha256": "7fe1e4f0d30ae95e7715ed028f784a1e0b5b112a6497708a5c58e1843ad3f7f2",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "amsterdam/64/confidence": {
+    "score": 2,
+    "note": "Relevant and coherent but duplicated comma and missing is in the final sentence.",
+    "sha256": "32f99128725e2e42af110c7ce1c9056cc71d448209bee4de8e44f75a528af8cd",
+    "fluency": 2
+  },
+  "amsterdam/64/trigram": {
+    "score": 2,
+    "note": "Fluent relevant overview, but lists Anne Frank House and Anne Frank Museum as separate landmarks.",
+    "sha256": "828fb487400396e70e2867b68f0d15c88e9a062d523aaa6c8486d56ef32d4976",
+    "fluency": 3
+  },
+  "amsterdam/64/trigram_rep": {
+    "score": 2,
+    "note": "Fluent relevant overview, but lists Anne Frank House and Anne Frank Museum as separate landmarks.",
+    "sha256": "828fb487400396e70e2867b68f0d15c88e9a062d523aaa6c8486d56ef32d4976",
+    "fluency": 3
+  },
+  "algebra/64/bigram": {
+    "score": 1,
+    "note": "Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.",
+    "sha256": "7878f66029860078fd4def869607178762864ccb15b387d13a77c03006bce2f0",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "amsterdam/64/bigram": {
+    "score": 3,
+    "note": "Coherent relevant overview with canals, arts, nightlife and public culture.",
+    "sha256": "ed89c9fec89447b9f08fca27c44eb42253c181218f30bd95eb5c2fe3bd42101f",
+    "fluency": 3
+  },
+  "amsterdam/64/bigram_rep": {
+    "score": 3,
+    "note": "Coherent relevant overview with canals, arts, nightlife and public culture.",
+    "sha256": "ed89c9fec89447b9f08fca27c44eb42253c181218f30bd95eb5c2fe3bd42101f",
+    "fluency": 3
+  },
+  "sky/64/confidence": {
+    "score": 2,
+    "note": "Fluent, but incorrectly says blue scatters more easily than violet.",
+    "sha256": "368082d056f5c7d53ae0e52722a574bba8d920523e3e194144a89f7fb560eead",
+    "fluency": 3
+  },
+  "sky/64/bigram": {
+    "score": 2,
+    "note": "Main scattering idea is sound, but violet explanation and wording are confused; duplicated punctuation.",
+    "sha256": "70af6d275b0f3eaab15ebf4e070b54b72cef7654496b75bae5153dabd0b9331e",
+    "fluency": 2
+  },
+  "sky/64/bigram_rep": {
+    "score": 2,
+    "note": "Main scattering idea is sound, but violet explanation and wording are confused; duplicated punctuation.",
+    "sha256": "70af6d275b0f3eaab15ebf4e070b54b72cef7654496b75bae5153dabd0b9331e",
+    "fluency": 2
+  },
+  "sky/64/trigram": {
+    "score": 2,
+    "note": "Fluent basic scattering explanation but misleading greater-atmospheric-thickness-during-day claim.",
+    "sha256": "cc7bb1e91cf4b27db18762278c09b3f5b393c96a3a492792e22ba5f577d88666",
+    "fluency": 3
+  },
+  "sky/64/trigram_rep": {
+    "score": 2,
+    "note": "Fluent basic scattering explanation but misleading greater-atmospheric-thickness-during-day claim.",
+    "sha256": "cc7bb1e91cf4b27db18762278c09b3f5b393c96a3a492792e22ba5f577d88666",
+    "fluency": 3
+  },
+  "train/64/confidence": {
+    "score": 2,
+    "note": "Correct 48 km/h but no requested explanation.",
+    "sha256": "fe6b7147c4b7fbd466bdfbc7bab1b35387781bb32abb8c53a6df788f63112a6d",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "amsterdam/16/trigram_rep": {
+    "score": 2,
+    "note": "Mostly intelligible but repeated canals, museums and cultural-attraction lists.",
+    "sha256": "9d77f4ef2e52bcaffc5a6911cd940c31554b490cce11f8d4e5f9563e34e9a16c",
+    "fluency": 2
+  },
+  "amsterdam/16/confidence": {
+    "score": 1,
+    "note": "Relevant opening but long and-loop, malformed grammar and R Museum fragment.",
+    "sha256": "012b5bccddb0b0e9518719a5795734cd794f711c7f684b9c5b2f290ea4fe8dba",
+    "fluency": 1
+  },
+  "algebra/64/confidence": {
+    "score": 1,
+    "note": "Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.",
+    "sha256": "425cdf75a1c087c8e8fb82aa9df36890a2714fecb15b09fc43798c76567db66e",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/64/bigram_rep": {
+    "score": 1,
+    "note": "Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.",
+    "sha256": "7878f66029860078fd4def869607178762864ccb15b387d13a77c03006bce2f0",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/64/trigram": {
+    "score": 1,
+    "note": "Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.",
+    "sha256": "3a42e956b1ee165520e012af84ac3ea22dc04efac61e747bf90965cadc7b9d4d",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/64/trigram_rep": {
+    "score": 1,
+    "note": "Incorrect solution (seven or five); valid initial expansion is followed by invalid algebra.",
+    "sha256": "3a42e956b1ee165520e012af84ac3ea22dc04efac61e747bf90965cadc7b9d4d",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/64/trigram": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/64/trigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/64/bigram": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/64/bigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h, but omits the requested brief explanation.",
+    "sha256": "0bbca92c45a07802b4f554a22aa6031319dd5af80f3ee381947bd8e4ab448a3e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "amsterdam/16/trigram": {
+    "score": 2,
+    "note": "Mostly intelligible but repeated canals, museums and cultural-attraction lists.",
+    "sha256": "9d77f4ef2e52bcaffc5a6911cd940c31554b490cce11f8d4e5f9563e34e9a16c",
+    "fluency": 2
+  },
+  "train/16/trigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h but omits the requested explanation.",
+    "sha256": "787e2f94b2c7b2d4f204943ad4058e171a2d715ad5f5bdf16583bfdd9726056e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/16/bigram": {
+    "score": 2,
+    "note": "Correct 48 km/h but omits the requested explanation.",
+    "sha256": "787e2f94b2c7b2d4f204943ad4058e171a2d715ad5f5bdf16583bfdd9726056e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "train/16/bigram_rep": {
+    "score": 2,
+    "note": "Correct 48 km/h but omits the requested explanation.",
+    "sha256": "787e2f94b2c7b2d4f204943ad4058e171a2d715ad5f5bdf16583bfdd9726056e",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "amsterdam/16/bigram": {
+    "score": 2,
+    "note": "Mostly coherent overview but repeated canals/clubs/museums/music and duplicated punctuation.",
+    "sha256": "c6b860c94f935270f2539ed72cb6864507da78465be7e8aec613b22f5679156c",
+    "fluency": 2
+  },
+  "amsterdam/16/bigram_rep": {
+    "score": 2,
+    "note": "Mostly coherent overview, but Red Square is misplaced in Amsterdam and commas repeat.",
+    "sha256": "5ef3b1952a0288904ace357f91eb7090d88a90f634621bafdf42665ddfdd0c3c",
+    "fluency": 2
+  },
+  "sky/16/confidence": {
+    "score": 2,
+    "note": "Mostly sound explanation but awkward duplicated punctuation and an unconvincing lower-sun ending.",
+    "sha256": "4f48bfbeaee8848989ff1d54aac7093ef03af88bf65da22706326247fb1b110c",
+    "fluency": 2
+  },
+  "sky/16/bigram": {
+    "score": 2,
+    "note": "Key blue-versus-red scattering idea present, but several broken clauses and confused violet/absorption sentence.",
+    "sha256": "404775a6a4b130dc7996ea76cbca42287abf2465f551203d4ce060358f4bdeb1",
+    "fluency": 2
+  },
+  "sky/16/bigram_rep": {
+    "score": 2,
+    "note": "Key blue-versus-red scattering idea present, but several broken clauses and confused violet/absorption sentence.",
+    "sha256": "404775a6a4b130dc7996ea76cbca42287abf2465f551203d4ce060358f4bdeb1",
+    "fluency": 2
+  },
+  "sky/16/trigram": {
+    "score": 2,
+    "note": "Mostly meaningful scattering explanation but duplicated absorbed and awkward/imprecise violet conclusion.",
+    "sha256": "a5af3e21ca157429f81712244cd7c950d99237812944355f703513d3527f1a05",
+    "fluency": 2
+  },
+  "sky/16/trigram_rep": {
+    "score": 2,
+    "note": "Mostly meaningful scattering opening, but duplicated words and confused sunrise/sunset explanation.",
+    "sha256": "833e78bcccc78d3ed3d3403db42b738546560765171e115998d52d40d2956eea",
+    "fluency": 2
+  },
+  "train/16/confidence": {
+    "score": 0,
+    "note": "Truncated malformed fragment without a numeric answer.",
+    "sha256": "4b81536c324ca19ba5129975e9fd48bb3224261dbba0031e18b61fa0a381f514",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/16/trigram": {
+    "score": 2,
+    "note": "Correct 48 km/h, but says outbound time is 22 hours and 22+3=5; the worked solution is invalid.",
+    "sha256": "4a0d5ee2e4ba68060031c7837426991ad18cbc2a4d31fc1a59ec2788226efb47",
+    "answer_correct": true,
+    "worked_correct": false
+  },
+  "amsterdam/32/confidence": {
+    "score": 2,
+    "note": "Recognizable relevant overview but several malformed phrases and repeated canals/bridges.",
+    "sha256": "d926809a86f0fbec8f64caeefe0605b0e8c6989a05548d72c77359548e6ae78d",
+    "fluency": 2
+  },
+  "amsterdam/32/bigram": {
+    "score": 2,
+    "note": "Mostly coherent but misspells a museum name and incorrectly calls canals the current primary transportation mode.",
+    "sha256": "16f499cef4663647fee73c3363f8221a21cd88c59f4c23c262e770617d75adad",
+    "fluency": 2
+  },
+  "amsterdam/32/bigram_rep": {
+    "score": 2,
+    "note": "Mostly coherent but misspells a museum name and incorrectly calls canals the current primary transportation mode.",
+    "sha256": "16f499cef4663647fee73c3363f8221a21cd88c59f4c23c262e770617d75adad",
+    "fluency": 2
+  },
+  "algebra/16/confidence": {
+    "score": 1,
+    "note": "Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.",
+    "sha256": "a2d0831e894cff4f719da4f182a698eaeff583fee528402872d17ac6da525db8",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/16/bigram": {
+    "score": 1,
+    "note": "Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.",
+    "sha256": "7ee71f29c54df3d341c2a8733e21604df3ad997fd83971dbcf7045e0c8c48ea6",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/16/bigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.",
+    "sha256": "7ee71f29c54df3d341c2a8733e21604df3ad997fd83971dbcf7045e0c8c48ea6",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/16/trigram": {
+    "score": 1,
+    "note": "Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.",
+    "sha256": "32b69d178f6f2866b94612a28673ff6308bfdfdc1f0478a23b3b0243efe8c267",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/16/trigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=5 after valid initial simplification; subtracting terms does not produce the stated result.",
+    "sha256": "32b69d178f6f2866b94612a28673ff6308bfdfdc1f0478a23b3b0243efe8c267",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "amsterdam/32/trigram": {
+    "score": 2,
+    "note": "Fluent overview but current-primary-transport canals claim and unsupported Red House landmark.",
+    "sha256": "19bb2c7e9288fc649293ec0a05e2c0ba7eee8f532d136bc6e90f77110d69968a",
+    "fluency": 3
+  },
+  "amsterdam/32/trigram_rep": {
+    "score": 2,
+    "note": "Fluent overview but current-primary-transport canals claim and unsupported Red House landmark.",
+    "sha256": "19bb2c7e9288fc649293ec0a05e2c0ba7eee8f532d136bc6e90f77110d69968a",
+    "fluency": 3
+  },
+  "sky/32/confidence": {
+    "score": 2,
+    "note": "Mostly useful explanation, with grammatical slips such as like as and from the distance.",
+    "sha256": "360b031959a8b8b0324966c3b30985ed96e490c1bfeb6d3cafed5b46ac73a698",
+    "fluency": 2
+  },
+  "sky/32/bigram": {
+    "score": 2,
+    "note": "Fluent scattering overview but overgeneralizes blue as shorter-wavelength than other colors, including no violet exception.",
+    "sha256": "6890afa8a900011f2cd70b61981bdddf4ec7d3906bde85612e39dc959b0dbbf4",
+    "fluency": 3
+  },
+  "sky/32/bigram_rep": {
+    "score": 2,
+    "note": "Fluent scattering overview but overgeneralizes blue as shorter-wavelength than other colors, including no violet exception.",
+    "sha256": "6890afa8a900011f2cd70b61981bdddf4ec7d3906bde85612e39dc959b0dbbf4",
+    "fluency": 3
+  },
+  "sky/32/trigram": {
+    "score": 2,
+    "note": "Fluent scattering overview but repeatedly overgeneralizes blue as scattering more than other colors, without excluding violet.",
+    "sha256": "51b8c641a3eacb9694cd29e8993e396329113aa4cf67624987e6de81ab3179c1",
+    "fluency": 3
+  },
+  "sky/32/trigram_rep": {
+    "score": 2,
+    "note": "Fluent scattering overview but repeatedly overgeneralizes blue as scattering more than other colors, without excluding violet.",
+    "sha256": "51b8c641a3eacb9694cd29e8993e396329113aa4cf67624987e6de81ab3179c1",
+    "fluency": 3
+  },
+  "algebra/32/confidence": {
+    "score": 1,
+    "note": "Incorrect x=5; invalid transformation after the initial expansion.",
+    "sha256": "550d7f91fda7e9a1e51d298ff8f9d908f9a7c2d28a485e7c7c48ae2bfaa64bc5",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/32/bigram": {
+    "score": 1,
+    "note": "Incorrect x=5; invalid transformation after the initial expansion.",
+    "sha256": "a77d1fec8bbf6480b9733ce10665fd5ea129a1784e0b4dce79327d3584d29edf",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/32/bigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=5; invalid transformation after the initial expansion.",
+    "sha256": "a77d1fec8bbf6480b9733ce10665fd5ea129a1784e0b4dce79327d3584d29edf",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/32/trigram": {
+    "score": 1,
+    "note": "Incorrect x=5; invalid transformation after the initial expansion.",
+    "sha256": "d78b45303d1094bd4ebf6f1ac7bbf26f3ad1f303a99b12296b29703e0b082aa8",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "algebra/32/trigram_rep": {
+    "score": 1,
+    "note": "Incorrect x=5; invalid transformation after the initial expansion.",
+    "sha256": "d78b45303d1094bd4ebf6f1ac7bbf26f3ad1f303a99b12296b29703e0b082aa8",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/32/confidence": {
+    "score": 0,
+    "sha256": "92ed5a78c15972dfa03b8a94d7b8e335e73652231d10516a4ad5d3dd08be7f37",
+    "note": "Malformed fragment without numeric answer.",
+    "answer_correct": false,
+    "worked_correct": false
+  },
+  "train/32/bigram": {
+    "score": 3,
+    "sha256": "67e8899f197e31ee138b8ea9accbd49aaa91b99deabcee980d3591e90e4e5935",
+    "note": "Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "train/32/bigram_rep": {
+    "score": 3,
+    "sha256": "67e8899f197e31ee138b8ea9accbd49aaa91b99deabcee980d3591e90e4e5935",
+    "note": "Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "train/32/trigram": {
+    "score": 3,
+    "sha256": "67e8899f197e31ee138b8ea9accbd49aaa91b99deabcee980d3591e90e4e5935",
+    "note": "Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h.",
+    "answer_correct": true,
+    "worked_correct": true
+  },
+  "train/32/trigram_rep": {
+    "score": 3,
+    "sha256": "67e8899f197e31ee138b8ea9accbd49aaa91b99deabcee980d3591e90e4e5935",
+    "note": "Correct worked solution: outbound 2h, return 3h, total 240km/5h=48km/h.",
+    "answer_correct": true,
+    "worked_correct": true
+  }
+}

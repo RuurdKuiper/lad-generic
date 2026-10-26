@@ -1,9 +1,53 @@
 import json
+import math
 
 import pytest
 import torch
 
 from diffusion_lm.training import DEFAULT_GENERATION_PROMPTS, _available_output_dir, _generation_inference_settings, _generation_perplexity_interval, _load_generation_prompts, _resolve_learning_rate, generation_validation
+from diffusion_lm.training import _build_learning_rate_scheduler
+
+
+@pytest.mark.parametrize("schedule_name", ["cosine", "linear"])
+@pytest.mark.parametrize("peak", [1e-5, 4e-5])
+def test_learning_rate_warms_up_then_stays_above_one_tenth_of_peak(schedule_name, peak):
+    parameter = torch.nn.Parameter(torch.zeros(()))
+    optimizer = torch.optim.SGD([parameter], lr=peak)
+    scheduler = _build_learning_rate_scheduler(
+        {"scheduler": schedule_name, "warmup_steps": 25}, optimizer, 1000, peak,
+    )
+    rates = [optimizer.param_groups[0]["lr"]]
+    for step in range(1100):
+        optimizer.step()
+        scheduler.step()
+        rates.append(optimizer.param_groups[0]["lr"])
+    assert rates[0] == 0
+    assert rates[25] == pytest.approx(peak)
+    assert min(rates[25:]) == pytest.approx(peak / 10)
+    assert rates[1000] == rates[1100] == pytest.approx(peak / 10)
+    assert all(a >= b for a, b in zip(rates[25:], rates[26:]))
+    progress = (500 - 25) / (1000 - 25)
+    decay = (1 + math.cos(math.pi * progress)) / 2 if schedule_name == "cosine" else 1 - progress
+    assert rates[500] == pytest.approx(peak / 10 + 0.9 * peak * decay)
+
+
+@pytest.mark.parametrize("endpoint", [1e-6, 3e-6])
+def test_explicit_learning_rate_endpoint_is_supported_for_cosine(endpoint):
+    optimizer = torch.optim.SGD([torch.nn.Parameter(torch.zeros(()))], lr=1e-5)
+    scheduler = _build_learning_rate_scheduler(
+        {"scheduler": "cosine", "end_learning_rate": endpoint}, optimizer, 10, 1e-5,
+    )
+    for step in range(10):
+        optimizer.step()
+        scheduler.step()
+    assert optimizer.param_groups[0]["lr"] == pytest.approx(endpoint)
+
+
+@pytest.mark.parametrize("endpoint", [0, 1e-7, 2e-5, float("nan")])
+def test_endpoint_more_than_tenfold_below_peak_is_rejected(endpoint):
+    optimizer = torch.optim.SGD([torch.nn.Parameter(torch.zeros(()))], lr=1e-5)
+    with pytest.raises(ValueError, match="one tenth"):
+        _build_learning_rate_scheduler({"scheduler": "cosine", "end_learning_rate": endpoint}, optimizer, 1000, 1e-5)
 
 
 def test_available_output_dir_adds_incrementing_suffixes(tmp_path):

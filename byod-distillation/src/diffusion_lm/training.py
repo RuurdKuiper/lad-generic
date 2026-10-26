@@ -13,8 +13,9 @@ import torch
 from tqdm.auto import tqdm
 from accelerate import Accelerator, DataLoaderConfiguration
 from torch.optim import AdamW
+from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, get_polynomial_decay_schedule_with_warmup, get_scheduler
+from transformers import AutoTokenizer, get_scheduler
 
 from .data import DenoisingCollator
 from .loss import masked_denoising_loss, selected_denoising_loss
@@ -197,24 +198,28 @@ def _resolve_learning_rate(config: dict[str, Any], num_processes: int = 1) -> tu
 def _build_learning_rate_scheduler(
     config: dict[str, Any], optimizer: torch.optim.Optimizer, max_updates: int, initial_learning_rate: float
 ):
-    """Build the configured scheduler, optionally with a nonzero linear endpoint."""
+    """Warm up, then decay at most tenfold from the resolved peak rate."""
     scheduler_name = str(config.get("scheduler", "linear")).lower()
     warmup_steps = int(config.get("warmup_steps", 0))
-    end_learning_rate = config.get("end_learning_rate")
-    if end_learning_rate is None:
+    if scheduler_name not in {"linear", "cosine"}:
+        if config.get("end_learning_rate") is not None:
+            raise ValueError("end_learning_rate requires scheduler=linear or cosine")
         return get_scheduler(scheduler_name, optimizer, warmup_steps, max_updates)
-    if scheduler_name != "linear":
-        raise ValueError("end_learning_rate is supported only with scheduler=linear")
-    end_learning_rate = float(end_learning_rate)
-    if end_learning_rate < 0 or end_learning_rate > initial_learning_rate:
-        raise ValueError("end_learning_rate must be between zero and the resolved learning_rate")
-    return get_polynomial_decay_schedule_with_warmup(
-        optimizer,
-        num_warmup_steps=warmup_steps,
-        num_training_steps=max_updates,
-        lr_end=end_learning_rate,
-        power=1.0,
-    )
+    end_learning_rate = float(config.get("end_learning_rate", initial_learning_rate / 10))
+    floor = initial_learning_rate / 10
+    if (not math.isfinite(end_learning_rate) or end_learning_rate > initial_learning_rate
+            or (end_learning_rate < floor and not math.isclose(end_learning_rate, floor))):
+        raise ValueError("end_learning_rate must be between one tenth of the peak and the peak learning_rate")
+    floor_ratio = max(floor, end_learning_rate) / initial_learning_rate
+
+    def schedule(step):
+        if step < warmup_steps:
+            return step / max(1, warmup_steps)
+        progress = min(1.0, max(0.0, (step - warmup_steps) / max(1, max_updates - warmup_steps)))
+        decay = (1 + math.cos(math.pi * progress)) / 2 if scheduler_name == "cosine" else 1 - progress
+        return floor_ratio + (1 - floor_ratio) * decay
+
+    return LambdaLR(optimizer, schedule)
 
 
 def _available_output_dir(path: Path) -> Path:
@@ -510,6 +515,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     initial_norms = _normalization_state(model)
     resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
     resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["frontier_padding_mode"] = train_collator.frontier_padding_mode; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate; resolved["resolved_training_precision"] = precision
+    if str(config.get("scheduler", "linear")).lower() in {"linear", "cosine"}:
+        resolved["resolved_end_learning_rate"] = config.get("end_learning_rate", resolved_learning_rate / 10)
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
     _write_json(output / "runtime_environment.json", {
         "torch_version": torch.__version__,
@@ -680,6 +687,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                 train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
                 progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{train_avg:.4f}")
                 _append_jsonl(metrics_path, {"split": "train", "step": update_step, "weighted_loss": loss_value,
+                                            "learning_rate": scheduler.get_last_lr()[0],
                                             "elapsed_seconds": time.perf_counter() - training_started,
                                             "distillation_weight": distillation["weight"],
                                             "supervised_tokens": supervised_tokens,

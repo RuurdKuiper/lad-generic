@@ -38,6 +38,11 @@ L = (1 - weight) * original_denoising_loss
     + weight * temperature² * KL(p_teacher,T || p_student,T)
 ```
 
+Both experimental objectives warm up for 25 updates to a peak learning rate of
+`1e-5`, then cosine-decay to `1e-6`. After warmup, decay is limited to a factor
+of ten from the resolved peak, including when the peak learning rate is changed.
+The current learning rate is saved in the training metrics.
+
 The defaults are **weight 0.5** and **temperature 1.0**. The KL uses every
 vocabulary token, not just the probability of the ground-truth label and not a
 top-k approximation. It is applied at the same supervised positions as the

@@ -1,0 +1,19 @@
+# Matches distillation.yaml except that the teacher is disabled entirely.
+max_updates: 500
+batch_size: 1
+eval_batch_size: 1
+gradient_accumulation_steps: 4
+gradient_checkpointing: true
+train_normalization_layers: false
+num_workers: 2
+warmup_steps: 25
+logging_steps: 1
+validation_steps: 50
+checkpoint_steps: 50
+validation_samples: 100
+generation_perplexity: {enabled: false}
+distillation:
+  enabled: false
+  weight: 0.0
+  temperature: 1.0
+  chunk_size: 64

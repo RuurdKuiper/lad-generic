@@ -1,0 +1,187 @@
+"""Exercise the public setup cells without network access or a CUDA build."""
+import importlib.metadata
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+import sys
+from types import SimpleNamespace
+
+import pytest
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def code_cell(marker):
+    notebook = json.loads((ROOT / "notebooks/train_distillation.ipynb").read_text())
+    return next(
+        "".join(cell["source"])
+        for cell in notebook["cells"]
+        if cell["cell_type"] == "code" and marker in "".join(cell["source"])
+    )
+
+
+@pytest.mark.parametrize("existing_checkout", [False, True])
+@pytest.mark.parametrize("torchao_version", [None, "0.10.0", "0.16.0"])
+def test_default_setup_imports_checkout_in_live_kernel_without_optional_cuda_builds(
+    tmp_path, monkeypatch, torchao_version, existing_checkout,
+):
+    checkout = tmp_path / "BYOD"
+    package = checkout / "byod-distillation/src/diffusion_lm"
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text("")
+    if existing_checkout:
+        (checkout / ".git").mkdir()
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+    monkeypatch.delitem(sys.modules, "diffusion_lm", raising=False)
+    real_version = importlib.metadata.version
+
+    def version(name):
+        if name != "torchao":
+            return real_version(name)
+        if torchao_version is None:
+            raise importlib.metadata.PackageNotFoundError(name)
+        return torchao_version
+
+    monkeypatch.setattr(importlib.metadata, "version", version)
+    installed = {"torch": "2.8.0+cu126", "triton": "3.4.0", "nvidia-cublas-cu12": "12.6.4.1"}
+    monkeypatch.setattr(importlib.metadata, "distributions", lambda: [
+        SimpleNamespace(metadata={"Name": name}, version=value)
+        for name, value in {**installed, "gradio": "5.0.0"}.items()
+    ])
+    commands = []
+    constraints = []
+
+    def run(command, **kwargs):
+        commands.append(command)
+        if "--constraint" in command:
+            constraints.extend(Path(command[command.index("--constraint") + 1]).read_text().splitlines())
+
+    monkeypatch.setattr(subprocess, "run", run)
+    source = code_cell("def setup_step").replace(
+        'Path("/content/lad-generic-distillation")', f"Path({str(checkout)!r})",
+    )
+    namespace = {}
+    try:
+        exec(compile(source, "notebook-setup", "exec"), namespace)
+    finally:
+        # The simulated checkout must not remain importable by later tests.
+        # monkeypatch restores any real package removed before this cell ran.
+        sys.modules.pop("diffusion_lm", None)
+
+    assert Path(namespace["diffusion_lm"].__file__) == package / "__init__.py"
+    installs = [command for command in commands if "install" in command]
+    assert len(installs) == 1 and ".[colab]" in installs[0]
+    assert set(constraints) == {f"{name}=={value}" for name, value in installed.items()}
+    if existing_checkout:
+        assert commands[0][-2:] == ["pull", "--ff-only"]
+    else:
+        assert "--depth" in commands[0] and "1" in commands[0]
+        assert commands[0][commands[0].index("--branch") + 1] == "experiment/ar-distillation"
+        assert "--sparse" in commands[0]
+    assert any(command[-3:] == ["sparse-checkout", "set", "byod-distillation"] for command in commands)
+    assert "-q" not in installs[0]
+    assert bool([command for command in commands if "uninstall" in command]) == (
+        torchao_version == "0.10.0"
+    )
+
+
+def test_default_extra_has_no_fp8_or_quantization_dependency():
+    tomllib = pytest.importorskip("tomllib")
+
+    extras = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["optional-dependencies"]
+    assert extras["colab"] == ["ipywidgets>=8"]
+    assert extras["demo"] == ["gradio>=6,<7"]
+    assert "fp8" not in extras
+    assert "fp8" not in (ROOT / "notebooks/train_distillation.ipynb").read_text().lower()
+    assert extras["cuda"] == ["bitsandbytes>=0.45"]
+
+
+@pytest.mark.parametrize("gradio_version", [None, "5.49.0", "6.0.0", "6.17.3", "7.0.0"])
+def test_inference_installs_gradio_only_when_needed(monkeypatch, gradio_version):
+    from diffusion_lm import demo
+
+    def version(name):
+        assert name == "gradio"
+        if gradio_version is None:
+            raise importlib.metadata.PackageNotFoundError(name)
+        return gradio_version
+
+    monkeypatch.setattr(importlib.metadata, "version", version)
+    monkeypatch.setattr(importlib, "reload", lambda module: module)
+    launches = []
+    monkeypatch.setattr(demo, "InferenceDemo", lambda run: SimpleNamespace(
+        launch=lambda **kwargs: launches.append(kwargs),
+    ))
+    commands = []
+    monkeypatch.setattr(subprocess, "run", lambda command, **kwargs: commands.append(command))
+    exec(compile(code_cell("inference_demo = demo_helpers.InferenceDemo"), "notebook-demo", "exec"), {"run_dir": ROOT})
+    assert commands == ([] if gradio_version in {"6.0.0", "6.17.3"} else [[
+        sys.executable, "-m", "pip", "install", "--prefer-binary", "gradio>=6,<7",
+    ]])
+    assert launches == [{"share": True, "inline": False}]
+
+
+@pytest.mark.parametrize("present", [[], ["transformer-engine-cu13"], [
+    "transformer-engine", "transformer-engine-torch", "transformer-engine-cu12",
+]])
+def test_cleanup_only_uninstalls_present_fp8_distributions(monkeypatch, present):
+    from diffusion_lm.notebook import remove_unused_transformer_engine
+
+    def version(name):
+        if name not in present:
+            raise importlib.metadata.PackageNotFoundError(name)
+        return "2.13.0"
+
+    monkeypatch.setattr(importlib.metadata, "version", version)
+    commands = []
+    monkeypatch.setattr(subprocess, "run", lambda command, **kwargs: commands.append(command))
+    assert remove_unused_transformer_engine() == present
+    if present:
+        assert commands == [[sys.executable, "-m", "pip", "uninstall", "-y", *present]]
+    else:
+        assert not commands
+
+
+@pytest.mark.parametrize("mode", ["quick", "paper"])
+def test_training_cleans_environment_before_import_and_logs_every_update(monkeypatch, tmp_path, mode):
+    from diffusion_lm import notebook as notebook_helpers
+
+    events = []
+    monkeypatch.setattr(importlib, "reload", lambda module: events.append("reload") or module)
+    monkeypatch.setattr(notebook_helpers, "remove_unused_transformer_engine", lambda: events.append("cleanup"))
+    commands = []
+    monkeypatch.setattr(notebook_helpers, "run_with_dashboard", lambda command, *args: commands.append(command))
+    cuda = SimpleNamespace(is_available=lambda: True, get_device_name=lambda index: "Test GPU")
+    monkeypatch.setitem(sys.modules, "torch", SimpleNamespace(cuda=cuda))
+
+    def config(*args, **kwargs):
+        assert "cleanup" in events
+        assert kwargs["config_path"] == "configs/my_run.yaml"
+        return {"display_name": "Test", "max_updates": 25000, "lora_r": 128}
+
+    monkeypatch.setitem(sys.modules, "train", SimpleNamespace(load_training_config=config))
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+    namespace = {
+        "PROJECT_DIR": ROOT, "mode": SimpleNamespace(value=mode),
+        "model": SimpleNamespace(value="llama"), "save_to_drive": SimpleNamespace(value=False),
+        "config_file": SimpleNamespace(value="configs/my_run.yaml"),
+        "distill_weight": SimpleNamespace(value=0.5),
+        "distill_temperature": SimpleNamespace(value=1.0),
+        "updates": SimpleNamespace(value=50),
+    }
+    source = code_cell("run_with_dashboard").replace(
+        'Path("/content/BYOD-distillation-configs")', f"Path({str(tmp_path)!r})",
+    )
+    exec(compile(source, "notebook-training", "exec"), namespace)
+    assert events == ["reload", "cleanup", "reload"]
+    command = commands[0]
+    assert command[command.index("--logging-steps") + 1] == "1"
+    import yaml
+    saved = yaml.safe_load(Path(command[command.index("--config") + 1]).read_text())
+    assert saved["distillation"] == dict(enabled=True, weight=0.5, temperature=1.0, chunk_size=64)
+    assert saved["max_updates"] == 50
+    assert "-u" in command
+    assert command[command.index("--prepared-data-cache-dir") + 1] == "/content/BYOD-distillation-cache/prepared"

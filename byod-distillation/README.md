@@ -4,7 +4,9 @@
 
 [Open the automatic baseline vs mixed-loss comparison](https://colab.research.google.com/github/RuurdKuiper/lad-generic/blob/experiment/ar-distillation/byod-distillation/notebooks/compare_distillation.ipynb)
 runs both 1,000-update Llama 3.2 1B trials sequentially, with live dashboards,
-Drive saving, loss-versus-time plots, and a final summary table. Select a GPU,
+Drive saving, loss-versus-time plots, and a final summary table. A final cell
+also compares generated answers from both best-validation adapters, scored by
+an independent Qwen2.5 0.5B model. Select a GPU,
 provide Hugging Face access, and run all cells. Set `BATCH_SIZE = 8` in the
 comparison settings for batches of eight in both runs (8,000 examples each
 at 1,000 updates). The default batch size is 1.
@@ -139,3 +141,31 @@ Original trained-model demos (not trained with this experimental objective):
 [Ministral](https://huggingface.co/spaces/Dovelove/byod-ministral-8b).
 
 [MIT license](LICENSE); inherited source attribution is retained.
+
+## Evaluate generation after training
+
+The comparison notebook's final cell evaluates both `best/` adapters on 20 fixed
+prompts with matched seeds, 64-token outputs, 32 LLaDA denoising steps, and
+sampling temperature 0.7. It loads each adapter sequentially, releases it, then
+loads one independent frozen [Qwen2.5 0.5B](https://huggingface.co/Qwen/Qwen2.5-0.5B)
+scorer for both sets of answers. The scorer's exact revision is resolved once
+and recorded. It downloads about 1 GB on first use.
+
+The report contains token-pooled and median per-answer perplexity, token-level
+Distinct-1/2/3, answer lengths, empty/unscorable answer counts, generation times,
+and escaped side-by-side answers. Perplexity scores answer text only, excluding
+the prompt. It is the independent scorer's causal likelihood, not the diffusion
+model's own perplexity or an accuracy score. Repetition and generic answers can
+also score well, so inspect the answers and diversity measures together. See the
+[Transformers perplexity definition](https://huggingface.co/docs/transformers/perplexity).
+Empty/single-token answers without next-token targets receive no perplexity;
+when a whole group has no scoreable tokens, pooled perplexity is null, not 1.
+
+To evaluate existing runs, set `SAVED_COMPARISON_DIR` in the final cell. Run
+Install and Hugging Face access first; training does not need to run again.
+The existing `best/` adapters are never modified. Reports are saved under a new
+`generation-evaluations/` subdirectory of the selected comparison.
+
+```bash
+python evaluate_generation.py results/llama1b-1000 --device cuda
+```

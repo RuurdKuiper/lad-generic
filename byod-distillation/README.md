@@ -64,7 +64,10 @@ Use the same GPU type/runtime, model, seed, data, learning rate, batch settings,
 and budget for both runs; repeat with several seeds for a stronger result.
 The comparison helper rejects mismatched resolved configurations. Training
 curves record the mixed objective, the original hard-target loss, teacher KL,
-and elapsed seconds separately. Validation/test and best-checkpoint selection
+and elapsed seconds separately. The live dashboard plots all three training
+losses, alongside the original validation loss, and displays the latest component
+values in its status line. Components are shown before applying the mixing weights.
+Validation/test and best-checkpoint selection
 use only the original denoising objective, so they stay comparable.
 Elapsed time starts after model/data setup and includes training and validation;
 model download and dataset preparation are excluded.

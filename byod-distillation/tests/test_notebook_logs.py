@@ -87,7 +87,8 @@ def test_trainer_emits_metric_event_only_for_notebook_training(tmp_path, monkeyp
     assert len(path.read_text().splitlines()) == 2
 
 
-def test_graph_keeps_all_loss_points_without_clearing_log_output(monkeypatch):
+@pytest.mark.parametrize("show_components", [False, True])
+def test_graph_keeps_all_loss_points_without_clearing_log_output(monkeypatch, show_components):
     import matplotlib
     matplotlib.use("Agg")
     from matplotlib.figure import Figure
@@ -109,7 +110,8 @@ def test_graph_keeps_all_loss_points_without_clearing_log_output(monkeypatch):
         o for o in objects if isinstance(o, Figure)))
     view = notebook._TrainingDisplay(3)
     for step, loss in ((1, 2.0), (2, 1.0)):
-        view.record({"split": "train", "step": step, "weighted_loss": loss})
+        components = {"denoising_loss": loss * 1.5, "distillation_loss": loss * 0.5} if show_components else {}
+        view.record({"split": "train", "step": step, "weighted_loss": loss, **components})
     view.record({"split": "validation", "step": 2, "weighted_loss": 1.2})
     view.record({"split": "train_interval", "step": 2, "weighted_loss": 1.5})
     assert view.plot_display.clears == 3
@@ -117,6 +119,14 @@ def test_graph_keeps_all_loss_points_without_clearing_log_output(monkeypatch):
     assert list(figures[-1].axes[0].lines[0].get_xdata()) == [1, 2]
     assert list(figures[-1].axes[0].lines[1].get_ydata()) == [1.2]
     assert "2/3 updates" in view.status_display.value
+    lines = {line.get_label(): line for line in figures[-1].axes[0].lines}
+    assert len(lines) == (4 if show_components else 2)
+    if show_components:
+        assert list(lines["training (mixed)"].get_ydata()) == [2.0, 1.0]
+        assert list(lines["training denoising"].get_ydata()) == [3.0, 1.5]
+        assert list(lines["training distillation KL"].get_ydata()) == [1.0, 0.5]
+        assert "denoising 1.5000" in view.status_display.value
+        assert "distillation KL 0.5000" in view.status_display.value
 
 
 def test_checkpoint_selection_after_failed_or_interrupted_training(tmp_path):

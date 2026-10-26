@@ -69,14 +69,28 @@ class _TrainingDisplay:
         points.append(record)
         step = int(record["step"])
         elapsed = (time.monotonic() - self.started) / 60
+        components = self.train[-1] if self.train else {}
+        component_status = "".join(
+            f" · {label} {components[key]:.4f}"
+            for key, label in (("denoising_loss", "denoising"), ("distillation_loss", "distillation KL"))
+            if key in components
+        )
         self.status(f"Training: {step:,}/{self.max_updates:,} updates · "
-                    f"{split} loss {record['weighted_loss']:.4f} · elapsed {elapsed:.1f} min")
+                    f"{split} loss {record['weighted_loss']:.4f}{component_status} · elapsed {elapsed:.1f} min")
         figure, axis = plt.subplots(figsize=(9, 3))
-        for values, label in ((self.train, "training"), (self.validation, "validation")):
+        has_components = any("denoising_loss" in point for point in self.train)
+        for values, label in ((self.train, "training (mixed)" if has_components else "training"),
+                              (self.validation, "validation (denoising)")):
             if values:
                 axis.plot([r["step"] for r in values], [r["weighted_loss"] for r in values],
                           label=label, linewidth=1.3)
-        axis.set(xlabel="update", ylabel="denoising loss")
+        for key, label in (("denoising_loss", "training denoising"),
+                           ("distillation_loss", "training distillation KL")):
+            values = [point for point in self.train if key in point]
+            if values:
+                axis.plot([point["step"] for point in values], [point[key] for point in values],
+                          label=label, linewidth=1.3, linestyle="--")
+        axis.set(xlabel="update", ylabel="loss")
         axis.grid(alpha=.25)
         axis.legend()
         figure.tight_layout()

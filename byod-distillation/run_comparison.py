@@ -17,10 +17,12 @@ from train import load_training_config
 ROOT = Path(__file__).resolve().parent
 
 
-def comparison_configs(output_root, updates=1000, evaluation_samples=64, validation_steps=100):
+def comparison_configs(output_root, updates=1000, evaluation_samples=64, validation_steps=100, *, batch_size=1):
+    if isinstance(batch_size, bool) or not isinstance(batch_size, int) or batch_size < 1:
+        raise ValueError("batch_size must be a positive integer")
     common = load_training_config("llama", "quick", config_path=str(ROOT / "configs/distillation.yaml"),
                                   max_updates=updates)
-    common.update(batch_size=1, eval_batch_size=1, gradient_accumulation_steps=1,
+    common.update(batch_size=batch_size, eval_batch_size=1, gradient_accumulation_steps=1,
                   validation_samples=evaluation_samples, test_samples=evaluation_samples,
                   validation_steps=validation_steps, checkpoint_steps=validation_steps,
                   num_workers=0, logging_steps=10,
@@ -35,13 +37,13 @@ def comparison_configs(output_root, updates=1000, evaluation_samples=64, validat
     return result
 
 
-def run_comparison(output_root, updates=1000, evaluation_samples=64, validation_steps=100, *, dashboard=False):
+def run_comparison(output_root, updates=1000, evaluation_samples=64, validation_steps=100, *, dashboard=False, batch_size=1):
     """Run both objectives sequentially, with an optional live Colab dashboard."""
     if min(updates, evaluation_samples, validation_steps) < 1:
         raise ValueError("Update and evaluation budgets must be positive")
     output_root = Path(output_root).resolve()
     output_root.mkdir(parents=True, exist_ok=True)
-    configs = comparison_configs(output_root, updates, evaluation_samples, validation_steps)
+    configs = comparison_configs(output_root, updates, evaluation_samples, validation_steps, batch_size=batch_size)
     for config in configs.values():
         if Path(config["output_dir"]).exists():
             raise FileExistsError(f"Run directory already exists: {config['output_dir']}")
@@ -86,8 +88,9 @@ def main():
     parser.add_argument("--updates", type=int, default=1000)
     parser.add_argument("--evaluation-samples", type=int, default=64)
     parser.add_argument("--validation-steps", type=int, default=100)
+    parser.add_argument("--batch-size", type=int, default=1)
     args = parser.parse_args()
-    run_comparison(args.output_root, args.updates, args.evaluation_samples, args.validation_steps)
+    run_comparison(args.output_root, args.updates, args.evaluation_samples, args.validation_steps, batch_size=args.batch_size)
 
 
 if __name__ == "__main__":

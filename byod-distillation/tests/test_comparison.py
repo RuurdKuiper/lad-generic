@@ -151,5 +151,21 @@ def test_comparison_notebook_defaults_and_training_cell(tmp_path, monkeypatch):
     )
     exec(compile(source, "comparison-training", "exec"), settings)
     assert len(calls) == 1
-    assert calls[0][1] == dict(updates=1000, evaluation_samples=64, validation_steps=100, dashboard=True)
+    assert calls[0][1] == dict(updates=1000, evaluation_samples=64, validation_steps=100, dashboard=True, batch_size=1)
     assert settings["output_root"].parent == tmp_path
+
+
+def test_batch_size_eight_is_used_for_both_training_runs(tmp_path):
+    from run_comparison import comparison_configs
+    configs = comparison_configs(tmp_path, batch_size=8)
+    for config in configs.values():
+        assert config["batch_size"] == 8
+        assert config["gradient_accumulation_steps"] == 1
+        assert config["max_updates"] == 1000
+
+
+@pytest.mark.parametrize("batch_size", [0, -1, 1.5, True])
+def test_invalid_batch_size_is_rejected(tmp_path, batch_size):
+    from run_comparison import comparison_configs
+    with pytest.raises(ValueError, match="batch_size"):
+        comparison_configs(tmp_path, batch_size=batch_size)

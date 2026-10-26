@@ -5,7 +5,9 @@
 [Open the automatic baseline vs mixed-loss comparison](https://colab.research.google.com/github/RuurdKuiper/lad-generic/blob/experiment/ar-distillation/byod-distillation/notebooks/compare_distillation.ipynb)
 runs both 1,000-update Llama 3.2 1B trials sequentially, with live dashboards,
 Drive saving, loss-versus-time plots, and a final summary table. Select a GPU,
-provide Hugging Face access, and run all cells.
+provide Hugging Face access, and run all cells. Set `BATCH_SIZE = 8` in the
+comparison settings for batches of eight in both runs (8,000 examples each
+at 1,000 updates). The default batch size is 1.
 
 This is an independent source snapshot of BYOD on the
 `experiment/ar-distillation` branch of `RuurdKuiper/lad-generic`.

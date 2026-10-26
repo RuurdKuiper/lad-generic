@@ -2,6 +2,11 @@
 
 [Open experimental Colab](https://colab.research.google.com/github/RuurdKuiper/lad-generic/blob/experiment/ar-distillation/byod-distillation/notebooks/train_distillation.ipynb)
 
+[Open the automatic baseline vs mixed-loss comparison](https://colab.research.google.com/github/RuurdKuiper/lad-generic/blob/experiment/ar-distillation/byod-distillation/notebooks/compare_distillation.ipynb)
+runs both 1,000-update Llama 3.2 1B trials sequentially, with live dashboards,
+Drive saving, loss-versus-time plots, and a final summary table. Select a GPU,
+provide Hugging Face access, and run all cells.
+
 This is an independent source snapshot of BYOD on the
 `experiment/ar-distillation` branch of `RuurdKuiper/lad-generic`.
 The published [BYOD reproduction](https://github.com/RuurdKuiper/BYOD), its
@@ -96,6 +101,21 @@ python train.py --model llama --mode quick --config configs/distillation.yaml
 python compare_runs.py BASELINE_RUN_DIR DISTILLED_RUN_DIR --output comparison.png
 pytest -q
 ```
+
+For a matched 1,000-update pilot with batch size 1 and no gradient accumulation:
+
+```bash
+python run_comparison.py --output-root results/llama1b-1000
+```
+
+This runs both objectives in fresh processes and writes the configs, full logs,
+adapters, `summary.json`, and `comparison.png`. It evaluates every 100 updates
+on 64 fixed validation examples and uses 64 test examples for a quick final
+check. The model/data revisions and all training settings match between runs.
+Apple Silicon is supported through MPS; laptop timings should not be interpreted
+as Colab CUDA timings. For a throughput-only estimate after caching the model
+configuration, use `python scripts/benchmark_device.py`; its random weights and
+synthetic inputs cannot establish learning quality.
 
 Install `.[demo]` for the local Gradio inference app. Other BYOD model, data,
 and inference instructions are in [UPSTREAM_README.md](UPSTREAM_README.md).

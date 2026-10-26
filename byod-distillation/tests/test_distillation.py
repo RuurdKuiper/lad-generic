@@ -195,7 +195,7 @@ def test_actual_training_loop_mixes_losses_and_only_updates_lora(tmp_path, monke
     config = load_training_config("llama", "quick", output_dir=str(tmp_path / "run"), max_updates=2)
     config.update(precision="fp32", batch_size=1, eval_batch_size=1, num_workers=0,
                   gradient_accumulation_steps=2, validation_steps=2, checkpoint_steps=2,
-                  validation_samples=2, logging_steps=1, learning_rate=1e-3,
+                  validation_samples=2, test_samples=2, logging_steps=1, learning_rate=1e-3,
                   max_sequence_length=16, warmup_steps=0, selected_logit_optimization=selected_logits,
                   generation_perplexity={"enabled": False},
                   distillation=dict(enabled=True, weight=weight, temperature=1.0, chunk_size=2))
@@ -204,6 +204,7 @@ def test_actual_training_loop_mixes_losses_and_only_updates_lora(tmp_path, monke
     records = [record for record in records if record["split"] == "train"]
     assert len(calls) == (4 if weight else 0)
     assert len(records) == 2 and result["weighted_loss"] > 0
+    assert result["valid_examples"] == 2
     for record in records:
         assert record["weighted_loss"] == pytest.approx(
             (1 - weight) * record["denoising_loss"] + weight * record["distillation_loss"])

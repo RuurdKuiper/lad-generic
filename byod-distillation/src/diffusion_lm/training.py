@@ -472,6 +472,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     if validation_limit is not None:
         validation_limit = min(int(validation_limit), len(val_data))
         val_data = val_data.select(range(validation_limit))
+    test_limit = config.get("test_samples")
+    if test_limit is not None:
+        if int(test_limit) < 1:
+            raise ValueError("test_samples must be positive")
+        test_data = test_data.select(range(min(int(test_limit), len(test_data))))
     common = dict(tokenizer=tokenizer, corruption_mode=config["corruption_mode"], max_sequence_length=int(config["max_sequence_length"]), include_answer_eos=bool(config.get("include_answer_eos", True)), pad_to_multiple_of=config.get("pad_to_multiple_of"), structured_loss_behavior=config.get("structured_loss_behavior", "all_answer_tokens"), eos_padding_loss=config.get("eos_padding_loss"), seed=seed, t_min=float(config.get("t_min", .1)), multi_turn_prob=float(config.get("multi_turn_prob", 0.0)), max_history_turns=int(config.get("max_history_turns", 2)), mask_token=str(config.get("mask_token", "MASK")), frontier_padding_mode=str(config.get("frontier_padding_mode", "iid")))
     train_collator = DenoisingCollator(
         **common, deterministic=False,
@@ -560,10 +565,11 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     # Keep training aggregates on-device. Calling float()/int() on CUDA tensors
     # in every iteration serializes the CPU and GPU; scalars are copied only
     # when a log or validation record is actually emitted.
-    interval_loss_sum = torch.zeros((), device=accelerator.device, dtype=torch.float64)
+    aggregate_dtype = torch.float32 if accelerator.device.type == "mps" else torch.float64
+    interval_loss_sum = torch.zeros((), device=accelerator.device, dtype=aggregate_dtype)
     interval_examples = torch.zeros((), device=accelerator.device, dtype=torch.int64)
     interval_component_sums = {
-        name: torch.zeros((), device=accelerator.device, dtype=torch.float64)
+        name: torch.zeros((), device=accelerator.device, dtype=aggregate_dtype)
         for name in ("denoising_loss", "distillation_loss") +
         (("answer_loss", "padding_loss") if answer_padding_weights is not None else ())
     }
@@ -659,10 +665,10 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                 if accelerator.sync_gradients and max_grad_norm is not None:
                     accelerator.clip_grad_norm_(model.parameters(), float(max_grad_norm))
                 optimizer.step(); scheduler.step(); optimizer.zero_grad()
-            interval_loss_sum += loss.detach().to(torch.float64) * info["valid_examples"]
+            interval_loss_sum += loss.detach().to(aggregate_dtype) * info["valid_examples"]
             interval_examples += info["valid_examples"]
             for name, total in interval_component_sums.items():
-                total.add_(info[name].to(torch.float64) * info["valid_examples"])
+                total.add_(info[name].to(aggregate_dtype) * info["valid_examples"])
             if accelerator.sync_gradients:
                 update_step += 1
                 progress.update(1)

@@ -60,3 +60,96 @@ def test_experimental_notebook_is_not_pointed_at_byod():
         if cell["cell_type"] == "code":
             compile("".join(cell["source"]), "notebook-cell", "exec")
             assert not cell["outputs"] and cell["execution_count"] is None
+
+
+def test_quick_comparison_matches_1000_update_settings(tmp_path):
+    from run_comparison import comparison_configs
+    configs = comparison_configs(tmp_path)
+    baseline = configs["baseline"].copy()
+    distilled = configs["distilled"].copy()
+    assert baseline.pop("distillation")["weight"] == 0
+    assert distilled.pop("distillation")["weight"] == 0.5
+    assert baseline.pop("output_dir") != distilled.pop("output_dir")
+    assert baseline == distilled
+    assert baseline["max_updates"] == 1000
+    assert baseline["batch_size"] == baseline["gradient_accumulation_steps"] == 1
+    assert baseline["validation_samples"] == baseline["test_samples"] == 64
+    assert baseline["model_name_or_path"] == "meta-llama/Llama-3.2-1B-Instruct"
+
+
+@pytest.mark.parametrize("dashboard", [False, True])
+def test_comparison_runs_both_objectives_and_writes_report(tmp_path, monkeypatch, dashboard):
+    import yaml
+    import run_comparison as runner
+    from diffusion_lm import notebook
+
+    calls = []
+    def train(command, *args, **kwargs):
+        config = yaml.safe_load(Path(command[command.index("--config") + 1]).read_text())
+        run = Path(config["output_dir"])
+        calls.append(run.name)
+        run.mkdir()
+        (run / "resolved_config.json").write_text(json.dumps(config))
+        (run / "metrics.jsonl").write_text(json.dumps(dict(
+            split="validation", step=2, weighted_loss=3., elapsed_seconds=4.,
+        )) + "\n")
+        (run / "test_metrics.json").write_text(json.dumps({"weighted_loss": 3.1}))
+        (run / "runtime_environment.json").write_text(json.dumps({"device_type": "test"}))
+    monkeypatch.setattr(runner.subprocess, "run", train)
+    monkeypatch.setattr(notebook, "run_with_dashboard", train)
+    summary = runner.run_comparison(tmp_path / "comparison", updates=2, dashboard=dashboard)
+    assert calls == ["baseline", "distilled"]
+    assert summary["baseline"]["final_test"]["weighted_loss"] == 3.1
+    assert (tmp_path / "comparison/comparison.png").is_file()
+    assert json.loads((tmp_path / "comparison/summary.json").read_text()) == summary
+    with pytest.raises(FileExistsError):
+        runner.run_comparison(tmp_path / "comparison", updates=2, dashboard=dashboard)
+    assert calls == ["baseline", "distilled"]
+
+
+def test_comparison_interrupt_does_not_start_the_second_run(tmp_path, monkeypatch):
+    from diffusion_lm import notebook
+    from run_comparison import run_comparison
+    calls = []
+    def interrupt(command, *args):
+        calls.append(command)
+        raise KeyboardInterrupt
+    monkeypatch.setattr(notebook, "run_with_dashboard", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        run_comparison(tmp_path, dashboard=True)
+    assert len(calls) == 1
+    assert not (tmp_path / "distilled.yaml").exists()
+
+
+def test_comparison_notebook_defaults_and_training_cell(tmp_path, monkeypatch):
+    import importlib
+    from types import SimpleNamespace
+    import sys
+    import run_comparison as runner
+    from diffusion_lm import notebook as helpers
+
+    root = Path(__file__).resolve().parents[1]
+    notebook = json.loads((root / "notebooks/compare_distillation.ipynb").read_text())
+    for cell in notebook["cells"]:
+        if cell["cell_type"] == "code":
+            compile("".join(cell["source"]), "comparison-cell", "exec")
+            assert not cell["outputs"] and cell["execution_count"] is None
+    settings = {}
+    exec("".join(notebook["cells"][6]["source"]), settings)
+    assert settings["UPDATES"] == 1000 and settings["EVALUATION_SAMPLES"] == 64
+    assert settings["SAVE_TO_DRIVE"] is True
+    settings["SAVE_TO_DRIVE"] = False
+    monkeypatch.setattr(importlib, "reload", lambda module: module)
+    monkeypatch.setattr(helpers, "remove_unused_transformer_engine", lambda: None)
+    monkeypatch.setitem(sys.modules, "torch", SimpleNamespace(cuda=SimpleNamespace(
+        is_available=lambda: True, get_device_name=lambda index: "Test GPU",
+    )))
+    calls = []
+    monkeypatch.setattr(runner, "run_comparison", lambda *args, **kwargs: calls.append((args, kwargs)))
+    source = "".join(notebook["cells"][8]["source"]).replace(
+        'Path("/content/BYOD-distillation-comparisons")', f"Path({str(tmp_path)!r})",
+    )
+    exec(compile(source, "comparison-training", "exec"), settings)
+    assert len(calls) == 1
+    assert calls[0][1] == dict(updates=1000, evaluation_samples=64, validation_steps=100, dashboard=True)
+    assert settings["output_root"].parent == tmp_path

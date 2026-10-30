@@ -1,0 +1,40 @@
+{
+  "model_revision": "e4f77d25ab5ca86f2223c6cdc6a72b887e20c8a5",
+  "targeted_tests": {
+    "passed": 116,
+    "skipped": 8
+  },
+  "actual_tiny_moe": {
+    "transformers": "5.2.0",
+    "attention": "sdpa",
+    "block_lengths": [
+      32,
+      64
+    ],
+    "native_stream_parity": true
+  },
+  "gradio_ui": {
+    "components": 27,
+    "both_methods_generate": true,
+    "real_trained_scorers_loaded": true
+  },
+  "trained_tokens": 875507295,
+  "full_16b_gpu_test": true,
+  "live_tests": {
+    "smoke_cases": 2,
+    "long_sampled_cases": 2,
+    "methods": [
+      "Confidence-guided",
+      "BG + TG Viterbi (Gumbel)"
+    ],
+    "unresolved_masks": false,
+    "block_lengths": [
+      32,
+      64
+    ],
+    "block64_cases": 1,
+    "observed_insertions": 1,
+    "observed_deletions": 1,
+    "generated_code_checks_passed": 3
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "space": "Ruurd/llada2.2-mini",
+  "scorers": "Ruurd/llada2.2-mini-ngram-guidance",
+  "model": "inclusionAI/LLaDA2.2-mini",
+  "model_revision": "e4f77d25ab5ca86f2223c6cdc6a72b887e20c8a5",
+  "tokens": 875507295,
+  "assets": {
+    "bigram_expanded.pt": {
+      "bytes": 498905325,
+      "sha256": "34d64ff5754ffd0886c1e3f4cf5d9a186d061f435530e84a5fa084206ae630d8"
+    },
+    "trigram_expanded.pt": {
+      "bytes": 887807799,
+      "sha256": "8259ec31774e1d534a801215f0c579a4915f9faaf41394de34d1c0239e5f94d8"
+    }
+  },
+  "source_hashes": {
+    "requirements.txt": "7f7fa292f784052d82d72607b9e3a191a011e423340f93d18132d5c4808a5f34",
+    "space_model.json": "04014355561a4295f445e82d80c69b3d80fc24c94dc5449bd781a00134f476df",
+    "README.md": "729b506d85e95b992ed0396a4ddf53b4e4f02c09a118c631a7e6491b8722b5f0",
+    "app.py": "445cdf8a234e40abd477514f504b575273504ac231e7442c9792c34bc52b856b",
+    "streaming.py": "a62922be862e255e6a80f946ba2770668ab01fa42e0ff5642a61b2a1ee13d4fb",
+    "src/diffusion_lm/trigram.py": "c5bdb31f66a97f5cfb50c0bb3e4f78b55fe99e3bb5855197586a7990d9379d85",
+    "src/diffusion_lm/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/diffusion_lm/bigram.py": "c53c877b4b67c0bb23879eeb9db7f28c7dd02d17aec9a9b654e62e4c22076247",
+    "src/diffusion_lm/repetition_schedule.py": "afcfecfe95eca8182a4069a36ebe12880d91b91e827986f5196a91605669605d",
+    "src/diffusion_lm/repetition_risk.py": "2ffe7062863833fafce199393d5e5ec39c496a549cbf5240b38b125046092a56"
+  }
+}

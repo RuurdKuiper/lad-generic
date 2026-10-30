@@ -1,0 +1,8 @@
+{
+  "scorers": "Ruurd/llada2.2-mini-ngram-guidance",
+  "scorer_revision": "236eca029fd74fa072dfd9e2317d2fcc766f6be3",
+  "public": true,
+  "space": "Ruurd/llada2.2-mini",
+  "space_revision": "b30553b6d34b4de80fc3bd7f8e9794ec4165e243",
+  "requested_hardware": "zero-a10g"
+}

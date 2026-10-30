@@ -1,0 +1,52 @@
+{
+  "model": "inclusionAI/LLaDA2.2-mini",
+  "revision": "e4f77d25ab5ca86f2223c6cdc6a72b887e20c8a5",
+  "sources": [
+    {
+      "name": "english",
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "prefix": "sample/10BT/",
+      "tokens": 720000000,
+      "files": [
+        "sample/10BT/000_00000.parquet"
+      ],
+      "offline": true,
+      "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44"
+    },
+    {
+      "name": "python",
+      "repo": "Avelina/python-edu-cleaned",
+      "revision": "3fedf55e02e72dd1fd68963f991f5e91adcb0f8d",
+      "prefix": "data/",
+      "tokens": 40000000,
+      "upstream": "HuggingFaceTB/smollm-corpus/python-edu",
+      "files": [
+        "data/train-00000-of-00027.parquet"
+      ],
+      "offline": true,
+      "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44"
+    },
+    {
+      "name": "math",
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "prefix": "finemath-4plus/",
+      "tokens": 40000000,
+      "files": [
+        "finemath-4plus/train-00000-of-00064.parquet"
+      ],
+      "offline": true,
+      "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44"
+    },
+    {
+      "name": "responses",
+      "local": "/Users/rkuiper/Documents/Code/lad-generic/data/lad-training-1m-256-long",
+      "tokens": null,
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44"
+    }
+  ]
+}

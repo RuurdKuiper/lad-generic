@@ -466,3 +466,32 @@ deployment and verification records are under
 The [decoding artifact index](../artifacts/bigram/README.md) links the current
 production defaults, complete LLaDA study, timing analysis and scorer provenance.
 Historical reports retain the settings used at the time of each experiment.
+
+### LLaDA2.2-mini companion Space
+
+The separate [LLaDA2.2 app](llada22_space/README.md) preserves the live diffusion
+layout while using the official edit-aware decoder and a new tokenizer-matched
+BG + TG scorer pair. Research and native insertion/deletion semantics are
+recorded in `artifacts/llada22/RESEARCH.md`.
+
+Build all response + 800M expanded-token statistics with
+`python scripts/build_llada22_ngrams.py`. Prepare the two reviewable repository
+bundles using `python huggingface/publish_llada22.py`. Publication uses
+`--execute`: private publication requires a separate read-only `HF_READ_TOKEN`
+for the new Space's private scorer downloads; `--execute --public` publishes
+both new repositories publicly. It refuses to overwrite existing repositories.
+The original Space is untouched.
+
+Use the isolated Space requirements (Transformers 5.2.0); do not upgrade the
+main project's Transformers 4 environment. `python scripts/verify_llada22.py
+--tiny` validates the real model architecture with synthetic tiny weights
+without downloading the 16B checkpoint. `--space Ruurd/llada2.2-mini` checks
+both hosted decoding methods. Model-free integration tests can extract the
+pinned native decoder via `LLADA22_NATIVE_SOURCE=/path/to/modeling_llada2_moe.py
+pytest tests/test_llada22_streaming.py`.
+
+Published companion: [Ruurd/llada2.2-mini](https://huggingface.co/spaces/Ruurd/llada2.2-mini).
+The [matching scorer repository](https://huggingface.co/Ruurd/llada2.2-mini-ngram-guidance)
+contains counts trained on 875,507,295 exact model-tokenizer tokens. Deployment
+pins and full-model native/guided GPU verification records are in
+`artifacts/llada22/`; the original LLaDA Space was preserved.

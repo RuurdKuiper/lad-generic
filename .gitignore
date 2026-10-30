@@ -88,3 +88,11 @@ artifacts/bigram/**/*.before
 artifacts/bigram/**/*.diff
 artifacts/bigram/llada_sequence_sampling/before_app.py.txt
 artifacts/bigram/lad_trigram_rollout/before/
+
+# LLaDA2.2 tokenizer, resumable counts, and Space bundle.
+artifacts/llada22/tokenizer/
+artifacts/llada22/modules/
+artifacts/llada22/ngrams/count-shards/
+artifacts/llada22/ngrams/spill/
+artifacts/llada22/ngrams/*.parquet
+artifacts/llada22/ngrams/*.duckdb*

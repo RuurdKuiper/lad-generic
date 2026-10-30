@@ -1,0 +1,113 @@
+{
+  "tokenizer": "inclusionAI/LLaDA2.2-mini",
+  "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44",
+  "model_revision": "e4f77d25ab5ca86f2223c6cdc6a72b887e20c8a5",
+  "sources": [
+    {
+      "name": "english",
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "prefix": "sample/10BT/",
+      "tokens": 720000000,
+      "files": [
+        "sample/10BT/000_00000.parquet"
+      ],
+      "offline": true,
+      "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44",
+      "documents": 694566,
+      "actual_tokens": 720000000,
+      "pairs": 719305434,
+      "triples": 718610868,
+      "skipped_duplicates": 1297,
+      "eos_appended": 694565,
+      "started_at": 1793097076.6739478,
+      "seconds": 414.73005533218384
+    },
+    {
+      "name": "python",
+      "repo": "Avelina/python-edu-cleaned",
+      "revision": "3fedf55e02e72dd1fd68963f991f5e91adcb0f8d",
+      "prefix": "data/",
+      "tokens": 40000000,
+      "upstream": "HuggingFaceTB/smollm-corpus/python-edu",
+      "files": [
+        "data/train-00000-of-00027.parquet"
+      ],
+      "offline": true,
+      "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44",
+      "documents": 81345,
+      "actual_tokens": 40000000,
+      "pairs": 39918655,
+      "triples": 39837310,
+      "skipped_duplicates": 0,
+      "eos_appended": 81344,
+      "started_at": 1793097491.430122,
+      "seconds": 21.344542980194092
+    },
+    {
+      "name": "math",
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "prefix": "finemath-4plus/",
+      "tokens": 40000000,
+      "files": [
+        "finemath-4plus/train-00000-of-00064.parquet"
+      ],
+      "offline": true,
+      "cache_dir": "/Users/rkuiper/Documents/Code/lad-generic/artifacts/bigram/llada_expanded_ngrams/hf-cache",
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44",
+      "documents": 25552,
+      "actual_tokens": 40000000,
+      "pairs": 39974448,
+      "triples": 39948896,
+      "skipped_duplicates": 0,
+      "eos_appended": 25551,
+      "started_at": 1793097512.780936,
+      "seconds": 20.3651602268219
+    },
+    {
+      "name": "responses",
+      "local": "data/lad-training-1m-256-long",
+      "tokens": null,
+      "tokenizer_sha256": "a2e43746d1efa4a1e8974c5650697935cd4b022ff3452e303ec0b4a161003c44",
+      "documents": 980000,
+      "actual_tokens": 75507295,
+      "pairs": 74527295,
+      "triples": 73547320,
+      "skipped_duplicates": 0,
+      "files": [],
+      "eos_appended": 755763,
+      "started_at": 1793097533.149538,
+      "seconds": 49.78266501426697
+    }
+  ],
+  "tokens": 875507295,
+  "model_vocab_size": 157184,
+  "document_boundaries_preserved": true,
+  "raw_documents_eos": true,
+  "new_corpus_mix": "90% FineWeb-Edu / 5% Python-Edu / 5% FineMath by tokenizer-specific tokens; plus original responses",
+  "aggregate_rows": {
+    "2": {
+      "rows": 41470277
+    },
+    "3": {
+      "rows": 226879203
+    }
+  },
+  "stored_trigrams": 62263839,
+  "stored_prefixes": 11719760,
+  "new_tokens": 800000000,
+  "assets": {
+    "bigram_expanded.pt": {
+      "bytes": 498905325,
+      "sha256": "34d64ff5754ffd0886c1e3f4cf5d9a186d061f435530e84a5fa084206ae630d8"
+    },
+    "trigram_expanded.pt": {
+      "bytes": 887807799,
+      "sha256": "8259ec31774e1d534a801215f0c579a4915f9faaf41394de34d1c0239e5f94d8"
+    }
+  },
+  "validation_queries": 10001
+}

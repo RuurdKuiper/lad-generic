@@ -72,7 +72,7 @@ def tokenize_source(spec, tokenizer):
         record = json.loads(done.read_text())
         if any(
             record.get(k) != spec.get(k)
-            for k in ["repo", "revision", "prefix", "tokens", "local"]
+            for k in ["repo", "revision", "prefix", "tokens", "local", "tokenizer_sha256"]
         ):
             raise RuntimeError(
                 f"Completed source differs from requested plan: {spec['name']}"
@@ -213,7 +213,9 @@ def tokenize_source(spec, tokenizer):
     return metadata
 
 
-def aggregate(metadata, tokenizer):
+def aggregate(metadata, tokenizer, *, tokenizer_id="GSAI-ML/LLaDA-8B-Instruct",
+              model_revision="08b83a6feb34df1a6011b80c3c00c7563e963b07",
+              compact_prefix=False):
     import duckdb
     import torch
     import sys
@@ -258,6 +260,22 @@ def aggregate(metadata, tokenizer):
             "COPY (SELECT * FROM read_parquet(?) WHERE count>=2 ORDER BY key) TO ? (FORMAT PARQUET, COMPRESSION ZSTD)",
             [str(OUT / "counts-3.parquet"), str(filtered)],
         )
+    if compact_prefix:
+        compact = OUT / "compact-prefix.parquet"
+        if not valid_parquet(compact):
+            db.execute(
+                "COPY (SELECT p.key,p.count FROM read_parquet(?) p JOIN "
+                "(SELECT DISTINCT key // ? AS key FROM read_parquet(?)) t "
+                "ON p.key=t.key ORDER BY p.key) TO ? (FORMAT PARQUET, COMPRESSION ZSTD)",
+                [str(prefix), V, str(filtered), str(compact)],
+            )
+        prefix = compact
+    for order in (2, 3):
+        actual = db.execute("SELECT sum(count) FROM read_parquet(?)",
+                            [str(OUT / f"counts-{order}.parquet")]).fetchone()[0]
+        expected = sum(s["pairs" if order == 2 else "triples"] for s in metadata)
+        if actual != expected:
+            raise ValueError(f"Order {order} count total mismatch: {actual} != {expected}")
     db.close()
 
     def arrays(path):
@@ -268,10 +286,12 @@ def aggregate(metadata, tokenizer):
         (np.load(OUT / "count-shards" / s["name"] / "unigrams.npy") for s in metadata),
         np.zeros(V, dtype=np.int64),
     )
+    if int(uni.sum()) != sum(s["actual_tokens"] for s in metadata):
+        raise ValueError("Unigram count total mismatch")
     meta = dict(
-        tokenizer="GSAI-ML/LLaDA-8B-Instruct",
+        tokenizer=tokenizer_id,
         tokenizer_sha256=tokenizer_fingerprint(tokenizer),
-        model_revision="08b83a6feb34df1a6011b80c3c00c7563e963b07",
+        model_revision=model_revision,
         sources=[
             dict(s, local="data/lad-training-1m-256-long") if "local" in s else s
             for s in metadata
@@ -280,7 +300,7 @@ def aggregate(metadata, tokenizer):
         model_vocab_size=V,
         document_boundaries_preserved=True,
         raw_documents_eos=True,
-        new_corpus_mix="90% FineWeb-Edu / 5% Python-Edu / 5% FineMath by LLaDA tokens; plus original responses",
+        new_corpus_mix="90% FineWeb-Edu / 5% Python-Edu / 5% FineMath by tokenizer-specific tokens; plus original responses",
     )
     keys, counts = arrays(OUT / "counts-2.parquet")
     scorer = BigramScorer(V, keys, counts, uni, metadata=meta)

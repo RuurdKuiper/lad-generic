@@ -1,0 +1,12 @@
+[
+  {
+    "space": "Ruurd/llada2.2-mini",
+    "sha": "b30553b6d34b4de80fc3bd7f8e9794ec4165e243",
+    "stage": "RUNNING"
+  },
+  {
+    "space": "Ruurd/llada-8b-instruct",
+    "sha": "5f399f6c9ef9212d7dfeae6d4dcff311dc57581d",
+    "stage": "RUNNING"
+  }
+]

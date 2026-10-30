@@ -11,8 +11,9 @@ from diffusion_lm.bigram import BigramScorer
 from diffusion_lm.trigram import TrigramScorer
 
 
+@pytest.mark.parametrize("compact", [False, True])
 def test_external_aggregation_preserves_document_boundaries_and_all_prefix_counts(
-    tmp_path,
+    tmp_path, compact,
 ):
     pytest.importorskip("duckdb")
     root = Path(__file__).parents[1]
@@ -42,10 +43,14 @@ def test_external_aggregation_preserves_document_boundaries_and_all_prefix_count
     # Interrupted COPY outputs must be rebuilt instead of accepted as caches.
     (tmp_path / "counts-2.parquet").write_bytes(b"partial")
     (tmp_path / "counts-3.parquet").touch()
-    module.aggregate([dict(name="fixture", actual_tokens=10, documents=4)], Tokenizer())
+    module.aggregate([dict(name="fixture", actual_tokens=10, documents=4, pairs=6, triples=3)],
+                     Tokenizer(), compact_prefix=compact, tokenizer_id="test-tokenizer",
+                     model_revision="test-pin")
     bigram = BigramScorer.load(tmp_path / "bigram_expanded.pt")
     trigram = TrigramScorer.load(tmp_path / "trigram_expanded.pt", bigram=bigram)
     assert bigram.unigram_counts.sum() == 10
+    assert bigram.metadata["tokenizer"] == "test-tokenizer"
+    assert bigram.metadata["model_revision"] == "test-pin"
     assert bigram.pair_counts.sum() == 6  # No 2->0, 3->4 cross-document edges.
     assert trigram.triple_keys.tolist() == [(0 * 8 + 1) * 8 + 2]
     assert trigram.triple_counts.tolist() == [2.0]

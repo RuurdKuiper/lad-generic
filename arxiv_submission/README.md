@@ -32,8 +32,7 @@ distinguishes padding multiple 8 for Llama and 16 for the other presets. See
 ## Submission metadata
 
 Use `ABSTRACT.txt` and `submission_metadata.json` to populate the form. The
-repository URL is the intended destination: **publish the prepared standalone
-repository before submitting this code-availability statement to arXiv**.
+repository was verified publicly accessible without authentication on 2026-10-30.
 The code's MIT license is separate from the distribution license you choose for
 the paper. Leave journal reference and DOI empty until an actual publication.
 Inspect arXiv's generated PDF before finalizing the submission.
@@ -58,11 +57,13 @@ ICLR permits arXiv posting during review; retain anonymity in the ICLR copy.
 
 ## Before submitting
 
-- Publish the clean BYOD checkout following its `RELEASE_CHECKLIST.md`.
-- Open the repository, Colab notebook, demos, and dataset links while logged out.
-- The code pins `Ruurd/LAD-training-1m-256`; the manuscript also links its public
-  `Dovelove/BYOD-training-1m-256` mirror. All five Parquet hashes match, and the
-  public 100-question suite matches the bundled prompts in order. Evidence is in
-  `../byod-reproducible/reference/public_artifacts.json`.
+- The manuscript links all four demos under `Ruurd`; all were public and RUNNING
+  during the unauthenticated check on 2026-10-30.
+- The original training mixture `Ruurd/LAD-training-1m-256` is public at the
+  manuscript's pinned revision. The anonymous-review mirror link was removed.
+- No public `Ruurd/BYOD-open-ended-questions` dataset exists. The manuscript
+  instead links the public `RuurdKuiper/BYOD` repository's
+  `src/diffusion_lm/generation_prompts.txt`, verified byte-for-byte against the
+  bundled 100-question suite (one comment header plus 100 prompts).
 - Confirm the paper's distribution license with all authors and complete any
   requested category endorsement.

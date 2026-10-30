@@ -1,26 +1,76 @@
 {
-  "checked_date": "2026-10-15",
+  "checked_date": "2026-10-30",
   "pdf_pages": 21,
   "authors": [
     "Ruurd J. A. Kuiper",
     "Robert A. Bagheri"
   ],
   "arxiv_archive_files": 20,
-  "arxiv_archive_sha256": "123147ac1f975f5d45f7959bd5c4b0329a3455f3f5b979d22046717c84bc7294",
-  "arxiv_archive_clean_compile": "passed: three PDFLaTeX runs, bundled bibliography, no shell escape",
-  "tex_environment": "TeX Live 2026 locally; not run on the arXiv server",
-  "latex_warnings_after_final_pass": 0,
-  "engine_note": "epstopdf reports shell escape disabled during the clean test; no figure conversions are used or needed",
+  "arxiv_archive_bytes": 438401,
+  "arxiv_archive_sha256": "a71eaa28430dc64d25ac5b76464dd7fdc0cfb658dd0be7e0551d2fea32d49e4b",
+  "arxiv_archive_clean_compile": "passed: extracted ZIP, three PDFLaTeX runs, bundled bibliography, no shell escape",
+  "tex_environment": "pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026); not run on the arXiv server",
   "unresolved_references": 0,
   "overfull_boxes": 0,
-  "standalone_tests": "187 passed",
-  "python_wheel_build": "passed",
-  "software_license": "MIT",
-  "gpu_training_validation": "not performed",
-  "public_datasets": "verified; five training Parquet hashes match across original and mirror",
-  "public_open_ended_questions": "100 prompts match bundled order",
-  "public_demos": "all four public and RUNNING during link check",
-  "github_url": "https://github.com/RuurdKuiper/BYOD",
-  "github_public_status": "unauthenticated API returned 404; publish before arXiv submission",
-  "publication_status": "prepared locally; nothing committed, submitted, or pushed"
+  "latex_warning": "epstopdf reports shell escape disabled; no EPS figures or conversions are required",
+  "figures": 10,
+  "pdf_hyperlinks": "verified: all four demos use Ruurd; no Dovelove destinations",
+  "public_links": [
+    {
+      "url": "https://huggingface.co/api/spaces/Ruurd/byod-gemma-2-9b",
+      "status": 200,
+      "id": "Ruurd/byod-gemma-2-9b",
+      "private": false,
+      "sha": "7f2e4155058b31cf79f78c30fcaf255342795415",
+      "space_stage": "RUNNING"
+    },
+    {
+      "url": "https://huggingface.co/api/spaces/Ruurd/byod-llama-3.1-8b",
+      "status": 200,
+      "id": "Ruurd/byod-llama-3.1-8b",
+      "private": false,
+      "sha": "26b0cafc3c92178b1e8359e9afe5190ee1712e1e",
+      "space_stage": "RUNNING"
+    },
+    {
+      "url": "https://huggingface.co/api/spaces/Ruurd/byod-qwen2.5-7b",
+      "status": 200,
+      "id": "Ruurd/byod-qwen2.5-7b",
+      "private": false,
+      "sha": "943b64ed751967a0d37a35d47fd939d59f3290f3",
+      "space_stage": "RUNNING"
+    },
+    {
+      "url": "https://huggingface.co/api/spaces/Ruurd/byod-ministral-8b",
+      "status": 200,
+      "id": "Ruurd/byod-ministral-8b",
+      "private": false,
+      "sha": "22327463961003496cdfa182a34f43c3dc82be27",
+      "space_stage": "RUNNING"
+    },
+    {
+      "url": "https://huggingface.co/api/datasets/Ruurd/LAD-training-1m-256",
+      "status": 200,
+      "id": "Ruurd/LAD-training-1m-256",
+      "private": false,
+      "sha": "6041513b684d6ca627879ffdb547b8629bb8b8de"
+    },
+    {
+      "url": "https://api.github.com/repos/RuurdKuiper/BYOD",
+      "status": 200,
+      "id": 1420670740,
+      "private": false,
+      "sha": null
+    }
+  ],
+  "question_set": {
+    "url": "https://github.com/RuurdKuiper/BYOD/blob/main/src/diffusion_lm/generation_prompts.txt",
+    "public_raw_download_status": 200,
+    "prompts": 100,
+    "matches_bundled_file": true,
+    "sha256": "db6a02c56d718553f787b78e8c5b67fe0ea0e62781e99a876ed22ce1cbb51b66"
+  },
+  "dataset_link_note": "No public Ruurd/BYOD-open-ended-questions or Ruurd/BYOD-training-1m-256 repository was found; use the public GitHub prompts and original Ruurd/LAD-training-1m-256 dataset.",
+  "validation_scope": "Submission packaging, compilation, resource links and spot checks of layout; experiments and literature claims were not independently revalidated.",
+  "publication_status": "Upload archive prepared locally; not submitted to arXiv."
 }

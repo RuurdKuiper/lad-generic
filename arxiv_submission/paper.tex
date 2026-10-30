@@ -25,10 +25,10 @@
 Unlike autoregressive (AR) models, diffusion language models (DLMs) permit parallel token updates, flexible generation, and bidirectional attention, but leading systems rely on costly pretraining or full-model fine-tuning. We present Build Your Own DLM (BYOD), a generalizable LoRA-only recipe for parameter-efficient AR-to-DLM conversion. Without architecture-specific tuning, BYOD induces diffusion generation in Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B; to our knowledge, this is the first reported AR-to-DLM conversion of a Mistral model. The adapters comprise 4.1--5.8\% of final parameters while every base-model parameter remains frozen; each 25,000-iteration conversion needs at most 102.4M tokens, processed in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use bidirectional context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 50.6\% average accuracy compared with 51.9\% for LLaDA 8B Instruct in the same harness. Open-generation quality at low network function evaluation (NFE) budgets remains the principal limitation: BYOD perplexity is 8.3--11.1 versus 4.1 for LLaDA and 2.2--3.0 for the AR parents when generating 128 tokens in 64 steps. To enable further experimentation and inspection, we provide a standalone training and evaluation implementation and interactive demos for all four conversions. BYOD thus provides a practical route for extending diffusion generation to other existing model families while identifying the gap that efficient conversion must next close.
 
 \noindent\textbf{Code:} \url{https://github.com/RuurdKuiper/BYOD}.\quad\textbf{BYOD demos:}
-\href{https://huggingface.co/spaces/Dovelove/byod-gemma-2-9b}{Gemma} $\mid$
-\href{https://huggingface.co/spaces/Dovelove/byod-llama-3.1-8b}{Llama} $\mid$
-\href{https://huggingface.co/spaces/Dovelove/byod-qwen2.5-7b}{Qwen} $\mid$
-\href{https://huggingface.co/spaces/Dovelove/byod-ministral-8b}{Ministral}
+\href{https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b}{Gemma} $\mid$
+\href{https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b}{Llama} $\mid$
+\href{https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b}{Qwen} $\mid$
+\href{https://huggingface.co/spaces/Ruurd/byod-ministral-8b}{Ministral}
 \end{abstract}
 
 \section{Introduction}
@@ -369,7 +369,7 @@ Merging is an algebraic reparameterization rather than an additional training st
 \section{Complete training configuration}
 \label{app:training-settings}
 
-Table~\ref{tab:training-settings} records the common resolved configuration of the four primary conversions, including optimization, precision, checkpointing, and validation. We use AdamW with BF16 master weights and Transformer Engine HYBRID FP8 execution. The implementation pins the one-million-example training mixture \href{https://huggingface.co/datasets/Ruurd/LAD-training-1m-256}{Ruurd/LAD-training-1m-256} at revision \nolinkurl{6041513b684d6ca627879ffdb547b8629bb8b8de}. A \href{https://huggingface.co/datasets/Dovelove/BYOD-training-1m-256}{public mirror} provides row-level source provenance and upstream licensing terms.
+Table~\ref{tab:training-settings} records the common resolved configuration of the four primary conversions, including optimization, precision, checkpointing, and validation. We use AdamW with BF16 master weights and Transformer Engine HYBRID FP8 execution. The implementation pins the one-million-example training mixture \href{https://huggingface.co/datasets/Ruurd/LAD-training-1m-256}{Ruurd/LAD-training-1m-256} at revision \nolinkurl{6041513b684d6ca627879ffdb547b8629bb8b8de}.
 
 \begin{table}[!htbp]
 \caption{Full common training configuration. Model-specific parent checkpoints, mask strings, and parameter counts appear in Table~\ref{tab:models}.}
@@ -405,7 +405,7 @@ BYOD-Llama-50k keeps the same batch size and objective but processes 800,000 exa
 \section{Complete inference configuration}
 \label{app:inference-settings}
 
-Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. The fixed 100-question open-ended prompt set is \href{https://huggingface.co/datasets/Dovelove/BYOD-open-ended-questions}{publicly available}. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late. The open-ended diagnostic uses temperature 0.7.
+Table~\ref{tab:diffusion-inference} separates task-specific diffusion budgets from the training configuration and gives the evaluation sample count in one place. The fixed 100-question open-ended prompt set is \href{https://github.com/RuurdKuiper/BYOD/blob/main/src/diffusion_lm/generation_prompts.txt}{publicly available}. Unless overridden in the table, diffusion evaluation uses the official LLaDA-style fixed-transfer sampler, greedy predictions (temperature 0), low-confidence remasking, classifier-free guidance scale 0, one full-answer block, and no repetition penalty. Delayed EOS/EOT means that a predicted terminator is assigned the lowest retention confidence and may therefore be predicted but is accepted late. The open-ended diagnostic uses temperature 0.7.
 
 \begin{table}[!htbp]
 \caption{Task-specific masked-diffusion inference settings in the validation notebook. NFE is the number of denoising network evaluations.}

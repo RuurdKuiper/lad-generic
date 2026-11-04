@@ -14,6 +14,10 @@ from huggingface_hub import HfApi
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+PAPER_CITATION = (
+    "Paper: [BYOD: Build Your Own DLM — Efficient Autoregressive-to-Diffusion "
+    "Language Model Conversion](https://arxiv.org/abs/2610.41574)"
+)
 DEFAULT_OUTPUTS_ROOT = Path(
     os.getenv(
         "LAD_OUTPUT_ROOT",
@@ -86,6 +90,11 @@ def _yaml_line(key: str, value: str | None) -> str:
     return f"{key}: {value}\n" if value else ""
 
 
+def paper_citation(namespace: str, anonymous_review: bool) -> str:
+    """Keep identifying paper links out of anonymous release cards."""
+    return "" if anonymous_review or namespace.casefold() == "dovelove" else PAPER_CITATION
+
+
 def anonymous_inference_config(spec: ByodModel, run_config: dict) -> dict:
     """Keep only non-identifying fields required to reconstruct inference."""
     return {
@@ -102,6 +111,7 @@ def model_card(spec: ByodModel, namespace: str, run_config: dict, anonymous_revi
     space_repo_id = f"{namespace}/{spec.space_name}"
     steps = run_config.get("max_updates", "the configured number of")
     mask_token = run_config.get("mask_token", "MASK")
+    paper_link = paper_citation(namespace, anonymous_review)
     source_note = "" if anonymous_review else f"""
 ## Loading
 
@@ -124,6 +134,7 @@ license: {spec.license_id}
 
 # {spec.display_name}
 
+{paper_link}
 {spec.display_name} is a masked discrete-diffusion language model created by
 converting [{spec.base_model}](https://huggingface.co/{spec.base_model}) with
 LoRA. This repository contains the exact `{spec.source_checkpoint}` checkpoint
@@ -186,7 +197,9 @@ def make_space_bundle(spec: ByodModel, namespace: str, destination: Path, anonym
     readme = (template_dir / "README.md.template").read_text()
     readme = readme.replace("__TITLE__", spec.display_name).replace(
         "__MODEL_REPO_ID__", f"{namespace}/{spec.model_name}"
-    ).replace("__SOURCE_CHECKPOINT__", spec.source_checkpoint)
+    ).replace("__SOURCE_CHECKPOINT__", spec.source_checkpoint).replace(
+        "__PAPER_LINK__", paper_citation(namespace, anonymous_review)
+    )
     (destination / "README.md").write_text(readme)
     (destination / "space_model.json").write_text(
         json.dumps(

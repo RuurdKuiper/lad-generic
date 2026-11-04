@@ -1,5 +1,7 @@
 # Optional PMI Viterbi in the original LAD Space
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 Deployed to [Ruurd/lad](https://huggingface.co/spaces/Ruurd/lad), revision
 `9f8b90edf869473ed00a4b14c1237fa51decff4b`, updating original revision `ffb072132fa8a88b47d022e7739e1ec3ff175900`.
 The original model checkpoint and Space configuration were retained.
@@ -54,9 +56,9 @@ no quality improvement is established by this smoke test.
 ## Repetition-penalty extension
 
 The initial integration record above describes the first PMI deployment.
-See [REPETITION_PENALTY.md](REPETITION_PENALTY.md) for the latest optional
+See [REPETITION_PENALTY.md](../../../archives/README.md) for the latest optional
 probability-weighted repetition penalty, its deployment revision, and validation.
 
 The current scoring formula is documented in
-[TRANSITION_REPETITION_PENALTY.md](TRANSITION_REPETITION_PENALTY.md):
+[TRANSITION_REPETITION_PENALTY.md](../../../archives/README.md):
 the repetition correction now applies directly to candidate transitions.

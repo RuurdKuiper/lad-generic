@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "huggingface"))
-from rollout_byod_simple_interface import accounts
+from hub_accounts import accounts
 from build_byod_expanded_ngrams import digest
 
 OUT = ROOT / "artifacts/bigram/byod_expanded_rollout"

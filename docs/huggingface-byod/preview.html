@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BYOD — Hugging Face article draft</title><style>body{margin:0;background:#f5f5f4;color:#202124;font:18px/1.65 system-ui,sans-serif}main{max-width:900px;margin:40px auto;padding:0 20px}article{background:white;padding:40px;margin:30px 0;border:1px solid #ddd;border-radius:12px}h1{font-size:2em;line-height:1.2}h2{line-height:1.3;margin-top:1.5em}a{color:#1255ac}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}em{color:#555}nav{font-size:15px} @media(max-width:600px){article{padding:22px}body{font-size:16px}}</style><main><nav>Published article first · Previous shorter version below</nav><article><h1>BYOD: Build your own diffusion language model in Google Colab</h1>
+<p>Can an existing instruction model learn to generate text through diffusion in a few hours on one GPU?</p>
+<p>In <a href="https://arxiv.org/html/2610.41574v1">BYOD: Build Your Own DLM</a>, we convert <strong>Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B</strong> into bidirectional masked-diffusion language models. Every pretrained weight stays frozen: training updates only LoRA adapters, representing <strong>4.1–5.8% of the final model parameters</strong>. The four primary conversions each took <strong>3.1–4.0 hours on one GPU in Google Colab</strong>.</p>
+<p>We want other people to be able to train, inspect, and experiment with these models too. The training notebook and interactive demos are available now.</p>
+<h2>Train your own model</h2>
+<p><strong><a href="https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb">Open the training notebook in Google Colab</a></strong> · <a href="https://github.com/RuurdKuiper/BYOD">Code and instructions</a></p>
+<p>The notebook takes you from selecting a model to trying your own trained adapter:</p>
+<ol>
+<li>Choose a model and a training profile.</li>
+<li>Use the provided tokenized training data, or configure your own instruction–response dataset.</li>
+<li>Train while watching the loss curves, with optional Google Drive storage.</li>
+<li>Open the interactive inference interface in <strong>step 6</strong> and watch your model denoise its answers. You can also load a saved interrupted run.</li>
+</ol>
+<p><strong>Quick mode</strong> uses smaller Llama, Gemma, or Qwen models and rank-128 LoRA for initial experiments. <strong>Paper mode</strong> uses the original 7B–9B models and rank-1024 adapters; our paper runs used a <strong>96 GB NVIDIA RTX PRO 6000</strong>. Quick mode does not reproduce the paper scores, and available Colab hardware determines which profile you can run.</p>
+<h2>Try the models before training</h2>
+<p>These demos run directly in your browser:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Interactive demo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 2 9B</td>
+<td><a href="https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b">Try BYOD-Gemma</a></td>
+</tr>
+<tr>
+<td>Llama 3.1 8B</td>
+<td><a href="https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b">Try BYOD-Llama</a></td>
+</tr>
+<tr>
+<td>Qwen2.5 7B</td>
+<td><a href="https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b">Try BYOD-Qwen</a></td>
+</tr>
+<tr>
+<td>Ministral 8B</td>
+<td><a href="https://huggingface.co/spaces/Ruurd/byod-ministral-8b">Try BYOD-Ministral</a></td>
+</tr>
+</tbody>
+</table>
+<p>Instead of appending one token at a time, the model starts with a masked answer and fills multiple positions through successive denoising steps. Try the same prompt with different step budgets and watch where tokens appear.</p>
+<p><img src="figures/demo_gemma_confidence_64steps_64tokens_probability.png" alt="A BYOD-Gemma answer about Amsterdam, with retained tokens colored by their sampling probability." /></p>
+<p><em>From Figure 7 of the paper: BYOD-Gemma generation at 64 denoising steps on a 64-token canvas. Greener tokens had higher sampling probability when retained.</em></p>
+<p>For related demos, try <a href="https://huggingface.co/spaces/Ruurd/lad">our earlier LAD model</a>, <a href="https://huggingface.co/spaces/Ruurd/llada-8b-instruct">LLaDA-8B-Instruct</a>, and <a href="https://huggingface.co/spaces/Ruurd/llada2.2-mini">LLaDA2.2-mini</a>. LLaDA2.2 is an additional demo, outside this paper’s evaluation. The hosted demos also include experimental decoding options beyond the paper’s evaluation settings.</p>
+<h2>What did we find?</h2>
+<p><strong>The same conversion recipe works across all four families.</strong> All four generate from fully masked answers and use information to the right of a masked position in our controlled attention test.</p>
+<p><strong>BYOD-Gemma comes within 1.3 percentage points of LLaDA on our nine-task average:</strong> 50.6% versus 51.9%, evaluated in the same harness. The unchanged AR parents still perform better on average, with particularly large conversion gaps in mathematics and code.</p>
+<p><img src="figures/benchmark_radar_panels.png" alt="Task accuracy radar plots comparing BYOD-Llama with LLaDA and its AR parent, and comparing the four BYOD conversions." /></p>
+<p><em>Figure 1: Task-level accuracy in the matched evaluation. Performance depends on both the task and the converted model family.</em></p>
+<p><strong>Open-ended generation remains the main challenge.</strong> At 64 denoising steps for 128 output tokens, externally scored perplexity is 8.3–11.1 for BYOD, versus 4.1 for LLaDA and 2.2–3.0 for the AR parents. Increasing the denoising budget generally helps, but a low-cost conversion still leaves a quality gap.</p>
+<p><img src="figures/open_generation_budget.png" alt="External perplexity and token diversity across 32, 64, and 128 denoising evaluations, with AR-parent references." /></p>
+<p><em>Figure 3: Generation quality across inference budgets. Lower perplexity and higher Distinct-1 are better; crosses mark the AR parents.</em></p>
+<p>We hope BYOD makes diffusion-model experiments easier to start: change a backbone, try different training data, inspect a denoising trajectory, and see what improves.</p>
+<p><strong><a href="https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb">Start with the Colab notebook</a></strong> · <a href="https://arxiv.org/html/2610.41574v1">Read the paper</a> · <a href="https://github.com/RuurdKuiper/BYOD">Get the code</a></p>
+</article><article><h2>BYOD: Train and try your own diffusion language model</h2>
+<p>We’re sharing <strong>BYOD: Build Your Own DLM</strong>, a recipe for converting existing instruction models into bidirectional masked-diffusion language models using only LoRA training.</p>
+<p>Our Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B conversions each took <strong>3.1–4.0 hours on one Colab GPU</strong>, with every pretrained weight frozen.</p>
+<p><strong>Want to train one yourself? <a href="https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb">Open our Google Colab notebook</a>.</strong> Select a model, train while watching the loss curves, then open the live inference interface in step 6. You can use the provided data or configure your own instruction–response dataset. Quick mode offers smaller models for experiments; paper mode needs a high-memory GPU, and our runs used 96 GB. Quick mode does not reproduce the paper scores.</p>
+<p><strong>Try the trained models in your browser:</strong> <a href="https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b">Gemma</a> · <a href="https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b">Llama</a> · <a href="https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b">Qwen</a> · <a href="https://huggingface.co/spaces/Ruurd/byod-ministral-8b">Ministral</a></p>
+<p><img src="figures/demo_gemma_confidence_64steps_64tokens_probability.png" alt="BYOD-Gemma generation, colored by retained-token sampling probability." /></p>
+<p><em>BYOD-Gemma at 64 denoising steps, from Figure 7. Try changing the step budget in the demos.</em></p>
+<p>BYOD-Gemma reaches <strong>50.6%</strong> average accuracy across nine tasks, compared with <strong>51.9%</strong> for LLaDA-8B-Instruct in the same harness. The AR parents remain stronger on average, and open-ended fluency is still a clear limitation.</p>
+<p><img src="figures/benchmark_radar_panels.png" alt="Task-level accuracy profiles for the matched Llama/LLaDA comparison and the four BYOD families." /></p>
+<p><em>Figure 1: Matched benchmark results. The largest gaps with AR occur in mathematics and code.</em></p>
+<p>We hope the notebook and demos make it easier for others to explore diffusion training, new backbones, and better decoding.</p>
+<p><a href="https://arxiv.org/html/2610.41574v1">Paper</a> · <a href="https://github.com/RuurdKuiper/BYOD">Code</a> · <strong><a href="https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb">Train in Colab</a></strong></p>
+</article></main></html>

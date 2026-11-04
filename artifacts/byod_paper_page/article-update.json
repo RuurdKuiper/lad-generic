@@ -1,0 +1,10 @@
+{
+  "post_url": "https://huggingface.co/papers/2610.41574#6ae88d732c4b59d1b5205872",
+  "original_abstract_preserved": true,
+  "author_verified": true,
+  "article_source": "docs/huggingface-byod/article.md",
+  "embedded_figures": 3,
+  "githubRepo": "https://github.com/RuurdKuiper/BYOD",
+  "projectPage": "https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb",
+  "submittedOnDailyAt": null
+}

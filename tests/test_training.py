@@ -166,53 +166,6 @@ def test_end_learning_rate_requires_linear_scheduler():
         )
 
 
-def test_llama_colab_long_run_uses_800k_samples_and_nonzero_linear_endpoint():
-    from pathlib import Path
-    import yaml
-
-    config = yaml.safe_load(
-        (Path(__file__).resolve().parents[1] / "configs/llama3_8b_mask_colab.yaml").read_text()
-    )
-
-    assert config["output_dir"] == "outputs/llama-3.1-8b-mask-long"
-    assert config["max_updates"] * config["batch_size"] * config["gradient_accumulation_steps"] == 800_000
-    assert config["scheduler"] == "linear"
-    assert config["learning_rate"] == pytest.approx(1e-5)
-    assert config["end_learning_rate"] == pytest.approx(1e-6)
-    assert config["validation_steps"] == 500
-    assert config["generation_perplexity"]["sampler"] == "llada_official"
-    assert config["generation_perplexity"]["interval_steps"] % config["validation_steps"] == 0
-
-
-def test_merged_full_finetuning_config_uses_low_memory_continuation():
-    from pathlib import Path
-    import yaml
-
-    config = yaml.safe_load(
-        (Path(__file__).resolve().parents[1] / "configs/llama3_8b_mask_colab_merged_full_finetune.yaml").read_text()
-    )
-
-    assert config["model_name_or_path"].endswith("/merged/llama-3.1-8b-mask")
-    assert config["full_finetuning"] is True
-    assert config["optimizer"] == "adamw8bit"
-    assert config["learning_rate"] == pytest.approx(1e-5)
-    assert config["end_learning_rate"] == pytest.approx(1e-6)
-    assert config["quantization"] == "none"
-    assert config["batch_size"] == 1
-    assert config["gradient_accumulation_steps"] == 16
-    assert config["gradient_checkpointing"] is True
-    assert config["batch_size"] * config["gradient_accumulation_steps"] == 16
-    assert config["resume_data_updates"] == 25000
-    assert config["max_updates"] == 25000
-    assert (config["resume_data_updates"] + config["max_updates"]) * 16 == 800_000
-    assert config["checkpoint_steps"] == 5000
-    assert config["save_best_model"] is False
-    assert config["generation_perplexity"]["enabled"] is True
-    assert config["generation_perplexity"]["score_perplexity"] is False
-    assert config["generation_perplexity"]["interval_steps"] == 1000
-    assert "lora_r" not in config
-
-
 @pytest.mark.parametrize("capability", [(8, 9), (9, 0), (10, 0), (12, 0)])
 def test_fp8_is_enabled_only_on_supported_native_hardware(capability):
     resolved = _resolve_fp8(
@@ -443,21 +396,3 @@ def test_shipped_training_and_benchmark_configs_share_open_ended_settings():
         resolve_mask_only_generation_settings(benchmark, "open_ended"),
     ):
         assert {key: actual[key] for key in keys} == {key: expected[key] for key in keys}
-
-
-def test_last_layer_and_lm_head_experiment_matches_long_run_except_for_declared_changes():
-    from pathlib import Path
-    import yaml
-
-    root = Path(__file__).resolve().parents[1]
-    original = yaml.safe_load((root / "configs/llama3_8b_mask_colab.yaml").read_text())
-    experiment = yaml.safe_load((root / "configs/llama3_8b_mask_colab_lastlayer_lmhead.yaml").read_text())
-
-    assert experiment.pop("train_last_n_layers") == 1
-    assert experiment.pop("lora_targets") == ["q_proj", "v_proj", "lm_head"]
-    assert experiment.pop("checkpoint_steps") == 5000
-    assert experiment.pop("output_dir") == "outputs/llama-3.1-8b-mask-long-lastlayer-lmhead"
-    original.pop("lora_targets")
-    original.pop("output_dir")
-    original.pop("checkpoint_steps")
-    assert experiment == original

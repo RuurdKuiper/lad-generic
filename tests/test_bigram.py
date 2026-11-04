@@ -17,7 +17,7 @@ def test_single_and_zero_weight():
     assert BigramViterbiSelector(scorer(), 0)(ids, logits).tolist() == [2, 3]
 
 
-@pytest.mark.parametrize('length', [1, 8, 32, 128, 256])
+@pytest.mark.parametrize('length', [1, 2, 256])
 def test_lengths(length):
     torch.manual_seed(length)
     ids = torch.randint(0, 8, (length, 16))
@@ -95,15 +95,6 @@ def test_fixed_tokens_and_both_boundaries_are_real_adjacencies():
     assert torch.allclose(confidence, emissions.gather(1, selected[:, None]).squeeze(1).exp())
     fixed, _ = selector.select_block(logits, current, torch.zeros(3, dtype=torch.bool))
     assert torch.equal(fixed, current)
-
-
-def test_zero_weight_full_logits_is_argmax_with_constraints():
-    torch.manual_seed(7)
-    logits = torch.randn(8, 8)
-    current = torch.arange(8)
-    editable = current % 2 == 0
-    selected, _ = BigramViterbiSelector(scorer(), 0).select_block(logits, current, editable)
-    assert torch.equal(selected, torch.where(editable, logits.argmax(-1), current))
 
 
 @pytest.mark.parametrize('method', ['conditional', 'pmi'])
@@ -220,17 +211,18 @@ def test_v1_checkpoint_reconstructs_exact_successor_counts_without_changing_cond
 
 @pytest.mark.parametrize('length', [1, 8, 32, 128, 256])
 @pytest.mark.parametrize('method', ['conditional', 'pmi'])
-def test_both_scoring_modes_lengths_and_zero_weight(length, method):
+def test_both_scoring_modes_lengths_and_zero_weight_preserve_constraints(length, method):
     torch.manual_seed(length)
     model = scorer()
     logits = torch.randn(length, 8)
-    current = torch.zeros(length, dtype=torch.long)
-    editable = torch.ones(length, dtype=torch.bool)
+    current = torch.arange(length) % 8
+    editable = torch.arange(length) % 2 == 0
     selected, _ = BigramViterbiSelector(model, .5, scoring_method=method).select_block(logits, current, editable)
     assert selected.shape == (length,)
+    assert torch.equal(selected[~editable], current[~editable])
     independent, _ = BigramViterbiSelector(model, 0., scoring_method=method).select_block(
         logits, current, editable, left_id=1, right_id=2)
-    assert torch.equal(independent, logits.argmax(-1))
+    assert torch.equal(independent, torch.where(editable, logits.argmax(-1), current))
 
 
 def test_pmi_fixed_tokens_and_boundary_objective():

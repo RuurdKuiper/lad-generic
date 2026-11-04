@@ -1,0 +1,57 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "revision": "acc5f04a1d0edc3aca1333151f5d86ddc8e4b222",
+    "duration": 30
+  },
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "revision": "4dacf9a455b2b24b419d7d9ee31e8606f0e55b0a",
+    "duration": 30
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "revision": "26f70a3299116678760c2cff09d456612b3a4635",
+    "duration": 30
+  },
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "revision": "4f07efacffb2b3bcae63b264dc0f7775c1a34b3d",
+    "duration": 30
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "revision": "e653aa8e58a84ee49f8d0c55e4331bc1f3f29b65",
+    "duration": 30
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "revision": "32baec1e589911461a0f8c701d1aa5e4de6de1dd",
+    "duration": 30
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "revision": "39975425179012c549c229ee0d8fc80dff2e9e08",
+    "duration": 30
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "revision": "ac4d35fb803c20afedc21539c40204ffe81f5416",
+    "duration": 30
+  },
+  {
+    "space": "Ruurd/lad",
+    "revision": "3b2ad9f8a7204bfb102187492582fe5f09cc7eda",
+    "duration": 30
+  },
+  {
+    "space": "Ruurd/llada-8b-instruct",
+    "revision": "cb32cc50bdff155526dcbdf6ba0709d9a273e483",
+    "duration": 30
+  },
+  {
+    "space": "Ruurd/llada2.2-mini",
+    "revision": "39b357a9d4d80e63c388bedef5660abc64fc6cad",
+    "duration": 30
+  }
+]

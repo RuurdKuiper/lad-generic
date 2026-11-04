@@ -1,5 +1,7 @@
 # Paper-style coding comparison
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 Manually reviewed 150 of 150 saved outputs; 150 planned. Runs execute on Hugging Face Space `Ruurd/byod-gemma-2-9b`; local code submits requests, stores answers, and aggregates manual judgments.
 
 Same ten custom assignments and all five methods at NFE 32, 64, and 128. The paper prescribes greedy temperature 0, low-confidence retention, one full block, no repetition penalty, and delayed EOS/EOT retention for coding ([paper source](../../../arxiv_submission/paper.tex)). This run uses a 128-token canvas and block, corresponding to the paper’s MBPP-sized budget, with the requested NFE ablation. It is not a HumanEval/MBPP benchmark reproduction.
@@ -80,11 +82,11 @@ Means are over saved runs in each group. Wall time includes network/queue/startu
 
 ## Artifacts
 
-- [Verbatim labeled outputs](answers_labeled.md)
-- [Manual scores and defect notes](manual_scores.csv)
-- [Exact run settings](manifest.json)
-- [Per-output data and timings](results.jsonl)
-- [Review protocol](REVIEW_PROTOCOL.md)
+- [Verbatim labeled outputs](../../../archives/README.md)
+- [Manual scores and defect notes](../../../archives/README.md)
+- [Exact run settings](../../../archives/README.md)
+- [Per-output data and timings](../../../archives/README.md)
+- [Review protocol](../../../archives/README.md)
 
 ## Earlier coding setup versus paper-style setup
 

@@ -1,0 +1,80 @@
+{
+  "post_url": "https://huggingface.co/papers/2610.41574#6ae88d732c4b59d1b5205872",
+  "models": [
+    "Ruurd/BYOD-Gemma-2-9B",
+    "Ruurd/BYOD-Llama-3.1-8B",
+    "Ruurd/BYOD-Qwen2.5-7B",
+    "Ruurd/BYOD-Ministral-8B"
+  ],
+  "datasets": [
+    "Ruurd/BYOD-tokenized-256",
+    "Ruurd/LAD-training-1m-256"
+  ],
+  "spaces": [
+    "Ruurd/byod-gemma-2-9b",
+    "Ruurd/byod-llama-3.1-8b",
+    "Ruurd/byod-qwen2.5-7b",
+    "Ruurd/byod-ministral-8b"
+  ],
+  "authorship_claim_submitted": true,
+  "main_page_edit_allowed": true,
+  "repository_commits": [
+    {
+      "repo": "Ruurd/BYOD-Gemma-2-9B",
+      "repo_type": "model",
+      "revision": "969ae9073e223aec79d0f292c7c76c6d9f94ecd0",
+      "arxiv_tag": true
+    },
+    {
+      "repo": "Ruurd/BYOD-Llama-3.1-8B",
+      "repo_type": "model",
+      "revision": "11302cf5a7fc19609a242ab8a83e3b17beea4854",
+      "arxiv_tag": true
+    },
+    {
+      "repo": "Ruurd/BYOD-Qwen2.5-7B",
+      "repo_type": "model",
+      "revision": "322dc07bfd94426aebc0087aa6b7435ac50ffdbf",
+      "arxiv_tag": true
+    },
+    {
+      "repo": "Ruurd/BYOD-Ministral-8B",
+      "repo_type": "model",
+      "revision": "e956cdbe066d6ff114ed36dcda73994ae6f82416",
+      "arxiv_tag": true
+    },
+    {
+      "repo": "Ruurd/LAD-training-1m-256",
+      "repo_type": "dataset",
+      "revision": "be822dd780d983966b4b3d1b35b491369a196dbc",
+      "arxiv_tag": true
+    },
+    {
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "9c6b32813e3f2a80b8dcba002798d628ffe4dc10",
+      "arxiv_tag": true
+    }
+  ],
+  "anonymous_space_commits": [
+    {
+      "space": "Dovelove/byod-gemma-2-9b",
+      "revision": "d12b9d81fe3f85efe48f9ffe76c15f0425bbfadb"
+    },
+    {
+      "space": "Dovelove/byod-llama-3.1-8b",
+      "revision": "378c9d28d6411fb9b27e1c8655ff9871f6082a66"
+    },
+    {
+      "space": "Dovelove/byod-qwen2.5-7b",
+      "revision": "9d2305736bf75bfef340a96f47e7cac2e6342d96"
+    },
+    {
+      "space": "Dovelove/byod-ministral-8b",
+      "revision": "d96a3b90ce1747aec8e8115100f83be061046491"
+    }
+  ],
+  "author_verified": true,
+  "article_source": "docs/huggingface-byod/article.md",
+  "embedded_figures": 3
+}

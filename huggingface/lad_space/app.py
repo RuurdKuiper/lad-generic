@@ -129,7 +129,8 @@ def _generate_step(input_ids, top_p, top_k, eos_bias=0.0, *, answer_start=0,
     return sampled, conf
 
 
-@spaces.GPU
+# Reserve 30s for interactive generation, including startup headroom.
+@spaces.GPU(duration=30)
 def run_diffusion_loop(input_ids, answer_start, max_it, pause_length, eos_bias,
                        sharpness, noise_start, use_confidence_noising,
                        use_permanent_unmasking, noise_clipping, top_p, top_k, added_tokens, context_window,

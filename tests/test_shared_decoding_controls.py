@@ -57,7 +57,9 @@ def test_temperature_changes_path_at_fixed_weight(mode):
 
 
 @pytest.mark.parametrize('mode', ['diffusion', 'viterbi_margin'])
-@pytest.mark.parametrize('length', [1, 32, 64, 128, 256])
+# This branch is elementwise; exercise a singleton and the maximum block width
+# rather than repeating the same assertion at every intermediate canvas size.
+@pytest.mark.parametrize('length', [1, 256])
 @pytest.mark.parametrize('temperature,top_k', [(0., 2), (1e-300, 2), (2., 1)])
 def test_greedy_limits_and_bfloat16_ties_keep_fixed_tokens(mode, length, temperature, top_k):
     selector = BigramViterbiSelector(PairReward(), .5, remasking_confidence=mode)

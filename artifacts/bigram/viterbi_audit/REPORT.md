@@ -1,5 +1,7 @@
 # Viterbi implementation and quality audit
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 The temperature-aware Viterbi calculation matches the previous implementation at temperature 1 and an identical candidate count. The simplified interface's four hidden defaults match the requested PMI / diffusion probability / minimum count 1 / clipping bound 2. No new selector regression was found at the user's explicit temperature 1 and top-k 16 settings. This is a focused audit, not a repeat of the full 30-question benchmark.
 
 ## Findings and final changes
@@ -36,12 +38,12 @@ These observations support the user's preference for T2 on this prompt, not a un
 
 ## Records
 
-- [Verbatim Amsterdam outputs](answers.md)
-- [Raw Amsterdam runs](amsterdam_comparison.jsonl)
-- [Manual observations](manual_observations.json)
-- [Initial source/default/parity checks](implementation_audit.json)
-- [Historical hosted-output comparison](hosted_comparison.jsonl)
-- [Experimental raw-confidence patch, reverted](unbiased_retention_experiment.patch)
-- [Final deployment](deployment.json)
-- [Final live verification](hosted_verification.json)
-- [Final interface generation check](final_interface_smoke.json)
+- [Verbatim Amsterdam outputs](../../../archives/README.md)
+- [Raw Amsterdam runs](../../../archives/README.md)
+- [Manual observations](../../../archives/README.md)
+- [Initial source/default/parity checks](../../../archives/README.md)
+- [Historical hosted-output comparison](../../../archives/README.md)
+- [Experimental raw-confidence patch, reverted](../../../archives/README.md)
+- [Final deployment](../../../archives/README.md)
+- [Final live verification](../../../archives/README.md)
+- [Final interface generation check](../../../archives/README.md)

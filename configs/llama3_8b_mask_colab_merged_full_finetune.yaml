@@ -14,8 +14,8 @@ full_finetuning: true
 dataset_name: Ruurd/LAD-training-1m-256
 splits: {train: train, validation: validation, test: test}
 # The merged checkpoint has already seen 25,000 x 16 = 400,000 examples.
-# Prepare 800,000 examples in the same seeded order, discard that prefix, and
-# train on the following 400,000 examples for another 25,000 updates.
+# Prepare 1,200,000 examples in the same seeded order, discard that prefix,
+# and train on the following 800,000 examples for another 50,000 updates.
 resume_data_updates: 25000
 
 # File paths
@@ -59,8 +59,8 @@ max_grad_norm: 0.5
 epochs: 1
 max_updates: 50000
 
-# Minimum-memory single-GPU layout: one sequence at a time, with accumulation
-# preserving the original effective batch size of 16.
+# Single-GPU layout: 16 sequences per batch without gradient accumulation.
+# For less memory, use batch_size: 1 and gradient_accumulation_steps: 16.
 max_sequence_length: 256
 pad_to_multiple_of: 8
 batch_size: 16

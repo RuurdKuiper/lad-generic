@@ -1,5 +1,7 @@
 # Decoding quality experiment — final report on 557 reviewed outputs
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 **Finalized at the user's request using the 557 available generations, all manually reviewed. The 43 ungenerated calls are skipped; the waiting runner has been stopped. The original 600-run matrix is incomplete, so comparisons across all settings use the same 23 fully covered prose questions.**
 
 Generation ran on [Ruurd's Gemma Space](https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b); the local script submitted requests and saved outputs. Space revision: `c8003db3f4da4569d0915199751c1b7e0f1147d2`. No model training or deployment changes were made.
@@ -17,13 +19,13 @@ These are exploratory judgments from one prompt set and one seed. They support a
 
 All 10 coding assignments are complete under every configuration (150 runs). All 30 prose questions have 32-step results; 28 have all 64-step results; the first 23 have every setting at every step count. A further two 128-step answers for question 24 are saved but excluded from the balanced comparison. The fair prose table below uses exactly the same first 23 questions for all 15 configurations.
 
-Skipped calls: 33 at 128 steps and 10 at 64 steps. Exact keys: [missing_runs.json](missing_runs.json).
+Skipped calls: 33 at 128 steps and 10 at 64 steps. Exact keys: [missing_runs.json](../../../archives/README.md).
 
 Common settings: 128 new tokens, block length 128, steps 128/64/32, seed 42, temperature 1, sampling top-k 16, bigram candidates 16, bigram weight 0.5, PMI minimum count 1, PMI clipping bound 2. System prompt: “You are a helpful assistant.” Retained tokens are frozen, revision is off, and early stopping is disabled to use the complete requested step budget.
 
 For prose, EOS/EOT retention delay is on and bigram ending-delay strength is 1000. For code both are off (neutral strength 1). The baseline has no bigram selector, so the bigram ending prediction penalty is not applied there. Temperature and sampling top-k affect the sampled baseline; Viterbi selection is deterministic. These are the requested practical configurations, not an experiment isolating the bigram term from sampling and ending policy.
 
-The 30 prose prompts are the original first 30 questions in `src/diffusion_lm/generation_prompts.txt`, ending with the traveler story. Coding prompts request short Python functions: even sum, palindrome normalization, Fibonacci, order-preserving deduplication, bracket matching, binary search, word counts, sorted merge, flattening, and FizzBuzz. The exact prompts/options are in [manifest.json](manifest.json) and every result record.
+The 30 prose prompts are the original first 30 questions in `src/diffusion_lm/generation_prompts.txt`, ending with the traveler story. Coding prompts request short Python functions: even sum, palindrome normalization, Fibonacci, order-preserving deduplication, bracket matching, binary search, word counts, sorted merge, flattening, and FizzBuzz. The exact prompts/options are in [manifest.json](../../../archives/README.md) and every result record.
 
 ## Coding — complete matrix
 
@@ -43,7 +45,7 @@ Every configuration solves even sum. The main extra successes are flattening and
 
 ## Prose — balanced 23-question comparison
 
-Cells show **mean manual score / 3** followed by the number of clean answers. Scale: 3 = no material grammar/fluency defect; 2 = localized defects; 1 = multiple conspicuous errors or severe repetition; 0 = mostly incoherent or degenerate output. Full criteria: [REVIEW_PROTOCOL.md](REVIEW_PROTOCOL.md).
+Cells show **mean manual score / 3** followed by the number of clean answers. Scale: 3 = no material grammar/fluency defect; 2 = localized defects; 1 = multiple conspicuous errors or severe repetition; 0 = mostly incoherent or degenerate output. Full criteria: [REVIEW_PROTOCOL.md](../../../archives/README.md).
 
 | Method | 32 steps | 64 steps | 128 steps |
 | --- | --- | --- | --- |
@@ -88,12 +90,12 @@ Request time includes hosted allocation/network/queue/rendering effects. Selecto
 
 ## Saved evidence and reproduction
 
-- [All available answers, labeled by configuration](answers_labeled.md)
-- [Raw outputs, exact options, status, timings](results.jsonl)
-- [Per-answer manual scores and reasons](manual_scores.csv)
-- [Manual judgments keyed by prompt and exact output hash](manual_reviews.json)
-- [Balanced prose aggregate](balanced_prose_summary.json)
-- [All available aggregates with sample counts](summary.json)
+- [All available answers, labeled by configuration](../../../archives/README.md)
+- [Raw outputs, exact options, status, timings](../../../archives/README.md)
+- [Per-answer manual scores and reasons](../../../archives/README.md)
+- [Manual judgments keyed by prompt and exact output hash](../../../archives/README.md)
+- [Balanced prose aggregate](../../../archives/README.md)
+- [All available aggregates with sample counts](../../../archives/README.md)
 
 Answers were read in sheets with shuffled configuration labels; exact duplicates within a prompt share a recorded judgment. This is an implementer's review in the same session as running the experiment, **not an independent blinded human study**. No external judge model, grammar checker, or execution-based grading was used. Only one baseline seed was tested, and 10 coding tasks are too few to establish a robust one-task advantage.
 

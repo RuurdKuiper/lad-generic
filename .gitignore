@@ -50,6 +50,7 @@ data/prepared/
 data/byod-prepared/
 data/byod-tokenized-publication.json
 base_models/
+local_cache/
 outputs/
 results/
 checkpoints/
@@ -96,3 +97,10 @@ artifacts/llada22/ngrams/count-shards/
 artifacts/llada22/ngrams/spill/
 artifacts/llada22/ngrams/*.parquet
 artifacts/llada22/ngrams/*.duckdb*
+
+# Keep only the selected illustration and its reproducibility inputs.
+artifacts/byod_daily_gif/*
+!artifacts/byod_daily_gif/README.md
+!artifacts/byod_daily_gif/capture.json
+!artifacts/byod_daily_gif/provenance.json
+!artifacts/byod_daily_gif/byod-gemma-denoising.gif

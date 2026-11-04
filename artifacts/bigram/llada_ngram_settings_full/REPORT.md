@@ -1,5 +1,7 @@
 # LLaDA decoding study — eight matched configurations
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 **2,256 graded outputs: 282 matched prompt/NFE cases × eight configurations.** The original stopped study contributes 1,410 outputs; the user-requested sampled bigram + trigram configuration adds 282. Temperature-zero confidence adds another 282; randomized BG+TG adds a further 282. Three original outputs from one incomplete comparison remain excluded. Every method uses precisely the same cases.
 
 ## Standard temperature decoding and the new eighth arm
@@ -28,7 +30,7 @@ was run to rebuild this report.
 
 See the [randomized extension](randomized/REPORT.md) for the math error audit,
 paired intervals and separate seed-variation check. The [seven-configuration
-report](PRE_RANDOMIZED_REPORT.md) and pre_randomized_* data/figures preserve
+report](../../../archives/README.md) and pre_randomized_* data/figures preserve
 all previous results. The original stopped main-study files remain immutable.
 
 ## Added configuration
@@ -75,7 +77,7 @@ This comparison removes the independent-token sampling difference between the or
 
 In coding, Confidence T=0 ties deterministic BG + TG at NFE 64 and128, and scores one more success at32. BG + TG retains the observed advantage at8 NFE (7/16 versus4/16) and16 NFE (8/16 versus7/16). Thus much of the earlier high-budget coding advantage over confidence is explained by its sampling temperature. Open-ended BG + TG still scores higher overall. On math, changing the baseline to T=0 removes the observed 64-NFE accuracy gap because both methods score9/16 (Confidence T=0.7 scores12/16). A128-NFE gap remains: Confidence T=0 scores11/15 and deterministic BG + TG scores9/15.
 
-The [completed six-configuration report](PRE_CONFIDENCE_ZERO_REPORT.md) is preserved. The [confidence-zero amendment](confidence_zero_amendment.json) records the frozen source and prior-result hashes; [new raw outputs](confidence_zero/results.jsonl) remain separate from both earlier generation phases.
+The [completed six-configuration report](../../../archives/README.md) is preserved. The [confidence-zero amendment](confidence_zero_amendment.json) records the frozen source and prior-result hashes; [new raw outputs](../../../archives/README.md) remain separate from both earlier generation phases.
 
 ## Overall metrics
 
@@ -217,14 +219,14 @@ Open/math answers were inspected by the assistant with configuration/NFE labels 
 ## Files
 
 - [All current configurations: raw outputs](combined_results.jsonl), [scores CSV](combined_scores.csv), [summary and paired bootstrap results](combined_summary.json).
-- [Every retained output with its judgment](ALL_OUTPUTS.md); [best, middle and worst examples by configuration/NFE/domain](EXAMPLES.md).
-- [Original five-method report](PRE_SAMPLING_REPORT.md); [high-NFE math audit](HIGH_NFE_MATH_ANALYSIS.md).
+- [Every retained output with its judgment](../../../archives/README.md); [best, middle and worst examples by configuration/NFE/domain](EXAMPLES.md).
+- [Original five-method report](../../../archives/README.md); [high-NFE math audit](HIGH_NFE_MATH_ANALYSIS.md).
 - [Sampling timing discussion: existing measurements and implementation deductions](TIMING_NOTES.md). No new timing benchmark or sampling optimization was performed for that discussion.
-- [Original manifest](manifest.json), [protocol and amendment](PROTOCOL.md), [sampling amendment](sampling_amendment.json), [original stop snapshot](stop_snapshot.json).
-- [Original retained outputs](matched_results.jsonl), [original scores](matched_scores.csv), [original main summary](matched_summary.json), [new sampled outputs](sample/results.jsonl).
+- [Original manifest](manifest.json), [protocol and amendment](PROTOCOL.md), [sampling amendment](sampling_amendment.json), [original stop snapshot](../../../archives/README.md).
+- [Original retained outputs](../../../archives/README.md), [original scores](../../../archives/README.md), [original main summary](../../../archives/README.md), [new sampled outputs](../../../archives/README.md).
 - [Manual judgments](reviews.json), [coding checks](code_checks.json), [reference validation](reference_validation.json).
 
-The original raw files and stop snapshot remain immutable historical records. `summary.json` and `scores.csv` now mirror the current matched analysis.
+The original raw files and stop snapshot remain immutable historical records. The canonical current analysis files are `combined_summary.json` and `combined_scores.csv`; duplicate aliases were removed.
 
 
 ## Randomized Viterbi: paired changes

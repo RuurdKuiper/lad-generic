@@ -43,7 +43,8 @@ BIGRAM = BigramScorer.load(scorer_path("bigram_expanded.pt"), tokenizer=TOKENIZE
 TRIGRAM = TrigramScorer.load(scorer_path("trigram_expanded.pt"), bigram=BIGRAM)
 
 
-@spaces.GPU(size="large", duration=300)
+# Reserve 30s for interactive generation, including startup headroom.
+@spaces.GPU(size="large", duration=30)
 def generate(question, system_prompt, max_new_tokens, steps, block_length, temperature,
              top_k, color_mode, method, bigram_weight, threshold, editing_threshold,
              max_post_steps, early_stopping, max_steps_per_block):

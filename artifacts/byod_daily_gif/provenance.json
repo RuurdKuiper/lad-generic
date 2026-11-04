@@ -1,0 +1,29 @@
+{
+  "capture": "capture.json",
+  "selection": "Illustrative example selected from multiple attempts; not a representative performance evaluation. Output text is unedited.",
+  "space": "Ruurd/byod-gemma-2-9b",
+  "space_revision": "352f07ff0233f63be8ef0bd4f33236c6e1c1cac8",
+  "seed": 303,
+  "system_guided": false,
+  "changed_parameters": [
+    "block_length",
+    "generation_seed",
+    "max_new_tokens",
+    "question",
+    "trajectory_color_mode"
+  ],
+  "rendering": {
+    "frames": 37,
+    "visible_tokens": 73,
+    "dimensions": [
+      1080,
+      1080
+    ],
+    "font_size": 32,
+    "duration_ms": 10000
+  },
+  "sha256": {
+    "capture.json": "76475c07ba4a445fdab2bcf9d75db740bed749d4a1c9d30a7ae99afe21e0b0c1",
+    "byod-gemma-denoising.gif": "a2ab964d5a5a3cd432fa5734501b63f0e3743203136174da7509c973cfbc6ad5"
+  }
+}

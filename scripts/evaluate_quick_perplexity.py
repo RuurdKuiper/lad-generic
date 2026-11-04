@@ -278,7 +278,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=['generate','score','summarize','diversity'])
     parser.add_argument('--limit', type=int)
-    parser.add_argument('--output', type=Path, default=OUT)
+    parser.add_argument('--output', type=Path, default=Path('/tmp/byod-perplexity'))
     parser.add_argument('--space', default=SPACE)
     parser.add_argument('--questions', type=int, default=30)
     parser.add_argument('--max-new-tokens', type=int, default=64)

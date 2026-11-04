@@ -1,0 +1,42 @@
+[
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "revision": "352f07ff0233f63be8ef0bd4f33236c6e1c1cac8",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "revision": "225987095efdd3a9e4745b5d4002896d75e7a0b5",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "revision": "269b4d8433d51cba2565434d3313687ff61714c4",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "revision": "3911bc0764e5ed7923d01cdb793c396405d8ecea",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "revision": "b8f716ebeec72a08f081bc25a6ac642328cd7874",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "revision": "1a59b1b3975f43246e4779527f92e746291dc629",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "revision": "8009d8f558c52f7afefe016f50bffd56bff1d425",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "revision": "5ff6a1108726741aba0e1c7177f123763c8c3fd8",
+    "paper": "https://arxiv.org/abs/2610.41574"
+  }
+]

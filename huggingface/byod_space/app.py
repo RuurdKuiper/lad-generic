@@ -105,23 +105,10 @@ def _trigram_scorer(path, bigram_path):
     return TrigramScorer.load(path, bigram=_bigram_scorer(bigram_path))
 
 
-def _duration(*args) -> int:
-    """Reserve enough GPU time for the requested number of denoising steps."""
-    try:
-        steps = int(args[3])
-        pause_per_step = float(args[7])
-        remasking_strategy = str(args[9])
-        ar_check_interval = max(1, int(args[11]))
-    except (IndexError, TypeError, ValueError):
-        steps = 64
-        pause_per_step = 0.0
-        remasking_strategy = "Confidence-guided"
-        ar_check_interval = 1
-    seconds_per_step = 2.0 + (2.0 / ar_check_interval if remasking_strategy == "Autoregressive-confidence" else 0.0)
-    return min(300, max(30, round(steps * (seconds_per_step + pause_per_step))))
-
-
-@spaces.GPU(size="large", duration=_duration)
+# Typical interactive runs fit in 30s, including startup headroom. This is a
+# hard timeout; long generations and visualization pauses must fit this budget.
+# Avoid pessimistic step-based reservations that block anonymous visitors.
+@spaces.GPU(size="large", duration=30)
 def generate(
     question: str,
     system_prompt: str,
@@ -292,6 +279,10 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
             )
             run = gr.Button("Generate", variant="primary")
             status = gr.Markdown("Ready")
+            gr.Markdown(
+                "Runs have a 30-second limit. If a run times out, reduce the "
+                "token count or denoising steps and set visualization pauses to zero."
+            )
             trajectory = gr.HTML(label="Live denoising")
         with gr.Column(scale=2):
             system_prompt = gr.Textbox(
@@ -317,7 +308,7 @@ with gr.Blocks(title=f"{DISPLAY_NAME} · masked diffusion") as demo:
                 step=0.05,
                 label="Pause between denoising steps (seconds)",
                 visible=not SIMPLE_INTERFACE,
-                info="Slows the visualization while keeping one GPU allocation for the full run.",
+                info="Slows the visualization and counts toward the 30-second runtime limit.",
             )
             trajectory_color_mode = gr.Radio(
                 choices=["No coloring", "Prediction probability", "Prediction iteration"],

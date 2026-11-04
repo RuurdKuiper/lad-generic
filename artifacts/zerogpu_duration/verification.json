@@ -1,0 +1,89 @@
+[
+  {
+    "space": "Ruurd/byod-llama-3.1-8b",
+    "revision": "4dacf9a455b2b24b419d7d9ee31e8606f0e55b0a",
+    "stage": "RUNNING",
+    "wall_seconds": 10.202983416998904,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 63, \"elapsed_ms\": 4575.255259871483, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 63, \"editable_predictions\": 2079, \"changed_predictions\": 1395, \"changed_fraction\": 0.670995670995671, \"selector_ms\": 428.28764021396637, \"mean_selector_ms\": 6.798216511332799}"
+  },
+  {
+    "space": "Ruurd/byod-qwen2.5-7b",
+    "revision": "26f70a3299116678760c2cff09d456612b3a4635",
+    "stage": "RUNNING",
+    "wall_seconds": 17.943532917000994,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 54, \"elapsed_ms\": 4182.903420645744, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 54, \"editable_predictions\": 2025, \"changed_predictions\": 840, \"changed_fraction\": 0.4148148148148148, \"selector_ms\": 438.3805962279439, \"mean_selector_ms\": 8.118159189406368}"
+  },
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "revision": "acc5f04a1d0edc3aca1333151f5d86ddc8e4b222",
+    "stage": "RUNNING",
+    "wall_seconds": 10.358783624997159,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 54, \"elapsed_ms\": 5591.589637100697, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 54, \"editable_predictions\": 2025, \"changed_predictions\": 1381, \"changed_fraction\": 0.6819753086419753, \"selector_ms\": 452.16393005102873, \"mean_selector_ms\": 8.373406112056088}"
+  },
+  {
+    "space": "Ruurd/byod-ministral-8b",
+    "revision": "4f07efacffb2b3bcae63b264dc0f7775c1a34b3d",
+    "stage": "RUNNING",
+    "wall_seconds": 10.628840792000119,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 54, \"elapsed_ms\": 4149.366348981857, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 54, \"editable_predictions\": 2025, \"changed_predictions\": 1119, \"changed_fraction\": 0.5525925925925926, \"selector_ms\": 388.7952230870724, \"mean_selector_ms\": 7.199911538649489}"
+  },
+  {
+    "space": "Dovelove/byod-llama-3.1-8b",
+    "revision": "32baec1e589911461a0f8c701d1aa5e4de6de1dd",
+    "stage": "RUNNING",
+    "wall_seconds": 11.994630917000904,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 55, \"elapsed_ms\": 4017.226587049663, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 55, \"editable_predictions\": 2035, \"changed_predictions\": 1174, \"changed_fraction\": 0.576904176904177, \"selector_ms\": 358.35007950663567, \"mean_selector_ms\": 6.515455991029739}"
+  },
+  {
+    "space": "Dovelove/byod-qwen2.5-7b",
+    "revision": "39975425179012c549c229ee0d8fc80dff2e9e08",
+    "stage": "RUNNING",
+    "wall_seconds": 13.129921583000396,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 63, \"elapsed_ms\": 6971.790624316782, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 63, \"editable_predictions\": 2079, \"changed_predictions\": 945, \"changed_fraction\": 0.45454545454545453, \"selector_ms\": 427.66091832891107, \"mean_selector_ms\": 6.78826854490335}"
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "revision": "e653aa8e58a84ee49f8d0c55e4331bc1f3f29b65",
+    "stage": "RUNNING",
+    "wall_seconds": 18.375928207999095,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 60, \"elapsed_ms\": 8569.470352958888, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 60, \"editable_predictions\": 2070, \"changed_predictions\": 1402, \"changed_fraction\": 0.6772946859903382, \"selector_ms\": 425.85143027827144, \"mean_selector_ms\": 7.097523837971191}"
+  },
+  {
+    "space": "Ruurd/llada-8b-instruct",
+    "revision": "cb32cc50bdff155526dcbdf6ba0709d9a273e483",
+    "stage": "RUNNING",
+    "wall_seconds": 7.38730116700026,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 64, \"elapsed_ms\": 2881.6095436923206, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 64, \"editable_predictions\": 2080, \"changed_predictions\": 1310, \"changed_fraction\": 0.6298076923076923, \"selector_ms\": 412.37650951370597, \"mean_selector_ms\": 6.443382961151656}"
+  },
+  {
+    "space": "Dovelove/byod-ministral-8b",
+    "revision": "ac4d35fb803c20afedc21539c40204ffe81f5416",
+    "stage": "RUNNING",
+    "wall_seconds": 11.762284000000363,
+    "status": "Inference metrics: {\"denoising_forward_passes\": 54, \"elapsed_ms\": 4245.186869055033, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 54, \"editable_predictions\": 2025, \"changed_predictions\": 1119, \"changed_fraction\": 0.5525925925925926, \"selector_ms\": 410.2440639398992, \"mean_selector_ms\": 7.597112295183319}"
+  },
+  {
+    "space": "Ruurd/lad",
+    "revision": "3b2ad9f8a7204bfb102187492582fe5f09cc7eda",
+    "stage": "RUNNING",
+    "wall_seconds": 10.01741991700328,
+    "status": "<"
+  },
+  {
+    "space": "Ruurd/llada2.2-mini",
+    "revision": "39b357a9d4d80e63c388bedef5660abc64fc6cad",
+    "stage": "RUNNING",
+    "wall_seconds": 13.858229667002888,
+    "status": "Complete \u00b7 44 forwards \u00b7 9.9s"
+  },
+  {
+    "space": "Ruurd/byod-gemma-2-9b",
+    "anonymous": true,
+    "status": "Denoising step 54/64 \u00b7 53 output tokens \u00b7 mean confidence 0.109 \u00b7 retained 54 tokens \u00b7 answer finished (EOS)\n\nInference metrics: {\"denoising_forward_passes\": 54, \"elapsed_ms\": 4408.914893865585, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 54, \"editable_predictions\": 2025, \"changed_predictions\": 1381, \"changed_fraction\": 0.6819753086419753, \"selector_ms\": 431.3640622422099, \"mean_selector_ms\": 7.988223374855739}"
+  },
+  {
+    "space": "Dovelove/byod-gemma-2-9b",
+    "anonymous": true,
+    "status": "Denoising step 60/64 \u00b7 59 output tokens \u00b7 mean confidence 0.077 \u00b7 retained 60 tokens \u00b7 answer finished (EOS)\n\nInference metrics: {\"denoising_forward_passes\": 60, \"elapsed_ms\": 7942.776293959469, \"adaptive_parallel_decoding\": false}\n\nDecoding metrics: {\"selector_calls\": 60, \"editable_predictions\": 2070, \"changed_predictions\": 1402, \"changed_fraction\": 0.6772946859903382, \"selector_ms\": 418.51391084492207, \"mean_selector_ms\": 6.975231847415368}"
+  }
+]

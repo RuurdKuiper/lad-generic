@@ -1,0 +1,54 @@
+[
+  {
+    "url": "https://arxiv.org/html/2610.41574v1",
+    "status": 200
+  },
+  {
+    "url": "https://arxiv.org/html/2610.41574v1/benchmark_radar_panels.svg",
+    "status": 200
+  },
+  {
+    "url": "https://arxiv.org/html/2610.41574v1/figures/demo_gemma_confidence_64steps_64tokens_probability.png",
+    "status": 200
+  },
+  {
+    "url": "https://arxiv.org/html/2610.41574v1/open_generation_budget.svg",
+    "status": 200
+  },
+  {
+    "url": "https://colab.research.google.com/github/RuurdKuiper/BYOD/blob/main/notebooks/train_diffusion.ipynb",
+    "status": 200
+  },
+  {
+    "url": "https://github.com/RuurdKuiper/BYOD",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/byod-gemma-2-9b",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/byod-llama-3.1-8b",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/byod-ministral-8b",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/byod-qwen2.5-7b",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/lad",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/llada-8b-instruct",
+    "status": 200
+  },
+  {
+    "url": "https://huggingface.co/spaces/Ruurd/llada2.2-mini",
+    "status": 200
+  }
+]

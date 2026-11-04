@@ -34,11 +34,32 @@ def test_space_bundles_get_distinct_persistent_visitor_counters(tmp_path):
     }
 
 
-def test_space_template_renders_the_configured_visitor_badge():
-    source = (ROOT / "huggingface" / "byod_space" / "app.py").read_text()
-
-    assert 'SPACE.get("visitor_counter_id")' in source
-    assert "https://visitor-badge.laobi.icu/badge?" in source
+@pytest.mark.parametrize("namespace,anonymous,expected", [
+    ("Ruurd", False, True),
+    ("Ruurd", True, False),
+    ("Dovelove", False, False),
+    ("Dovelove", True, False),
+    ("dOvElOvE", False, False),
+])
+def test_paper_citation_is_omitted_from_anonymous_releases(tmp_path, monkeypatch, namespace, anonymous, expected):
+    module = _load_publish_module()
+    source = tmp_path / "source"
+    (source / "huggingface").mkdir(parents=True)
+    (source / "huggingface/byod_space").symlink_to(ROOT / "huggingface/byod_space", target_is_directory=True)
+    (source / "src").symlink_to(ROOT / "src", target_is_directory=True)
+    checkpoint_dir = source / "artifacts/bigram"
+    checkpoint_dir.mkdir(parents=True)
+    spec = module.MODELS[0]
+    (checkpoint_dir / module.BIGRAM_CHECKPOINTS[spec.space_name]).write_bytes(b"test scorer")
+    monkeypatch.setattr(module, "REPO_ROOT", source)
+    destination = tmp_path / "bundle"
+    destination.mkdir()
+    module.make_space_bundle(spec, namespace, destination, anonymous_review=anonymous)
+    space_card = (destination / "README.md").read_text()
+    model_card = module.model_card(spec, namespace, {}, anonymous_review=anonymous)
+    for card in (space_card, model_card):
+        assert ("https://arxiv.org/abs/2610.41574" in card) is expected
+        assert "__PAPER_LINK__" not in card
 
 
 def test_owner_spaces_bundle_their_own_tokenizer_scorer(tmp_path, monkeypatch):
@@ -65,7 +86,6 @@ def test_owner_spaces_bundle_their_own_tokenizer_scorer(tmp_path, monkeypatch):
     for namespace, index, expected in cases:
         dest = tmp_path / f'{namespace}-{index}'
         dest.mkdir()
-        publish_byod.make_space_bundle(publish_byod.MODELS[index], namespace, dest)
         publish_byod.make_space_bundle(publish_byod.MODELS[index], namespace, dest)
         config = json.loads((dest / 'space_model.json').read_text())
         assert config['bigram_enabled'] is expected

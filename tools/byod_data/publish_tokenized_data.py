@@ -96,6 +96,8 @@ def main():
         card.data.license = "other"
         card.text = """# BYOD: pretokenized 256-token training profiles
 
+Paper: [BYOD: Build Your Own DLM — Efficient Autoregressive-to-Diffusion Language Model Conversion](https://arxiv.org/abs/2610.41574)
+
 Clean token IDs and deterministic answer/padding masks for the standalone
 [BYOD implementation](https://github.com/RuurdKuiper/BYOD). Random masking is
 resampled online during training; these are not fixed noisy training inputs.

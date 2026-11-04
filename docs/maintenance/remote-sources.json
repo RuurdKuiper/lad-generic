@@ -1,0 +1,3731 @@
+{
+  "checked_at": "2026-11-04T14:32:51.172244+00:00",
+  "records": [
+    {
+      "path": "base_models/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+      "repo": "GSAI-ML/LLaDA-8B-Instruct",
+      "repo_type": "model",
+      "revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct/tree/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+      "accessible_payload": "model-00001-of-00006.safetensors",
+      "verified": true,
+      "checked_files": [
+        "config.json",
+        "configuration_llada.py",
+        "generation_config.json",
+        "model-00001-of-00006.safetensors",
+        "model-00002-of-00006.safetensors",
+        "model-00003-of-00006.safetensors",
+        "model-00004-of-00006.safetensors",
+        "model-00005-of-00006.safetensors",
+        "model-00006-of-00006.safetensors",
+        "model.safetensors.index.json",
+        "modeling_llada.py",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+      "repo": "Qwen/Qwen2.5-0.5B-Instruct",
+      "repo_type": "model",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/tree/7ae557604adf67be50417f59c2c2f167def9a775",
+      "accessible_payload": "model.safetensors",
+      "verified": true,
+      "checked_files": [
+        "config.json",
+        "generation_config.json",
+        "merges.txt",
+        "model.safetensors",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "repo": "Qwen/Qwen2.5-1.5B-Instruct",
+      "repo_type": "model",
+      "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct/tree/989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "accessible_payload": "model.safetensors",
+      "verified": true,
+      "checked_files": [
+        "merges.txt",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--Qwen--Qwen2.5-7B-Instruct/snapshots/a09a35458c702b33eeacc393d103063234e8bc28",
+      "repo": "Qwen/Qwen2.5-7B-Instruct",
+      "repo_type": "model",
+      "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/tree/a09a35458c702b33eeacc393d103063234e8bc28",
+      "accessible_payload": "model-00001-of-00004.safetensors",
+      "verified": true,
+      "checked_files": [
+        "merges.txt",
+        "tokenizer.json",
+        "tokenizer_config.json",
+        "vocab.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--google--gemma-2-2b-it/snapshots/299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+      "repo": "google/gemma-2-2b-it",
+      "repo_type": "model",
+      "revision": "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/google/gemma-2-2b-it/tree/299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+      "accessible_payload": "model-00001-of-00002.safetensors",
+      "verified": true,
+      "checked_files": [
+        "config.json",
+        "generation_config.json",
+        "model-00001-of-00002.safetensors",
+        "model-00002-of-00002.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--google--gemma-2-9b-it/snapshots/11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "repo": "google/gemma-2-9b-it",
+      "repo_type": "model",
+      "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/google/gemma-2-9b-it/tree/11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "accessible_payload": "model-00001-of-00004.safetensors",
+      "verified": true,
+      "checked_files": [
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer.model",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--google--gemma-3-1b-it/snapshots/dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "repo": "google/gemma-3-1b-it",
+      "repo_type": "model",
+      "revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/google/gemma-3-1b-it/tree/dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+      "accessible_payload": "model.safetensors",
+      "verified": true,
+      "checked_files": [
+        "added_tokens.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer.model",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--hf-internal-testing--llama-tokenizer/snapshots/d02ad6cb9dd2c2296a6332199fa2fdca5938fef0",
+      "repo": "hf-internal-testing/llama-tokenizer",
+      "repo_type": "model",
+      "revision": "d02ad6cb9dd2c2296a6332199fa2fdca5938fef0",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/hf-internal-testing/llama-tokenizer/tree/d02ad6cb9dd2c2296a6332199fa2fdca5938fef0",
+      "verified": true,
+      "checked_files": [
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer.model",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659",
+      "repo": "meta-llama/Llama-3.1-8B-Instruct",
+      "repo_type": "model",
+      "revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/tree/0e9e39f249a16976918f6564b8830bc894c89659",
+      "accessible_payload": "model-00001-of-00004.safetensors",
+      "verified": true,
+      "checked_files": [
+        "config.json",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--meta-llama--Llama-3.2-1B-Instruct/snapshots/9213176726f574b556790deb65791e0c5aa438b6",
+      "repo": "meta-llama/Llama-3.2-1B-Instruct",
+      "repo_type": "model",
+      "revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct/tree/9213176726f574b556790deb65791e0c5aa438b6",
+      "accessible_payload": "model.safetensors",
+      "verified": true,
+      "checked_files": [
+        "config.json",
+        "generation_config.json",
+        "model.safetensors",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--meta-llama--Llama-3.2-3B/snapshots/13afe5124825b4f3751f836b40dafda64c1ed062",
+      "repo": "meta-llama/Llama-3.2-3B",
+      "repo_type": "model",
+      "revision": "13afe5124825b4f3751f836b40dafda64c1ed062",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/meta-llama/Llama-3.2-3B/tree/13afe5124825b4f3751f836b40dafda64c1ed062",
+      "accessible_payload": "model-00001-of-00002.safetensors",
+      "verified": true,
+      "checked_files": [
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--meta-llama--Meta-Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659",
+      "repo": "meta-llama/Llama-3.1-8B-Instruct",
+      "repo_type": "model",
+      "revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/tree/0e9e39f249a16976918f6564b8830bc894c89659",
+      "accessible_payload": "model-00001-of-00004.safetensors",
+      "verified": true,
+      "checked_files": [
+        "config.json",
+        "generation_config.json",
+        "model-00001-of-00004.safetensors",
+        "model-00002-of-00004.safetensors",
+        "model-00003-of-00004.safetensors",
+        "model-00004-of-00004.safetensors",
+        "model.safetensors.index.json",
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "base_models/models--mistralai--Ministral-8B-Instruct-2410/snapshots/2f494a194c5b980dfb9772cb92d26cbb671fce5a",
+      "repo": "mistralai/Ministral-8B-Instruct-2410",
+      "repo_type": "model",
+      "revision": "2f494a194c5b980dfb9772cb92d26cbb671fce5a",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/mistralai/Ministral-8B-Instruct-2410/tree/2f494a194c5b980dfb9772cb92d26cbb671fce5a",
+      "accessible_payload": "consolidated.safetensors",
+      "verified": true,
+      "checked_files": [
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "data/huggingface/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659",
+      "repo": "meta-llama/Llama-3.1-8B-Instruct",
+      "repo_type": "model",
+      "revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/tree/0e9e39f249a16976918f6564b8830bc894c89659",
+      "accessible_payload": "model-00001-of-00004.safetensors",
+      "verified": true,
+      "checked_files": [
+        "special_tokens_map.json",
+        "tokenizer.json",
+        "tokenizer_config.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "data/huggingface/prepared-hub/datasets--Ruurd--BYOD-tokenized-256/snapshots/2237314e10bcbe3d743a3baa35d83a5747b73653",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2237314e10bcbe3d743a3baa35d83a5747b73653",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2237314e10bcbe3d743a3baa35d83a5747b73653",
+      "accessible_payload": "llama-3.2-1b-instruct/test-00000-of-00001.parquet",
+      "verified": true,
+      "checked_files": [
+        "prepared/llama-3.2-1b-instruct.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "data/huggingface/prepared-hub/datasets--Ruurd--BYOD-tokenized-256/snapshots/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "snapshot",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "verified": true,
+      "checked_files": [
+        "prepared/qwen2.5-1.5b-instruct.json"
+      ],
+      "mismatches": []
+    },
+    {
+      "path": "data/huggingface/OpenCoder-LLM___opc-sft-stage2/educational_instruct/0.0.0/7d28f40d579edd7c24402d17d0c7639f991e6f8d",
+      "repo": "OpenCoder-LLM/opc-sft-stage2",
+      "repo_type": "dataset",
+      "revision": "7d28f40d579edd7c24402d17d0c7639f991e6f8d",
+      "config": "educational_instruct",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/OpenCoder-LLM/opc-sft-stage2/tree/7d28f40d579edd7c24402d17d0c7639f991e6f8d",
+      "accessible_payload": "educational_instruct/train-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "educational_instruct/train-00000-of-00001.parquet",
+        "evol_instruct/train-00000-of-00001.parquet",
+        "mceval_instruct/train-00000-of-00001.parquet",
+        "package_instruct/train-00000-of-00002.parquet",
+        "package_instruct/train-00001-of-00002.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/Rowan___hellaswag/default/0.0.0/218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "repo": "Rowan/hellaswag",
+      "repo_type": "dataset",
+      "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/Rowan/hellaswag/tree/218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00001.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/Ruurd___byod-tokenized-256/llama-3.2-1b-instruct/0.0.0/2237314e10bcbe3d743a3baa35d83a5747b73653",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2237314e10bcbe3d743a3baa35d83a5747b73653",
+      "config": "llama-3.2-1b-instruct",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2237314e10bcbe3d743a3baa35d83a5747b73653",
+      "accessible_payload": "llama-3.2-1b-instruct/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "llama-3.2-1b-instruct/test-00000-of-00001.parquet",
+        "llama-3.2-1b-instruct/train-00000-of-00002.parquet",
+        "llama-3.2-1b-instruct/train-00001-of-00002.parquet",
+        "llama-3.2-1b-instruct/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/Ruurd___byod-tokenized-256/qwen2.5-1.5b-instruct/0.0.0/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "config": "qwen2.5-1.5b-instruct",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "gemma-2-9b-it/test-00000-of-00001.parquet",
+        "gemma-2-9b-it/train-00000-of-00002.parquet",
+        "gemma-2-9b-it/train-00001-of-00002.parquet",
+        "gemma-2-9b-it/validation-00000-of-00001.parquet",
+        "gemma-3-1b-it/test-00000-of-00001.parquet",
+        "gemma-3-1b-it/train-00000-of-00002.parquet",
+        "gemma-3-1b-it/train-00001-of-00002.parquet",
+        "gemma-3-1b-it/validation-00000-of-00001.parquet",
+        "llama-3.1-8b-instruct/test-00000-of-00001.parquet",
+        "llama-3.1-8b-instruct/train-00000-of-00002.parquet",
+        "llama-3.1-8b-instruct/train-00001-of-00002.parquet",
+        "llama-3.1-8b-instruct/validation-00000-of-00001.parquet",
+        "llama-3.2-1b-instruct/test-00000-of-00001.parquet",
+        "llama-3.2-1b-instruct/train-00000-of-00002.parquet",
+        "llama-3.2-1b-instruct/train-00001-of-00002.parquet",
+        "llama-3.2-1b-instruct/validation-00000-of-00001.parquet",
+        "ministral-8b-instruct-2410/test-00000-of-00001.parquet",
+        "ministral-8b-instruct-2410/train-00000-of-00002.parquet",
+        "ministral-8b-instruct-2410/train-00001-of-00002.parquet",
+        "ministral-8b-instruct-2410/validation-00000-of-00001.parquet",
+        "qwen2.5-1.5b-instruct/test-00000-of-00001.parquet",
+        "qwen2.5-1.5b-instruct/train-00000-of-00002.parquet",
+        "qwen2.5-1.5b-instruct/train-00001-of-00002.parquet",
+        "qwen2.5-1.5b-instruct/validation-00000-of-00001.parquet",
+        "qwen2.5-7b-instruct/test-00000-of-00001.parquet",
+        "qwen2.5-7b-instruct/train-00000-of-00002.parquet",
+        "qwen2.5-7b-instruct/train-00001-of-00002.parquet",
+        "qwen2.5-7b-instruct/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/Ruurd___lad-training/default/0.0.0/1fe8b552c044f3068bae3439fd6f9fb6f7acf9a3",
+      "repo": "Ruurd/LAD-training",
+      "repo_type": "dataset",
+      "revision": "1fe8b552c044f3068bae3439fd6f9fb6f7acf9a3",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/Ruurd/LAD-training/tree/1fe8b552c044f3068bae3439fd6f9fb6f7acf9a3",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00008.parquet",
+        "data/train-00001-of-00008.parquet",
+        "data/train-00002-of-00008.parquet",
+        "data/train-00003-of-00008.parquet",
+        "data/train-00004-of-00008.parquet",
+        "data/train-00005-of-00008.parquet",
+        "data/train-00006-of-00008.parquet",
+        "data/train-00007-of-00008.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/Ruurd___lad-training-1m-256/default/0.0.0/6041513b684d6ca627879ffdb547b8629bb8b8de",
+      "repo": "Ruurd/LAD-training-1m-256",
+      "repo_type": "dataset",
+      "revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/Ruurd/LAD-training-1m-256/tree/6041513b684d6ca627879ffdb547b8629bb8b8de",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00003.parquet",
+        "data/train-00001-of-00003.parquet",
+        "data/train-00002-of-00003.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/Ruurd___lad-training-1m-256-long/default/0.0.0/0394bcd90ec3328617badbe36202c12d6ac5b54c",
+      "repo": "Ruurd/LAD-training-1m-256-long",
+      "repo_type": "dataset",
+      "revision": "0394bcd90ec3328617badbe36202c12d6ac5b54c",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/Ruurd/LAD-training-1m-256-long/tree/0394bcd90ec3328617badbe36202c12d6ac5b54c",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00004.parquet",
+        "data/train-00001-of-00004.parquet",
+        "data/train-00002-of-00004.parquet",
+        "data/train-00003-of-00004.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/allenai___ai2_arc/ARC-Challenge/0.0.0/210d026faf9955653af8916fad021475a3f00453",
+      "repo": "allenai/ai2_arc",
+      "repo_type": "dataset",
+      "revision": "210d026faf9955653af8916fad021475a3f00453",
+      "config": "ARC-Challenge",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/allenai/ai2_arc/tree/210d026faf9955653af8916fad021475a3f00453",
+      "accessible_payload": "ARC-Challenge/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "ARC-Challenge/test-00000-of-00001.parquet",
+        "ARC-Challenge/train-00000-of-00001.parquet",
+        "ARC-Challenge/validation-00000-of-00001.parquet",
+        "ARC-Easy/test-00000-of-00001.parquet",
+        "ARC-Easy/train-00000-of-00001.parquet",
+        "ARC-Easy/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/allenai___ai2_arc/ARC-Easy/0.0.0/210d026faf9955653af8916fad021475a3f00453",
+      "repo": "allenai/ai2_arc",
+      "repo_type": "dataset",
+      "revision": "210d026faf9955653af8916fad021475a3f00453",
+      "config": "ARC-Easy",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/allenai/ai2_arc/tree/210d026faf9955653af8916fad021475a3f00453",
+      "accessible_payload": "ARC-Challenge/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "ARC-Challenge/test-00000-of-00001.parquet",
+        "ARC-Challenge/train-00000-of-00001.parquet",
+        "ARC-Challenge/validation-00000-of-00001.parquet",
+        "ARC-Easy/test-00000-of-00001.parquet",
+        "ARC-Easy/train-00000-of-00001.parquet",
+        "ARC-Easy/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/allenai___tulu-3-sft-mixture/default/0.0.0/b14afda60f1bbebe55d5d2fa1e4df5042f97f8be",
+      "repo": "allenai/tulu-3-sft-mixture",
+      "repo_type": "dataset",
+      "revision": "b14afda60f1bbebe55d5d2fa1e4df5042f97f8be",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/allenai/tulu-3-sft-mixture/tree/b14afda60f1bbebe55d5d2fa1e4df5042f97f8be",
+      "accessible_payload": "data/train-00000-of-00006.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/train-00000-of-00006.parquet",
+        "data/train-00001-of-00006.parquet",
+        "data/train-00002-of-00006.parquet",
+        "data/train-00003-of-00006.parquet",
+        "data/train-00004-of-00006.parquet",
+        "data/train-00005-of-00006.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/cais___mmlu/all/0.0.0/c30699e8356da336a370243923dbaf21066bb9fe",
+      "repo": "cais/mmlu",
+      "repo_type": "dataset",
+      "revision": "c30699e8356da336a370243923dbaf21066bb9fe",
+      "config": "all",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/cais/mmlu/tree/c30699e8356da336a370243923dbaf21066bb9fe",
+      "accessible_payload": "abstract_algebra/dev-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "abstract_algebra/dev-00000-of-00001.parquet",
+        "abstract_algebra/test-00000-of-00001.parquet",
+        "abstract_algebra/validation-00000-of-00001.parquet",
+        "all/auxiliary_train-00000-of-00001.parquet",
+        "all/dev-00000-of-00001.parquet",
+        "all/test-00000-of-00001.parquet",
+        "all/validation-00000-of-00001.parquet",
+        "anatomy/dev-00000-of-00001.parquet",
+        "anatomy/test-00000-of-00001.parquet",
+        "anatomy/validation-00000-of-00001.parquet",
+        "astronomy/dev-00000-of-00001.parquet",
+        "astronomy/test-00000-of-00001.parquet",
+        "astronomy/validation-00000-of-00001.parquet",
+        "auxiliary_train/train-00000-of-00001.parquet",
+        "business_ethics/dev-00000-of-00001.parquet",
+        "business_ethics/test-00000-of-00001.parquet",
+        "business_ethics/validation-00000-of-00001.parquet",
+        "clinical_knowledge/dev-00000-of-00001.parquet",
+        "clinical_knowledge/test-00000-of-00001.parquet",
+        "clinical_knowledge/validation-00000-of-00001.parquet",
+        "college_biology/dev-00000-of-00001.parquet",
+        "college_biology/test-00000-of-00001.parquet",
+        "college_biology/validation-00000-of-00001.parquet",
+        "college_chemistry/dev-00000-of-00001.parquet",
+        "college_chemistry/test-00000-of-00001.parquet",
+        "college_chemistry/validation-00000-of-00001.parquet",
+        "college_computer_science/dev-00000-of-00001.parquet",
+        "college_computer_science/test-00000-of-00001.parquet",
+        "college_computer_science/validation-00000-of-00001.parquet",
+        "college_mathematics/dev-00000-of-00001.parquet",
+        "college_mathematics/test-00000-of-00001.parquet",
+        "college_mathematics/validation-00000-of-00001.parquet",
+        "college_medicine/dev-00000-of-00001.parquet",
+        "college_medicine/test-00000-of-00001.parquet",
+        "college_medicine/validation-00000-of-00001.parquet",
+        "college_physics/dev-00000-of-00001.parquet",
+        "college_physics/test-00000-of-00001.parquet",
+        "college_physics/validation-00000-of-00001.parquet",
+        "computer_security/dev-00000-of-00001.parquet",
+        "computer_security/test-00000-of-00001.parquet",
+        "computer_security/validation-00000-of-00001.parquet",
+        "conceptual_physics/dev-00000-of-00001.parquet",
+        "conceptual_physics/test-00000-of-00001.parquet",
+        "conceptual_physics/validation-00000-of-00001.parquet",
+        "econometrics/dev-00000-of-00001.parquet",
+        "econometrics/test-00000-of-00001.parquet",
+        "econometrics/validation-00000-of-00001.parquet",
+        "electrical_engineering/dev-00000-of-00001.parquet",
+        "electrical_engineering/test-00000-of-00001.parquet",
+        "electrical_engineering/validation-00000-of-00001.parquet",
+        "elementary_mathematics/dev-00000-of-00001.parquet",
+        "elementary_mathematics/test-00000-of-00001.parquet",
+        "elementary_mathematics/validation-00000-of-00001.parquet",
+        "formal_logic/dev-00000-of-00001.parquet",
+        "formal_logic/test-00000-of-00001.parquet",
+        "formal_logic/validation-00000-of-00001.parquet",
+        "global_facts/dev-00000-of-00001.parquet",
+        "global_facts/test-00000-of-00001.parquet",
+        "global_facts/validation-00000-of-00001.parquet",
+        "high_school_biology/dev-00000-of-00001.parquet",
+        "high_school_biology/test-00000-of-00001.parquet",
+        "high_school_biology/validation-00000-of-00001.parquet",
+        "high_school_chemistry/dev-00000-of-00001.parquet",
+        "high_school_chemistry/test-00000-of-00001.parquet",
+        "high_school_chemistry/validation-00000-of-00001.parquet",
+        "high_school_computer_science/dev-00000-of-00001.parquet",
+        "high_school_computer_science/test-00000-of-00001.parquet",
+        "high_school_computer_science/validation-00000-of-00001.parquet",
+        "high_school_european_history/dev-00000-of-00001.parquet",
+        "high_school_european_history/test-00000-of-00001.parquet",
+        "high_school_european_history/validation-00000-of-00001.parquet",
+        "high_school_geography/dev-00000-of-00001.parquet",
+        "high_school_geography/test-00000-of-00001.parquet",
+        "high_school_geography/validation-00000-of-00001.parquet",
+        "high_school_government_and_politics/dev-00000-of-00001.parquet",
+        "high_school_government_and_politics/test-00000-of-00001.parquet",
+        "high_school_government_and_politics/validation-00000-of-00001.parquet",
+        "high_school_macroeconomics/dev-00000-of-00001.parquet",
+        "high_school_macroeconomics/test-00000-of-00001.parquet",
+        "high_school_macroeconomics/validation-00000-of-00001.parquet",
+        "high_school_mathematics/dev-00000-of-00001.parquet",
+        "high_school_mathematics/test-00000-of-00001.parquet",
+        "high_school_mathematics/validation-00000-of-00001.parquet",
+        "high_school_microeconomics/dev-00000-of-00001.parquet",
+        "high_school_microeconomics/test-00000-of-00001.parquet",
+        "high_school_microeconomics/validation-00000-of-00001.parquet",
+        "high_school_physics/dev-00000-of-00001.parquet",
+        "high_school_physics/test-00000-of-00001.parquet",
+        "high_school_physics/validation-00000-of-00001.parquet",
+        "high_school_psychology/dev-00000-of-00001.parquet",
+        "high_school_psychology/test-00000-of-00001.parquet",
+        "high_school_psychology/validation-00000-of-00001.parquet",
+        "high_school_statistics/dev-00000-of-00001.parquet",
+        "high_school_statistics/test-00000-of-00001.parquet",
+        "high_school_statistics/validation-00000-of-00001.parquet",
+        "high_school_us_history/dev-00000-of-00001.parquet",
+        "high_school_us_history/test-00000-of-00001.parquet",
+        "high_school_us_history/validation-00000-of-00001.parquet",
+        "high_school_world_history/dev-00000-of-00001.parquet",
+        "high_school_world_history/test-00000-of-00001.parquet",
+        "high_school_world_history/validation-00000-of-00001.parquet",
+        "human_aging/dev-00000-of-00001.parquet",
+        "human_aging/test-00000-of-00001.parquet",
+        "human_aging/validation-00000-of-00001.parquet",
+        "human_sexuality/dev-00000-of-00001.parquet",
+        "human_sexuality/test-00000-of-00001.parquet",
+        "human_sexuality/validation-00000-of-00001.parquet",
+        "international_law/dev-00000-of-00001.parquet",
+        "international_law/test-00000-of-00001.parquet",
+        "international_law/validation-00000-of-00001.parquet",
+        "jurisprudence/dev-00000-of-00001.parquet",
+        "jurisprudence/test-00000-of-00001.parquet",
+        "jurisprudence/validation-00000-of-00001.parquet",
+        "logical_fallacies/dev-00000-of-00001.parquet",
+        "logical_fallacies/test-00000-of-00001.parquet",
+        "logical_fallacies/validation-00000-of-00001.parquet",
+        "machine_learning/dev-00000-of-00001.parquet",
+        "machine_learning/test-00000-of-00001.parquet",
+        "machine_learning/validation-00000-of-00001.parquet",
+        "management/dev-00000-of-00001.parquet",
+        "management/test-00000-of-00001.parquet",
+        "management/validation-00000-of-00001.parquet",
+        "marketing/dev-00000-of-00001.parquet",
+        "marketing/test-00000-of-00001.parquet",
+        "marketing/validation-00000-of-00001.parquet",
+        "medical_genetics/dev-00000-of-00001.parquet",
+        "medical_genetics/test-00000-of-00001.parquet",
+        "medical_genetics/validation-00000-of-00001.parquet",
+        "miscellaneous/dev-00000-of-00001.parquet",
+        "miscellaneous/test-00000-of-00001.parquet",
+        "miscellaneous/validation-00000-of-00001.parquet",
+        "moral_disputes/dev-00000-of-00001.parquet",
+        "moral_disputes/test-00000-of-00001.parquet",
+        "moral_disputes/validation-00000-of-00001.parquet",
+        "moral_scenarios/dev-00000-of-00001.parquet",
+        "moral_scenarios/test-00000-of-00001.parquet",
+        "moral_scenarios/validation-00000-of-00001.parquet",
+        "nutrition/dev-00000-of-00001.parquet",
+        "nutrition/test-00000-of-00001.parquet",
+        "nutrition/validation-00000-of-00001.parquet",
+        "philosophy/dev-00000-of-00001.parquet",
+        "philosophy/test-00000-of-00001.parquet",
+        "philosophy/validation-00000-of-00001.parquet",
+        "prehistory/dev-00000-of-00001.parquet",
+        "prehistory/test-00000-of-00001.parquet",
+        "prehistory/validation-00000-of-00001.parquet",
+        "professional_accounting/dev-00000-of-00001.parquet",
+        "professional_accounting/test-00000-of-00001.parquet",
+        "professional_accounting/validation-00000-of-00001.parquet",
+        "professional_law/dev-00000-of-00001.parquet",
+        "professional_law/test-00000-of-00001.parquet",
+        "professional_law/validation-00000-of-00001.parquet",
+        "professional_medicine/dev-00000-of-00001.parquet",
+        "professional_medicine/test-00000-of-00001.parquet",
+        "professional_medicine/validation-00000-of-00001.parquet",
+        "professional_psychology/dev-00000-of-00001.parquet",
+        "professional_psychology/test-00000-of-00001.parquet",
+        "professional_psychology/validation-00000-of-00001.parquet",
+        "public_relations/dev-00000-of-00001.parquet",
+        "public_relations/test-00000-of-00001.parquet",
+        "public_relations/validation-00000-of-00001.parquet",
+        "security_studies/dev-00000-of-00001.parquet",
+        "security_studies/test-00000-of-00001.parquet",
+        "security_studies/validation-00000-of-00001.parquet",
+        "sociology/dev-00000-of-00001.parquet",
+        "sociology/test-00000-of-00001.parquet",
+        "sociology/validation-00000-of-00001.parquet",
+        "us_foreign_policy/dev-00000-of-00001.parquet",
+        "us_foreign_policy/test-00000-of-00001.parquet",
+        "us_foreign_policy/validation-00000-of-00001.parquet",
+        "virology/dev-00000-of-00001.parquet",
+        "virology/test-00000-of-00001.parquet",
+        "virology/validation-00000-of-00001.parquet",
+        "world_religions/dev-00000-of-00001.parquet",
+        "world_religions/test-00000-of-00001.parquet",
+        "world_religions/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/crumb___clean-instruct-3_m/default/0.0.0/38f39571524f4aad05fb380d1f29c2dab7614ae1",
+      "repo": "crumb/clean-instruct-3_m",
+      "repo_type": "dataset",
+      "revision": "38f39571524f4aad05fb380d1f29c2dab7614ae1",
+      "config": "default",
+      "kind": "dataset_cache",
+      "verified": false,
+      "error_type": "RepositoryNotFoundError"
+    },
+    {
+      "path": "data/huggingface/google-research-datasets___mbpp/sanitized/0.0.0/4bb6404fdc6cacfda99d4ac4205087b89d32030c",
+      "repo": "google-research-datasets/mbpp",
+      "repo_type": "dataset",
+      "revision": "4bb6404fdc6cacfda99d4ac4205087b89d32030c",
+      "config": "sanitized",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/google-research-datasets/mbpp/tree/4bb6404fdc6cacfda99d4ac4205087b89d32030c",
+      "accessible_payload": "full/prompt-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "full/prompt-00000-of-00001.parquet",
+        "full/test-00000-of-00001.parquet",
+        "full/train-00000-of-00001.parquet",
+        "full/validation-00000-of-00001.parquet",
+        "sanitized/prompt-00000-of-00001.parquet",
+        "sanitized/test-00000-of-00001.parquet",
+        "sanitized/train-00000-of-00001.parquet",
+        "sanitized/validation-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/microsoft___orca-math-word-problems-200k/default/0.0.0/29255d1770cc4eac66e5e7fa378cba542c026350",
+      "repo": "microsoft/orca-math-word-problems-200k",
+      "repo_type": "dataset",
+      "revision": "29255d1770cc4eac66e5e7fa378cba542c026350",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/microsoft/orca-math-word-problems-200k/tree/29255d1770cc4eac66e5e7fa378cba542c026350",
+      "accessible_payload": "data/train-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/train-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/openai___gsm8k/main/0.0.0/740312add88f781978c0658806c59bc2815b9866",
+      "repo": "openai/gsm8k",
+      "repo_type": "dataset",
+      "revision": "740312add88f781978c0658806c59bc2815b9866",
+      "config": "main",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/openai/gsm8k/tree/740312add88f781978c0658806c59bc2815b9866",
+      "accessible_payload": "main/test-00000-of-00001.parquet",
+      "verified": true,
+      "payload_files": [
+        "main/test-00000-of-00001.parquet",
+        "main/train-00000-of-00001.parquet",
+        "socratic/test-00000-of-00001.parquet",
+        "socratic/train-00000-of-00001.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/tatsu-lab___alpaca/default/0.0.0/dce01c9b08f87459cf36a430d809084718273017",
+      "repo": "tatsu-lab/alpaca",
+      "repo_type": "dataset",
+      "revision": "dce01c9b08f87459cf36a430d809084718273017",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/tatsu-lab/alpaca/tree/dce01c9b08f87459cf36a430d809084718273017",
+      "accessible_payload": "data/train-00000-of-00001-a09b74b3ef9c3b56.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/train-00000-of-00001-a09b74b3ef9c3b56.parquet"
+      ]
+    },
+    {
+      "path": "data/huggingface/vicgalle___alpaca-gpt4/default/0.0.0/f7e3ded725cb81e8e564e32feb12860f376f2b51",
+      "repo": "vicgalle/alpaca-gpt4",
+      "repo_type": "dataset",
+      "revision": "f7e3ded725cb81e8e564e32feb12860f376f2b51",
+      "config": "default",
+      "kind": "dataset_cache",
+      "url": "https://huggingface.co/datasets/vicgalle/alpaca-gpt4/tree/f7e3ded725cb81e8e564e32feb12860f376f2b51",
+      "accessible_payload": "data/train-00000-of-00001-6ef3991c06080e14.parquet",
+      "verified": true,
+      "payload_files": [
+        "data/train-00000-of-00001-6ef3991c06080e14.parquet"
+      ]
+    },
+    {
+      "path": "data/lad-training-1m-256-long",
+      "repo": "Ruurd/LAD-training-1m-256-long",
+      "repo_type": "dataset",
+      "revision": "0394bcd90ec3328617badbe36202c12d6ac5b54c",
+      "kind": "saved_dataset",
+      "url": "https://huggingface.co/datasets/Ruurd/LAD-training-1m-256-long/tree/0394bcd90ec3328617badbe36202c12d6ac5b54c",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": false,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00004.parquet",
+        "data/train-00001-of-00004.parquet",
+        "data/train-00002-of-00004.parquet",
+        "data/train-00003-of-00004.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ],
+      "remote_dataset_info": {
+        "features": [
+          {
+            "name": "instruction",
+            "dtype": "string"
+          },
+          {
+            "name": "input",
+            "dtype": "string"
+          },
+          {
+            "name": "output",
+            "dtype": "string"
+          },
+          {
+            "name": "system",
+            "dtype": "string"
+          },
+          {
+            "name": "input_ids",
+            "list": "int32"
+          },
+          {
+            "name": "labels",
+            "list": "int32"
+          },
+          {
+            "name": "category",
+            "dtype": "string"
+          },
+          {
+            "name": "source",
+            "dtype": "string"
+          },
+          {
+            "name": "answer_truncated",
+            "dtype": "bool"
+          }
+        ],
+        "splits": [
+          {
+            "name": "train",
+            "num_bytes": 1846024807,
+            "num_examples": 980000
+          },
+          {
+            "name": "validation",
+            "num_bytes": 18836987,
+            "num_examples": 10000
+          },
+          {
+            "name": "test",
+            "num_bytes": 18836987,
+            "num_examples": 10000
+          }
+        ],
+        "download_size": 1587196171,
+        "dataset_size": 1883698781
+      },
+      "manifest_matches": false,
+      "manifest_http_status": 404
+    },
+    {
+      "path": "data/lad-training-1m-256-long-epoch2",
+      "repo": "Ruurd/LAD-training-1m-256-long-epoch2",
+      "repo_type": "dataset",
+      "revision": "69d46e9bf295867afe6adf03b32dcc2745e205b8",
+      "kind": "saved_dataset",
+      "url": "https://huggingface.co/datasets/Ruurd/LAD-training-1m-256-long-epoch2/tree/69d46e9bf295867afe6adf03b32dcc2745e205b8",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": false,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00004.parquet",
+        "data/train-00001-of-00004.parquet",
+        "data/train-00002-of-00004.parquet",
+        "data/train-00003-of-00004.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ],
+      "remote_dataset_info": {
+        "features": [
+          {
+            "name": "system",
+            "dtype": "string"
+          },
+          {
+            "name": "instruction",
+            "dtype": "string"
+          },
+          {
+            "name": "input",
+            "dtype": "string"
+          },
+          {
+            "name": "output",
+            "dtype": "string"
+          },
+          {
+            "name": "input_ids",
+            "list": "int32"
+          },
+          {
+            "name": "labels",
+            "list": "int32"
+          },
+          {
+            "name": "category",
+            "dtype": "string"
+          },
+          {
+            "name": "source",
+            "dtype": "string"
+          },
+          {
+            "name": "answer_truncated",
+            "dtype": "bool"
+          },
+          {
+            "name": "sample_origin",
+            "dtype": "string"
+          }
+        ],
+        "splits": [
+          {
+            "name": "train",
+            "num_bytes": 1766254325,
+            "num_examples": 980000
+          },
+          {
+            "name": "validation",
+            "num_bytes": 18943159,
+            "num_examples": 10000
+          },
+          {
+            "name": "test",
+            "num_bytes": 18951432,
+            "num_examples": 10000
+          }
+        ],
+        "download_size": 1489751028,
+        "dataset_size": 1804148916
+      },
+      "manifest_matches": false,
+      "manifest_http_status": 404
+    },
+    {
+      "path": "data/lad-training-2m-256-long",
+      "repo": "Ruurd/LAD-training-2m-256-long",
+      "repo_type": "dataset",
+      "revision": "2b05a56659c53e5495afcd9c87f074dc0ae924a0",
+      "kind": "saved_dataset",
+      "url": "https://huggingface.co/datasets/Ruurd/LAD-training-2m-256-long/tree/2b05a56659c53e5495afcd9c87f074dc0ae924a0",
+      "accessible_payload": "data/test-00000-of-00001.parquet",
+      "verified": false,
+      "payload_files": [
+        "data/test-00000-of-00001.parquet",
+        "data/train-00000-of-00008.parquet",
+        "data/train-00001-of-00008.parquet",
+        "data/train-00002-of-00008.parquet",
+        "data/train-00003-of-00008.parquet",
+        "data/train-00004-of-00008.parquet",
+        "data/train-00005-of-00008.parquet",
+        "data/train-00006-of-00008.parquet",
+        "data/train-00007-of-00008.parquet",
+        "data/validation-00000-of-00001.parquet"
+      ],
+      "remote_dataset_info": {
+        "features": [
+          {
+            "name": "instruction",
+            "dtype": "string"
+          },
+          {
+            "name": "input",
+            "dtype": "string"
+          },
+          {
+            "name": "output",
+            "dtype": "string"
+          },
+          {
+            "name": "system",
+            "dtype": "string"
+          },
+          {
+            "name": "input_ids",
+            "list": "int32"
+          },
+          {
+            "name": "labels",
+            "list": "int32"
+          },
+          {
+            "name": "category",
+            "dtype": "string"
+          },
+          {
+            "name": "source",
+            "dtype": "string"
+          },
+          {
+            "name": "answer_truncated",
+            "dtype": "bool"
+          },
+          {
+            "name": "sample_origin",
+            "dtype": "string"
+          }
+        ],
+        "splits": [
+          {
+            "name": "train",
+            "num_bytes": 3762475012,
+            "num_examples": 1960000
+          },
+          {
+            "name": "validation",
+            "num_bytes": 38392602,
+            "num_examples": 20000
+          },
+          {
+            "name": "test",
+            "num_bytes": 38392602,
+            "num_examples": 20000
+          }
+        ],
+        "download_size": 3080427687,
+        "dataset_size": 3839260216
+      },
+      "manifest_matches": false,
+      "manifest_http_status": 404
+    },
+    {
+      "path": "data/byod-prepared/0e1f81c989b21db9",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "ministral-8b-instruct-2410",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    },
+    {
+      "path": "data/byod-prepared/c1f043bdb9b066b0",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "gemma-2-9b-it",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    },
+    {
+      "path": "data/byod-prepared/d1ba066fbec10e52",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "llama-3.1-8b-instruct",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    },
+    {
+      "path": "data/byod-prepared/7e86b657c2fdd287",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "qwen2.5-7b-instruct",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    },
+    {
+      "path": "data/byod-prepared/a11133b6115d2db2",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "qwen2.5-1.5b-instruct",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    },
+    {
+      "path": "data/byod-prepared/93a1acdeab816067",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "gemma-3-1b-it",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    },
+    {
+      "path": "data/byod-prepared/47d6443fab78782b",
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "repo_type": "dataset",
+      "revision": "2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "kind": "prepared_dataset",
+      "profile": "llama-3.2-1b-instruct",
+      "url": "https://huggingface.co/datasets/Ruurd/BYOD-tokenized-256/tree/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3",
+      "accessible_payload": "gemma-2-9b-it/test-00000-of-00001.parquet",
+      "publication_matches": true,
+      "verified": true
+    }
+  ],
+  "preserved_metadata": {
+    "data/huggingface/OpenCoder-LLM___opc-sft-stage2/educational_instruct/0.0.0/7d28f40d579edd7c24402d17d0c7639f991e6f8d/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "seq_id": {
+          "dtype": "int64",
+          "_type": "Value"
+        },
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "code": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "entry_point": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "testcase": {
+          "feature": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "_type": "List"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "opc-sft-stage2",
+      "config_name": "educational_instruct",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 126084906,
+          "num_examples": 118278,
+          "dataset_name": "opc-sft-stage2"
+        }
+      },
+      "download_size": 53572508,
+      "dataset_size": 126084906,
+      "size_in_bytes": 179657414
+    },
+    "data/huggingface/Rowan___hellaswag/default/0.0.0/218ec52e09a7e7462a5400043bb9a69a41d06b76/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "ind": {
+          "dtype": "int32",
+          "_type": "Value"
+        },
+        "activity_label": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "ctx_a": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "ctx_b": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "ctx": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "endings": {
+          "feature": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "source_id": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "split": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "split_type": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "label": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "hellaswag",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 43237613,
+          "num_examples": 39905,
+          "dataset_name": "hellaswag"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 10793104,
+          "num_examples": 10003,
+          "dataset_name": "hellaswag"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 11176973,
+          "num_examples": 10042,
+          "dataset_name": "hellaswag"
+        }
+      },
+      "download_size": 36793872,
+      "dataset_size": 65207690,
+      "size_in_bytes": 102001562
+    },
+    "data/huggingface/Ruurd___byod-tokenized-256/llama-3.2-1b-instruct/0.0.0/2237314e10bcbe3d743a3baa35d83a5747b73653/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "_index": {
+          "dtype": "int64",
+          "_type": "Value"
+        },
+        "_lad_clean_ids": {
+          "feature": {
+            "dtype": "int64",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "_lad_answer_mask": {
+          "feature": {
+            "dtype": "bool",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "_lad_padding_mask": {
+          "feature": {
+            "dtype": "bool",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "_lad_usable": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "_lad_empty_answer": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "_lad_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "byod-tokenized-256",
+      "config_name": "llama-3.2-1b-instruct",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 439856946,
+          "num_examples": 400000,
+          "dataset_name": "byod-tokenized-256"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 10963170,
+          "num_examples": 10000,
+          "dataset_name": "byod-tokenized-256"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 10989092,
+          "num_examples": 10000,
+          "dataset_name": "byod-tokenized-256"
+        }
+      },
+      "download_size": 443542903,
+      "dataset_size": 461809208,
+      "size_in_bytes": 905352111
+    },
+    "data/huggingface/Ruurd___byod-tokenized-256/qwen2.5-1.5b-instruct/0.0.0/2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "_index": {
+          "dtype": "int64",
+          "_type": "Value"
+        },
+        "_lad_clean_ids": {
+          "feature": {
+            "dtype": "int64",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "_lad_answer_mask": {
+          "feature": {
+            "dtype": "bool",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "_lad_padding_mask": {
+          "feature": {
+            "dtype": "bool",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "_lad_usable": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "_lad_empty_answer": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "_lad_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "byod-tokenized-256",
+      "config_name": "qwen2.5-1.5b-instruct",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 442301704,
+          "num_examples": 400000,
+          "dataset_name": "byod-tokenized-256"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 11021886,
+          "num_examples": 10000,
+          "dataset_name": "byod-tokenized-256"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 11047433,
+          "num_examples": 10000,
+          "dataset_name": "byod-tokenized-256"
+        }
+      },
+      "download_size": 446082255,
+      "dataset_size": 464371023,
+      "size_in_bytes": 910453278
+    },
+    "data/huggingface/Ruurd___lad-training/default/0.0.0/1fe8b552c044f3068bae3439fd6f9fb6f7acf9a3/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "text": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int64",
+            "_type": "Value"
+          },
+          "_type": "List"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "lad-training",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 3672817161,
+          "num_examples": 951630,
+          "shard_lengths": [
+            145300,
+            145300,
+            145300,
+            145300,
+            132524,
+            145299,
+            92607
+          ],
+          "dataset_name": "lad-training"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 37516623,
+          "num_examples": 9711,
+          "dataset_name": "lad-training"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 37551294,
+          "num_examples": 9711,
+          "dataset_name": "lad-training"
+        }
+      },
+      "download_size": 3370945291,
+      "dataset_size": 3747885078,
+      "size_in_bytes": 7118830369
+    },
+    "data/huggingface/Ruurd___lad-training-1m-256/default/0.0.0/6041513b684d6ca627879ffdb547b8629bb8b8de/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "lad-training-1m-256",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 1518098717,
+          "num_examples": 980000,
+          "shard_lengths": [
+            326667,
+            326667,
+            326666
+          ],
+          "dataset_name": "lad-training-1m-256"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 15426774,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 15484848,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256"
+        }
+      },
+      "download_size": 1255946732,
+      "dataset_size": 1549010339,
+      "size_in_bytes": 2804957071
+    },
+    "data/huggingface/Ruurd___lad-training-1m-256-long/default/0.0.0/0394bcd90ec3328617badbe36202c12d6ac5b54c/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "lad-training-1m-256-long",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 1882299973,
+          "num_examples": 980000,
+          "shard_lengths": [
+            298087,
+            298087,
+            298087,
+            85739
+          ],
+          "dataset_name": "lad-training-1m-256-long"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 19125041,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256-long"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 19132480,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256-long"
+        }
+      },
+      "download_size": 1587196171,
+      "dataset_size": 1920557494,
+      "size_in_bytes": 3507753665
+    },
+    "data/huggingface/allenai___ai2_arc/ARC-Challenge/0.0.0/210d026faf9955653af8916fad021475a3f00453/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "id": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "question": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "choices": {
+          "text": {
+            "feature": {
+              "dtype": "string",
+              "_type": "Value"
+            },
+            "_type": "List"
+          },
+          "label": {
+            "feature": {
+              "dtype": "string",
+              "_type": "Value"
+            },
+            "_type": "List"
+          }
+        },
+        "answerKey": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "ai2_arc",
+      "config_name": "ARC-Challenge",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 349760,
+          "num_examples": 1119,
+          "dataset_name": "ai2_arc"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 375511,
+          "num_examples": 1172,
+          "dataset_name": "ai2_arc"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 96660,
+          "num_examples": 299,
+          "dataset_name": "ai2_arc"
+        }
+      },
+      "download_size": 449460,
+      "dataset_size": 821931,
+      "size_in_bytes": 1271391
+    },
+    "data/huggingface/allenai___ai2_arc/ARC-Easy/0.0.0/210d026faf9955653af8916fad021475a3f00453/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "id": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "question": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "choices": {
+          "text": {
+            "feature": {
+              "dtype": "string",
+              "_type": "Value"
+            },
+            "_type": "List"
+          },
+          "label": {
+            "feature": {
+              "dtype": "string",
+              "_type": "Value"
+            },
+            "_type": "List"
+          }
+        },
+        "answerKey": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "ai2_arc",
+      "config_name": "ARC-Easy",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 619000,
+          "num_examples": 2251,
+          "dataset_name": "ai2_arc"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 657514,
+          "num_examples": 2376,
+          "dataset_name": "ai2_arc"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 157394,
+          "num_examples": 570,
+          "dataset_name": "ai2_arc"
+        }
+      },
+      "download_size": 762935,
+      "dataset_size": 1433908,
+      "size_in_bytes": 2196843
+    },
+    "data/huggingface/allenai___tulu-3-sft-mixture/default/0.0.0/b14afda60f1bbebe55d5d2fa1e4df5042f97f8be/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "id": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "messages": {
+          "feature": {
+            "content": {
+              "dtype": "string",
+              "_type": "Value"
+            },
+            "role": {
+              "dtype": "string",
+              "_type": "Value"
+            }
+          },
+          "_type": "List"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "tulu-3-sft-mixture",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 2914253735,
+          "num_examples": 939343,
+          "shard_lengths": [
+            139000,
+            46558,
+            86000,
+            192557,
+            217114,
+            258114
+          ],
+          "dataset_name": "tulu-3-sft-mixture"
+        }
+      },
+      "download_size": 1412954868,
+      "dataset_size": 2914253735,
+      "size_in_bytes": 4327208603
+    },
+    "data/huggingface/cais___mmlu/all/0.0.0/c30699e8356da336a370243923dbaf21066bb9fe/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "question": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "subject": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "choices": {
+          "feature": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "answer": {
+          "names": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "_type": "ClassLabel"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "mmlu",
+      "config_name": "all",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "test": {
+          "name": "test",
+          "num_bytes": 6969209,
+          "num_examples": 14042,
+          "dataset_name": "mmlu"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 763676,
+          "num_examples": 1531,
+          "dataset_name": "mmlu"
+        },
+        "dev": {
+          "name": "dev",
+          "num_bytes": 125389,
+          "num_examples": 285,
+          "dataset_name": "mmlu"
+        },
+        "auxiliary_train": {
+          "name": "auxiliary_train",
+          "num_bytes": 161013106,
+          "num_examples": 99842,
+          "dataset_name": "mmlu"
+        }
+      },
+      "download_size": 51503402,
+      "dataset_size": 168871380,
+      "size_in_bytes": 220374782
+    },
+    "data/huggingface/crumb___clean-instruct-3_m/default/0.0.0/38f39571524f4aad05fb380d1f29c2dab7614ae1/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "clean-instruct-3_m",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 1899993123,
+          "num_examples": 3085812,
+          "shard_lengths": [
+            815453,
+            811453,
+            810453,
+            648453
+          ],
+          "dataset_name": "clean-instruct-3_m"
+        }
+      },
+      "download_size": 1173097125,
+      "dataset_size": 1899993123,
+      "size_in_bytes": 3073090248
+    },
+    "data/huggingface/google-research-datasets___mbpp/sanitized/0.0.0/4bb6404fdc6cacfda99d4ac4205087b89d32030c/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "source_file": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "task_id": {
+          "dtype": "int32",
+          "_type": "Value"
+        },
+        "prompt": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "code": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "test_imports": {
+          "feature": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "test_list": {
+          "feature": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "_type": "List"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "mbpp",
+      "config_name": "sanitized",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 63468,
+          "num_examples": 120,
+          "dataset_name": "mbpp"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 132753,
+          "num_examples": 257,
+          "dataset_name": "mbpp"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 20056,
+          "num_examples": 43,
+          "dataset_name": "mbpp"
+        },
+        "prompt": {
+          "name": "prompt",
+          "num_bytes": 3408,
+          "num_examples": 7,
+          "dataset_name": "mbpp"
+        }
+      },
+      "download_size": 115422,
+      "dataset_size": 219685,
+      "size_in_bytes": 335107
+    },
+    "data/huggingface/microsoft___orca-math-word-problems-200k/default/0.0.0/29255d1770cc4eac66e5e7fa378cba542c026350/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "question": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "orca-math-word-problems-200k",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 225322861,
+          "num_examples": 200035,
+          "dataset_name": "orca-math-word-problems-200k"
+        }
+      },
+      "download_size": 84248748,
+      "dataset_size": 225322861,
+      "size_in_bytes": 309571609
+    },
+    "data/huggingface/openai___gsm8k/main/0.0.0/740312add88f781978c0658806c59bc2815b9866/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "question": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "gsm8k",
+      "config_name": "main",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 3963202,
+          "num_examples": 7473,
+          "dataset_name": "gsm8k"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 713732,
+          "num_examples": 1319,
+          "dataset_name": "gsm8k"
+        }
+      },
+      "download_size": 2725633,
+      "dataset_size": 4676934,
+      "size_in_bytes": 7402567
+    },
+    "data/huggingface/tatsu-lab___alpaca/default/0.0.0/dce01c9b08f87459cf36a430d809084718273017/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "text": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "alpaca",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 46208623,
+          "num_examples": 52002,
+          "dataset_name": "alpaca"
+        }
+      },
+      "download_size": 24246638,
+      "dataset_size": 46208623,
+      "size_in_bytes": 70455261
+    },
+    "data/huggingface/vicgalle___alpaca-gpt4/default/0.0.0/f7e3ded725cb81e8e564e32feb12860f376f2b51/dataset_info.json": {
+      "description": "",
+      "citation": "",
+      "homepage": "",
+      "license": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "text": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "builder_name": "parquet",
+      "dataset_name": "alpaca-gpt4",
+      "config_name": "default",
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      },
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 88566301,
+          "num_examples": 52002,
+          "dataset_name": "alpaca-gpt4"
+        }
+      },
+      "download_size": 48393562,
+      "dataset_size": 88566301,
+      "size_in_bytes": 136959863
+    },
+    "data/lad-training-1m-256-long/dataset_dict.json": {
+      "splits": [
+        "train",
+        "validation",
+        "test"
+      ]
+    },
+    "data/lad-training-1m-256-long/manifest.json": {
+      "config": {
+        "cache_dir": "data/huggingface",
+        "max_prompt_tokens": 256,
+        "max_sequence_tokens": 256,
+        "seed": 42,
+        "test_fraction": 0.01,
+        "tokenizer_name": "meta-llama/Llama-3.1-8B-Instruct",
+        "total_examples": 1000000,
+        "truncate_long_answers": true,
+        "validation_fraction": 0.01,
+        "weights": {
+          "code": 0.1,
+          "general": 0.7,
+          "math": 0.1,
+          "reasoning": 0.1
+        }
+      },
+      "rows": {
+        "test": {
+          "code": 981,
+          "general": 7026,
+          "math": 1002,
+          "reasoning": 991
+        },
+        "train": {
+          "code": 98019,
+          "general": 685928,
+          "math": 98023,
+          "reasoning": 98030
+        },
+        "validation": {
+          "code": 1000,
+          "general": 7046,
+          "math": 975,
+          "reasoning": 979
+        }
+      },
+      "truncated_answers": {
+        "test": 2234,
+        "train": 224237,
+        "validation": 2276
+      }
+    },
+    "data/lad-training-1m-256-long/test/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00001.arrow"
+        }
+      ],
+      "_fingerprint": "34403c495514ece6",
+      "_format_columns": [
+        "answer_truncated",
+        "category",
+        "input",
+        "input_ids",
+        "instruction",
+        "labels",
+        "output",
+        "source",
+        "system"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-1m-256-long/test/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/lad-training-1m-256-long/train/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00004.arrow"
+        },
+        {
+          "filename": "data-00001-of-00004.arrow"
+        },
+        {
+          "filename": "data-00002-of-00004.arrow"
+        },
+        {
+          "filename": "data-00003-of-00004.arrow"
+        }
+      ],
+      "_fingerprint": "fddfe34a94b4948a",
+      "_format_columns": [
+        "answer_truncated",
+        "category",
+        "input",
+        "input_ids",
+        "instruction",
+        "labels",
+        "output",
+        "source",
+        "system"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-1m-256-long/train/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/lad-training-1m-256-long/validation/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00001.arrow"
+        }
+      ],
+      "_fingerprint": "ecbae7c98eac9107",
+      "_format_columns": [
+        "answer_truncated",
+        "category",
+        "input",
+        "input_ids",
+        "instruction",
+        "labels",
+        "output",
+        "source",
+        "system"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-1m-256-long/validation/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/lad-training-1m-256-long-epoch2/dataset_dict.json": {
+      "splits": [
+        "train",
+        "validation",
+        "test"
+      ]
+    },
+    "data/lad-training-1m-256-long-epoch2/manifest.json": {
+      "config": {
+        "allow_excluded_fallback": true,
+        "cache_dir": "data/huggingface",
+        "exclude_dataset": "Ruurd/LAD-training-1m-256-long",
+        "max_prompt_tokens": 256,
+        "max_sequence_tokens": 256,
+        "seed": 43,
+        "test_fraction": 0.01,
+        "tokenizer_name": "meta-llama/Llama-3.1-8B-Instruct",
+        "total_examples": 1000000,
+        "truncate_long_answers": true,
+        "validation_fraction": 0.01,
+        "weights": {
+          "code": 0.1,
+          "general": 0.7,
+          "math": 0.1,
+          "reasoning": 0.1
+        }
+      },
+      "novelty": {
+        "allow_excluded_fallback": true,
+        "categories": {
+          "code": {
+            "excluded_training_fallback_unique_rows": 77402,
+            "final_sample_origins": {
+              "excluded_training_fallback": 83935,
+              "new_source": 14084
+            },
+            "new_unique_rows": 12982,
+            "oversampled_rows": 7635,
+            "target_rows": 98019
+          },
+          "general": {
+            "excluded_training_fallback_unique_rows": 0,
+            "final_sample_origins": {
+              "new_source": 685928
+            },
+            "new_unique_rows": 685928,
+            "oversampled_rows": 0,
+            "target_rows": 685928
+          },
+          "math": {
+            "excluded_training_fallback_unique_rows": 7147,
+            "final_sample_origins": {
+              "excluded_training_fallback": 7147,
+              "new_source": 90876
+            },
+            "new_unique_rows": 90876,
+            "oversampled_rows": 0,
+            "target_rows": 98023
+          },
+          "reasoning": {
+            "excluded_training_fallback_unique_rows": 34990,
+            "final_sample_origins": {
+              "excluded_training_fallback": 98030
+            },
+            "new_unique_rows": 0,
+            "oversampled_rows": 63040,
+            "target_rows": 98030
+          }
+        },
+        "exclude_dataset": "Ruurd/LAD-training-1m-256-long",
+        "excluded_prompt_hashes": 973064,
+        "filter_counts": {
+          "benchmark_blocked": 436,
+          "excluded_overlap": 785077,
+          "within_build_duplicate": 100202
+        },
+        "reused_heldout_rows": {
+          "test": 10000,
+          "validation": 10000
+        }
+      },
+      "rows": {
+        "test": {
+          "code": 981,
+          "general": 7026,
+          "math": 1002,
+          "reasoning": 991
+        },
+        "train": {
+          "code": 98019,
+          "general": 685928,
+          "math": 98023,
+          "reasoning": 98030
+        },
+        "validation": {
+          "code": 1000,
+          "general": 7046,
+          "math": 975,
+          "reasoning": 979
+        }
+      },
+      "sample_origins": {
+        "test": {
+          "excluded_heldout": 10000
+        },
+        "train": {
+          "excluded_training_fallback": 189112,
+          "new_source": 790888
+        },
+        "validation": {
+          "excluded_heldout": 10000
+        }
+      },
+      "truncated_answers": {
+        "test": 2234,
+        "train": 175386,
+        "validation": 2276
+      }
+    },
+    "data/lad-training-1m-256-long-epoch2/test/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00001.arrow"
+        }
+      ],
+      "_fingerprint": "e26a9cdaa38d818a",
+      "_format_columns": [
+        "system",
+        "instruction",
+        "input",
+        "output",
+        "input_ids",
+        "labels",
+        "category",
+        "source",
+        "answer_truncated",
+        "sample_origin"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": "test"
+    },
+    "data/lad-training-1m-256-long-epoch2/test/dataset_info.json": {
+      "builder_name": "parquet",
+      "citation": "",
+      "config_name": "default",
+      "dataset_name": "lad-training-1m-256-long",
+      "dataset_size": 1920557494,
+      "description": "",
+      "download_size": 1587196171,
+      "features": {
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "sample_origin": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": "",
+      "size_in_bytes": 3507753665,
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 1882299973,
+          "num_examples": 980000,
+          "shard_lengths": [
+            298087,
+            298087,
+            298087,
+            85739
+          ],
+          "dataset_name": "lad-training-1m-256-long"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 19125041,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256-long"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 19132480,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256-long"
+        }
+      },
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "data/lad-training-1m-256-long-epoch2/train/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00004.arrow"
+        },
+        {
+          "filename": "data-00001-of-00004.arrow"
+        },
+        {
+          "filename": "data-00002-of-00004.arrow"
+        },
+        {
+          "filename": "data-00003-of-00004.arrow"
+        }
+      ],
+      "_fingerprint": "6ece75505b2a516e",
+      "_format_columns": null,
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-1m-256-long-epoch2/train/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "sample_origin": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/lad-training-1m-256-long-epoch2/validation/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00001.arrow"
+        }
+      ],
+      "_fingerprint": "67680127df950629",
+      "_format_columns": [
+        "system",
+        "instruction",
+        "input",
+        "output",
+        "input_ids",
+        "labels",
+        "category",
+        "source",
+        "answer_truncated",
+        "sample_origin"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": "validation"
+    },
+    "data/lad-training-1m-256-long-epoch2/validation/dataset_info.json": {
+      "builder_name": "parquet",
+      "citation": "",
+      "config_name": "default",
+      "dataset_name": "lad-training-1m-256-long",
+      "dataset_size": 1920557494,
+      "description": "",
+      "download_size": 1587196171,
+      "features": {
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "sample_origin": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": "",
+      "size_in_bytes": 3507753665,
+      "splits": {
+        "train": {
+          "name": "train",
+          "num_bytes": 1882299973,
+          "num_examples": 980000,
+          "shard_lengths": [
+            298087,
+            298087,
+            298087,
+            85739
+          ],
+          "dataset_name": "lad-training-1m-256-long"
+        },
+        "validation": {
+          "name": "validation",
+          "num_bytes": 19125041,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256-long"
+        },
+        "test": {
+          "name": "test",
+          "num_bytes": 19132480,
+          "num_examples": 10000,
+          "dataset_name": "lad-training-1m-256-long"
+        }
+      },
+      "version": {
+        "version_str": "0.0.0",
+        "major": 0,
+        "minor": 0,
+        "patch": 0
+      }
+    },
+    "data/lad-training-2m-256-long/dataset_dict.json": {
+      "splits": [
+        "train",
+        "validation",
+        "test"
+      ]
+    },
+    "data/lad-training-2m-256-long/manifest.json": {
+      "config": {
+        "allow_excluded_fallback": false,
+        "cache_dir": "data/huggingface",
+        "exclude_dataset": null,
+        "max_prompt_tokens": 256,
+        "max_sequence_tokens": 256,
+        "seed": 42,
+        "test_fraction": 0.01,
+        "tokenizer_name": "meta-llama/Llama-3.1-8B-Instruct",
+        "total_examples": 2000000,
+        "truncate_long_answers": true,
+        "validation_fraction": 0.01,
+        "weights": {
+          "code": 0.1,
+          "general": 0.7,
+          "math": 0.1,
+          "reasoning": 0.1
+        }
+      },
+      "novelty": {
+        "allow_excluded_fallback": false,
+        "categories": {
+          "code": {
+            "excluded_training_fallback_unique_rows": 0,
+            "final_sample_origins": {
+              "new_source": 200000
+            },
+            "new_unique_rows": 92270,
+            "oversampled_rows": 107730,
+            "target_rows": 200000
+          },
+          "general": {
+            "excluded_training_fallback_unique_rows": 0,
+            "final_sample_origins": {
+              "new_source": 1400000
+            },
+            "new_unique_rows": 1400000,
+            "oversampled_rows": 0,
+            "target_rows": 1400000
+          },
+          "math": {
+            "excluded_training_fallback_unique_rows": 0,
+            "final_sample_origins": {
+              "new_source": 200000
+            },
+            "new_unique_rows": 183145,
+            "oversampled_rows": 16855,
+            "target_rows": 200000
+          },
+          "reasoning": {
+            "excluded_training_fallback_unique_rows": 0,
+            "final_sample_origins": {
+              "new_source": 200000
+            },
+            "new_unique_rows": 36672,
+            "oversampled_rows": 163328,
+            "target_rows": 200000
+          }
+        },
+        "exclude_dataset": null,
+        "excluded_prompt_hashes": 0,
+        "filter_counts": {
+          "benchmark_blocked": 569,
+          "within_build_duplicate": 268688
+        },
+        "reused_heldout_rows": {}
+      },
+      "rows": {
+        "test": {
+          "code": 2010,
+          "general": 14025,
+          "math": 1980,
+          "reasoning": 1985
+        },
+        "train": {
+          "code": 196000,
+          "general": 1371995,
+          "math": 195982,
+          "reasoning": 196023
+        },
+        "validation": {
+          "code": 1990,
+          "general": 13980,
+          "math": 2038,
+          "reasoning": 1992
+        }
+      },
+      "sample_origins": {
+        "test": {
+          "new_source": 20000
+        },
+        "train": {
+          "new_source": 1960000
+        },
+        "validation": {
+          "new_source": 20000
+        }
+      },
+      "truncated_answers": {
+        "test": 4031,
+        "train": 401261,
+        "validation": 4158
+      }
+    },
+    "data/lad-training-2m-256-long/test/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00001.arrow"
+        }
+      ],
+      "_fingerprint": "2ca0d31c1eac9dfd",
+      "_format_columns": [
+        "answer_truncated",
+        "category",
+        "input",
+        "input_ids",
+        "instruction",
+        "labels",
+        "output",
+        "sample_origin",
+        "source",
+        "system"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-2m-256-long/test/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "sample_origin": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/lad-training-2m-256-long/train/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00008.arrow"
+        },
+        {
+          "filename": "data-00001-of-00008.arrow"
+        },
+        {
+          "filename": "data-00002-of-00008.arrow"
+        },
+        {
+          "filename": "data-00003-of-00008.arrow"
+        },
+        {
+          "filename": "data-00004-of-00008.arrow"
+        },
+        {
+          "filename": "data-00005-of-00008.arrow"
+        },
+        {
+          "filename": "data-00006-of-00008.arrow"
+        },
+        {
+          "filename": "data-00007-of-00008.arrow"
+        }
+      ],
+      "_fingerprint": "0b639fb5243c6be1",
+      "_format_columns": [
+        "answer_truncated",
+        "category",
+        "input",
+        "input_ids",
+        "instruction",
+        "labels",
+        "output",
+        "sample_origin",
+        "source",
+        "system"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-2m-256-long/train/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "sample_origin": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/lad-training-2m-256-long/validation/state.json": {
+      "_data_files": [
+        {
+          "filename": "data-00000-of-00001.arrow"
+        }
+      ],
+      "_fingerprint": "0001f3b0c9419990",
+      "_format_columns": [
+        "answer_truncated",
+        "category",
+        "input",
+        "input_ids",
+        "instruction",
+        "labels",
+        "output",
+        "sample_origin",
+        "source",
+        "system"
+      ],
+      "_format_kwargs": {},
+      "_format_type": null,
+      "_output_all_columns": false,
+      "_split": null
+    },
+    "data/lad-training-2m-256-long/validation/dataset_info.json": {
+      "citation": "",
+      "description": "",
+      "features": {
+        "instruction": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "output": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "system": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "input_ids": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "labels": {
+          "feature": {
+            "dtype": "int32",
+            "_type": "Value"
+          },
+          "_type": "List"
+        },
+        "category": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "source": {
+          "dtype": "string",
+          "_type": "Value"
+        },
+        "answer_truncated": {
+          "dtype": "bool",
+          "_type": "Value"
+        },
+        "sample_origin": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      "homepage": "",
+      "license": ""
+    },
+    "data/byod-prepared/0e1f81c989b21db9/publication.json": {
+      "profile": "ministral-8b-instruct-2410",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "mistralai/Ministral-8B-Instruct-2410",
+        "model_revision": "2f494a194c5b980dfb9772cb92d26cbb671fce5a",
+        "chat_template": "{%- if messages[0][\"role\"] == \"system\" %}\n    {%- set system_message = messages[0][\"content\"] %}\n    {%- set loop_messages = messages[1:] %}\n{%- else %}\n    {%- set loop_messages = messages %}\n{%- endif %}\n{%- if not tools is defined %}\n    {%- set tools = none %}\n{%- endif %}\n{%- set user_messages = loop_messages | selectattr(\"role\", \"equalto\", \"user\") | list %}\n\n{#- This block checks for alternating user/assistant messages, skipping tool calling messages #}\n{%- set ns = namespace() %}\n{%- set ns.index = 0 %}\n{%- for message in loop_messages %}\n    {%- if not (message.role == \"tool\" or message.role == \"tool_results\" or (message.tool_calls is defined and message.tool_calls is not none)) %}\n        {%- if (message[\"role\"] == \"user\") != (ns.index % 2 == 0) %}\n            {{- raise_exception(\"After the optional system message, conversation roles must alternate user/assistant/user/assistant/...\") }}\n        {%- endif %}\n        {%- set ns.index = ns.index + 1 %}\n    {%- endif %}\n{%- endfor %}\n\n{{- bos_token }}\n{%- for message in loop_messages %}\n    {%- if message[\"role\"] == \"user\" %}\n        {%- if tools is not none and (message == user_messages[-1]) %}\n            {{- \"[AVAILABLE_TOOLS][\" }}\n            {%- for tool in tools %}\n                {%- set tool = tool.function %}\n                {{- '{\"type\": \"function\", \"function\": {' }}\n                {%- for key, val in tool.items() if key != \"return\" %}\n                    {%- if val is string %}\n                        {{- '\"' + key + '\": \"' + val + '\"' }}\n                    {%- else %}\n                        {{- '\"' + key + '\": ' + val|tojson }}\n                    {%- endif %}\n                    {%- if not loop.last %}\n                        {{- \", \" }}\n                    {%- endif %}\n                {%- endfor %}\n                {{- \"}}\" }}\n                {%- if not loop.last %}\n                    {{- \", \" }}\n                {%- else %}\n                    {{- \"]\" }}\n                {%- endif %}\n            {%- endfor %}\n            {{- \"[/AVAILABLE_TOOLS]\" }}\n            {%- endif %}\n        {%- if loop.last and system_message is defined %}\n            {{- \"[INST]\" + system_message + \"\\n\\n\" + message[\"content\"] + \"[/INST]\" }}\n        {%- else %}\n            {{- \"[INST]\" + message[\"content\"] + \"[/INST]\" }}\n        {%- endif %}\n    {%- elif (message.tool_calls is defined and message.tool_calls is not none) %}\n        {{- \"[TOOL_CALLS][\" }}\n        {%- for tool_call in message.tool_calls %}\n            {%- set out = tool_call.function|tojson %}\n            {{- out[:-1] }}\n            {%- if not tool_call.id is defined or tool_call.id|length != 9 %}\n                {{- raise_exception(\"Tool call IDs should be alphanumeric strings with length 9!\") }}\n            {%- endif %}\n            {{- ', \"id\": \"' + tool_call.id + '\"}' }}\n            {%- if not loop.last %}\n                {{- \", \" }}\n            {%- else %}\n                {{- \"]\" + eos_token }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif message[\"role\"] == \"assistant\" %}\n        {{- message[\"content\"] + eos_token}}\n    {%- elif message[\"role\"] == \"tool_results\" or message[\"role\"] == \"tool\" %}\n        {%- if message.content is defined and message.content.content is defined %}\n            {%- set content = message.content.content %}\n        {%- else %}\n            {%- set content = message.content %}\n        {%- endif %}\n        {{- '[TOOL_RESULTS]{\"content\": ' + content|string + \", \" }}\n        {%- if not message.tool_call_id is defined or message.tool_call_id|length != 9 %}\n            {{- raise_exception(\"Tool call IDs should be alphanumeric strings with length 9!\") }}\n        {%- endif %}\n        {{- '\"call_id\": \"' + message.tool_call_id + '\"}[/TOOL_RESULTS]' }}\n    {%- else %}\n        {{- raise_exception(\"Only user and assistant roles are supported, with the exception of an initial optional system message!\") }}\n    {%- endif %}\n{%- endfor %}\n",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "0e1f81c989b21db9",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-prepared/c1f043bdb9b066b0/publication.json": {
+      "profile": "gemma-2-9b-it",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "google/gemma-2-9b-it",
+        "model_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+        "chat_template": "{{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '\n' + message['content'] | trim + '<end_of_turn>\n' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model\n'}}{% endif %}",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "c1f043bdb9b066b0",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-prepared/d1ba066fbec10e52/publication.json": {
+      "profile": "llama-3.1-8b-instruct",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "meta-llama/Llama-3.1-8B-Instruct",
+        "model_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+        "chat_template": "{{- bos_token }}\n{%- if custom_tools is defined %}\n    {%- set tools = custom_tools %}\n{%- endif %}\n{%- if not tools_in_user_message is defined %}\n    {%- set tools_in_user_message = true %}\n{%- endif %}\n{%- if not date_string is defined %}\n    {%- set date_string = \"26 Jul 2024\" %}\n{%- endif %}\n{%- if not tools is defined %}\n    {%- set tools = none %}\n{%- endif %}\n\n{#- This block extracts the system message, so we can slot it into the right place. #}\n{%- if messages[0]['role'] == 'system' %}\n    {%- set system_message = messages[0]['content']|trim %}\n    {%- set messages = messages[1:] %}\n{%- else %}\n    {%- set system_message = \"\" %}\n{%- endif %}\n\n{#- System message + builtin tools #}\n{{- \"<|start_header_id|>system<|end_header_id|>\\n\\n\" }}\n{%- if builtin_tools is defined or tools is not none %}\n    {{- \"Environment: ipython\\n\" }}\n{%- endif %}\n{%- if builtin_tools is defined %}\n    {{- \"Tools: \" + builtin_tools | reject('equalto', 'code_interpreter') | join(\", \") + \"\\n\\n\"}}\n{%- endif %}\n{{- \"Cutting Knowledge Date: December 2023\\n\" }}\n{{- \"Today Date: \" + date_string + \"\\n\\n\" }}\n{%- if tools is not none and not tools_in_user_message %}\n    {{- \"You have access to the following functions. To call a function, please respond with JSON for a function call.\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n{%- endif %}\n{{- system_message }}\n{{- \"<|eot_id|>\" }}\n\n{#- Custom tools are passed in a user message with some extra guidance #}\n{%- if tools_in_user_message and not tools is none %}\n    {#- Extract the first user message so we can plug it in here #}\n    {%- if messages | length != 0 %}\n        {%- set first_user_message = messages[0]['content']|trim %}\n        {%- set messages = messages[1:] %}\n    {%- else %}\n        {{- raise_exception(\"Cannot put tools in the first user message when there's no first user message!\") }}\n{%- endif %}\n    {{- '<|start_header_id|>user<|end_header_id|>\\n\\n' -}}\n    {{- \"Given the following functions, please respond with a JSON for a function call \" }}\n    {{- \"with its proper arguments that best answers the given prompt.\\n\\n\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n    {{- first_user_message + \"<|eot_id|>\"}}\n{%- endif %}\n\n{%- for message in messages %}\n    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}\n        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\\n\\n'+ message['content'] | trim + '<|eot_id|>' }}\n    {%- elif 'tool_calls' in message %}\n        {%- if not message.tool_calls|length == 1 %}\n            {{- raise_exception(\"This model only supports single tool-calls at once!\") }}\n        {%- endif %}\n        {%- set tool_call = message.tool_calls[0].function %}\n        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}\n            {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' -}}\n            {{- \"<|python_tag|>\" + tool_call.name + \".call(\" }}\n            {%- for arg_name, arg_val in tool_call.arguments | items %}\n                {{- arg_name + '=\"' + arg_val + '\"' }}\n                {%- if not loop.last %}\n                    {{- \", \" }}\n                {%- endif %}\n                {%- endfor %}\n            {{- \")\" }}\n        {%- else  %}\n            {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' -}}\n            {{- '{\"name\": \"' + tool_call.name + '\", ' }}\n            {{- '\"parameters\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- \"}\" }}\n        {%- endif %}\n        {%- if builtin_tools is defined %}\n            {#- This means we're in ipython mode #}\n            {{- \"<|eom_id|>\" }}\n        {%- else %}\n            {{- \"<|eot_id|>\" }}\n        {%- endif %}\n    {%- elif message.role == \"tool\" or message.role == \"ipython\" %}\n        {{- \"<|start_header_id|>ipython<|end_header_id|>\\n\\n\" }}\n        {%- if message.content is mapping or message.content is iterable %}\n            {{- message.content | tojson }}\n        {%- else %}\n            {{- message.content }}\n        {%- endif %}\n        {{- \"<|eot_id|>\" }}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' }}\n{%- endif %}\n",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "d1ba066fbec10e52",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-prepared/7e86b657c2fdd287/publication.json": {
+      "profile": "qwen2.5-7b-instruct",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "Qwen/Qwen2.5-7B-Instruct",
+        "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+        "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- messages[0]['content'] }}\n    {%- else %}\n        {{- 'You are Qwen, created by Alibaba Cloud. You are a helpful assistant.' }}\n    {%- endif %}\n    {{- \"\\n\\n# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0]['content'] + '<|im_end|>\\n' }}\n    {%- else %}\n        {{- '<|im_start|>system\\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) or (message.role == \"assistant\" and not message.tool_calls) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {{- '<|im_start|>' + message.role }}\n        {%- if message.content %}\n            {{- '\\n' + message.content }}\n        {%- endif %}\n        {%- for tool_call in message.tool_calls %}\n            {%- if tool_call.function is defined %}\n                {%- set tool_call = tool_call.function %}\n            {%- endif %}\n            {{- '\\n<tool_call>\\n{\"name\": \"' }}\n            {{- tool_call.name }}\n            {{- '\", \"arguments\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- '}\\n</tool_call>' }}\n        {%- endfor %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if (loop.index0 == 0) or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}\n",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "7e86b657c2fdd287",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-prepared/a11133b6115d2db2/publication.json": {
+      "profile": "qwen2.5-1.5b-instruct",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+        "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- messages[0]['content'] }}\n    {%- else %}\n        {{- 'You are Qwen, created by Alibaba Cloud. You are a helpful assistant.' }}\n    {%- endif %}\n    {{- \"\\n\\n# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0]['content'] + '<|im_end|>\\n' }}\n    {%- else %}\n        {{- '<|im_start|>system\\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) or (message.role == \"assistant\" and not message.tool_calls) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {{- '<|im_start|>' + message.role }}\n        {%- if message.content %}\n            {{- '\\n' + message.content }}\n        {%- endif %}\n        {%- for tool_call in message.tool_calls %}\n            {%- if tool_call.function is defined %}\n                {%- set tool_call = tool_call.function %}\n            {%- endif %}\n            {{- '\\n<tool_call>\\n{\"name\": \"' }}\n            {{- tool_call.name }}\n            {{- '\", \"arguments\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- '}\\n</tool_call>' }}\n        {%- endfor %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if (loop.index0 == 0) or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}\n",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "a11133b6115d2db2",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-prepared/93a1acdeab816067/publication.json": {
+      "profile": "gemma-3-1b-it",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "google/gemma-3-1b-it",
+        "model_revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+        "chat_template": "{{ bos_token }}\n{%- if messages[0]['role'] == 'system' -%}\n    {%- if messages[0]['content'] is string -%}\n        {%- set first_user_prefix = messages[0]['content'] + '\n\n' -%}\n    {%- else -%}\n        {%- set first_user_prefix = messages[0]['content'][0]['text'] + '\n\n' -%}\n    {%- endif -%}\n    {%- set loop_messages = messages[1:] -%}\n{%- else -%}\n    {%- set first_user_prefix = \"\" -%}\n    {%- set loop_messages = messages -%}\n{%- endif -%}\n{%- for message in loop_messages -%}\n    {%- if (message['role'] == 'user') != (loop.index0 % 2 == 0) -%}\n        {{ raise_exception(\"Conversation roles must alternate user/assistant/user/assistant/...\") }}\n    {%- endif -%}\n    {%- if (message['role'] == 'assistant') -%}\n        {%- set role = \"model\" -%}\n    {%- else -%}\n        {%- set role = message['role'] -%}\n    {%- endif -%}\n    {{ '<start_of_turn>' + role + '\n' + (first_user_prefix if loop.first else \"\") }}\n    {%- if message['content'] is string -%}\n        {{ message['content'] | trim }}\n    {%- elif message['content'] is iterable -%}\n        {%- for item in message['content'] -%}\n            {%- if item['type'] == 'image' -%}\n                {{ '<start_of_image>' }}\n            {%- elif item['type'] == 'text' -%}\n                {{ item['text'] | trim }}\n            {%- endif -%}\n        {%- endfor -%}\n    {%- else -%}\n        {{ raise_exception(\"Invalid content type\") }}\n    {%- endif -%}\n    {{ '<end_of_turn>\n' }}\n{%- endfor -%}\n{%- if add_generation_prompt -%}\n    {{'<start_of_turn>model\n'}}\n{%- endif -%}\n",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "93a1acdeab816067",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-prepared/47d6443fab78782b/publication.json": {
+      "profile": "llama-3.2-1b-instruct",
+      "preparation": {
+        "format": 2,
+        "dataset": "Ruurd/LAD-training-1m-256",
+        "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+        "config": null,
+        "splits": {
+          "train": "train",
+          "validation": "validation",
+          "test": "test"
+        },
+        "tokenizer": "meta-llama/Llama-3.2-1B-Instruct",
+        "model_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+        "chat_template": "{{- bos_token }}\n{%- if custom_tools is defined %}\n    {%- set tools = custom_tools %}\n{%- endif %}\n{%- if not tools_in_user_message is defined %}\n    {%- set tools_in_user_message = true %}\n{%- endif %}\n{%- if not date_string is defined %}\n    {%- if strftime_now is defined %}\n        {%- set date_string = strftime_now(\"%d %b %Y\") %}\n    {%- else %}\n        {%- set date_string = \"26 Jul 2024\" %}\n    {%- endif %}\n{%- endif %}\n{%- if not tools is defined %}\n    {%- set tools = none %}\n{%- endif %}\n\n{#- This block extracts the system message, so we can slot it into the right place. #}\n{%- if messages[0]['role'] == 'system' %}\n    {%- set system_message = messages[0]['content']|trim %}\n    {%- set messages = messages[1:] %}\n{%- else %}\n    {%- set system_message = \"\" %}\n{%- endif %}\n\n{#- System message #}\n{{- \"<|start_header_id|>system<|end_header_id|>\\n\\n\" }}\n{%- if tools is not none %}\n    {{- \"Environment: ipython\\n\" }}\n{%- endif %}\n{{- \"Cutting Knowledge Date: December 2023\\n\" }}\n{{- \"Today Date: \" + date_string + \"\\n\\n\" }}\n{%- if tools is not none and not tools_in_user_message %}\n    {{- \"You have access to the following functions. To call a function, please respond with JSON for a function call.\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n{%- endif %}\n{{- system_message }}\n{{- \"<|eot_id|>\" }}\n\n{#- Custom tools are passed in a user message with some extra guidance #}\n{%- if tools_in_user_message and not tools is none %}\n    {#- Extract the first user message so we can plug it in here #}\n    {%- if messages | length != 0 %}\n        {%- set first_user_message = messages[0]['content']|trim %}\n        {%- set messages = messages[1:] %}\n    {%- else %}\n        {{- raise_exception(\"Cannot put tools in the first user message when there's no first user message!\") }}\n{%- endif %}\n    {{- '<|start_header_id|>user<|end_header_id|>\\n\\n' -}}\n    {{- \"Given the following functions, please respond with a JSON for a function call \" }}\n    {{- \"with its proper arguments that best answers the given prompt.\\n\\n\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n    {{- first_user_message + \"<|eot_id|>\"}}\n{%- endif %}\n\n{%- for message in messages %}\n    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}\n        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\\n\\n'+ message['content'] | trim + '<|eot_id|>' }}\n    {%- elif 'tool_calls' in message %}\n        {%- if not message.tool_calls|length == 1 %}\n            {{- raise_exception(\"This model only supports single tool-calls at once!\") }}\n        {%- endif %}\n        {%- set tool_call = message.tool_calls[0].function %}\n        {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' -}}\n        {{- '{\"name\": \"' + tool_call.name + '\", ' }}\n        {{- '\"parameters\": ' }}\n        {{- tool_call.arguments | tojson }}\n        {{- \"}\" }}\n        {{- \"<|eot_id|>\" }}\n    {%- elif message.role == \"tool\" or message.role == \"ipython\" %}\n        {{- \"<|start_header_id|>ipython<|end_header_id|>\\n\\n\" }}\n        {%- if message.content is mapping or message.content is iterable %}\n            {{- message.content | tojson }}\n        {%- else %}\n            {{- message.content }}\n        {%- endif %}\n        {{- \"<|eot_id|>\" }}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' }}\n{%- endif %}\n",
+        "mode": "mask_only",
+        "max_length": 256,
+        "include_answer_eos": true,
+        "train_sample_limit": 400000,
+        "seed": 42
+      },
+      "cache_key": "47d6443fab78782b",
+      "rows": {
+        "train": 400000,
+        "validation": 10000,
+        "test": 10000
+      },
+      "random_corruption": "online, not stored",
+      "software": "https://github.com/RuurdKuiper/BYOD"
+    },
+    "data/byod-tokenized-publication.json": {
+      "repo": "Ruurd/BYOD-tokenized-256",
+      "profiles": {
+        "llama-3.2-1b-instruct": {
+          "profile": "llama-3.2-1b-instruct",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "meta-llama/Llama-3.2-1B-Instruct",
+            "model_revision": "9213176726f574b556790deb65791e0c5aa438b6",
+            "chat_template": "{{- bos_token }}\n{%- if custom_tools is defined %}\n    {%- set tools = custom_tools %}\n{%- endif %}\n{%- if not tools_in_user_message is defined %}\n    {%- set tools_in_user_message = true %}\n{%- endif %}\n{%- if not date_string is defined %}\n    {%- if strftime_now is defined %}\n        {%- set date_string = strftime_now(\"%d %b %Y\") %}\n    {%- else %}\n        {%- set date_string = \"26 Jul 2024\" %}\n    {%- endif %}\n{%- endif %}\n{%- if not tools is defined %}\n    {%- set tools = none %}\n{%- endif %}\n\n{#- This block extracts the system message, so we can slot it into the right place. #}\n{%- if messages[0]['role'] == 'system' %}\n    {%- set system_message = messages[0]['content']|trim %}\n    {%- set messages = messages[1:] %}\n{%- else %}\n    {%- set system_message = \"\" %}\n{%- endif %}\n\n{#- System message #}\n{{- \"<|start_header_id|>system<|end_header_id|>\\n\\n\" }}\n{%- if tools is not none %}\n    {{- \"Environment: ipython\\n\" }}\n{%- endif %}\n{{- \"Cutting Knowledge Date: December 2023\\n\" }}\n{{- \"Today Date: \" + date_string + \"\\n\\n\" }}\n{%- if tools is not none and not tools_in_user_message %}\n    {{- \"You have access to the following functions. To call a function, please respond with JSON for a function call.\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n{%- endif %}\n{{- system_message }}\n{{- \"<|eot_id|>\" }}\n\n{#- Custom tools are passed in a user message with some extra guidance #}\n{%- if tools_in_user_message and not tools is none %}\n    {#- Extract the first user message so we can plug it in here #}\n    {%- if messages | length != 0 %}\n        {%- set first_user_message = messages[0]['content']|trim %}\n        {%- set messages = messages[1:] %}\n    {%- else %}\n        {{- raise_exception(\"Cannot put tools in the first user message when there's no first user message!\") }}\n{%- endif %}\n    {{- '<|start_header_id|>user<|end_header_id|>\\n\\n' -}}\n    {{- \"Given the following functions, please respond with a JSON for a function call \" }}\n    {{- \"with its proper arguments that best answers the given prompt.\\n\\n\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n    {{- first_user_message + \"<|eot_id|>\"}}\n{%- endif %}\n\n{%- for message in messages %}\n    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}\n        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\\n\\n'+ message['content'] | trim + '<|eot_id|>' }}\n    {%- elif 'tool_calls' in message %}\n        {%- if not message.tool_calls|length == 1 %}\n            {{- raise_exception(\"This model only supports single tool-calls at once!\") }}\n        {%- endif %}\n        {%- set tool_call = message.tool_calls[0].function %}\n        {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' -}}\n        {{- '{\"name\": \"' + tool_call.name + '\", ' }}\n        {{- '\"parameters\": ' }}\n        {{- tool_call.arguments | tojson }}\n        {{- \"}\" }}\n        {{- \"<|eot_id|>\" }}\n    {%- elif message.role == \"tool\" or message.role == \"ipython\" %}\n        {{- \"<|start_header_id|>ipython<|end_header_id|>\\n\\n\" }}\n        {%- if message.content is mapping or message.content is iterable %}\n            {{- message.content | tojson }}\n        {%- else %}\n            {{- message.content }}\n        {%- endif %}\n        {{- \"<|eot_id|>\" }}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' }}\n{%- endif %}\n",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "47d6443fab78782b",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "2237314e10bcbe3d743a3baa35d83a5747b73653"
+        },
+        "gemma-3-1b-it": {
+          "profile": "gemma-3-1b-it",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "google/gemma-3-1b-it",
+            "model_revision": "dcc83ea841ab6100d6b47a070329e1ba4cf78752",
+            "chat_template": "{{ bos_token }}\n{%- if messages[0]['role'] == 'system' -%}\n    {%- if messages[0]['content'] is string -%}\n        {%- set first_user_prefix = messages[0]['content'] + '\n\n' -%}\n    {%- else -%}\n        {%- set first_user_prefix = messages[0]['content'][0]['text'] + '\n\n' -%}\n    {%- endif -%}\n    {%- set loop_messages = messages[1:] -%}\n{%- else -%}\n    {%- set first_user_prefix = \"\" -%}\n    {%- set loop_messages = messages -%}\n{%- endif -%}\n{%- for message in loop_messages -%}\n    {%- if (message['role'] == 'user') != (loop.index0 % 2 == 0) -%}\n        {{ raise_exception(\"Conversation roles must alternate user/assistant/user/assistant/...\") }}\n    {%- endif -%}\n    {%- if (message['role'] == 'assistant') -%}\n        {%- set role = \"model\" -%}\n    {%- else -%}\n        {%- set role = message['role'] -%}\n    {%- endif -%}\n    {{ '<start_of_turn>' + role + '\n' + (first_user_prefix if loop.first else \"\") }}\n    {%- if message['content'] is string -%}\n        {{ message['content'] | trim }}\n    {%- elif message['content'] is iterable -%}\n        {%- for item in message['content'] -%}\n            {%- if item['type'] == 'image' -%}\n                {{ '<start_of_image>' }}\n            {%- elif item['type'] == 'text' -%}\n                {{ item['text'] | trim }}\n            {%- endif -%}\n        {%- endfor -%}\n    {%- else -%}\n        {{ raise_exception(\"Invalid content type\") }}\n    {%- endif -%}\n    {{ '<end_of_turn>\n' }}\n{%- endfor -%}\n{%- if add_generation_prompt -%}\n    {{'<start_of_turn>model\n'}}\n{%- endif -%}\n",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "93a1acdeab816067",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "77503fbca16e34735fe03067d17f9cabb593f2b4"
+        },
+        "qwen2.5-1.5b-instruct": {
+          "profile": "qwen2.5-1.5b-instruct",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "Qwen/Qwen2.5-1.5B-Instruct",
+            "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+            "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- messages[0]['content'] }}\n    {%- else %}\n        {{- 'You are Qwen, created by Alibaba Cloud. You are a helpful assistant.' }}\n    {%- endif %}\n    {{- \"\\n\\n# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0]['content'] + '<|im_end|>\\n' }}\n    {%- else %}\n        {{- '<|im_start|>system\\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) or (message.role == \"assistant\" and not message.tool_calls) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {{- '<|im_start|>' + message.role }}\n        {%- if message.content %}\n            {{- '\\n' + message.content }}\n        {%- endif %}\n        {%- for tool_call in message.tool_calls %}\n            {%- if tool_call.function is defined %}\n                {%- set tool_call = tool_call.function %}\n            {%- endif %}\n            {{- '\\n<tool_call>\\n{\"name\": \"' }}\n            {{- tool_call.name }}\n            {{- '\", \"arguments\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- '}\\n</tool_call>' }}\n        {%- endfor %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if (loop.index0 == 0) or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}\n",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "a11133b6115d2db2",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "1cad53b41ef3af103218ea65d4ff910e0bfbe85d"
+        },
+        "llama-3.1-8b-instruct": {
+          "profile": "llama-3.1-8b-instruct",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "meta-llama/Llama-3.1-8B-Instruct",
+            "model_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+            "chat_template": "{{- bos_token }}\n{%- if custom_tools is defined %}\n    {%- set tools = custom_tools %}\n{%- endif %}\n{%- if not tools_in_user_message is defined %}\n    {%- set tools_in_user_message = true %}\n{%- endif %}\n{%- if not date_string is defined %}\n    {%- set date_string = \"26 Jul 2024\" %}\n{%- endif %}\n{%- if not tools is defined %}\n    {%- set tools = none %}\n{%- endif %}\n\n{#- This block extracts the system message, so we can slot it into the right place. #}\n{%- if messages[0]['role'] == 'system' %}\n    {%- set system_message = messages[0]['content']|trim %}\n    {%- set messages = messages[1:] %}\n{%- else %}\n    {%- set system_message = \"\" %}\n{%- endif %}\n\n{#- System message + builtin tools #}\n{{- \"<|start_header_id|>system<|end_header_id|>\\n\\n\" }}\n{%- if builtin_tools is defined or tools is not none %}\n    {{- \"Environment: ipython\\n\" }}\n{%- endif %}\n{%- if builtin_tools is defined %}\n    {{- \"Tools: \" + builtin_tools | reject('equalto', 'code_interpreter') | join(\", \") + \"\\n\\n\"}}\n{%- endif %}\n{{- \"Cutting Knowledge Date: December 2023\\n\" }}\n{{- \"Today Date: \" + date_string + \"\\n\\n\" }}\n{%- if tools is not none and not tools_in_user_message %}\n    {{- \"You have access to the following functions. To call a function, please respond with JSON for a function call.\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n{%- endif %}\n{{- system_message }}\n{{- \"<|eot_id|>\" }}\n\n{#- Custom tools are passed in a user message with some extra guidance #}\n{%- if tools_in_user_message and not tools is none %}\n    {#- Extract the first user message so we can plug it in here #}\n    {%- if messages | length != 0 %}\n        {%- set first_user_message = messages[0]['content']|trim %}\n        {%- set messages = messages[1:] %}\n    {%- else %}\n        {{- raise_exception(\"Cannot put tools in the first user message when there's no first user message!\") }}\n{%- endif %}\n    {{- '<|start_header_id|>user<|end_header_id|>\\n\\n' -}}\n    {{- \"Given the following functions, please respond with a JSON for a function call \" }}\n    {{- \"with its proper arguments that best answers the given prompt.\\n\\n\" }}\n    {{- 'Respond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.' }}\n    {{- \"Do not use variables.\\n\\n\" }}\n    {%- for t in tools %}\n        {{- t | tojson(indent=4) }}\n        {{- \"\\n\\n\" }}\n    {%- endfor %}\n    {{- first_user_message + \"<|eot_id|>\"}}\n{%- endif %}\n\n{%- for message in messages %}\n    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}\n        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\\n\\n'+ message['content'] | trim + '<|eot_id|>' }}\n    {%- elif 'tool_calls' in message %}\n        {%- if not message.tool_calls|length == 1 %}\n            {{- raise_exception(\"This model only supports single tool-calls at once!\") }}\n        {%- endif %}\n        {%- set tool_call = message.tool_calls[0].function %}\n        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}\n            {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' -}}\n            {{- \"<|python_tag|>\" + tool_call.name + \".call(\" }}\n            {%- for arg_name, arg_val in tool_call.arguments | items %}\n                {{- arg_name + '=\"' + arg_val + '\"' }}\n                {%- if not loop.last %}\n                    {{- \", \" }}\n                {%- endif %}\n                {%- endfor %}\n            {{- \")\" }}\n        {%- else  %}\n            {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' -}}\n            {{- '{\"name\": \"' + tool_call.name + '\", ' }}\n            {{- '\"parameters\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- \"}\" }}\n        {%- endif %}\n        {%- if builtin_tools is defined %}\n            {#- This means we're in ipython mode #}\n            {{- \"<|eom_id|>\" }}\n        {%- else %}\n            {{- \"<|eot_id|>\" }}\n        {%- endif %}\n    {%- elif message.role == \"tool\" or message.role == \"ipython\" %}\n        {{- \"<|start_header_id|>ipython<|end_header_id|>\\n\\n\" }}\n        {%- if message.content is mapping or message.content is iterable %}\n            {{- message.content | tojson }}\n        {%- else %}\n            {{- message.content }}\n        {%- endif %}\n        {{- \"<|eot_id|>\" }}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|start_header_id|>assistant<|end_header_id|>\\n\\n' }}\n{%- endif %}\n",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "d1ba066fbec10e52",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "5feb30e03b4b5f5bbc1d5248cb9e8d7a8f384a33"
+        },
+        "gemma-2-9b-it": {
+          "profile": "gemma-2-9b-it",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "google/gemma-2-9b-it",
+            "model_revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+            "chat_template": "{{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '\n' + message['content'] | trim + '<end_of_turn>\n' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model\n'}}{% endif %}",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "c1f043bdb9b066b0",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "a88a6ad8a253d1b1daf3132aba77f6c442d8286c"
+        },
+        "qwen2.5-7b-instruct": {
+          "profile": "qwen2.5-7b-instruct",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "Qwen/Qwen2.5-7B-Instruct",
+            "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+            "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- messages[0]['content'] }}\n    {%- else %}\n        {{- 'You are Qwen, created by Alibaba Cloud. You are a helpful assistant.' }}\n    {%- endif %}\n    {{- \"\\n\\n# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0]['content'] + '<|im_end|>\\n' }}\n    {%- else %}\n        {{- '<|im_start|>system\\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) or (message.role == \"assistant\" and not message.tool_calls) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {{- '<|im_start|>' + message.role }}\n        {%- if message.content %}\n            {{- '\\n' + message.content }}\n        {%- endif %}\n        {%- for tool_call in message.tool_calls %}\n            {%- if tool_call.function is defined %}\n                {%- set tool_call = tool_call.function %}\n            {%- endif %}\n            {{- '\\n<tool_call>\\n{\"name\": \"' }}\n            {{- tool_call.name }}\n            {{- '\", \"arguments\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- '}\\n</tool_call>' }}\n        {%- endfor %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if (loop.index0 == 0) or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}\n",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "7e86b657c2fdd287",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "66bfecc2099d7a1ba7efe1498d0d28047e58b9d2"
+        },
+        "ministral-8b-instruct-2410": {
+          "profile": "ministral-8b-instruct-2410",
+          "preparation": {
+            "format": 2,
+            "dataset": "Ruurd/LAD-training-1m-256",
+            "dataset_revision": "6041513b684d6ca627879ffdb547b8629bb8b8de",
+            "config": null,
+            "splits": {
+              "train": "train",
+              "validation": "validation",
+              "test": "test"
+            },
+            "tokenizer": "mistralai/Ministral-8B-Instruct-2410",
+            "model_revision": "2f494a194c5b980dfb9772cb92d26cbb671fce5a",
+            "chat_template": "{%- if messages[0][\"role\"] == \"system\" %}\n    {%- set system_message = messages[0][\"content\"] %}\n    {%- set loop_messages = messages[1:] %}\n{%- else %}\n    {%- set loop_messages = messages %}\n{%- endif %}\n{%- if not tools is defined %}\n    {%- set tools = none %}\n{%- endif %}\n{%- set user_messages = loop_messages | selectattr(\"role\", \"equalto\", \"user\") | list %}\n\n{#- This block checks for alternating user/assistant messages, skipping tool calling messages #}\n{%- set ns = namespace() %}\n{%- set ns.index = 0 %}\n{%- for message in loop_messages %}\n    {%- if not (message.role == \"tool\" or message.role == \"tool_results\" or (message.tool_calls is defined and message.tool_calls is not none)) %}\n        {%- if (message[\"role\"] == \"user\") != (ns.index % 2 == 0) %}\n            {{- raise_exception(\"After the optional system message, conversation roles must alternate user/assistant/user/assistant/...\") }}\n        {%- endif %}\n        {%- set ns.index = ns.index + 1 %}\n    {%- endif %}\n{%- endfor %}\n\n{{- bos_token }}\n{%- for message in loop_messages %}\n    {%- if message[\"role\"] == \"user\" %}\n        {%- if tools is not none and (message == user_messages[-1]) %}\n            {{- \"[AVAILABLE_TOOLS][\" }}\n            {%- for tool in tools %}\n                {%- set tool = tool.function %}\n                {{- '{\"type\": \"function\", \"function\": {' }}\n                {%- for key, val in tool.items() if key != \"return\" %}\n                    {%- if val is string %}\n                        {{- '\"' + key + '\": \"' + val + '\"' }}\n                    {%- else %}\n                        {{- '\"' + key + '\": ' + val|tojson }}\n                    {%- endif %}\n                    {%- if not loop.last %}\n                        {{- \", \" }}\n                    {%- endif %}\n                {%- endfor %}\n                {{- \"}}\" }}\n                {%- if not loop.last %}\n                    {{- \", \" }}\n                {%- else %}\n                    {{- \"]\" }}\n                {%- endif %}\n            {%- endfor %}\n            {{- \"[/AVAILABLE_TOOLS]\" }}\n            {%- endif %}\n        {%- if loop.last and system_message is defined %}\n            {{- \"[INST]\" + system_message + \"\\n\\n\" + message[\"content\"] + \"[/INST]\" }}\n        {%- else %}\n            {{- \"[INST]\" + message[\"content\"] + \"[/INST]\" }}\n        {%- endif %}\n    {%- elif (message.tool_calls is defined and message.tool_calls is not none) %}\n        {{- \"[TOOL_CALLS][\" }}\n        {%- for tool_call in message.tool_calls %}\n            {%- set out = tool_call.function|tojson %}\n            {{- out[:-1] }}\n            {%- if not tool_call.id is defined or tool_call.id|length != 9 %}\n                {{- raise_exception(\"Tool call IDs should be alphanumeric strings with length 9!\") }}\n            {%- endif %}\n            {{- ', \"id\": \"' + tool_call.id + '\"}' }}\n            {%- if not loop.last %}\n                {{- \", \" }}\n            {%- else %}\n                {{- \"]\" + eos_token }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif message[\"role\"] == \"assistant\" %}\n        {{- message[\"content\"] + eos_token}}\n    {%- elif message[\"role\"] == \"tool_results\" or message[\"role\"] == \"tool\" %}\n        {%- if message.content is defined and message.content.content is defined %}\n            {%- set content = message.content.content %}\n        {%- else %}\n            {%- set content = message.content %}\n        {%- endif %}\n        {{- '[TOOL_RESULTS]{\"content\": ' + content|string + \", \" }}\n        {%- if not message.tool_call_id is defined or message.tool_call_id|length != 9 %}\n            {{- raise_exception(\"Tool call IDs should be alphanumeric strings with length 9!\") }}\n        {%- endif %}\n        {{- '\"call_id\": \"' + message.tool_call_id + '\"}[/TOOL_RESULTS]' }}\n    {%- else %}\n        {{- raise_exception(\"Only user and assistant roles are supported, with the exception of an initial optional system message!\") }}\n    {%- endif %}\n{%- endfor %}\n",
+            "mode": "mask_only",
+            "max_length": 256,
+            "include_answer_eos": true,
+            "train_sample_limit": 400000,
+            "seed": 42
+          },
+          "cache_key": "0e1f81c989b21db9",
+          "rows": {
+            "train": 400000,
+            "validation": 10000,
+            "test": 10000
+          },
+          "random_corruption": "online, not stored",
+          "software": "https://github.com/RuurdKuiper/BYOD",
+          "published_revision": "df833bc8ca84a317f6e05bd61d4d77dd049f5dd1"
+        }
+      }
+    }
+  }
+}

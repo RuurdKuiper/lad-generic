@@ -1,5 +1,7 @@
 # PMI scoring for BYOD Gemma
 
+Earlier-phase evidence is in the [verified research archive](../../archives/README.md); extract it to recover the original paths.
+
 The existing `Bigram Viterbi` strategy now offers `Conditional bigram` (default)
 and `PMI bigram`. Both use the same Viterbi DP, top-k candidates, block constraints,
 and confidence-guided remasking. The weight remains adjustable, default 0.5.
@@ -123,7 +125,7 @@ During incomplete steps, masks use the existing explicit mask placeholders.
 Regression tests cover all three color modes, code fences, tabs, spaces,
 newlines, literal HTML entities, and markup escaping. A local preview generated
 with the actual Gemma tokenizer round-trips the Fibonacci snippet exactly,
-including all seven line breaks: [code_rendering_preview.html](code_rendering_preview.html).
+including all seven line breaks: [code_rendering_preview.html](../../archives/README.md).
 The existing API still returns `(status, trajectory_html)`.
 
 Current targeted validation: 80 passed, 2 CUDA parity skips. The broad repository

@@ -7,7 +7,7 @@ from html import unescape
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "huggingface"))
-from rollout_byod_simple_interface import accounts
+from hub_accounts import accounts
 
 OUT = ROOT / "artifacts/bigram/byod_expanded_rollout"
 

@@ -1,5 +1,7 @@
 # LLaDA: bigram, trigram and fading repetition at low and high NFE
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 **22 October 2026 · 180 completed generations · six prompts · one fixed seed**
 
 ## Practical recommendation
@@ -69,7 +71,7 @@ All n-gram conditions use the same expanded **877,064,287-token** corpus. The tr
 | Math | Solve `3(x − 2) + 4 = 2x + 9`, show brief steps | `x = 11` |
 | Math | 120 km at 60 km/h, return 120 km at 40 km/h; average speed with brief explanation | `240 / (2 + 3) = 48 km/h` |
 
-Open prompts are the first two from the existing standard question set. Code prompts request concise code only. All exact prompts and request parameters are saved in [manifest.json](manifest.json).
+Open prompts are the first two from the existing standard question set. Code prompts request concise code only. All exact prompts and request parameters are saved in [manifest.json](../../../archives/README.md).
 
 Runs rotated method order within task/budget groups. Budget order was 4, 128, 8, 64, 16, 32 so the high-budget reference would be covered early if quota ran out. Three one-step warmups were excluded from timings. **All 180 cases completed with zero errors and exactly their requested NFE: 7,560 timed diffusion forwards total.** No extra model or judge-model passes were used.
 
@@ -158,7 +160,7 @@ Bigram adds approximately **20–34%** over confidence guidance at the same NFE 
 
 ## Representative examples across all budgets
 
-Full text for every configuration is in [outputs.md](outputs.md). These excerpts illustrate both benefits and failures; they were selected after reviewing the outputs.
+Full text for every configuration is in [outputs.md](../../../archives/README.md). These excerpts illustrate both benefits and failures; they were selected after reviewing the outputs.
 
 ### 4 iterations: recognizable prose still loops
 
@@ -232,7 +234,7 @@ Red Square is a Moscow landmark ([UNESCO](https://whc.unesco.org/en/list/545/));
 
 ## Diversity diagnostic
 
-Distinct-1 uses **unique LLaDA token IDs divided by total token IDs across each entire visible answer**. Visible text is retokenized with the pinned LLaDA tokenizer; EOS/padding are excluded by the interface. Raw unique-token counts and lengths are in [scores.csv](scores.csv). No distinct-2 metric is used.
+Distinct-1 uses **unique LLaDA token IDs divided by total token IDs across each entire visible answer**. Visible text is retokenized with the pinned LLaDA tokenizer; EOS/padding are excluded by the interface. Raw unique-token counts and lengths are in [scores.csv](../../../archives/README.md). No distinct-2 metric is used.
 
 Mean open-ended distinct-1:
 
@@ -268,4 +270,4 @@ Reproduce or resume generation with:
 
 The runner checks the pinned Space revision and saves each successful case immediately. The summarizer requires all 180 unique cases, verifies every request setting and NFE count, and checks review/output hashes.
 
-Artifacts: [manifest](manifest.json), [all outputs](outputs.md), [raw generations](results.jsonl), [manual reviews](manual_reviews.json), [code tests](code_checks.json), [per-answer scores](scores.csv), [summary](summary.json), and [vector figure](comparison.svg).
+Artifacts: [manifest](../../../archives/README.md), [all outputs](../../../archives/README.md), [raw generations](../../../archives/README.md), [manual reviews](../../../archives/README.md), [code tests](../../../archives/README.md), [per-answer scores](../../../archives/README.md), [summary](../../../archives/README.md), and [vector figure](../../../archives/README.md).

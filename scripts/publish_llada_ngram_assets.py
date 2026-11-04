@@ -2,13 +2,21 @@
 """Publish trained scorer artifacts outside the Space's one-GB file limit."""
 
 import json
+import hashlib
 import os
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "huggingface"))
-from enable_llada_trigram import digest
+
+
+def digest(path):
+    result = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for chunk in iter(lambda: stream.read(8 * 1024 * 1024), b''):
+            result.update(chunk)
+    return result.hexdigest()
 
 
 def main():

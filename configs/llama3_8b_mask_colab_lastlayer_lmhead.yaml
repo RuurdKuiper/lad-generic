@@ -1,5 +1,7 @@
 # Llama 3.1 8B 50k-long experiment with the final transformer block and output
 # head fully trainable in addition to the original q_proj/v_proj LoRA adapters.
+# Retains the earlier 1e-5 to 1e-6 learning-rate schedule; the current long-run
+# preset uses 1e-4 to 1e-5.
 
 # Base model
 model_name_or_path: meta-llama/Llama-3.1-8B-Instruct

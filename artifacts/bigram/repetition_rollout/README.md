@@ -1,5 +1,7 @@
 # Optional repetition penalty for Ruurd Gemma and LLaDA
 
+Earlier-phase evidence is in the [verified research archive](../../../archives/README.md); extract it to recover the original paths.
+
 Added **PMI Viterbi + Repetition Penalty** alongside the original Bigram Viterbi option. Gamma defaults to 1; the original option remains selected by default.
 
 The edge score is `0.5 * temperature * PMI(a,b) - gamma * C(a,b)`. Counts accumulate earlier expected pair occurrences from the full-vocabulary diffusion distribution and reset each iteration/block. EOS/EOT pairs are neither counted nor penalized. Retained tokens remain singleton constraints; no additional model forwards are used.
@@ -18,7 +20,7 @@ Before/after live comparisons use Amsterdam, seed 1234, temperature 2, top-k 16,
 All eight hosted checks passed. On both models, original output matched the
 pre-deployment baseline and gamma zero matched original output exactly. Each
 run reported four selector calls. The new gamma control and preserved advanced
-controls were checked live. Complete outputs: [EXAMPLES.md](EXAMPLES.md).
+controls were checked live. Complete outputs: [EXAMPLES.md](../../../archives/README.md).
 
 In this one low-budget example, LLaDA moved from a city-of loop to a mostly
 coherent answer at gamma 1, with punctuation/repetition flaws still present.

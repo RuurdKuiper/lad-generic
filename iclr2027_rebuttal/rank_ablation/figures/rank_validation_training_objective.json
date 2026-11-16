@@ -17,10 +17,10 @@
     },
     "1024": {
       "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-1024/metrics.jsonl",
-      "sha256": "e6d0fdfee07cb9cdde4a817808bb2859163e3e6ea5c6e7ade28471e083165220",
-      "points": 20,
-      "last_update": 5000,
-      "last_loss": 1.265038070678711
+      "sha256": "147c818d9a718c3a5de1f6288e3c770300880dd46a9283685830aaae7c9c9e67",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 1.1524630737304689
     },
     "2048": {
       "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-2048/metrics.jsonl",
@@ -40,7 +40,8 @@
     0.5093340301513671
   ],
   "main_axis": "logarithmic, full observed range",
-  "inset_axis": "linear, >=18000 updates, ranks [128, 512, 2048]",
+  "inset_axis": "linear, >=18000 updates, ranks [128, 512, 1024, 2048]",
   "smoothing": false,
-  "limitation": "Fresh rank-1024 curve is partial until 25k updates; historical 1024 is not included."
+  "presentation": "Only axis labels and tick numbers; rank key in manuscript caption",
+  "limitation": "One parent and seed; validation loss alone does not establish downstream quality. Historical 1024 is excluded."
 }

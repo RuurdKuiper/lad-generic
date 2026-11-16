@@ -1,10 +1,24 @@
-# Llama 8B rank study — first three complete; fresh rank-1024 control authorized
+# Llama 8B rank study — all four validation histories reach 25k
 
-Ranks **128, 512 and 2048** have completed **25,000 optimizer updates** each.
-The author now requests a **fresh rank-1024 run** using the same validation-only
-recipe, with $17 available. This is a separate rank experiment: the original
-benchmarked BYOD-Llama checkpoint and its results remain unchanged. Keep each
-final adapter, recovery checkpoints and the complete loss history.
+Ranks **128, 512, 1024 and 2048** have each reached **25,000 optimizer updates**.
+This is a separate validation-only rank experiment: the original benchmarked
+BYOD-Llama checkpoint and scores remain unchanged.
+
+**Artifact status:** the final rank-1024 validation result and full loss history
+are saved, but the recovery job failed during the 25k checkpoint upload with
+HTTP 403: Hugging Face requires automatic credit recharge for more storage.
+Its final adapter is absent; the latest persisted recovery checkpoint is 22.5k.
+The other three runs' final adapters remain saved. See
+[verification](final_run_verification.json) and
+[provider diagnosis](rank1024_recovery_diagnosis.json).
+No recharge, storage deletion or additional GPU job was started in response.
+
+Rank 1024 was originally chosen to balance quality with single-A100 feasibility:
+per-device batch 16 on an 80GB A100, or 8 on a 40GB A100, in the original
+implementation. The controlled rank study uses RTX PRO 6000 GPUs; these are
+separate implementation/hardware configurations. We compare loss improvement
+**per added rank/adapter parameter**, since 1024→2048 adds twice as many
+parameters as 512→1024. The larger rank still achieves lower validation loss.
 
 ## Curves and model retention
 
@@ -18,7 +32,7 @@ The four [configurations](configs/) use:
 | Published run model | One `final/` adapter after update 25,000; `save_best_model: false` |
 | Recovery state | Every 2,500 updates, including model, optimizer, scheduler and RNG state; keep the latest **two completed checkpoints** |
 | Loss-log retention | Independent of checkpoints; never pruned with older checkpoints |
-| Cloud persistence | Private Hub dataset, separate `rank-128/`, `rank-512/`, `rank-2048/` directories |
+| Cloud persistence | Private Hub dataset, separate `rank-128/`, `rank-512/`, `rank-1024/`, `rank-2048/` directories |
 
 [The worker](run_training.py) commits logs/configuration after every validation.
 It uploads each completed checkpoint before deleting older completed checkpoints
@@ -110,7 +124,7 @@ actually active for all three runs.
 |---|---:|
 | 128 | 54,525,952 |
 | 512 | 218,103,808 |
-| 1024 — historical reference | 436,207,616 |
+| 1024 — fresh controlled run | 436,207,616 |
 | 2048 | 872,415,232 |
 
 Llama's V projection has output width 1,024, so its effective matrix rank cannot

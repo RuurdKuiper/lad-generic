@@ -1,0 +1,25 @@
+{
+  "job_id": "6afaff79f7633f04f3556aea",
+  "job_stage": "ERROR",
+  "samples": 1179,
+  "first_observation_utc": "2026-11-16T13:07:58.006447+00:00",
+  "last_observation_utc": "2026-11-16T13:28:08.957337+00:00",
+  "latest_gpus": {
+    "f76d6ca9": {
+      "utilization": 0,
+      "memory_used_bytes": 81752000000,
+      "memory_total_bytes": 97249000000
+    }
+  },
+  "largest_observed_gpu_memory": {
+    "device": "f76d6ca9",
+    "observed_at_utc": "2026-11-16T13:10:31.515371+00:00",
+    "utilization": 0,
+    "memory_used_bytes": 81752000000,
+    "memory_total_bytes": 97249000000
+  },
+  "median_nonzero_gpu_memory_bytes": 81752000000,
+  "scope": "Rank-1024 recovery allocation only; live telemetry has no earlier history.",
+  "limitation": "Sampled device memory, including allocator/context overhead; not PyTorch max_memory_allocated or a guaranteed whole-run peak. Startup/validation/checkpoint phases may be included.",
+  "api_reference": "https://huggingface.co/docs/hub/jobs-manage#monitor-resource-usage"
+}

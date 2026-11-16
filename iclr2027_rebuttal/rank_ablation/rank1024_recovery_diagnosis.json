@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-11-16T13:28:54.340430+00:00",
+  "job_id": "6afaff79f7633f04f3556aea",
+  "repository_revision": "be80c612e61cc60121f2927c86bf58a495c9759b",
+  "startedAt": "2026-11-16T13:06:45.155Z",
+  "finishedAt": "2026-11-16T13:28:13.310Z",
+  "durations": {
+    "schedulingSecs": 107,
+    "runningSecs": 1288,
+    "totalSecs": 1395
+  },
+  "status": {
+    "stage": "ERROR",
+    "message": "Job failed with exit code: 1. Reason: Error",
+    "failureCount": 0
+  },
+  "timeout": 3600
+}

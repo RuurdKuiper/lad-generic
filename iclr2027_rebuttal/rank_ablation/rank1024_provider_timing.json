@@ -1,0 +1,15 @@
+{
+  "timeout": 18000,
+  "startedAt": "2026-11-16T07:20:54.965Z",
+  "finishedAt": "2026-11-16T10:22:25.174Z",
+  "durations": {
+    "schedulingSecs": 4,
+    "runningSecs": 10890,
+    "totalSecs": 10894
+  },
+  "status": {
+    "stage": "ERROR",
+    "message": "Job failed with exit code: 1. Reason: Error",
+    "failureCount": 0
+  }
+}

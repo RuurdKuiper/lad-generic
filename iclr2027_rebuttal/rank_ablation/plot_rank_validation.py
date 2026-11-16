@@ -36,6 +36,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--objective", action="store_true", help="Plot the actual 90/10 objective, using the fresh rank-1024 run")
     args = parser.parse_args()
+    axes_only = args.objective
     metric = "weighted_loss" if args.objective else METRIC
     runs = dict(RUNS)
     if args.objective:
@@ -74,8 +75,8 @@ def main() -> None:
         "axes.spines.top": False, "axes.spines.right": False,
         "pdf.fonttype": 42, "ps.fonttype": 42,
     })
-    figure = plt.figure(figsize=(12.8, 7.8), facecolor="white")
-    axis = figure.add_axes([0.085, 0.18, 0.86, 0.66])
+    figure = plt.figure(figsize=(10, 6.1) if axes_only else (12.8, 7.8), facecolor="white")
+    axis = figure.add_axes([0.095, 0.13, 0.88, 0.84] if axes_only else [0.085, 0.18, 0.86, 0.66])
     handles = []
     labels = []
     for rank, points in data.items():
@@ -85,11 +86,11 @@ def main() -> None:
             markevery=(rank % 5, 10), markerfacecolor="white", markeredgewidth=1.3,
         )
         handles.append(line)
-        suffix = " (fresh)" if args.objective else " (historical)"
+        suffix = "" if args.objective else " (historical)"
         labels.append(f"Rank {rank:,}" + (suffix if rank == 1024 else ""))
         axis.plot(steps[-1], values[-1], marker=STYLES[rank]["marker"],
                   color=STYLES[rank]["color"], markersize=6, linestyle="none")
-        if args.objective and steps[-1] < 25000:
+        if args.objective and steps[-1] < 25000 and not axes_only:
             axis.annotate(f"{steps[-1]:,} updates", (steps[-1], values[-1]), xytext=(-8, -27),
                           textcoords="offset points", ha="right", color=STYLES[rank]["color"],
                           fontsize=10.5, arrowprops=dict(arrowstyle="-", color=STYLES[rank]["color"], lw=.8))
@@ -120,10 +121,11 @@ def main() -> None:
                    markevery=(0, 5), markerfacecolor="white", markeredgewidth=1.2)
         inset.plot(steps[-1], values[-1], marker=STYLES[rank]["marker"],
                    color=STYLES[rank]["color"], markersize=5, linestyle="none")
-        inset.annotate(f"{values[-1]:.4f}", (steps[-1], values[-1]), xytext=(-8, 12),
-                       textcoords="offset points", ha="right", color=STYLES[rank]["color"],
-                       fontsize=10.5, fontweight="bold",
-                       bbox=dict(facecolor="white", edgecolor="none", alpha=.8, pad=1))
+        if not axes_only:
+            inset.annotate(f"{values[-1]:.4f}", (steps[-1], values[-1]), xytext=(-8, 12),
+                           textcoords="offset points", ha="right", color=STYLES[rank]["color"],
+                           fontsize=10.5, fontweight="bold",
+                           bbox=dict(facecolor="white", edgecolor="none", alpha=.8, pad=1))
     padding = max(.0007, (max(late) - min(late)) * .18)
     inset.set_ylim(min(late) - padding, max(late) + padding)
     inset.set_xlim(18000, 25500)
@@ -132,24 +134,26 @@ def main() -> None:
     inset.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value:.3f}" if args.objective else f"{value:.4f}"))
     inset.tick_params(labelsize=9.5)
     inset.set_ylabel("Loss (linear scale)", fontsize=9.5, labelpad=7)
-    inset.set_title("Late-training zoom · available curves" if args.objective else "Ranks 1,024 and 2,048 · late-training zoom", fontsize=10.5, pad=10)
+    if not axes_only:
+        inset.set_title("Late-training zoom · available curves" if args.objective else "Ranks 1,024 and 2,048 · late-training zoom", fontsize=10.5, pad=10)
     inset.grid(True, color="#D8DEE5", linewidth=.6, alpha=.8)
     for spine in inset.spines.values():
         spine.set_visible(True)
         spine.set_color("#BAC4D0")
 
-    figure.text(.085, .955, "Validation loss of the training objective" if args.objective else "Validation loss by LoRA rank", fontsize=19, fontweight="bold")
-    subtitle = "0.9 × answer loss + 0.1 × padding loss · lower is better · no smoothing" if args.objective else "Common logged metric · lower is better · raw values, no smoothing"
-    figure.text(.085, .919, subtitle, color="#505E6F", fontsize=11.5)
-    figure.legend(handles, labels, loc="upper left", bbox_to_anchor=(.077, .9), ncol=4,
-                  frameon=False, handlelength=3.1, columnspacing=1.8, fontsize=11.5)
-    last_step = data[1024 if args.objective else 2048][-1][0]
-    progress_rank = "Fresh rank 1,024" if args.objective else "Rank 2,048"
-    progress_note = "All curves extend through 25,000 updates." if last_step == 25000 else f"{progress_rank}: snapshot through {last_step:,} updates; other curves reach 25,000."
-    note = "Same 200 validation examples and matched recipe; answer/padding losses are separately normalized and noise-corrected." if args.objective else "Same 200 validation examples. Rank 1,024 is a historical reference; its training-objective settings may differ."
-    figure.text(.085, .073, note,
-                color="#505E6F", fontsize=10.2)
-    figure.text(.085, .045, progress_note, color="#505E6F", fontsize=10.2)
+    if not axes_only:
+        figure.text(.085, .955, "Validation loss of the training objective" if args.objective else "Validation loss by LoRA rank", fontsize=19, fontweight="bold")
+        subtitle = "0.9 × answer loss + 0.1 × padding loss · lower is better · no smoothing" if args.objective else "Common logged metric · lower is better · raw values, no smoothing"
+        figure.text(.085, .919, subtitle, color="#505E6F", fontsize=11.5)
+        figure.legend(handles, labels, loc="upper left", bbox_to_anchor=(.077, .9), ncol=4,
+                      frameon=False, handlelength=3.1, columnspacing=1.8, fontsize=11.5)
+        last_step = data[1024 if args.objective else 2048][-1][0]
+        progress_rank = "Rank 1,024" if args.objective else "Rank 2,048"
+        progress_note = "All curves extend through 25,000 updates." if last_step == 25000 else f"{progress_rank}: snapshot through {last_step:,} updates; other curves reach 25,000."
+        note = "Same 200 validation examples and matched recipe; answer/padding losses are separately normalized and noise-corrected." if args.objective else "Same 200 validation examples. Rank 1,024 is a historical reference; its training-objective settings may differ."
+        figure.text(.085, .073, note,
+                    color="#505E6F", fontsize=10.2)
+        figure.text(.085, .045, progress_note, color="#505E6F", fontsize=10.2)
 
     stem = output / ("rank_validation_training_objective" if args.objective else "rank_validation_common_ce")
     for suffix in ("png", "pdf", "svg"):
@@ -165,7 +169,11 @@ def main() -> None:
         "validation_signature": list(next(iter(signatures))),
         "main_axis": "logarithmic, full observed range", "inset_axis": f"linear, >=18000 updates, ranks {inset_ranks}",
         "smoothing": False,
-        "limitation": "Fresh rank-1024 curve is partial until 25k updates; historical 1024 is not included." if args.objective else "The historical rank-1024 run has incompletely documented training loss weighting; this is not a fully controlled four-rank experiment.",
+        "presentation": "Only axis labels and tick numbers; rank key in manuscript caption" if axes_only else "Annotated historical comparison",
+        "limitation": ("One parent and seed; validation loss alone does not establish downstream quality. Historical 1024 is excluded."
+                       if all(source["last_update"] == 25000 for source in sources.values())
+                       else "Fresh rank-1024 curve is partial until 25k updates; historical 1024 is not included.")
+                      if args.objective else "The historical rank-1024 run has incompletely documented training loss weighting; this is not a fully controlled four-rank experiment.",
     }
     stem.with_suffix(".json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps({"figure": str(stem.with_suffix('.png')), "validation_points": len(csv_rows),

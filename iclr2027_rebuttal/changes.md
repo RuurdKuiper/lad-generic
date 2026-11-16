@@ -358,3 +358,291 @@ without inferring benchmark accuracy. Q2 reports the expanded coverage and
 paired Gemma/LLaDA interval, retaining the lack of multiplicity/selection
 adjustment and the model-size/training-history caveat. Preserved the author's
 edited W1/W2 and every other response verbatim. No paper changes or new runs.
+
+
+## 16 November — standalone dPsL-W1 response
+
+Filled dPsL-W1 independently using the LAD and rank evidence, without referring
+to another reviewer or response. Cited the completed related-work clarification,
+Appendix B/Table 5 published LAD comparison and Appendix C/Figure 5/Table 6 rank
+study. Kept clear that no matched-budget LAD retraining or systematic module
+ablation was performed; rank evidence remains preliminary and validation-only.
+All other responses and the original comment are unchanged. No additional paper
+changes or GPU runs were required because these manuscript additions exist.
+
+
+## 16 November — standalone dPsL-W2 and MMLU-Pro budget rationale
+
+Filled only dPsL-W2, preserving the author's edited earlier responses. Reused
+the completed shared 250/164 coverage, total/net outcome counts, interval
+methods and descriptive Gemma/LLaDA comparison without referring to another
+reviewer. Retained unadjusted/multiple-selection and model-size/history limits.
+
+Verified all 2,500 final MMLU-Pro outcomes: the four AR configurations use a
+2,048-new-token cap, while all six diffusion configurations use 64, not the
+submitted paper's 128. Added the author's rationale to the response and
+Appendix G: AR reasoning motivates the larger maximum; generally shorter direct
+diffusion answers motivate a cheaper canvas. Stated that no controlled output-
+budget ablation establishes that longer diffusion outputs would not help.
+
+An offline retokenization check on the 1,000 saved AR answers supports the
+maximum-versus-actual-length distinction: median reconstructed lengths are
+33/64.5/5/111.5 for Gemma/Qwen/Ministral/Llama, with 250/248/247/225 of 250 below
+1,024 tokens. These are retokenized saved text lengths, not originally logged
+generated-token counts; no exact-length claim or extra numeric table was added
+to the paper. No predictions, output budgets, scores or GPU jobs were changed.
+
+
+## 16 November — standalone dPsL-W3 and quality/cost interpretation
+
+Added the response acknowledging math/code deficits and the remaining
+128-NFE perplexity gap. Used all four expanded Gemma/LLaDA math/code comparisons
+to show mixed, descriptively close task scores rather than full equivalence or
+superiority. Corrected the timing attribution: conversion is 3.1–4.0 GPU-hours,
+3.2 for Llama and 4.0 for Gemma; LLaDA reports 130,000 H800 pretraining GPU-hours.
+Rechecked the primary LLaDA paper's introduction. Explicitly excluded inherited
+AR pretraining from BYOD's conversion cost and noted the hardware difference.
+
+Updated the Discussion to distinguish task-score proximity from overall
+quality equivalence. The existing Conclusion already proposes partial/full
+fine-tuning from a merged conversion; preserved its wording and described the
+idea as future work rather than an evaluated result. Did not assert that every
+diffusion model necessarily has the same quality deficit. All other reviewer
+responses, benchmark values and numerical artifacts remain unchanged.
+
+
+## 16 November — concise dPsL-Q1 and Q2 answers
+
+Filled these questions separately, referring only to this reviewer's W1/W2
+and the existing manuscript appendices. Q1 distinguishes the published LAD
+comparison from an unperformed matched-budget control, and rank validation from
+systematic module sensitivity/downstream benchmarking. Q2 states the actual
+250/164 coverage, nominal paired interval and the remaining unequal MMLU-Pro
+output limits; it does not claim full-suite or equal-budget evaluation. All
+other response text and original questions remain unchanged. No paper changes
+or additional experiments were needed.
+
+
+## 16 November — dPsL-Q3 scope and infilling clarification
+
+Added the standalone response explaining that practical infilling/constrained
+quality and measured latency were not evaluated. Referenced Figure 2/Appendix J
+as a right-context diagnostic, not an application-level quality/latency result.
+Added the explicit limitation to the manuscript and clarified that one forward
+pass was not a measured latency experiment. All other reviewer answers remain
+unchanged, and no new experiment is promised.
+
+Clarified terminology to the author: BERT-style models are masked language
+models (MLMs), using bidirectional Transformer encoders. Checked the primary
+BERT paper and counterexamples to the proposed literature argument: DiffuLLaMA
+has story/code infilling evaluations and SEDD has conditional-infilling results.
+The response therefore relies on this study's conversion focus, rather than
+claiming infilling is exclusive to BERT-like models or lacks DLM precedents.
+
+
+## 16 November — keep dPsL-Q3 scope clarification in the rebuttal only
+
+At the author's request, removed the two manuscript sentences added for Q3,
+restoring the TeX exactly to its pre-Q3 version. Kept the reviewer response,
+removing only its claim that this limitation was newly added to the manuscript.
+This supersedes the manuscript-edit portion of the preceding Q3 log entry.
+
+
+## 16 November — fC22-W1.1 sample coverage and uncertainty response
+
+Added a standalone answer covering the expanded shared 250/164 question sets,
+21,640 total / 10,570 net additional outcomes, main-table macro intervals and
+appendix Wilson intervals. Reused the qualified ten-paper reporting context
+without claiming all evaluation counts are absent. Reported the current nominal
+paired Gemma/LLaDA interval with multiplicity/selection and model-history limits,
+and explicitly withdrew the old positive 25k-to-50k mean-accuracy claim using the
+updated −0.14 pp interval spanning zero. Verified all numbers against the
+versioned manuscript source. Preserved every other author-edited answer and
+the original incomplete review quote. No new manuscript edits were needed: the
+referenced updates are already implemented. No model evaluation or GPU work.
+
+
+## 16 November — fC22-W1.2 stale/intermediate AR table entries
+
+Added a brief acknowledgement using the author's explanation that intermediate
+results remained in the submitted table. Corrected the requested coverage
+wording to 250 questions/task and all 164 HumanEval questions, rather than
+implying HumanEval contains 250. Referenced the already updated Table 3 and
+Appendix D counts/intervals. Only this response field changed; no new manuscript
+changes, scoring or evaluation were needed.
+
+
+## 16 November — fC22-W1.3 training exposure and retention response
+
+Condensed the shared R05 material into a standalone response: instruction-tuned
+parents and the published Qwen base/Instruct example; explicit Qwen2.5-Math,
+Tülu RLVR and d1 benchmark-training precedents; Dream/Tülu/FLAN upstream lineage;
+and BYOD's specified approximately 19% benchmark-source mixture. Kept Tülu SFT
+separate from its RLVR data and retained-example exposure separate from upstream
+sources. Rechecked the primary reports, official LLaDA release policy, mixture
+card and FLAN source configuration.
+
+Included the author's explicit duplicate-filtering statement and Section 3.3's
+normalized held-out-prompt policy without claiming that a complete historical
+near-duplicate audit was performed. Current builder code corroborates the
+policy but does not close the earlier D1/D2 historical-manifest audit items.
+Acknowledged that extra task-format exposure remains a confound and that a
+matched extra-AR-training control would be useful. Framed broad capabilities
+after the limited conversion stage as consistent with pretrained-knowledge
+reuse, not a causal measure of retention or statistical equivalence.
+
+Clarified the roles of DLM references and AR capability controls, emphasizing
+low-cost conversion across four families. Only fC22-W1.3 was populated; no
+other author-edited answer or manuscript text changed, and no new experiment
+was promised or launched.
+
+
+## 16 November — fC22-W2.1 novelty and ablation response
+
+Added a standalone answer emphasizing the shared mask-only LoRA recipe across
+four tested families and 3.1–4.0-hour single-GPU conversions, excluding inherited
+AR training. Distinguished this contribution from introducing LoRA diffusion
+itself. Reused the published LAD comparison and preliminary rank/resource
+study, and explicitly identified target-module, label-alignment and loss-weight
+sensitivity that is not independently ablated. Described merged checkpoints as
+potential later fine-tuning initializations, without claiming a demonstrated
+improvement in that later training.
+
+Expanded Appendix B's implementation comparison with shared Q/V targeting,
+alpha/r scaling and dropout, rank scope, update/batch settings and token-position
+budgets, checked against LAD's primary paper. Expanded Appendix C's scope note
+for fixed label alignment/loss weights. No new numbered floats were introduced;
+existing reviewer references remain stable. Earlier author-edited responses and
+all main-text/numerical benchmark content are unchanged.
+
+The priority check found earlier Mistral diffusion work: TESS 2 (ACL 2025) and
+Nemotron-Labs-Diffusion (2026, Ministral 3). Asked whether to correct/cite this in
+the manuscript; the author explicitly selected keeping the correction in the
+rebuttal for now. Accordingly, narrowed the new response and documented the
+follow-up in rebuttal/literature notes, while preserving the manuscript's current
+broad first-Mistral wording. It remains unresolved there. Did not add the earlier
+declined FP8/speed-attribution footnote. No experiments or paid jobs were run.
+
+
+## 16 November — fC22-W2.2 parallel decoding and perplexity response
+
+Added a standalone response distinguishing task-benchmark decoding from the
+existing 128-token open-generation experiments at 32/64/128 NFE. Cited
+perplexity/diversity precedents and selected-task step comparisons without
+claiming field-wide rarity or no low-NFE benchmarks. Rechecked LLaDA, Dream,
+DiffuLLaMA and DiffuCoder primary sources against the earlier audit.
+
+Verified Gemma perplexities 14.56/8.27/4.33 at 32/64/128 NFE, AR 3.01, and
+LLaDA 5.33 at 32 NFE. Kept the AR score as a valid quality reference while
+explaining the different decoding regimes and lack of equal-compute/latency
+interpretation. Acknowledged the real remaining low-NFE deficit and missing
+reduced-step task/latency evaluation. No new experiment is promised.
+
+Also identified an existing Results wording error: the 2.7–5.0× parent-PPL
+range applies specifically at 64 NFE, not across all budgets. Asked the author
+whether to correct and clarify the Results text; this optional manuscript
+change is pending that preference. At this step only fC22-W2.2 is populated;
+all other author-edited responses and the manuscript remain unchanged.
+
+
+## 16 November — completed NFE Results-text correction
+
+The author requested correcting the paper and thanking the reviewer for catching
+our Results-text error. Replaced the incorrect across-budget ratio wording with
+its correct 64-NFE scope, and added Gemma PPL 14.56 at 32 NFE / 4.33 at 128 NFE
+versus AR 3.01. Kept the AR result as a valid quality reference without implying
+equal compute or latency. Revised fC22-W2.2 to acknowledge and correct our own
+wording error instead of implying reviewer misinterpretation. This resolves
+the pending manuscript preference in the preceding entry. All numerical
+measurements, plots, tables and other reviewer answers remain unchanged.
+
+
+## 16 November — fC22-W2.3 conversion benefit and remaining quality gaps
+
+Added a standalone response acknowledging the missing latency evidence and
+updated Qwen MATH gap (30.4% versus parent 73.6%). Used the local LLaDA reference
+and mixed Gemma math/code scores to motivate useful diffusion capabilities at
+small additional conversion cost, without claiming that every DLM necessarily
+struggles on these tasks or that model performance is equivalent. Emphasized
+four-family conversion feasibility and kept the inherited AR pretraining cost,
+different hardware and lack of matched-quality inference-speed evidence clear.
+All scores were checked against the final manuscript source. No other answers,
+manuscript text, measurements or jobs changed; the cited Discussion/Limitations
+already state the scope and remaining quality/latency work.
+
+
+## 16 November — fC22-Q1 and Q2 concise answers
+
+Filled these separately with references only to this reviewer's weaknesses and
+the manuscript. Q1 thanks the reviewer, explains corrected intermediate entries
+and verified saved outputs, and distinguishes 250-question subsets from full
+HumanEval while pointing to the main/appendix confidence intervals. Q2 states
+that reduced-NFE task accuracies and wall-clock profiling remain unmeasured;
+uses the qualified selected-task literature context rather than claiming such
+studies never occur. Included the removal of separate adapter branches after
+merging without assuming that different backbones match LLaDA's latency.
+All original questions and every other author-edited response remain unchanged.
+No manuscript edits or new experiments were needed for these answers.
+
+
+## 16 November — fC22-Q3 training and evaluation lengths
+
+Filled this response with the distinction between the 256-token total training
+sequence and a 256-token evaluation answer plus prompt. Checked dynamic batch
+padding and rounding to a multiple of 16 against the collator and manuscript
+settings. Kept variable-length/padding exposure as a possible explanation for
+observed flexibility, without treating it as proof of extrapolation beyond the
+cap. Acknowledged that no controlled length ablation quantifies its contribution
+to the math/code gap; similarity to LLaDA does not resolve the larger AR-parent
+gap. Verified that the original question and every other response are unchanged.
+No manuscript changes or additional experiments were made.
+
+
+## 16 November — fC22-Q3 length argument refinement
+
+Revised only this response to lead with variable-length training and observed
+length flexibility. Explained why grouping questions by length confounds length
+with task difficulty, and distinguished a paired inference-canvas sensitivity
+check from a controlled longer-sequence training comparison. Both remain future
+work; no causal attribution or claim that padding proves extrapolation was added.
+Preserved the original question and every other response. No manuscript changes
+or experiments were made.
+
+
+## 16 November — A100 rank-selection rationale and completed rank curves
+
+Updated the rank-related answers mNeh-W1/Q1, dPsL-W1/Q1 and fC22-W2.1,
+the shared rebuttal, Discussion and Appendix C. Rank 1024 is framed as a
+quality/resource choice compatible with the original single-A100 setup:
+batch 16 on the 80GB variant or batch 8 on the 40GB variant. These capacities
+use NVIDIA's variant names; no personal Colab history or exact live-memory
+usage is added to the manuscript or responses. The controlled rank experiment
+remains explicitly separate and uses RTX PRO 6000 hardware.
+
+All four validation histories reach 25,000 updates. Final losses at ranks
+128/512/1024/2048 are 1.268363/1.195119/1.152463/1.102089. Gains of 0.042656
+and 0.050374 correspond to 512 and 1024 added rank units, respectively: the
+latter gain per added parameter is 40.95% smaller. Removed the obsolete claim
+that the absolute second gain is smaller. Regenerated the summary, full curves,
+CSV/JSON provenance and manuscript table, removed the completed-rank TODO, and
+rebuilt the paper. Removed “fresh” from the final graph's legend at the author's
+request; the historical-reference plot retains its distinguishing label.
+
+Training completed, but the final checkpoint upload hit a Hub storage/billing
+403 requiring automatic credit recharge. The final validation history is saved;
+the rank-1024 final adapter is absent and its latest persisted recovery state
+is 22.5k. Recorded this artifact follow-up in the internal README/rebuttal and
+verification files. No recharge, deletion or further GPU job was started.
+Original reviewer quotations, unrelated responses and benchmark data remain
+unchanged.
+
+
+## 16 November — axes-only rank graph
+
+Removed the figure title, subtitle/objective formula, footer notes, inset title,
+legend and endpoint annotations from the objective plot. Only axis labels and
+tick numbers remain. Tightened the figure margins and retained all four curves,
+their distinct styles, and the late-training inset. Moved the rank/color/marker
+key to the manuscript caption, copied the regenerated PDF asset, and rebuilt
+the manuscript. Numerical data, axis scales and all reviewer responses are
+unchanged by this presentation edit.

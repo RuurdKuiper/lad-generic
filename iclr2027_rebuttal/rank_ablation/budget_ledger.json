@@ -92,15 +92,77 @@
       "runtime_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
       "timeout_seconds": 18000,
       "reserved_usd": 13.795733,
-      "created_at": "2026-11-16T07:20:50.758000+00:00"
+      "created_at": "2026-11-16T07:20:50.758000+00:00",
+      "status": "ERROR",
+      "provider_started_at": "2026-11-16T07:20:54.965Z",
+      "provider_finished_at": "2026-11-16T10:22:25.174Z",
+      "provider_durations": {
+        "schedulingSecs": 4,
+        "runningSecs": 10890,
+        "totalSecs": 10894
+      },
+      "cost_upper_usd": 8.387439,
+      "cost_upper_basis": "Provider totalSecs rounded up, plus one billing-minute contingency"
+    },
+    {
+      "role": "training-1024",
+      "job_id": "6afafec7f7633f04f3556a7d",
+      "url": "https://huggingface.co/jobs/Ruurd/6afafec7f7633f04f3556a7d",
+      "flavor": "rtx-pro-6000",
+      "created_at": "2026-11-16T13:01:59.166000+00:00",
+      "timeout_seconds": 3600,
+      "reserved_usd": 2.795813,
+      "input_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+      "runtime_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+      "recovery_revision": "12e017b6b40d0968e2fa1deeaeed606e5e347bfb",
+      "resume_checkpoint": 22500,
+      "status": "ERROR",
+      "provider_started_at": "2026-11-16T13:02:03.789Z",
+      "provider_finished_at": "2026-11-16T13:02:32.949Z",
+      "provider_durations": {
+        "schedulingSecs": 4,
+        "runningSecs": 29,
+        "totalSecs": 33
+      },
+      "cost_upper_usd": 0.091666,
+      "cost_upper_basis": "Provider totalSecs rounded up, plus one billing-minute contingency"
+    },
+    {
+      "role": "training-1024",
+      "job_id": "6afaff79f7633f04f3556aea",
+      "url": "https://huggingface.co/jobs/Ruurd/6afaff79f7633f04f3556aea",
+      "flavor": "rtx-pro-6000",
+      "created_at": "2026-11-16T13:04:57.990000+00:00",
+      "timeout_seconds": 3600,
+      "reserved_usd": 2.795813,
+      "input_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+      "runtime_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+      "recovery_revision": "5c05f5ed90026aebd1c95b1bef446850e6af9a97",
+      "resume_checkpoint": 22500,
+      "status": "ERROR",
+      "provider_started_at": "2026-11-16T13:06:45.155Z",
+      "provider_finished_at": "2026-11-16T13:28:13.310Z",
+      "provider_durations": {
+        "schedulingSecs": 107,
+        "runningSecs": 1288,
+        "totalSecs": 1395
+      },
+      "cost_upper_usd": 1.1458249999999999,
+      "cost_upper_basis": "Provider totalSecs rounded up, plus one billing-minute contingency",
+      "training_updates_completed": 25000,
+      "final_validation_saved": true,
+      "final_adapter_saved": false,
+      "stop_reason": "Hub storage/billing limit blocked final checkpoint upload (HTTP 403)"
     }
   ],
   "repo": "Ruurd/iclr2027-rank-ablation",
   "input_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
   "image": "pytorch/pytorch@sha256:a7103283ea7113e10ae5d014bd2342acebda0bc53164b2f7b1dd6eb7a766bdb6",
   "format_fix": "FP8 recovery uses Torch serialization and explicitly retains calibration state; failed attempt preserved in rank-2048/, corrected study in fp8-checkpoint-v2/.",
-  "planning_envelope_usd": 41.466212999999996,
+  "planning_envelope_usd": 38.945398000000004,
   "startup_contingency_usd": 2.0,
   "rank1024_additional_cap_usd": 17,
-  "rank1024_startup_contingency_usd": 2
+  "rank1024_startup_contingency_usd": 2,
+  "observed_total_cost_upper_usd": 35.29541,
+  "rank1024_observed_cost_upper_usd": 9.62493
 }

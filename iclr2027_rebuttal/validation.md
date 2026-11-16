@@ -178,3 +178,118 @@ matched four-rank plot remain pending.
 - Added explicit nominal/unadjusted and model-selection language throughout;
   no superiority inference is drawn from the Gemma/LLaDA interval. Preserved
   separate rank-study logs/figure and original benchmarked model weights.
+
+
+## 16 November — dPsL-W2 validation
+
+Verified that only this answer was populated and that all other author-edited
+responses and review quotes are unchanged. Read every final MMLU-Pro row to
+confirm n=250/model and saved 2,048 AR / 64 diffusion limits. Offline AR answer
+retokenization supports early stopping below the cap; no reconstructed lengths
+were presented as logged generation counts. Added rationale and budget-scope
+limits to the paper's existing Appendix G. The 27-page PDF builds successfully
+without undefined references/citations or overfull boxes. No numerical benchmark
+artifact, generated answer or paid resource was changed.
+
+
+## 16 November — dPsL-W3 validation
+
+Verified only dPsL-W3's answer changed, with its original quote and all other
+author-edited responses preserved. Cross-checked all eight quoted benchmark
+scores against the versioned final source, conversion times against Table 2,
+and the 128-NFE perplexities against the existing open-generation table.
+Confirmed LLaDA's 0.13-million H800-hour figure refers to pretraining, with SFT
+following it. The original Conclusion and all content from Limitations onwards
+are unchanged. The updated 27-page PDF builds without undefined references or
+overfull boxes; the Conclusion remains on page 10. No new model evaluation.
+
+
+## 16 November — dPsL-Q3 validation
+
+Confirmed only Q3's response field changed, preserving its original question
+and every earlier author edit. Verified Figure 2 and Appendix J references
+against the rendered manuscript. The PDF builds successfully without undefined
+citations/references or overfull boxes; the Conclusion remains on page 10.
+Checked BERT (ACL N19-1423), DiffuLLaMA Section 4.2/Appendix B.3 and SEDD
+Section 5.3.2 for terminology and infilling precedents. No scores, benchmark
+outputs, latency measurements or GPU jobs were changed.
+
+
+## 16 November — fC22-W1.3 response verification
+
+Verified only this answer field changed and its original quote/all other
+responses remain identical. Checked the shared mixture arithmetic (18.957%
+explicit benchmark sources), 400,000 example presentations per primary run,
+and Section 3.3's filtering description. Reopened primary evidence for the
+Qwen 57.9/84.8 HumanEval pair, specialist benchmark-training use, Tülu RLVR
+sources, d1 train/test separation, Dream's Tülu SFT use, FLAN train-source
+configuration and LLaDA's unreleased training data. No raw training-set overlap
+audit or new model evaluation was performed; none is claimed in the response.
+
+
+## 16 November — fC22-W2.1 verification
+
+Verified only the W2.1 answer field changed, preserving its original quotation
+and every other author-edited answer. Rechecked LAD's Q/V, alpha/r, dropout,
+100k × batch-8 × 256 settings; BYOD's primary 25k × batch-16 × 256 ceiling is
+102.4M positions. Checked the prior Mistral conversions against primary papers,
+without treating the author's own BYOD abstract as independent priority evidence.
+
+Only Appendix B/C prose changed in the manuscript: all text before the LAD
+appendix, all content from the benchmark-uncertainty appendix onwards and all
+benchmark values remain identical. Confirmed the author's requested deferral of
+the manuscript priority correction. The 28-page PDF builds with no undefined
+citations/references or overfull boxes; main text remains within 10 pages.
+Appendix B/C, LAD Table 5, rank Figure 5 and rank Table 6 references are stable.
+
+
+## 16 November — fC22-W2.2 evidence and edit verification
+
+Verified only the W2.2 answer field changed, with its quote and every other
+response intact. Checked the Gemma and LLaDA values directly against the open-
+generation table. Recomputed parent-perplexity ratio ranges: 4.84–9.08 at
+32 NFE, 2.75–4.99 at 64, and 1.44–2.78 at 128. The current manuscript's
+2.7–5.0 range therefore belongs to 64 NFE specifically. No measurements,
+plots, scores or manuscript text changed while awaiting the author's optional
+Results-wording preference. No paid work or new model evaluation was run.
+
+
+## 16 November — NFE Results correction build and scope
+
+Verified that only the open-generation Results paragraph and the corresponding
+fC22-W2.2 answer changed. Ratios and Gemma values were already checked directly
+against the unchanged table. Rebuilt the 28-page PDF successfully, with no
+undefined citations/references or overfull boxes. The Conclusion remains on
+page 10. No scores, raw outputs, figure inputs or evaluation settings changed.
+
+
+## 16 November — final rank validation, resource rationale and graph label
+
+- Checked four unique 100-point validation histories through update 25,000;
+  plotted raw 0.9-answer/0.1-padding objective with identical validation
+  counts and corruption signatures. The plotting script verifies component
+  reconstruction of every weighted loss. Historical rank 1024 is excluded.
+- Calculated marginal reductions per added rank unit/adapter parameter,
+  confirming a 40.95% smaller normalized gain for 1024→2048. Its absolute
+  gain is larger, so the previous absolute diminishing-return wording was removed.
+- Verified the final figure and embedded manuscript figure contain all four
+  completed curves, retain their distinct styles, and omit “fresh” from labels.
+- LaTeX build passed: 27 pages, final rank graph on PDF page 16, conclusion
+  within page 10, no undefined references or overfull boxes.
+- Preserved all original review quotations, every response outside the five
+  rank-related sections, and the final benchmark-source hash.
+- Separately verified provider ERROR after training reached 25k: final
+  checkpoint upload blocked by Hub storage/billing HTTP 403. Final validation
+  data persisted; the final adapter did not. Conservative recorded study cost
+  upper bound is $35.30, including $9.62 for all rank-1024 allocations, within
+  existing caps. These are runtime-based upper bounds, not an invoice.
+
+
+## 16 November — axes-only figure presentation
+
+Inspected the regenerated PNG and checked PDF-extracted text: axis labels and
+ticks remain; title, objective subtitle, notes, rank legend and endpoint values
+are absent. All 400 validation points and four 25k endpoints remain. The
+manuscript caption identifies the curves by color and marker. LaTeX rebuilt
+successfully without undefined references or overfull boxes. This supersedes
+the preceding check that progress footer text was embedded in the figure.

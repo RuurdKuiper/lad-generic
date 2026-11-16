@@ -67,3 +67,24 @@ Added verified original-report comparisons to the shared training-data response:
 ### Qwen training-lineage follow-up
 
 Verified the general-to-specialist data link and the specialist report's explicit benchmark-training sources. Added the decontamination account with correct scope and no inference of retained test leakage; see [the evidence note](post_training_evidence.md). The exact general-parent item inventory remains unresolved, and the matched additional-AR-training limitation remains unchanged.
+
+
+## Mistral-family priority check — 16 November 2026
+
+Primary-source checks found prior diffusion conversions in the broader family:
+
+- TESS 2, ACL 2025, Sections 4.2–4.3: adaptation of Mistral 7B v0.1/v0.3,
+  including full diffusion adaptation and instruction tuning. This uses simplex
+  diffusion rather than BYOD's mask-only LoRA recipe.
+  https://aclanthology.org/2025.acl-long.1029.pdf
+- Nemotron-Labs-Diffusion, arXiv:2607.05722, Section 5.1: starts from pretrained
+  Ministral 3 models, with AR continued pretraining followed by joint AR/diffusion
+  training. This is a newer parent family/checkpoint than Ministral-8B-Instruct-2410.
+  https://arxiv.org/html/2607.05722
+
+Do not infer that BYOD is the first diffusion model anywhere in the Mistral
+family from failure to locate a prior conversion of the exact 2410 checkpoint.
+The author elected to keep this correction in rebuttal materials for now;
+no new prior-work citations or priority correction were applied to the working
+manuscript. The generality/accessibility argument remains about the shared,
+low-budget LoRA recipe and evidence across the four selected families.

@@ -79,17 +79,16 @@ We understand this concern. BYOD is indeed similar to LAD, in that it uses LoRA 
 
 Because we do agree that a more in-depth comparison is granted, we have added LAD's published 8B benchmark results alongside BYOD-Llama in Appendix B (Table 5), and reference this comparison in the main text. These are useful context, but they were not obtained in the same harness. We therefore keep the protocols separate and do not treat the table as a controlled comparison of the two objectives.
 
-To address the comment about hyperparameter ablation, we have added a rank ablation on Llama 3.1 8B in Appendix C (Figure 5 and Table 6), varying rank across 128, 512, 1024 and 2048 while keeping the other settings fixed. The results show that rank 1024 offers a practical balance, as the drop in validation loss is much larger going from rank 512 to 1024, then when going from 1024 to 2048, while the latter of course adds twice as much parameters. Running the full benchmark suite for all of these models was out of the scope of this study, but lower validation loss is of course indicative of better performance. We did perform earlier exploratory tests of using other layers (q,k,v-projection, MLP-layers) as LoRA targets, as well as learning rates, but a full sweep of these was outside this study's scope, as we already had four different model types + extended training as 'hyperparameters' as well. 
-
+To address the hyperparameter question, we have added a rank ablation on Llama 3.1 8B in Appendix C (Figure 5 and Table 6), testing 128, 512, 1024 and 2048 under otherwise fixed settings. Rank 1024 was chosen to balance validation quality with single-GPU training: in the original implementation, it allowed batch size 16 on an 80GB A100 or batch size 8 on a 40GB A100. Rank 2048 lowers validation loss further, but doubles the adapter parameters and takes longer per update. Its loss reduction per added rank unit is smaller: going from 1024 to 2048 adds twice as many rank units as going from 512 to 1024. This supports a practical resource trade-off rather than an optimal rank. We did not benchmark these ablation models, so lower validation loss does not establish higher task accuracy. Earlier exploratory tests of other attention projections, MLP targets and learning rates informed the recipe; a full sweep of these interacting choices was outside this study's scope.
 #### mNeh-W2
 
 > *Furthermore, the benchmark evaluation uses only 125 examples per task and does not report uncertainty estimates. This makes it difficult to judge how reliable the small average gap against LLaDA is. Since competitive performance at a low conversion cost is a major reason to use the method, I would want stronger evidence for this comparison.*
 
 **Response:**
 
-We appreciate this point and agree that the comparison needs stronger evidence.We have now doubled the target from 125 to 250 questions on eight tasks and evaluated all 164 HumanEval questions, using the same questions across models. Across ten model/checkpoint configurations, the completed results contain 21,640 model–question outcomes, a net increase of 10,570 over the recovered historical results. 
+We appreciate this point and agree that the comparison needs stronger evidence.We have now doubled the target from 125 to 250 questions on eight tasks and evaluated all 164 HumanEval questions, using the same questions across models. Across ten model/checkpoint configurations, the completed results contain 21,640 model–question outcomes, a net increase of 10,570 over the recovered historical results. We would like to note that while we reported the number of samples used for evaluation in our manuscript, this is often not customary for studies of this type.
 
-We would like to note that while we reported the number of samples used for evaluation in our manuscript, this is often not customary for studies of this type. Moreover, we have performed a review of ten top diffusion language model papers and found that none of them had accompanying confidence intervals, or per-task sample counts beside the scores: [LLaDA](https://arxiv.org/html/2502.09992), [Dream](https://arxiv.org/html/2508.15487), [DiffuLLaMA](https://arxiv.org/html/2410.17891), [Scaling up Masked Diffusion Models](https://arxiv.org/html/2410.18514), [MDLM](https://arxiv.org/html/2406.07524), [SEDD](https://arxiv.org/pdf/2310.16834), [Time-Agnostic Masked Models](https://arxiv.org/html/2409.02908), [DiffuCoder](https://arxiv.org/html/2506.20639), [LLaDA2.0](https://arxiv.org/pdf/2512.15745) and [Mercury](https://arxiv.org/html/2506.17298). Finally, benchmark sizes can also be small, for example, [HumanEval has only 164 questions](https://huggingface.co/datasets/openai/openai_humaneval).
+We also appreciate the need for confidence intervals, which we have now included in our results. However, we would again like to note that these are rarely reported; a review of ten top diffusion language model papers found that none of them had accompanying confidence intervals, or reported their sample size for benchmarks: [LLaDA](https://arxiv.org/html/2502.09992), [Dream](https://arxiv.org/html/2508.15487), [DiffuLLaMA](https://arxiv.org/html/2410.17891), [Scaling up Masked Diffusion Models](https://arxiv.org/html/2410.18514), [MDLM](https://arxiv.org/html/2406.07524), [SEDD](https://arxiv.org/pdf/2310.16834), [Time-Agnostic Masked Models](https://arxiv.org/html/2409.02908), [DiffuCoder](https://arxiv.org/html/2506.20639), [LLaDA2.0](https://arxiv.org/pdf/2512.15745) and [Mercury](https://arxiv.org/html/2506.17298). 
 
 However, we agree with the reviewer that this information is actually important, and have therefore now included confidence intervals for all benchmark results. Table 3 gives the updated scores using the 250 samples, and 95% confidence intervals for the nine-task averages. Appendix D gives the full per-task table with 95% confidence intervals, the actual sample counts and the calculation details.
 
@@ -103,8 +102,7 @@ BYOD-Gemma now averages 52.43%, compared with 49.55% for LLaDA. The paired diffe
 
 **Response:**
 
-As discussed in W1, Appendix B compares published LAD results with BYOD; we have not rerun LAD with matched training data and budget. Appendix C examines rank under otherwise fixed settings. At 5,000 matched updates, validation loss is 1.4144 at rank 128, 1.3179 at 512 and 1.2650 at 1024. Smaller ranks therefore give higher validation loss in this preliminary comparison. We did not run downstream benchmarks for these ablations, so we cannot quantify their effect on benchmark accuracy.
-
+As discussed in W1, Appendix B compares published LAD results with BYOD; we have not rerun LAD with matched training data and budget. Appendix C examines rank under otherwise fixed settings. Smaller ranks give higher validation loss, while rank 2048 improves it further at greater adapter and training cost. Rank 1024 was chosen as a practical balance within a single-A100 training budget; the loss reduction per added rank unit decreases at higher ranks. We did not run downstream benchmarks for these ablations, so cannot quantify their effect on task accuracy.
 #### mNeh-Q2
 
 > *Does the reported proximity to LLaDA hold on larger benchmark subsets, with confidence intervals for the paired differences?*
@@ -185,7 +183,11 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We appreciate this concern. BYOD builds on LAD's use of LoRA and bidirectional attention, but it's method of diffusive generation and the objective of the studies is significantly different; LAD combines masking with structured corruption, while BYOD instead tests a shared mask-only MDLM recipe, which made direct comparison infeasible. Furthermore BYOD introduces and tests a generalizable recipe for Gemma, Llama, Qwen and Ministral models, while LAD only tested Llama models. We have clarified this relationship in the main text and added LAD's published 8B benchmark results alongside BYOD-Llama in Appendix B (Table 5). The training and evaluation settings differ, so this provides context rather than a direct control.
+
+To address the ablation question, we have added a rank study on Llama 3.1 8B in Appendix C (Figure 5 and Table 6), testing 128, 512, 1024 and 2048 under otherwise fixed settings. Rank 1024 was chosen to balance validation quality with training on a single A100: batch size 16 on the 80GB variant, or 8 on the 40GB variant, in the original implementation. Rank 2048 gives lower validation loss, but doubles the adapter parameters and takes longer per update. The gain per added rank unit decreases, since 1024→2048 adds twice as many rank units as 512→1024. We therefore present 1024 as a practical resource trade-off, rather than a uniquely optimal rank. These are validation-loss comparisons; we have not measured downstream benchmark accuracy for the ablation models.
+
+Finally, trainable-module and learning rate ablations were performed earlier during exploratory tests and informed our configuration. We have described these choices and their limits in Appendix C. These tests were not a systematic trainable-module ablation; a full search over the interacting choices was outside this study's scope, as we already had the different 'model families' as hyperparameters here as well. We therefore present Q/V adapters and rank 1024 as a shared working recipe, rather than claiming that these choices are uniquely optimal.
 
 #### dPsL-W2
 
@@ -193,7 +195,15 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We appreciate this concern. We have now expanded the evaluation to 250 shared questions on eight tasks and all 164 HumanEval questions. Across ten model/checkpoint configurations, this gives 21,640 model–question outcomes, a net increase of 10,570 over the recovered historical results. Table 3 reports the updated nine-task averages with 95% confidence intervals; Appendix D gives the expanded per-task scores and confidence intervals. 
+
+We would like to note that while we reported the number of samples used for evaluation in our manuscript, this is often not customary for studies of this type.
+
+We also appreciate the need for confidence intervals, which we have now included in our results. However, we would again like to note that these are rarely reported; a review of ten top diffusion language model papers found that none of them had accompanying confidence intervals, or reported their sample size for benchmarks: [LLaDA](https://arxiv.org/html/2502.09992), [Dream](https://arxiv.org/html/2508.15487), [DiffuLLaMA](https://arxiv.org/html/2410.17891), [Scaling up Masked Diffusion Models](https://arxiv.org/html/2410.18514), [MDLM](https://arxiv.org/html/2406.07524), [SEDD](https://arxiv.org/pdf/2310.16834), [Time-Agnostic Masked Models](https://arxiv.org/html/2409.02908), [DiffuCoder](https://arxiv.org/html/2506.20639), [LLaDA2.0](https://arxiv.org/pdf/2512.15745) and [Mercury](https://arxiv.org/html/2506.17298). 
+
+BYOD-Gemma now averages 52.43%, versus 49.55% for LLaDA, with a paired difference of +2.88 percentage points and a 95% difference interval of [+0.74, +4.98]. This interval is unadjusted for multiple comparisons or selecting the strongest conversion. We therefore do not claim superiority: Gemma is larger and has a different training history. The results are shown rather to support the feasibility of low-cost LoRA conversion.
+
+We understand the MMLU-Pro output limits might have been confusing. We found that the AR models often reasoned before giving their answer, and thus did not finish their answer in lower token budgets, so we allowed up to 2,048 new tokens; this is a maximum, not a fixed output length, and answers often ended much earlier. The diffusion models generally gave shorter, direct answers, so we used a shorter canvas to reduce evaluation cost. We found no diffusion-model answers that were cut short by the token budget. 
 
 #### dPsL-W3
 
@@ -201,7 +211,13 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We agree that the losses on mathematics and code are important limitations. Our aim is to show that a small LoRA adaptation can produce useful diffusion capabilities approaching those of a pretrained diffusion model, rather than outperforming the AR parents or establishing full equivalence.
+
+The expanded results in Table 3 show mixed but often close task scores. BYOD-Gemma reaches 24.4% on MATH-500 and 43.6% on MBPP, compared with 26.0% and 42.8% for LLaDA. Its GSM8K score is higher (68.8% versus 59.6%), while HumanEval remains lower (29.9% versus 34.8%). These are descriptive comparisons between models with different sizes and training histories.
+
+BYOD's additional conversion takes 3.1–4.0 GPU-hours per model, including 3.2 for Llama and 4.0 for Gemma, whereas LLaDA reports 130,000 H800 GPU-hours for pretraining alone ([paper](https://arxiv.org/html/2502.09992)). BYOD reuses an already pretrained AR model, whose earlier training cost is excluded; the hardware also differs. This illustrates the accessibility of conversion, rather than a matched comparison of total training cost.
+
+The perplexity gap remains: at 128 NFE, BYOD scores 4.33–6.21 versus 2.79 for LLaDA. We retain this limitation and have clarified in the Discussion that task-score proximity does not imply overall equivalence. As proposed in the Conclusion, a promising next step is partial or full diffusion fine-tuning initialized from the merged model, testing whether quality can improve without eroding retained capabilities. This remains a direction for future work, not a demonstrated result.
 
 ### Questions for authors
 
@@ -211,7 +227,8 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+As explained in W1, Appendix B compares published LAD results with BYOD, but we have not run a matched-token, matched-compute LAD or alternative conversion control. This is also not feasible due to the different training settings necessary to train with the significanlty different LAD training objective. 
+We did perform a rank ablation, shown in Appendix C where we compare ranks 128, 512, 1024 and 2048 under otherwise fixed settings. Rank 1024 balances validation loss with the original single-A100 training budget. Rank 2048 improves loss further, but doubles the adapter parameters; its gain per added rank unit is smaller. We performed earlier exploratory tests which informed our Q/V LoRA targets and other hyperparameters such as learning rate, but we have not systematically quantified sensitivity to these paramaters. We therefore present a working recipe, rather than uniquely optimal hyperparameter choices. A more detailed is also included under 'dPsL-W1'.
 
 #### dPsL-Q2
 
@@ -219,7 +236,7 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+As described under 'dPsL-W2', we now evaluate 250 shared questions on eight tasks and all 164 HumanEval questions; only HumanEval uses its full test set. BYOD-Gemma minus LLaDA is +2.88 percentage points, with a nominal paired 95% interval of [+0.74, +4.98] (Table 3 and Appendix D). The intervals are unadjusted, and we make no superiority claim. MMLU-Pro output limits remain different: up to 2,048 new tokens for AR and a 64-token diffusion canvas, as explained in W2 and Appendix G. We have not rerun this comparison with matched output limits, so the results do not establish an equal-budget comparison.
 
 #### dPsL-Q3
 
@@ -227,7 +244,9 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We agree that infilling and constrained generation are interesting research directions. However, our study focuses text generation capabilities of diffusion models, and more specifically on whether a low-cost LoRA recipe can convert AR models into functional diffusion models, and which capabilities they retain after conversion.
+
+We have therefore not expanded the study to evaluate a realistic infilling or constrained-generation benchmark. We did already include our right-context copy test (Figure 2 and Appendix J) which confirms access to later context, but is a diagnostic rather than evidence of practical infilling. A dedicated evaluation of task quality, constraint satisfaction and wall-clock latency against suitable baselines would be a valuable extension, but is outside the present study's scope.
 
 ## Reviewer fC22
 
@@ -293,17 +312,21 @@ _[To be written.]_
 
 > *The evaluation cannot support the comparative claims.*
 
-**Response:**
-
-_[To be written.]_
-
 #### fC22-W1.1
 
 > *All benchmarks use 125-example subsets (App. D), giving about  points of uncertainty per task, but no intervals are reported. Yet the text interprets differences of 0.5-1.3 points (BYOD-Gemma vs LLaDA; 25k vs 50k updates).*
 
 **Response:**
 
-_[To be written.]_
+We appreciate this concern. We have now expanded the evaluation to 250 shared questions on eight tasks and all 164 HumanEval questions. Across ten model/checkpoint configurations, this gives 21,640 model–question outcomes, a net increase of 10,570 over the recovered historical results.
+
+For context, the main comparisons we inspected in ten prominent diffusion papers present point estimates without accompanying confidence intervals, and often omit per-task sample counts beside the scores: [LLaDA](https://arxiv.org/html/2502.09992), [Dream](https://arxiv.org/html/2508.15487), [DiffuLLaMA](https://arxiv.org/html/2410.17891), [Scaling up Masked Diffusion Models](https://arxiv.org/html/2410.18514), [MDLM](https://arxiv.org/html/2406.07524), [SEDD](https://arxiv.org/pdf/2310.16834), [Time-Agnostic Masked Models](https://arxiv.org/html/2409.02908), [DiffuCoder](https://arxiv.org/html/2506.20639), [LLaDA2.0](https://arxiv.org/pdf/2512.15745) and [Mercury](https://arxiv.org/html/2506.17298). Some report evaluation counts elsewhere. We agree that reporting uncertainty makes our comparisons easier to interpret.
+
+Table 3 now reports the updated nine-task averages with 95% confidence intervals. Appendix D gives the full per-task results, Wilson intervals and actual sample counts. Average intervals use 20,000 bootstrap resamples within each task, with equal task weights; model differences preserve question pairing.
+
+BYOD-Gemma now averages 52.43%, versus 49.55% for LLaDA: a paired difference of +2.88 percentage points, with a nominal 95% interval of [+0.74, +4.98]. These intervals are unadjusted for multiple comparisons or selecting the strongest conversion. We make no superiority claim, particularly given Gemma's larger size and different training history.
+
+The longer Llama run averages 47.80%, compared with 47.93% at 25k updates. Its paired difference is −0.14 percentage points, with a nominal 95% interval of [−1.81, +1.49]. We have therefore removed the earlier claim of an average accuracy gain from longer training. All benchmark figures, tables and comparative claims have been updated; the main contribution remains feasible conversion at low additional training cost.
 
 #### fC22-W1.2
 
@@ -311,7 +334,7 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We thank the reviewer for catching this error. Table 3 incorrectly retained intermediate results, and the blanket statement of 125 examples did not reflect the actual sample counts. We have now replaced these entries with the verified expanded results: 250 questions per task and all 164 HumanEval questions. The corrected table and Appendix D report the actual counts and confidence intervals.
 
 #### fC22-W1.3
 
@@ -319,15 +342,21 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We thank the reviewer for raising this concern. All four AR parents are already instruction-tuned checkpoints, with prior exposure to instruction-following, mathematics and coding formats. Published base/Instruct scores illustrate the importance of this post-training: Qwen2.5-7B reports 57.9% HumanEval for its base model and 84.8% for Instruct ([Tables 4 and 8](https://arxiv.org/html/2412.15115v2)). This does not establish which benchmark examples the parent encountered.
+
+Using benchmark training splits during post-training is a documented practice. Qwen2.5-Math explicitly uses GSM8K and MATH training examples for SFT ([Section 3.1](https://arxiv.org/html/2409.12122)); Tülu 3 uses these training splits for reinforcement learning ([Section 6.1](https://arxiv.org/html/2411.15124)). There is also a diffusion example: d1 trains on GSM8K/MATH training splits and evaluates on held-out questions ([Appendix B.1.1](https://dllm-reasoning.github.io/media/preprint.pdf)). These examples do not prove identical exposure in our parents or baselines. LLaDA, for instance, does not release its training data ([official repository](https://github.com/ML-GSAI/LLaDA#pre-training-and-supervised-fine-tuning)); missing disclosure does not establish that benchmark training examples were excluded.
+
+Shared instruction mixtures provide another route for such exposure. Dream uses Tülu 3 SFT data ([report](https://arxiv.org/html/2508.15487)), whose [mixture includes FLAN v2](https://huggingface.co/datasets/allenai/tulu-3-sft-mixture). FLAN's [source configuration](https://github.com/google-research/FLAN/blob/main/flan/v2/task_configs.py) includes GSM8K and other benchmark training sources, including StrategyQA and QASC. This documents upstream data sources, not exact retained examples in every downstream model; Tülu's benchmark-trained reinforcement-learning stage is separate from its SFT mixture.
+
+We report our own sources and proportions explicitly. About 19% of the specified mixture comes from benchmark training splits, within one shared instruction mixture rather than separate task-specific adaptations. We used training splits and explicitly filtered normalized prompt duplicates against held-out benchmark prompts, as described in Section 3.3. This addresses direct training/test duplication, while additional exposure to task formats remains a separate issue.
+
+We agree that this additional training can influence the scores. The conversion gap therefore describes the change from the released instruction-tuned parent to its further-adapted diffusion counterpart; it does not isolate the effect of the diffusion objective. A matched additional AR fine-tuning control would help separate these effects and remains useful future work.
+
+Our central question is whether a shared, inexpensive conversion works across different model families and yields useful performance alongside diffusion references such as LLaDA. The AR parents provide a reference for capability changes, rather than a target we claim to outperform. Broad capabilities after only 400,000 training-example presentations per primary conversion are consistent with substantial reuse of pretrained knowledge, but do not separate retained knowledge from learning during adaptation. The supported result is feasible cross-family conversion with a small additional training budget, not equivalence to other models or a causal estimate of knowledge retention.
 
 #### fC22-W2 — overall concern
 
 > *Limited novelty and no demonstrated benefit of the converted models.*
-
-**Response:**
-
-_[To be written.]_
 
 #### fC22-W2.1
 
@@ -335,7 +364,13 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We agree that the individual components have precedents, including LAD's use of LoRA and bidirectional attention. Our contribution is a shared, reproducible mask-only conversion recipe and evidence that it works across Gemma, Llama, Qwen and Ministral. Each primary conversion takes 3.1–4.0 hours on one GPU, making diffusion-model training and experimentation accessible without a large training cluster. 
+
+We have expanded the comparison with LAD in the main text and Appendix B, covering implementation settings and published benchmark performance. LAD combines masking with structural corruption and tests several sizes within the Llama family; BYOD tests mask-only MDLM conversion across four families. The published results use different training and evaluation protocols, so they do not constitute a matched control.
+
+We have also added the rank study in Appendix C, testing 128, 512, 1024 and 2048 under otherwise fixed settings. Rank 1024 was chosen to balance validation quality with single-A100 training: batch size 16 on the 80GB variant, or 8 on the 40GB variant, in the original implementation. Rank 2048 does lower validation loss further, but doubles the adapter parameters and takes longer per update. Its loss reduction per added rank unit is smaller, since 1024 to 2048 adds twice as many rank units as 512 to 1024. Earlier exploratory tests informed the Q/V targets, learning rate and loss weights, but were not a systematic controlled sweep. Removing the AR label shift implements our same-position reconstruction target, as explained in the Method. We have not separately ablated label alignment or loss weights in this study, and do not claim that every configuration choice is optimal.
+
+The converted models are useful research artifacts even when they do not outperform models trained for much longer. Their merged checkpoints also provide a starting point for the partial or full diffusion fine-tuning proposed in our Conclusion. Whether this initialization improves later training remains to be tested; our demonstrated benefit is accessible conversion across the four tested families.
 
 #### fC22-W2.2
 
@@ -343,7 +378,12 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+The reviewer is correct in that we have not evaluated the full benchmark suite at reduced NFE. Parallel denoising is instead tested in our open-generation experiments: Figure 3 and Appendix I report perplexity and Distinct-1/2/3 for 128-token outputs at 32, 64 and 128 NFE. The 32- and 64-NFE settings update multiple positions per step. Perplexity- and diversity metrics are an established way to study this trade-off, as in [MDLM](https://arxiv.org/html/2406.07524), [SEDD](https://arxiv.org/pdf/2310.16834) and [Time-Agnostic Masked Models](https://arxiv.org/html/2409.02908). Other studies do report reduced-step benchmark performance, but often only on selected tasks: [LLaDA](https://arxiv.org/html/2502.09992) tests only mathematics/coding tasks, [Dream](https://arxiv.org/html/2508.15487) uses a single task (Countdown) and [DiffuLLaMA](https://arxiv.org/html/2410.17891) only compares four multiple-choice tasks. Showing (full) benchmark performance with reduced token budgets is thus not necessarily standard practice. 
+
+We also would like to thank the reviewer for highlighting an error in our previous Results text. We incorrectly described the 2.7–5.0× AR-perplexity range as applying across NFE budgets; this applied only at 64 NFE, and we have revised our manuscript accordingly. A better comparison for the AR-parent would be BYOD-Gemma's 4.33 perplexity score at 128 NFE, compared with 3.01 for its AR parent. As can be seen, these are much closer together. 
+
+Reduced-NFE task benchmarks and measured quality–latency trade-offs remain useful future work, as reflected in our Limitations section. Our demonstrated efficiency concerns conversion training; we do not claim an inference-speed advantage at matched quality.
+
 
 #### fC22-W2.3
 
@@ -351,7 +391,13 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We agree that the mathematics/code losses and lack of latency measurements are important limitations. The expanded evaluation still shows a large Qwen MATH-500 gap: 30.4% for BYOD-Qwen versus 73.6% for its AR parent. We do not claim to outperform the AR parents or demonstrate faster inference at matched quality.
+
+However, these task difficulties are also present in our diffusion reference. LLaDA scores 26.0% on MATH-500 and 34.8% on HumanEval under our harness. BYOD-Gemma reaches 24.4% and 29.9%, respectively, and 43.6% on MBPP compared with LLaDA's 42.8% (Table 3). These mixed, descriptively similar scores show that inexpensive LoRA conversion can yield useful capabilities alongside a model pretrained and instruction-tuned as a DLM. Differences in model size and training history prevent treating this as proof of equivalence or superiority.
+
+The contribution combines this performance with a shared conversion recipe that works across four model families in 3.1–4.0 GPU-hours per model. LLaDA reports 130,000 H800 GPU-hours for pretraining alone ([paper](https://arxiv.org/html/2502.09992)). Our figure excludes the AR parents' earlier training, and the hardware differs; it describes the small additional cost of obtaining a diffusion model from an existing checkpoint.
+
+The study therefore establishes accessible conversion and useful diffusion capabilities across the tested families. Improving mathematics, code and perplexity, and establishing a favorable quality–latency trade-off, remain future work, as stated in our Discussion and Limitations.
 
 ### Questions for authors
 
@@ -361,7 +407,7 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+We thank the reviewer for catching these inconsistencies. As explained in W1.2, intermediate results remained in the submitted table. We have corrected the entries using verified per-question outputs and expanded evaluation to 250 shared questions on eight tasks and all 164 HumanEval questions. These are expanded subsets, rather than full test sets except for HumanEval. Table 3 reports the updated averages with confidence intervals; Appendix D gives the per-task results, intervals and actual sample counts, as discussed in W1.1.
 
 #### fC22-Q2
 
@@ -369,7 +415,9 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+As discussed in W2.2, we report perplexity- and diversity metrics at 32 and 64 NFE for 128-token outputs, but have not measured task-benchmark accuracies at those budgets. Other papers provide selected-task analyses; repeating the full benchmark suite at every NFE budget is not a uniform reporting convention. A reduced-NFE accuracy sweep remains outside this study's scope.
+
+Wall-clock profiling also remains future work. Merging folds the LoRA weights into the parent projections and removes the separate adapter branches, so the adapters need not add inference overhead. However, architectural similarity alone does not establish latency comparable to LLaDA: the backbone, sampler, implementation and hardware also matter. We therefore do not claim measured inference speedups or latency parity; our demonstrated efficiency concerns conversion training, as stated in the Limitations.
 
 #### fC22-Q3
 
@@ -377,83 +425,8 @@ _[To be written.]_
 
 **Response:**
 
-_[To be written.]_
+Handling variable-length sequences is part of our training setup: examples have different prompt and answer lengths, and each batch is padded to its longest sequence, rounded to a multiple of 16. The converted models can also generate at shorter and longer lengths than the training cap. However, the reviewer is correct that the limits differ: 256 tokens covers the complete training sequence, whereas evaluation allows up to 256 answer tokens plus the prompt.
 
-## Previous reviewer-specific drafting notes
+How length affects quality remains an interesting question. Simply comparing shorter and longer examples would mix length effects with differences in question difficulty and the reasoning or code required. Evaluating the same questions with different answer-canvas lengths could test sensitivity to inference length, although shorter canvases can also truncate otherwise correct answers. A controlled comparison with a model trained on longer sequences would more directly test whether the training cap limits performance. However, these experiments are beyond the scope of this study.
 
-<details>
-<summary>Earlier scaffolding moved from rebuttal.md — internal reference only</summary>
-
-These notes predate this point-by-point template and may contain stale statuses or partial prose. They are retained for later use; none has been copied into the response fields above. References here to shared material “above” mean [rebuttal.md](rebuttal.md).
-
-## Response to Reviewer mNeh
-
-Thank you for highlighting the conversion budget and parent comparisons.
-
-### Q1 — LAD comparison and smaller rank
-
-Use the shared LAD response/table and the provisional rank/resource response above. The asterisk marks the final-1024 update still needed. A matched LAD/objective control remains separate work. [Insert final evidence and manuscript locations: L1–L3.]
-
-### Q2 — Larger subsets and paired intervals
-
-Use the shared uncertainty response. [Insert achieved counts, verified paired Gemma–LLaDA difference/interval and revised table location: E1–E7. Do not describe the plan as completed.]
-
-## Response to Reviewer dPsL
-
-Thank you for recognizing the accessible recipe, four-family study and candid limitations.
-
-### Q1 — Control, rank and target modules
-
-Use the shared LAD response and the provisional rank/resource response above. Keep the asterisk until the final fresh-1024 endpoint is available. Module/LR choices are supported here by author-reported exploratory observations, not a systematic ablation; a matched LAD/objective control remains separate work. [Insert final evidence and manuscript locations: L1–L3. Merging is not a substitute for these experiments.]
-
-### Q2 — Coverage, paired intervals and MMLU-Pro
-
-Recovered runs used AR 2,048 MMLU-Pro output tokens versus diffusion 64; the manuscript incorrectly states 128 for diffusion. Document these intentional limits accurately and qualify the interpretation; matched-output sensitivity runs are optional and not currently scheduled. [Insert results, actual scope and paired intervals: E2–E7.]
-
-### Q3 — Useful infilling, quality and latency
-
-The right-context copy test probes access to later context, not realistic infilling quality or a favorable quality–latency trade-off. Math/code and open-generation deficits remain material limitations.
-
-- [ ] **U1 — Select a useful infilling/constrained-generation task and baseline**, with quality, constraint success and measured latency; otherwise limit the utility claim.
-- [ ] **U2 — Report existing failure analysis accurately** and distinguish observed syntax errors from untested explanations.
-
-[Insert measured evidence and revised sections, or explicit limitations.]
-
-## Response to Reviewer fC22
-
-Thank you for the detailed protocol and score-provenance scrutiny.
-
-### Q1 — Four AR scores and full benchmarks/intervals
-
-The audit locates 50-item Gemma AR code results, a 95-item partial Qwen AR HumanEval rerun, and a later 125-item Ministral AR HumanEval rerun that supersedes its 50-item score. [Insert verified provenance, denominators and any corrections/propagated changes: E1. Insert actual expanded scope and intervals: E2–E7. A 250-item subset of a larger dataset is not full-benchmark evaluation.]
-
-### Q2 — Reduced-NFE task accuracy and latency
-
-**Draft response:** We thank the reviewer for raising this point. Parallel generation is already evaluated in our open-generation experiments: we report perplexity and Distinct-1/2/3 for 128-token outputs at 32, 64 and 128 NFE. The 32- and 64-NFE settings therefore explicitly test parallel denoising; the one-token-per-step setting applies to the task-benchmark table.
-
-We would also like to clarify the interpretation of the 14.56-versus-3.01 perplexity comparison. The former uses only 32 denoising steps for a 128-token output, whereas the AR parent uses its standard sequential decoding procedure; it has no directly analogous reduced diffusion-NFE setting. The AR result remains a useful quality reference, but this comparison does not hold the denoising budget fixed. For assessing the reduced-NFE diffusion regime, the closer comparison in the same table is LLaDA at 32 NFE on the same 128-token canvas: perplexity 5.33 versus 14.56 for BYOD-Gemma. At 128 NFE, BYOD-Gemma's perplexity is 4.33, compared with 3.01 for its AR parent. We acknowledge the remaining gap; our point is that the reduced-NFE and standard-decoding comparisons answer different questions.
-
-Our use of perplexity- and diversity metrics follows an established evaluation approach in diffusion language modeling. The generation analyses in [MDLM](https://arxiv.org/html/2406.07524), [SEDD](https://arxiv.org/html/2310.16834) and [Time-Agnostic Masked Models](https://arxiv.org/html/2409.02908) emphasize metrics such as generative perplexity and diversity/entropy. Where the cited studies provide reduced-compute task analyses, these cover selected tasks rather than repeating their entire benchmark suite at every budget: [LLaDA](https://arxiv.org/pdf/2502.09992) tests GSM8K, MATH, HumanEval and MBPP; [Dream](https://arxiv.org/html/2508.15487) uses Countdown; and [DiffuLLaMA](https://arxiv.org/html/2410.17891) reports a T=32 versus T=8 comparison on HellaSwag, WinoGrande, SIQA and PIQA. Thus, a full-suite sweep across lower NFE budgets is not a uniform reporting convention in these examples.
-
-We nevertheless agree that reduced-NFE task accuracy and measured latency would strengthen the evaluation and are valuable directions for further work. The reported low-NFE quality degradation remains a limitation; our contribution concerns efficient cross-family conversion, and we do not claim a demonstrated inference-speed advantage at matched quality.
-
-**Internal evidence/scope note:** Avoid calling AR decoding “full diffusion NFE”: it is a different procedure. Equal diffusion NFE and output canvas align step budgets but do not establish equal FLOPs, memory use or wall-clock latency across Gemma and LLaDA. The numbers above are the manuscript’s historical open-generation measurements, not new results from the ongoing accuracy campaign. “Full suite” means all task benchmarks at multiple inference budgets, not necessarily every question within a dataset. Do not turn this contextual statement into “most DLM papers never evaluate reduced-NFE task accuracy.” DiffuLLaMA Appendix C.5 / Table 11 is a genuine additional task-score comparison missed in the initial audit; its multiple-choice evaluation uses likelihood scoring elsewhere, so it should not be silently equated with BYOD's generated-answer protocol. DiffuCoder also tests four coding tasks at halved steps, and LLaDA2.0 explicitly uses a representative benchmark subset for score/TPF analysis. These remain documented in [the corrected ten-paper audit](reduced_nfe_audit.md). Negative findings are limited to the inspected versions/results; this is not a citation-ranked or systematic frequency survey. The literature context does not supply BYOD task accuracy at low NFE or remove its reported quality gap.
-
-- [ ] **U3 — Reduced-NFE task accuracy remains future work**, unless separately selected: e.g. 2/4 tokens transferred per step on fixed paired items with unchanged output budgets. The current campaign expands sample counts at the original NFE settings; this literature check does not add runs.
-- [ ] **U4 — Measured quality/latency trade-offs remain future work:** document hardware, batch size and timing procedure; retain the limitation and avoid a wall-clock speedup claim until measured.
-
-### Q3 — Training/evaluation length mismatch
-
-Training caps total sequence length at 256; some evaluations allow 256 answer tokens plus the prompt. This may contribute to degradation, but its contribution has not been isolated.
-
-- [ ] **U5 — Audit prompt+answer lengths/truncation per model/task** and compare within/beyond-range performance. A causal attribution needs an appropriate controlled intervention; otherwise report the diagnosis as provisional.
-
-### W1 — Exposure and knowledge retention
-
-Use the expanded shared training-data response above, including the already instruction-tuned parent clarification, descriptive before/after interpretation, mixture breakdown and supporting sources. [Insert verified historical split/filtering evidence, the matched-AR-control limitation/future-work statement, and exact manuscript changes: D1–D4. Preserve the distinction between train-split legitimacy and the adaptation confound.]
-
-### W2 — Novelty and objective choices
-
-Use the shared LAD response and inheritance table. [Insert L2–L4 and practical evidence U1/U3/U4 if available; state what remains unablated. Emphasize demonstrated feasibility/cost and four-family transfer.]
-
-</details>
+Our expanded results nevertheless show broadly comparable math/code performance to LLaDA. This supports the usefulness of the conversion despite the short training sequences, without establishing that length has no effect on quality.

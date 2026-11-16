@@ -1,0 +1,7 @@
+{
+  "repo": "Ruurd/iclr2027-rebuttal-eval",
+  "revision": "1825d75ddab6369e7bd036c4e786fe2da248a442",
+  "plan_id": "735498944f7504cc3ef0ec92fc144ea538c421439861575516f6d10d4ba974bc",
+  "private": true,
+  "image": "pytorch/pytorch@sha256:417bd75df6365104c283ea4c1651fb3530d9eb5a4c2fafa51943cff2a94e6385"
+}

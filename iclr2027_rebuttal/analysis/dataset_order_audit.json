@@ -1,0 +1,1956 @@
+{
+  "seed": 20261115,
+  "replicates": 9999,
+  "tasks": {
+    "arc_c": {
+      "raw_size": 1172,
+      "unique_size": 1172,
+      "selected_size": 250,
+      "dataset_spec": {
+        "repo": "allenai/ai2_arc",
+        "config": "ARC-Challenge",
+        "split": "test",
+        "revision": "210d026faf9955653af8916fad021475a3f00453"
+      },
+      "cached_arrow_sha256": "e56914301ff03032cabc30b284e0e8d612cc56bac7b6a5ab4e7f35b31d6c3e32",
+      "features": {
+        "source_id_prefix": {
+          "kind": "categorical",
+          "total_variation": 0.10755748373101952,
+          "p": 0.1859,
+          "counts": {
+            "ACTAAP": {
+              "selected": 4,
+              "remainder": 22,
+              "full": 26
+            },
+            "AIMS": {
+              "selected": 3,
+              "remainder": 5,
+              "full": 8
+            },
+            "AKDE&ED": {
+              "selected": 7,
+              "remainder": 9,
+              "full": 16
+            },
+            "CSZ": {
+              "selected": 1,
+              "remainder": 1,
+              "full": 2
+            },
+            "CSZ10358": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "CSZ20754": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "CSZ30169": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "CSZ30338": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "FCAT": {
+              "selected": 1,
+              "remainder": 1,
+              "full": 2
+            },
+            "LEAP": {
+              "selected": 3,
+              "remainder": 15,
+              "full": 18
+            },
+            "MCAS": {
+              "selected": 17,
+              "remainder": 79,
+              "full": 96
+            },
+            "MDSA": {
+              "selected": 5,
+              "remainder": 22,
+              "full": 27
+            },
+            "MEA": {
+              "selected": 3,
+              "remainder": 13,
+              "full": 16
+            },
+            "MEAP": {
+              "selected": 2,
+              "remainder": 5,
+              "full": 7
+            },
+            "MSA": {
+              "selected": 2,
+              "remainder": 6,
+              "full": 8
+            },
+            "Mercury": {
+              "selected": 132,
+              "remainder": 440,
+              "full": 572
+            },
+            "Mercury_SC": {
+              "selected": 52,
+              "remainder": 186,
+              "full": 238
+            },
+            "NAEP": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "NCEOGA": {
+              "selected": 1,
+              "remainder": 14,
+              "full": 15
+            },
+            "NYSEDREGENTS": {
+              "selected": 6,
+              "remainder": 40,
+              "full": 46
+            },
+            "OHAT": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "TAKS": {
+              "selected": 3,
+              "remainder": 5,
+              "full": 8
+            },
+            "TIMSS": {
+              "selected": 8,
+              "remainder": 21,
+              "full": 29
+            },
+            "VASoL": {
+              "selected": 0,
+              "remainder": 16,
+              "full": 16
+            },
+            "WASL": {
+              "selected": 0,
+              "remainder": 2,
+              "full": 2
+            }
+          },
+          "holm_p": 1.0
+        },
+        "answer_label": {
+          "kind": "categorical",
+          "total_variation": 0.09474186550976144,
+          "p": 0.0489,
+          "counts": {
+            "1": {
+              "selected": 0,
+              "remainder": 3,
+              "full": 3
+            },
+            "2": {
+              "selected": 2,
+              "remainder": 8,
+              "full": 10
+            },
+            "3": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "4": {
+              "selected": 1,
+              "remainder": 1,
+              "full": 2
+            },
+            "A": {
+              "selected": 64,
+              "remainder": 199,
+              "full": 263
+            },
+            "B": {
+              "selected": 70,
+              "remainder": 231,
+              "full": 301
+            },
+            "C": {
+              "selected": 69,
+              "remainder": 234,
+              "full": 303
+            },
+            "D": {
+              "selected": 44,
+              "remainder": 239,
+              "full": 283
+            }
+          },
+          "holm_p": 1.0
+        },
+        "choice_count": {
+          "kind": "categorical",
+          "total_variation": 0.0032537960954446814,
+          "p": 0.8379,
+          "counts": {
+            "3": {
+              "selected": 1,
+              "remainder": 3,
+              "full": 4
+            },
+            "4": {
+              "selected": 249,
+              "remainder": 916,
+              "full": 1165
+            },
+            "5": {
+              "selected": 0,
+              "remainder": 3,
+              "full": 3
+            }
+          },
+          "holm_p": 1.0
+        },
+        "question_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 922,
+          "selected_mean": 22.068,
+          "remainder_mean": 22.801518438177876,
+          "full_mean": 22.64505119453925,
+          "mean_difference": -0.7335184381778745,
+          "standardized_difference": -0.05135373174992022,
+          "p": 0.4736,
+          "holm_p": 1.0
+        },
+        "mean_choice_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 922,
+          "selected_mean": 4.827,
+          "remainder_mean": 5.015003615328996,
+          "full_mean": 4.974900455062571,
+          "mean_difference": -0.1880036153289959,
+          "standardized_difference": -0.05972823610942493,
+          "p": 0.4011,
+          "holm_p": 1.0
+        }
+      }
+    },
+    "hellaswag": {
+      "raw_size": 10042,
+      "unique_size": 10042,
+      "selected_size": 250,
+      "dataset_spec": {
+        "repo": "Rowan/hellaswag",
+        "config": null,
+        "split": "validation",
+        "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76"
+      },
+      "cached_arrow_sha256": "fdd100245fae28e387869527dd0b8af1a0a931f7cf364abaf6f3138de7f0d27b",
+      "features": {
+        "source": {
+          "kind": "categorical",
+          "total_variation": 0.6943423202614378,
+          "p": 0.0001,
+          "counts": {
+            "activitynet": {
+              "selected": 250,
+              "remainder": 2993,
+              "full": 3243
+            },
+            "wikihow": {
+              "selected": 0,
+              "remainder": 6799,
+              "full": 6799
+            }
+          },
+          "holm_p": 0.0029000000000000002
+        },
+        "activity": {
+          "kind": "categorical",
+          "total_variation": 0.7984068627450981,
+          "p": 0.0001,
+          "counts": {
+            "Applying sunscreen": {
+              "selected": 1,
+              "remainder": 19,
+              "full": 20
+            },
+            "Archery": {
+              "selected": 1,
+              "remainder": 8,
+              "full": 9
+            },
+            "Arm wrestling": {
+              "selected": 0,
+              "remainder": 20,
+              "full": 20
+            },
+            "Assembling bicycle": {
+              "selected": 3,
+              "remainder": 5,
+              "full": 8
+            },
+            "BMX": {
+              "selected": 1,
+              "remainder": 8,
+              "full": 9
+            },
+            "Baking cookies": {
+              "selected": 0,
+              "remainder": 33,
+              "full": 33
+            },
+            "Ballet": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Bathing dog": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Baton twirling": {
+              "selected": 3,
+              "remainder": 11,
+              "full": 14
+            },
+            "Beach soccer": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Beer pong": {
+              "selected": 3,
+              "remainder": 12,
+              "full": 15
+            },
+            "Blow-drying hair": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Blowing leaves": {
+              "selected": 1,
+              "remainder": 10,
+              "full": 11
+            },
+            "Braiding hair": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Breakdancing": {
+              "selected": 0,
+              "remainder": 2,
+              "full": 2
+            },
+            "Brushing teeth": {
+              "selected": 0,
+              "remainder": 3,
+              "full": 3
+            },
+            "Building sandcastles": {
+              "selected": 0,
+              "remainder": 5,
+              "full": 5
+            },
+            "Bullfighting": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Calf roping": {
+              "selected": 0,
+              "remainder": 27,
+              "full": 27
+            },
+            "Camel ride": {
+              "selected": 1,
+              "remainder": 15,
+              "full": 16
+            },
+            "Canoeing": {
+              "selected": 3,
+              "remainder": 11,
+              "full": 14
+            },
+            "Capoeira": {
+              "selected": 0,
+              "remainder": 14,
+              "full": 14
+            },
+            "Cars & Other Vehicles": {
+              "selected": 0,
+              "remainder": 65,
+              "full": 65
+            },
+            "Carving jack-o-lanterns": {
+              "selected": 0,
+              "remainder": 18,
+              "full": 18
+            },
+            "Cheerleading": {
+              "selected": 3,
+              "remainder": 20,
+              "full": 23
+            },
+            "Chopping wood": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Clean and jerk": {
+              "selected": 5,
+              "remainder": 132,
+              "full": 137
+            },
+            "Cleaning shoes": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Cleaning sink": {
+              "selected": 1,
+              "remainder": 7,
+              "full": 8
+            },
+            "Cleaning windows": {
+              "selected": 2,
+              "remainder": 14,
+              "full": 16
+            },
+            "Clipping cat claws": {
+              "selected": 3,
+              "remainder": 19,
+              "full": 22
+            },
+            "Computers and Electronics": {
+              "selected": 0,
+              "remainder": 454,
+              "full": 454
+            },
+            "Cricket": {
+              "selected": 3,
+              "remainder": 2,
+              "full": 5
+            },
+            "Croquet": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Cutting the grass": {
+              "selected": 13,
+              "remainder": 118,
+              "full": 131
+            },
+            "Decorating the Christmas tree": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Disc dog": {
+              "selected": 5,
+              "remainder": 27,
+              "full": 32
+            },
+            "Discus throw": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Dodgeball": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Doing a powerbomb": {
+              "selected": 1,
+              "remainder": 11,
+              "full": 12
+            },
+            "Doing crunches": {
+              "selected": 0,
+              "remainder": 15,
+              "full": 15
+            },
+            "Doing fencing": {
+              "selected": 2,
+              "remainder": 6,
+              "full": 8
+            },
+            "Doing karate": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Doing kickboxing": {
+              "selected": 0,
+              "remainder": 4,
+              "full": 4
+            },
+            "Doing motocross": {
+              "selected": 1,
+              "remainder": 6,
+              "full": 7
+            },
+            "Drinking beer": {
+              "selected": 4,
+              "remainder": 7,
+              "full": 11
+            },
+            "Drinking coffee": {
+              "selected": 0,
+              "remainder": 5,
+              "full": 5
+            },
+            "Drum corps": {
+              "selected": 2,
+              "remainder": 6,
+              "full": 8
+            },
+            "Education and Communications": {
+              "selected": 0,
+              "remainder": 201,
+              "full": 201
+            },
+            "Elliptical trainer": {
+              "selected": 0,
+              "remainder": 15,
+              "full": 15
+            },
+            "Family Life": {
+              "selected": 0,
+              "remainder": 980,
+              "full": 980
+            },
+            "Finance and Business": {
+              "selected": 0,
+              "remainder": 265,
+              "full": 265
+            },
+            "Fixing bicycle": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Fixing the roof": {
+              "selected": 0,
+              "remainder": 4,
+              "full": 4
+            },
+            "Food and Entertaining": {
+              "selected": 0,
+              "remainder": 500,
+              "full": 500
+            },
+            "Fun sliding down": {
+              "selected": 1,
+              "remainder": 4,
+              "full": 5
+            },
+            "Futsal": {
+              "selected": 0,
+              "remainder": 25,
+              "full": 25
+            },
+            "Gargling mouthwash": {
+              "selected": 4,
+              "remainder": 59,
+              "full": 63
+            },
+            "Getting a haircut": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Getting a piercing": {
+              "selected": 1,
+              "remainder": 17,
+              "full": 18
+            },
+            "Getting a tattoo": {
+              "selected": 0,
+              "remainder": 2,
+              "full": 2
+            },
+            "Grooming dog": {
+              "selected": 3,
+              "remainder": 8,
+              "full": 11
+            },
+            "Hand car wash": {
+              "selected": 8,
+              "remainder": 15,
+              "full": 23
+            },
+            "Hand washing clothes": {
+              "selected": 3,
+              "remainder": 5,
+              "full": 8
+            },
+            "Hanging wallpaper": {
+              "selected": 4,
+              "remainder": 7,
+              "full": 11
+            },
+            "Having an ice cream": {
+              "selected": 9,
+              "remainder": 107,
+              "full": 116
+            },
+            "Health": {
+              "selected": 0,
+              "remainder": 427,
+              "full": 427
+            },
+            "High jump": {
+              "selected": 3,
+              "remainder": 114,
+              "full": 117
+            },
+            "Hitting a pinata": {
+              "selected": 3,
+              "remainder": 13,
+              "full": 16
+            },
+            "Holidays and Traditions": {
+              "selected": 0,
+              "remainder": 38,
+              "full": 38
+            },
+            "Home and Garden": {
+              "selected": 0,
+              "remainder": 390,
+              "full": 390
+            },
+            "Home,Categories": {
+              "selected": 0,
+              "remainder": 2,
+              "full": 2
+            },
+            "Hopscotch": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Horseback riding": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Hula hoop": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Hurling": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Ice fishing": {
+              "selected": 8,
+              "remainder": 119,
+              "full": 127
+            },
+            "Installing carpet": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Ironing clothes": {
+              "selected": 3,
+              "remainder": 12,
+              "full": 15
+            },
+            "Javelin throw": {
+              "selected": 0,
+              "remainder": 5,
+              "full": 5
+            },
+            "Kayaking": {
+              "selected": 2,
+              "remainder": 5,
+              "full": 7
+            },
+            "Kite flying": {
+              "selected": 1,
+              "remainder": 1,
+              "full": 2
+            },
+            "Kneeling": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Knitting": {
+              "selected": 0,
+              "remainder": 5,
+              "full": 5
+            },
+            "Laying tile": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Layup drill in basketball": {
+              "selected": 9,
+              "remainder": 102,
+              "full": 111
+            },
+            "Long jump": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Longboarding": {
+              "selected": 2,
+              "remainder": 9,
+              "full": 11
+            },
+            "Making a cake": {
+              "selected": 0,
+              "remainder": 30,
+              "full": 30
+            },
+            "Making a lemonade": {
+              "selected": 1,
+              "remainder": 31,
+              "full": 32
+            },
+            "Making a sandwich": {
+              "selected": 1,
+              "remainder": 11,
+              "full": 12
+            },
+            "Mixing drinks": {
+              "selected": 0,
+              "remainder": 13,
+              "full": 13
+            },
+            "Mooping floor": {
+              "selected": 4,
+              "remainder": 5,
+              "full": 9
+            },
+            "Mowing the lawn": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Paintball": {
+              "selected": 3,
+              "remainder": 7,
+              "full": 10
+            },
+            "Painting": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "Painting furniture": {
+              "selected": 3,
+              "remainder": 16,
+              "full": 19
+            },
+            "Personal Care and Style": {
+              "selected": 0,
+              "remainder": 2627,
+              "full": 2627
+            },
+            "Pets and Animals": {
+              "selected": 0,
+              "remainder": 255,
+              "full": 255
+            },
+            "Philosophy and Religion": {
+              "selected": 0,
+              "remainder": 24,
+              "full": 24
+            },
+            "Ping-pong": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Plastering": {
+              "selected": 1,
+              "remainder": 6,
+              "full": 7
+            },
+            "Plataform diving": {
+              "selected": 0,
+              "remainder": 13,
+              "full": 13
+            },
+            "Playing accordion": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Playing badminton": {
+              "selected": 0,
+              "remainder": 15,
+              "full": 15
+            },
+            "Playing bagpipes": {
+              "selected": 2,
+              "remainder": 8,
+              "full": 10
+            },
+            "Playing beach volleyball": {
+              "selected": 0,
+              "remainder": 17,
+              "full": 17
+            },
+            "Playing blackjack": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Playing congas": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Playing drums": {
+              "selected": 2,
+              "remainder": 13,
+              "full": 15
+            },
+            "Playing guitarra": {
+              "selected": 1,
+              "remainder": 17,
+              "full": 18
+            },
+            "Playing harmonica": {
+              "selected": 10,
+              "remainder": 87,
+              "full": 97
+            },
+            "Playing ice hockey": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Playing kickball": {
+              "selected": 0,
+              "remainder": 2,
+              "full": 2
+            },
+            "Playing lacrosse": {
+              "selected": 0,
+              "remainder": 15,
+              "full": 15
+            },
+            "Playing piano": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Playing polo": {
+              "selected": 2,
+              "remainder": 10,
+              "full": 12
+            },
+            "Playing pool": {
+              "selected": 0,
+              "remainder": 26,
+              "full": 26
+            },
+            "Playing rubik cube": {
+              "selected": 0,
+              "remainder": 3,
+              "full": 3
+            },
+            "Playing saxophone": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Playing squash": {
+              "selected": 0,
+              "remainder": 4,
+              "full": 4
+            },
+            "Playing violin": {
+              "selected": 10,
+              "remainder": 111,
+              "full": 121
+            },
+            "Playing water polo": {
+              "selected": 6,
+              "remainder": 9,
+              "full": 15
+            },
+            "Pole vault": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Polishing forniture": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Polishing shoes": {
+              "selected": 1,
+              "remainder": 13,
+              "full": 14
+            },
+            "Powerbocking": {
+              "selected": 0,
+              "remainder": 14,
+              "full": 14
+            },
+            "Preparing pasta": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Preparing salad": {
+              "selected": 0,
+              "remainder": 10,
+              "full": 10
+            },
+            "Putting in contact lenses": {
+              "selected": 2,
+              "remainder": 10,
+              "full": 12
+            },
+            "Putting on makeup": {
+              "selected": 1,
+              "remainder": 6,
+              "full": 7
+            },
+            "Putting on shoes": {
+              "selected": 1,
+              "remainder": 1,
+              "full": 2
+            },
+            "Raking leaves": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Relationships": {
+              "selected": 0,
+              "remainder": 113,
+              "full": 113
+            },
+            "Removing curlers": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Removing ice from car": {
+              "selected": 3,
+              "remainder": 3,
+              "full": 6
+            },
+            "River tubing": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Rock climbing": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Rock-paper-scissors": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Rollerblading": {
+              "selected": 3,
+              "remainder": 10,
+              "full": 13
+            },
+            "Roof shingle removal": {
+              "selected": 1,
+              "remainder": 13,
+              "full": 14
+            },
+            "Rope skipping": {
+              "selected": 0,
+              "remainder": 21,
+              "full": 21
+            },
+            "Running a marathon": {
+              "selected": 7,
+              "remainder": 133,
+              "full": 140
+            },
+            "Sailing": {
+              "selected": 0,
+              "remainder": 4,
+              "full": 4
+            },
+            "Scuba diving": {
+              "selected": 4,
+              "remainder": 19,
+              "full": 23
+            },
+            "Sharpening knives": {
+              "selected": 18,
+              "remainder": 120,
+              "full": 138
+            },
+            "Shaving": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Shaving legs": {
+              "selected": 0,
+              "remainder": 5,
+              "full": 5
+            },
+            "Shot put": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Shoveling snow": {
+              "selected": 0,
+              "remainder": 18,
+              "full": 18
+            },
+            "Shuffleboard": {
+              "selected": 2,
+              "remainder": 11,
+              "full": 13
+            },
+            "Skateboarding": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Skiing": {
+              "selected": 3,
+              "remainder": 14,
+              "full": 17
+            },
+            "Slacklining": {
+              "selected": 0,
+              "remainder": 12,
+              "full": 12
+            },
+            "Smoking a cigarette": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Smoking hookah": {
+              "selected": 0,
+              "remainder": 10,
+              "full": 10
+            },
+            "Snatch": {
+              "selected": 0,
+              "remainder": 6,
+              "full": 6
+            },
+            "Snow tubing": {
+              "selected": 1,
+              "remainder": 17,
+              "full": 18
+            },
+            "Spinning": {
+              "selected": 0,
+              "remainder": 18,
+              "full": 18
+            },
+            "Sports and Fitness": {
+              "selected": 0,
+              "remainder": 144,
+              "full": 144
+            },
+            "Spread mulch": {
+              "selected": 1,
+              "remainder": 5,
+              "full": 6
+            },
+            "Starting a campfire": {
+              "selected": 0,
+              "remainder": 14,
+              "full": 14
+            },
+            "Sumo": {
+              "selected": 1,
+              "remainder": 2,
+              "full": 3
+            },
+            "Surfing": {
+              "selected": 5,
+              "remainder": 15,
+              "full": 20
+            },
+            "Swimming": {
+              "selected": 0,
+              "remainder": 14,
+              "full": 14
+            },
+            "Table soccer": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Tai chi": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Tango": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Tennis serve with ball bouncing": {
+              "selected": 5,
+              "remainder": 8,
+              "full": 13
+            },
+            "Throwing darts": {
+              "selected": 1,
+              "remainder": 3,
+              "full": 4
+            },
+            "Travel": {
+              "selected": 0,
+              "remainder": 60,
+              "full": 60
+            },
+            "Trimming branches or hedges": {
+              "selected": 0,
+              "remainder": 4,
+              "full": 4
+            },
+            "Triple jump": {
+              "selected": 0,
+              "remainder": 11,
+              "full": 11
+            },
+            "Tumbling": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Uncategorized": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Using parallel bars": {
+              "selected": 1,
+              "remainder": 20,
+              "full": 21
+            },
+            "Using the pommel horse": {
+              "selected": 2,
+              "remainder": 8,
+              "full": 10
+            },
+            "Using the rowing machine": {
+              "selected": 1,
+              "remainder": 9,
+              "full": 10
+            },
+            "Using uneven bars": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Vacuuming floor": {
+              "selected": 0,
+              "remainder": 9,
+              "full": 9
+            },
+            "Volleyball": {
+              "selected": 0,
+              "remainder": 4,
+              "full": 4
+            },
+            "Wakeboarding": {
+              "selected": 0,
+              "remainder": 13,
+              "full": 13
+            },
+            "Walking the dog": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Washing face": {
+              "selected": 13,
+              "remainder": 123,
+              "full": 136
+            },
+            "Washing hands": {
+              "selected": 0,
+              "remainder": 5,
+              "full": 5
+            },
+            "Waterskiing": {
+              "selected": 0,
+              "remainder": 19,
+              "full": 19
+            },
+            "Welding": {
+              "selected": 0,
+              "remainder": 8,
+              "full": 8
+            },
+            "Windsurfing": {
+              "selected": 0,
+              "remainder": 7,
+              "full": 7
+            },
+            "Work World": {
+              "selected": 0,
+              "remainder": 86,
+              "full": 86
+            },
+            "Wrapping presents": {
+              "selected": 0,
+              "remainder": 17,
+              "full": 17
+            },
+            "Youth": {
+              "selected": 0,
+              "remainder": 161,
+              "full": 161
+            },
+            "Zumba": {
+              "selected": 1,
+              "remainder": 9,
+              "full": 10
+            }
+          },
+          "holm_p": 0.0029000000000000002
+        },
+        "split_type": {
+          "kind": "categorical",
+          "total_variation": 0.06767647058823525,
+          "p": 0.0377,
+          "counts": {
+            "indomain": {
+              "selected": 141,
+              "remainder": 4860,
+              "full": 5001
+            },
+            "zeroshot": {
+              "selected": 109,
+              "remainder": 4932,
+              "full": 5041
+            }
+          },
+          "holm_p": 0.8671
+        },
+        "answer_label": {
+          "kind": "categorical",
+          "total_variation": 0.04946405228758172,
+          "p": 0.3652,
+          "counts": {
+            "0": {
+              "selected": 67,
+              "remainder": 2448,
+              "full": 2515
+            },
+            "1": {
+              "selected": 59,
+              "remainder": 2426,
+              "full": 2485
+            },
+            "2": {
+              "selected": 72,
+              "remainder": 2512,
+              "full": 2584
+            },
+            "3": {
+              "selected": 52,
+              "remainder": 2406,
+              "full": 2458
+            }
+          },
+          "holm_p": 1.0
+        },
+        "context_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 9792,
+          "selected_mean": 23.152,
+          "remainder_mean": 40.556678921568626,
+          "full_mean": 40.123381796454886,
+          "mean_difference": -17.404678921568625,
+          "standardized_difference": -1.1213148586003219,
+          "p": 0.0001,
+          "holm_p": 0.0029000000000000002
+        },
+        "mean_ending_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 9792,
+          "selected_mean": 12.288,
+          "remainder_mean": 25.711320465686274,
+          "full_mean": 25.377141007767378,
+          "mean_difference": -13.423320465686274,
+          "standardized_difference": -1.2882359984286866,
+          "p": 0.0001,
+          "holm_p": 0.0029000000000000002
+        }
+      },
+      "source_transition_indices": [
+        3243
+      ]
+    },
+    "gsm8k": {
+      "raw_size": 1319,
+      "unique_size": 1319,
+      "selected_size": 250,
+      "dataset_spec": {
+        "repo": "openai/gsm8k",
+        "config": "main",
+        "split": "test",
+        "revision": "740312add88f781978c0658806c59bc2815b9866"
+      },
+      "cached_arrow_sha256": "45965b000311d1550e5619b60b5bf31cf76edebfd8b8eddc62a876fbf8c9be95",
+      "features": {
+        "question_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 1069,
+          "selected_mean": 46.264,
+          "remainder_mean": 46.247895229186156,
+          "full_mean": 46.25094768764215,
+          "mean_difference": 0.01610477081384687,
+          "standardized_difference": 0.0008910633043302512,
+          "p": 0.9897,
+          "holm_p": 1.0
+        },
+        "reference_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 1069,
+          "selected_mean": 51.596,
+          "remainder_mean": 53.06173994387278,
+          "full_mean": 52.78392721758908,
+          "mean_difference": -1.4657399438727836,
+          "standardized_difference": -0.05480517376097805,
+          "p": 0.4279,
+          "holm_p": 1.0
+        },
+        "annotated_calculation_count": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 1069,
+          "selected_mean": 3.116,
+          "remainder_mean": 3.27689429373246,
+          "full_mean": 3.246398786959818,
+          "mean_difference": -0.16089429373246,
+          "standardized_difference": -0.11422708939279305,
+          "p": 0.1048,
+          "holm_p": 1.0
+        }
+      }
+    },
+    "math": {
+      "raw_size": 500,
+      "unique_size": 500,
+      "selected_size": 250,
+      "dataset_spec": {
+        "repo": "HuggingFaceH4/MATH-500",
+        "config": null,
+        "split": "test",
+        "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
+      },
+      "cached_arrow_sha256": "ff2663846092b986df3026f53904030cbaf8e061c9f978d319a7bd86b3a04ea4",
+      "features": {
+        "subject": {
+          "kind": "categorical",
+          "total_variation": 0.027999999999999997,
+          "p": 0.9972,
+          "counts": {
+            "Algebra": {
+              "selected": 62,
+              "remainder": 62,
+              "full": 124
+            },
+            "Counting & Probability": {
+              "selected": 19,
+              "remainder": 19,
+              "full": 38
+            },
+            "Geometry": {
+              "selected": 19,
+              "remainder": 22,
+              "full": 41
+            },
+            "Intermediate Algebra": {
+              "selected": 51,
+              "remainder": 46,
+              "full": 97
+            },
+            "Number Theory": {
+              "selected": 29,
+              "remainder": 33,
+              "full": 62
+            },
+            "Prealgebra": {
+              "selected": 41,
+              "remainder": 41,
+              "full": 82
+            },
+            "Precalculus": {
+              "selected": 29,
+              "remainder": 27,
+              "full": 56
+            }
+          },
+          "holm_p": 1.0
+        },
+        "difficulty_level": {
+          "kind": "categorical",
+          "total_variation": 0.05999999999999999,
+          "p": 0.6471,
+          "counts": {
+            "1": {
+              "selected": 22,
+              "remainder": 21,
+              "full": 43
+            },
+            "2": {
+              "selected": 52,
+              "remainder": 38,
+              "full": 90
+            },
+            "3": {
+              "selected": 52,
+              "remainder": 53,
+              "full": 105
+            },
+            "4": {
+              "selected": 64,
+              "remainder": 64,
+              "full": 128
+            },
+            "5": {
+              "selected": 60,
+              "remainder": 74,
+              "full": 134
+            }
+          },
+          "holm_p": 1.0
+        },
+        "problem_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 250,
+          "selected_mean": 31.636,
+          "remainder_mean": 31.372,
+          "full_mean": 31.504,
+          "mean_difference": 0.26399999999999935,
+          "standardized_difference": 0.011244774479126559,
+          "p": 0.8995,
+          "holm_p": 1.0
+        },
+        "reference_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 250,
+          "selected_mean": 86.136,
+          "remainder_mean": 87.452,
+          "full_mean": 86.794,
+          "mean_difference": -1.3160000000000025,
+          "standardized_difference": -0.019098089432237078,
+          "p": 0.8345,
+          "holm_p": 1.0
+        },
+        "difficulty_level_numeric": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 250,
+          "selected_mean": 3.352,
+          "remainder_mean": 3.528,
+          "full_mean": 3.44,
+          "mean_difference": -0.17600000000000016,
+          "standardized_difference": -0.13653163590358272,
+          "p": 0.1371,
+          "holm_p": 1.0
+        }
+      }
+    },
+    "gpqa": {
+      "raw_size": 448,
+      "unique_size": 448,
+      "selected_size": 250,
+      "dataset_spec": {
+        "repo": "Idavidrein/gpqa",
+        "config": "gpqa_main",
+        "split": "train",
+        "revision": "83022cefff930aea54f654c0b282e74b9eeda5c6"
+      },
+      "cached_arrow_sha256": "1b336842237c635c3e30282fe3f2a815a20eb0fb4b032b467db4f8d1192d7b2a",
+      "features": {
+        "domain": {
+          "kind": "categorical",
+          "total_variation": 0.01701010101010099,
+          "p": 0.9221,
+          "counts": {
+            "Biology": {
+              "selected": 42,
+              "remainder": 36,
+              "full": 78
+            },
+            "Chemistry": {
+              "selected": 104,
+              "remainder": 79,
+              "full": 183
+            },
+            "Physics": {
+              "selected": 104,
+              "remainder": 83,
+              "full": 187
+            }
+          },
+          "holm_p": 1.0
+        },
+        "subdomain": {
+          "kind": "categorical",
+          "total_variation": 0.07268686868686867,
+          "p": 0.974,
+          "counts": {
+            "Analytical Chemistry": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "Astrophysics": {
+              "selected": 18,
+              "remainder": 19,
+              "full": 37
+            },
+            "Chemistry (general)": {
+              "selected": 30,
+              "remainder": 21,
+              "full": 51
+            },
+            "Condensed Matter Physics": {
+              "selected": 1,
+              "remainder": 2,
+              "full": 3
+            },
+            "Electromagnetism and Photonics": {
+              "selected": 7,
+              "remainder": 4,
+              "full": 11
+            },
+            "Genetics": {
+              "selected": 9,
+              "remainder": 7,
+              "full": 16
+            },
+            "High-energy particle physics": {
+              "selected": 18,
+              "remainder": 15,
+              "full": 33
+            },
+            "Inorganic Chemistry": {
+              "selected": 3,
+              "remainder": 0,
+              "full": 3
+            },
+            "Molecular Biology": {
+              "selected": 33,
+              "remainder": 29,
+              "full": 62
+            },
+            "Optics and Acoustics": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "Organic Chemistry": {
+              "selected": 71,
+              "remainder": 56,
+              "full": 127
+            },
+            "Physical Chemistry": {
+              "selected": 0,
+              "remainder": 1,
+              "full": 1
+            },
+            "Physics (general)": {
+              "selected": 22,
+              "remainder": 14,
+              "full": 36
+            },
+            "Quantum Mechanics": {
+              "selected": 31,
+              "remainder": 22,
+              "full": 53
+            },
+            "Relativistic Mechanics": {
+              "selected": 4,
+              "remainder": 5,
+              "full": 9
+            },
+            "Statistical Mechanics": {
+              "selected": 3,
+              "remainder": 1,
+              "full": 4
+            }
+          },
+          "holm_p": 1.0
+        },
+        "writer_difficulty": {
+          "kind": "categorical",
+          "total_variation": 0.02569696969696972,
+          "p": 0.9053,
+          "counts": {
+            "<missing>": {
+              "selected": 5,
+              "remainder": 4,
+              "full": 9
+            },
+            "Easy undergraduate level (or easier)": {
+              "selected": 1,
+              "remainder": 2,
+              "full": 3
+            },
+            "Hard graduate level (could be a question on a hard graduate exam for PhD students in the domain)": {
+              "selected": 83,
+              "remainder": 66,
+              "full": 149
+            },
+            "Hard undergraduate level (could be a question on a hard undergraduate exam for students majoring in the subject)": {
+              "selected": 139,
+              "remainder": 105,
+              "full": 244
+            },
+            "Post-graduate level or harder (only individuals with years of highly specialized expertise could reliably answer correctly)": {
+              "selected": 22,
+              "remainder": 21,
+              "full": 43
+            }
+          },
+          "holm_p": 1.0
+        },
+        "question_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 198,
+          "selected_mean": 69.12,
+          "remainder_mean": 74.72222222222223,
+          "full_mean": 71.59598214285714,
+          "mean_difference": -5.602222222222224,
+          "standardized_difference": -0.11183947450028008,
+          "p": 0.2416,
+          "holm_p": 1.0
+        },
+        "expert_validator_accuracy": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 198,
+          "selected_mean": 0.77,
+          "remainder_mean": 0.6818181818181818,
+          "full_mean": 0.7310267857142857,
+          "mean_difference": 0.08818181818181825,
+          "standardized_difference": 0.2991577880933928,
+          "p": 0.0024,
+          "holm_p": 0.0576
+        },
+        "nonexpert_validator_accuracy": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 198,
+          "selected_mean": 0.292,
+          "remainder_mean": 0.3181818181818181,
+          "full_mean": 0.30357142857142855,
+          "mean_difference": -0.02618181818181814,
+          "standardized_difference": -0.106218174720557,
+          "p": 0.2699,
+          "holm_p": 1.0
+        }
+      }
+    },
+    "mbpp": {
+      "raw_size": 257,
+      "unique_size": 257,
+      "selected_size": 250,
+      "dataset_spec": {
+        "repo": "google-research-datasets/mbpp",
+        "config": "sanitized",
+        "split": "test",
+        "revision": "4bb6404fdc6cacfda99d4ac4205087b89d32030c"
+      },
+      "cached_arrow_sha256": "6c9863a9ff3f38516ecc59837f0cbdd0eca9bc3b474c2eb6d2d29f0449c30f1b",
+      "features": {
+        "source_file": {
+          "kind": "categorical",
+          "total_variation": 0.768,
+          "p": 0.0002,
+          "counts": {
+            "Benchmark Questions Verification V2.ipynb": {
+              "selected": 96,
+              "remainder": 0,
+              "full": 96
+            },
+            "Ellen's Copy of Benchmark Questions Verification V2.ipynb": {
+              "selected": 20,
+              "remainder": 0,
+              "full": 20
+            },
+            "Mike's Copy of Benchmark Questions Verification V2.ipynb": {
+              "selected": 76,
+              "remainder": 0,
+              "full": 76
+            },
+            "charlessutton@: Benchmark Questions Verification V2.ipynb": {
+              "selected": 58,
+              "remainder": 7,
+              "full": 65
+            }
+          },
+          "holm_p": 0.005
+        },
+        "description_words": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 7,
+          "selected_mean": 16.332,
+          "remainder_mean": 13.0,
+          "full_mean": 16.24124513618677,
+          "mean_difference": 3.3320000000000007,
+          "standardized_difference": 0.5259363106792642,
+          "p": 0.1636,
+          "holm_p": 1.0
+        },
+        "reference_code_lines": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 7,
+          "selected_mean": 6.124,
+          "remainder_mean": 3.2857142857142856,
+          "full_mean": 6.046692607003891,
+          "mean_difference": 2.838285714285714,
+          "standardized_difference": 0.6696126194727069,
+          "p": 0.0725,
+          "holm_p": 1.0
+        },
+        "test_count": {
+          "kind": "numeric",
+          "selected_n": 250,
+          "remainder_n": 7,
+          "selected_mean": 3.02,
+          "remainder_mean": 3.0,
+          "full_mean": 3.019455252918288,
+          "mean_difference": 0.020000000000000018,
+          "standardized_difference": 0.12179788088488912,
+          "p": 1.0,
+          "holm_p": 1.0
+        }
+      },
+      "task_ids_sorted": true,
+      "omitted_task_ids": [
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479
+      ],
+      "worst_case_full_score_distance_pp": 2.7237354085603114
+    }
+  },
+  "tests": [
+    {
+      "task": "arc_c",
+      "feature": "source_id_prefix",
+      "p": 0.1859,
+      "holm_p": 1.0
+    },
+    {
+      "task": "arc_c",
+      "feature": "answer_label",
+      "p": 0.0489,
+      "holm_p": 1.0
+    },
+    {
+      "task": "arc_c",
+      "feature": "choice_count",
+      "p": 0.8379,
+      "holm_p": 1.0
+    },
+    {
+      "task": "arc_c",
+      "feature": "question_words",
+      "p": 0.4736,
+      "holm_p": 1.0
+    },
+    {
+      "task": "arc_c",
+      "feature": "mean_choice_words",
+      "p": 0.4011,
+      "holm_p": 1.0
+    },
+    {
+      "task": "hellaswag",
+      "feature": "source",
+      "p": 0.0001,
+      "holm_p": 0.0029000000000000002
+    },
+    {
+      "task": "hellaswag",
+      "feature": "activity",
+      "p": 0.0001,
+      "holm_p": 0.0029000000000000002
+    },
+    {
+      "task": "hellaswag",
+      "feature": "split_type",
+      "p": 0.0377,
+      "holm_p": 0.8671
+    },
+    {
+      "task": "hellaswag",
+      "feature": "answer_label",
+      "p": 0.3652,
+      "holm_p": 1.0
+    },
+    {
+      "task": "hellaswag",
+      "feature": "context_words",
+      "p": 0.0001,
+      "holm_p": 0.0029000000000000002
+    },
+    {
+      "task": "hellaswag",
+      "feature": "mean_ending_words",
+      "p": 0.0001,
+      "holm_p": 0.0029000000000000002
+    },
+    {
+      "task": "gsm8k",
+      "feature": "question_words",
+      "p": 0.9897,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gsm8k",
+      "feature": "reference_words",
+      "p": 0.4279,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gsm8k",
+      "feature": "annotated_calculation_count",
+      "p": 0.1048,
+      "holm_p": 1.0
+    },
+    {
+      "task": "math",
+      "feature": "subject",
+      "p": 0.9972,
+      "holm_p": 1.0
+    },
+    {
+      "task": "math",
+      "feature": "difficulty_level",
+      "p": 0.6471,
+      "holm_p": 1.0
+    },
+    {
+      "task": "math",
+      "feature": "problem_words",
+      "p": 0.8995,
+      "holm_p": 1.0
+    },
+    {
+      "task": "math",
+      "feature": "reference_words",
+      "p": 0.8345,
+      "holm_p": 1.0
+    },
+    {
+      "task": "math",
+      "feature": "difficulty_level_numeric",
+      "p": 0.1371,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gpqa",
+      "feature": "domain",
+      "p": 0.9221,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gpqa",
+      "feature": "subdomain",
+      "p": 0.974,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gpqa",
+      "feature": "writer_difficulty",
+      "p": 0.9053,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gpqa",
+      "feature": "question_words",
+      "p": 0.2416,
+      "holm_p": 1.0
+    },
+    {
+      "task": "gpqa",
+      "feature": "expert_validator_accuracy",
+      "p": 0.0024,
+      "holm_p": 0.0576
+    },
+    {
+      "task": "gpqa",
+      "feature": "nonexpert_validator_accuracy",
+      "p": 0.2699,
+      "holm_p": 1.0
+    },
+    {
+      "task": "mbpp",
+      "feature": "source_file",
+      "p": 0.0002,
+      "holm_p": 0.005
+    },
+    {
+      "task": "mbpp",
+      "feature": "description_words",
+      "p": 0.1636,
+      "holm_p": 1.0
+    },
+    {
+      "task": "mbpp",
+      "feature": "reference_code_lines",
+      "p": 0.0725,
+      "holm_p": 1.0
+    },
+    {
+      "task": "mbpp",
+      "feature": "test_count",
+      "p": 1.0,
+      "holm_p": 1.0
+    }
+  ]
+}

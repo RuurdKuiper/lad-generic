@@ -1,0 +1,11 @@
+model,mean_pct,ci95_low_pct,ci95_high_pct,status
+gemma_d,50.577777777777776,47.93172736526833,53.22382819028723,latest compatible historical recorded outcomes; rescoring pending
+gemma_ar,65.68888888888888,62.71432913261831,68.66344864515946,latest compatible historical recorded outcomes; rescoring pending
+llada,51.91111111111111,49.164564619629395,54.65765760259282,latest compatible historical recorded outcomes; rescoring pending
+qwen_d,48.97777777777777,46.27561594072068,51.67993961483487,latest compatible historical recorded outcomes; rescoring pending
+qwen_ar,71.39649122807018,68.97491405097578,73.81806840516457,latest compatible historical recorded outcomes; rescoring pending
+ministral_d,49.86666666666666,47.20107705853469,52.53225627479863,latest compatible historical recorded outcomes; rescoring pending
+ministral_ar,63.46666666666666,60.859288977683704,66.07404435564962,latest compatible historical recorded outcomes; rescoring pending
+llama_25k,48.711111111111116,46.02548641630449,51.39673580591775,latest compatible historical recorded outcomes; rescoring pending
+llama_ar,58.75555555555556,56.0380378364815,61.47307327462962,latest compatible historical recorded outcomes; rescoring pending
+llama_50k,49.24444444444445,46.56630391796847,51.922584970920425,latest compatible historical recorded outcomes; rescoring pending

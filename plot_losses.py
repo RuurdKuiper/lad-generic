@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 from typing import Any
@@ -26,13 +27,14 @@ def read_metrics(run_dir: str | Path) -> list[dict[str, Any]]:
     return records
 
 
-def loss_series(records: list[dict[str, Any]]) -> tuple[list[tuple[int, float]], list[tuple[int, float]]]:
+def loss_series(records: list[dict[str, Any]], metric: str = "weighted_loss") -> tuple[list[tuple[int, float]], list[tuple[int, float]]]:
     """Return logged train and validation loss points, ordered by update step."""
-    train = [(int(record["step"]), float(record["weighted_loss"])) for record in records if record.get("split") == "train"]
+    records = [record for record in records if record.get(metric) is not None]
+    train = [(int(record["step"]), float(record[metric])) for record in records if record.get("split") == "train"]
     # Older/short runs may only contain the interval average at validation.
     if not train:
-        train = [(int(record["step"]), float(record["weighted_loss"])) for record in records if record.get("split") == "train_interval"]
-    validation = [(int(record["step"]), float(record["weighted_loss"])) for record in records if record.get("split") == "validation"]
+        train = [(int(record["step"]), float(record[metric])) for record in records if record.get("split") == "train_interval"]
+    validation = [(int(record["step"]), float(record[metric])) for record in records if record.get("split") == "validation"]
     return sorted(train), sorted(validation)
 
 
@@ -57,6 +59,9 @@ def main() -> None:
     parser.add_argument("--smooth", type=int, default=10, help="Trailing-average window for training loss (default: 10; use 1 for raw)")
     parser.add_argument("--output", default="losses.png", help="PNG/PDF/SVG output path (default: losses.png)")
     parser.add_argument("--log-y", action="store_true", help="Use a logarithmic loss axis")
+    parser.add_argument("--split", choices=("both", "train", "validation"), default="both", help="Which loss curves to show")
+    parser.add_argument("--metric", choices=("weighted_loss", "answer_loss", "padding_loss"), default="weighted_loss")
+    parser.add_argument("--csv", help="Also export the plotted series as raw, unsmoothed CSV points")
     args = parser.parse_args()
     if args.smooth < 1:
         parser.error("--smooth must be at least 1")
@@ -70,10 +75,18 @@ def main() -> None:
 
     figure, axis = plt.subplots(figsize=(10, 6))
     plotted = False
+    csv_rows = []
     for index, run in enumerate(args.runs):
         run_path = Path(run)
         label = args.labels[index] if args.labels else run_path.name
-        train, validation = loss_series(read_metrics(run_path))
+        train, validation = loss_series(read_metrics(run_path), args.metric)
+        if args.split == "validation":
+            train = []
+        elif args.split == "train":
+            validation = []
+        for split, points in (("train", train), ("validation", validation)):
+            csv_rows.extend({"run": label, "split": split, "step": step, "metric": args.metric, "value": value}
+                            for step, value in points)
         color = f"C{index % 10}"
         if train:
             steps, losses = zip(*train)
@@ -88,7 +101,9 @@ def main() -> None:
     if not plotted:
         raise SystemExit("No plottable loss records found.")
 
-    axis.set(title="Training and validation loss", xlabel="Gradient update step", ylabel="Weighted denoising loss")
+    title = {"both": "Training and validation loss", "train": "Training loss", "validation": "Validation loss"}[args.split]
+    ylabel = {"weighted_loss": "Weighted denoising loss", "answer_loss": "Answer loss", "padding_loss": "Padding loss"}[args.metric]
+    axis.set(title=title, xlabel="Gradient update step", ylabel=ylabel)
     if args.log_y:
         axis.set_yscale("log")
     axis.grid(True, alpha=.25)
@@ -97,7 +112,16 @@ def main() -> None:
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(output, dpi=180)
+    plt.close(figure)
     print(f"Saved loss plot to {output.resolve()}")
+    if args.csv:
+        csv_path = Path(args.csv)
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+        with csv_path.open("w", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=("run", "split", "step", "metric", "value"))
+            writer.writeheader()
+            writer.writerows(csv_rows)
+        print(f"Saved raw loss points to {csv_path.resolve()}")
 
 
 if __name__ == "__main__":

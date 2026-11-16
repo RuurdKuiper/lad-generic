@@ -1,0 +1,1170 @@
+{
+  "python_version": "3.14.2 (main, Dec  5 2025, 16:49:16) [Clang 17.0.0 (clang-1700.4.4.1)]",
+  "analysis_script_sha256": "e544eface5f30fd92e3f1e1f1938cbfc0b4993658711df18d1db5f3d063880e0",
+  "final_results_sha256": "c25ba5167bc8301724ce6c8d222528500aa6992ec967eda16da8019adf02ed6b",
+  "human_groups": {
+    "gemma_d": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 47,
+        "canonical_full_function_over_cap": 26,
+        "canonical_body_only_over_cap": 1,
+        "near_cap": 124,
+        "fail_near_cap": 77,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 30,
+        "syntax_invalid_near_cap": 30,
+        "unterminated_triple_quote": 8,
+        "tokenizer_available": true,
+        "mean_output_tokens": 255.368,
+        "mean_specification_tokens": 140.672,
+        "mean_canonical_full_function_tokens": 198.4,
+        "syntax_errors": {
+          "invalid syntax": 9,
+          "closing parenthesis ')' does not match opening parenthesis '['": 2,
+          "'[' was never closed": 1,
+          "unmatched ')'": 5,
+          "unterminated triple-quoted string literal (detected at line 22)": 1,
+          "unterminated triple-quoted string literal (detected at line 23)": 1,
+          "unterminated triple-quoted string literal (detected at line 6)": 1,
+          "unterminated triple-quoted string literal (detected at line 15)": 1,
+          "unterminated triple-quoted string literal (detected at line 24)": 1,
+          "expected an indented block after 'for' statement on line 25": 1,
+          "unterminated string literal (detected at line 16)": 1,
+          "unterminated triple-quoted string literal (detected at line 25)": 1,
+          "unterminated triple-quoted string literal (detected at line 18)": 1,
+          "'(' was never closed": 1,
+          "unterminated string literal (detected at line 20)": 1,
+          "unterminated string literal (detected at line 12)": 1,
+          "unterminated triple-quoted string literal (detected at line 16)": 1
+        }
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 2,
+        "canonical_full_function_over_cap": 16,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 39,
+        "fail_near_cap": 37,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 11,
+        "syntax_invalid_near_cap": 11,
+        "unterminated_triple_quote": 6,
+        "tokenizer_available": true,
+        "mean_output_tokens": 255.43589743589743,
+        "mean_specification_tokens": 166.64102564102564,
+        "mean_canonical_full_function_tokens": 249.10256410256412,
+        "syntax_errors": {
+          "unterminated triple-quoted string literal (detected at line 15)": 1,
+          "unterminated triple-quoted string literal (detected at line 19)": 1,
+          "unterminated triple-quoted string literal (detected at line 26)": 1,
+          "unterminated triple-quoted string literal (detected at line 17)": 1,
+          "unindent does not match any outer indentation level": 1,
+          "invalid syntax": 2,
+          "'[' was never closed": 1,
+          "unterminated triple-quoted string literal (detected at line 20)": 1,
+          "unterminated string literal (detected at line 12)": 1,
+          "unterminated triple-quoted string literal (detected at line 21)": 1
+        }
+      }
+    },
+    "gemma_ar": {
+      "historical_ids": {
+        "n": 50,
+        "correct": 37,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 163.14,
+        "mean_specification_tokens": 112.38,
+        "mean_canonical_full_function_tokens": 159.32,
+        "syntax_errors": {}
+      },
+      "added_ids": {
+        "n": 114,
+        "correct": 61,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 1,
+        "syntax_invalid_near_cap": 0,
+        "unterminated_triple_quote": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 226.68421052631578,
+        "mean_specification_tokens": 161.96491228070175,
+        "mean_canonical_full_function_tokens": 232.8859649122807,
+        "syntax_errors": {
+          "invalid syntax": 1
+        }
+      }
+    },
+    "llada": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 50,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 2,
+        "syntax_invalid": 3,
+        "syntax_invalid_near_cap": 0,
+        "unterminated_triple_quote": 0,
+        "tokenizer_available": false,
+        "mean_output_tokens": null,
+        "mean_specification_tokens": null,
+        "mean_canonical_full_function_tokens": null,
+        "syntax_errors": {
+          "'(' was never closed": 1,
+          "invalid syntax": 2
+        }
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 7,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 1,
+        "syntax_invalid_near_cap": 0,
+        "unterminated_triple_quote": 0,
+        "tokenizer_available": false,
+        "mean_output_tokens": null,
+        "mean_specification_tokens": null,
+        "mean_canonical_full_function_tokens": null,
+        "syntax_errors": {
+          "unmatched ']'": 1
+        }
+      }
+    },
+    "qwen_d": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 37,
+        "canonical_full_function_over_cap": 18,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 125,
+        "fail_near_cap": 88,
+        "missing_entry": 0,
+        "docstring_only_function": 2,
+        "syntax_invalid": 46,
+        "syntax_invalid_near_cap": 46,
+        "unterminated_triple_quote": 15,
+        "tokenizer_available": true,
+        "mean_output_tokens": 302.136,
+        "mean_specification_tokens": 128.36,
+        "mean_canonical_full_function_tokens": 177.576,
+        "syntax_errors": {
+          "unmatched ')'": 3,
+          "invalid syntax": 10,
+          "unterminated triple-quoted string literal (detected at line 17)": 3,
+          "unterminated triple-quoted string literal (detected at line 14)": 1,
+          "unterminated triple-quoted string literal (detected at line 19)": 1,
+          "'(' was never closed": 2,
+          "unterminated triple-quoted string literal (detected at line 44)": 1,
+          "closing parenthesis ')' does not match opening parenthesis '['": 4,
+          "unterminated triple-quoted string literal (detected at line 13)": 1,
+          "unterminated triple-quoted string literal (detected at line 36)": 1,
+          "unterminated triple-quoted string literal (detected at line 18)": 2,
+          "unterminated triple-quoted string literal (detected at line 11)": 2,
+          "unindent does not match any outer indentation level": 3,
+          "closing parenthesis ']' does not match opening parenthesis '('": 1,
+          "unterminated string literal (detected at line 5)": 1,
+          "unterminated string literal (detected at line 2)": 4,
+          "unterminated triple-quoted string literal (detected at line 31)": 1,
+          "expression cannot contain assignment, perhaps you meant \"==\"?": 1,
+          "unterminated triple-quoted string literal (detected at line 15)": 1,
+          "unterminated string literal (detected at line 16)": 1,
+          "unterminated triple-quoted string literal (detected at line 9)": 1,
+          "unterminated f-string literal (detected at line 2)": 1
+        }
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 2,
+        "canonical_full_function_over_cap": 9,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 39,
+        "fail_near_cap": 37,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 15,
+        "syntax_invalid_near_cap": 15,
+        "unterminated_triple_quote": 1,
+        "tokenizer_available": true,
+        "mean_output_tokens": 291.94871794871796,
+        "mean_specification_tokens": 152.46153846153845,
+        "mean_canonical_full_function_tokens": 222.2051282051282,
+        "syntax_errors": {
+          "invalid syntax": 5,
+          "invalid syntax. Perhaps you forgot a comma?": 4,
+          "unmatched ')'": 2,
+          "expected an indented block after 'for' statement on line 12": 1,
+          "closing parenthesis ')' does not match opening parenthesis '['": 1,
+          "unterminated triple-quoted string literal (detected at line 7)": 1,
+          "'(' was never closed": 1
+        }
+      }
+    },
+    "qwen_ar": {
+      "historical_ids": {
+        "n": 95,
+        "correct": 83,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 190.33684210526314,
+        "mean_specification_tokens": 116.86315789473684,
+        "mean_canonical_full_function_tokens": 160.47368421052633,
+        "syntax_errors": {}
+      },
+      "added_ids": {
+        "n": 69,
+        "correct": 50,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 249.91304347826087,
+        "mean_specification_tokens": 157.81159420289856,
+        "mean_canonical_full_function_tokens": 226.34782608695653,
+        "syntax_errors": {}
+      }
+    },
+    "ministral_d": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 44,
+        "canonical_full_function_over_cap": 21,
+        "canonical_body_only_over_cap": 1,
+        "near_cap": 112,
+        "fail_near_cap": 75,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 32,
+        "syntax_invalid_near_cap": 30,
+        "unterminated_triple_quote": 4,
+        "tokenizer_available": true,
+        "mean_output_tokens": 279.464,
+        "mean_specification_tokens": 131.96,
+        "mean_canonical_full_function_tokens": 182.704,
+        "syntax_errors": {
+          "'(' was never closed": 4,
+          "closing parenthesis ']' does not match opening parenthesis '('": 2,
+          "invalid syntax": 8,
+          "unterminated triple-quoted string literal (detected at line 21)": 1,
+          "expected ':'": 3,
+          "unmatched ']'": 1,
+          "unterminated string literal (detected at line 4)": 1,
+          "unterminated triple-quoted string literal (detected at line 39)": 1,
+          "unmatched ')'": 2,
+          "unterminated triple-quoted string literal (detected at line 11)": 1,
+          "expected an indented block after 'elif' statement on line 6": 1,
+          "unterminated triple-quoted string literal (detected at line 38)": 1,
+          "unterminated string literal (detected at line 27)": 1,
+          "cannot assign to function call": 1,
+          "expected an indented block after 'else' statement on line 29": 1,
+          "unexpected indent": 1,
+          "unterminated string literal (detected at line 17)": 1,
+          "invalid syntax. Perhaps you forgot a comma?": 1
+        }
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 4,
+        "canonical_full_function_over_cap": 13,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 38,
+        "fail_near_cap": 34,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 20,
+        "syntax_invalid_near_cap": 19,
+        "unterminated_triple_quote": 3,
+        "tokenizer_available": true,
+        "mean_output_tokens": 283.05128205128204,
+        "mean_specification_tokens": 158.2051282051282,
+        "mean_canonical_full_function_tokens": 230.46153846153845,
+        "syntax_errors": {
+          "invalid syntax": 8,
+          "unterminated triple-quoted string literal (detected at line 18)": 1,
+          "closing parenthesis ')' does not match opening parenthesis '['": 2,
+          "'(' was never closed": 3,
+          "unindent does not match any outer indentation level": 1,
+          "unterminated string literal (detected at line 10)": 1,
+          "unterminated string literal (detected at line 5)": 1,
+          "unterminated triple-quoted string literal (detected at line 32)": 1,
+          "unterminated triple-quoted string literal (detected at line 23)": 1,
+          "unmatched ')'": 1
+        }
+      }
+    },
+    "ministral_ar": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 107,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 181.384,
+        "mean_specification_tokens": 131.96,
+        "mean_canonical_full_function_tokens": 182.704,
+        "syntax_errors": {}
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 28,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 213.66666666666666,
+        "mean_specification_tokens": 158.2051282051282,
+        "mean_canonical_full_function_tokens": 230.46153846153845,
+        "syntax_errors": {}
+      }
+    },
+    "llama_25k": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 39,
+        "canonical_full_function_over_cap": 18,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 43,
+        "fail_near_cap": 32,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 43,
+        "syntax_invalid_near_cap": 18,
+        "unterminated_triple_quote": 8,
+        "tokenizer_available": true,
+        "mean_output_tokens": 181.096,
+        "mean_specification_tokens": 125.336,
+        "mean_canonical_full_function_tokens": 174.376,
+        "syntax_errors": {
+          "unexpected indent": 2,
+          "unterminated triple-quoted string literal (detected at line 10)": 2,
+          "'(' was never closed": 4,
+          "unmatched ')'": 5,
+          "unmatched ']'": 1,
+          "invalid syntax. Perhaps you forgot a comma?": 3,
+          "invalid syntax": 12,
+          "unindent does not match any outer indentation level": 1,
+          "'[' was never closed": 2,
+          "unterminated triple-quoted string literal (detected at line 5)": 1,
+          "unterminated triple-quoted string literal (detected at line 29)": 1,
+          "unterminated triple-quoted string literal (detected at line 22)": 1,
+          "unterminated string literal (detected at line 19)": 1,
+          "unterminated triple-quoted string literal (detected at line 19)": 1,
+          "unterminated triple-quoted string literal (detected at line 27)": 1,
+          "unterminated string literal (detected at line 5)": 1,
+          "unterminated string literal (detected at line 21)": 1,
+          "unterminated triple-quoted string literal (detected at line 8)": 1,
+          "unterminated string literal (detected at line 17)": 1,
+          "closing parenthesis ']' does not match opening parenthesis '('": 1
+        }
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 2,
+        "canonical_full_function_over_cap": 8,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 12,
+        "fail_near_cap": 12,
+        "missing_entry": 0,
+        "docstring_only_function": 1,
+        "syntax_invalid": 14,
+        "syntax_invalid_near_cap": 7,
+        "unterminated_triple_quote": 3,
+        "tokenizer_available": true,
+        "mean_output_tokens": 163.69230769230768,
+        "mean_specification_tokens": 150.3846153846154,
+        "mean_canonical_full_function_tokens": 219.64102564102564,
+        "syntax_errors": {
+          "invalid syntax": 3,
+          "unterminated triple-quoted string literal (detected at line 11)": 1,
+          "unterminated string literal (detected at line 4)": 1,
+          "'(' was never closed": 2,
+          "unindent does not match any outer indentation level": 1,
+          "unterminated string literal (detected at line 15)": 1,
+          "unterminated string literal (detected at line 6)": 1,
+          "unterminated triple-quoted string literal (detected at line 5)": 1,
+          "unmatched ')'": 1,
+          "unterminated string literal (detected at line 9)": 1,
+          "unterminated triple-quoted string literal (detected at line 3)": 1
+        }
+      }
+    },
+    "llama_50k": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 35,
+        "canonical_full_function_over_cap": 18,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 58,
+        "fail_near_cap": 49,
+        "missing_entry": 0,
+        "docstring_only_function": 2,
+        "syntax_invalid": 35,
+        "syntax_invalid_near_cap": 25,
+        "unterminated_triple_quote": 13,
+        "tokenizer_available": true,
+        "mean_output_tokens": 195.088,
+        "mean_specification_tokens": 125.336,
+        "mean_canonical_full_function_tokens": 174.376,
+        "syntax_errors": {
+          "unterminated triple-quoted string literal (detected at line 7)": 1,
+          "'(' was never closed": 4,
+          "unterminated triple-quoted string literal (detected at line 10)": 1,
+          "unmatched ']'": 1,
+          "invalid syntax": 10,
+          "unterminated triple-quoted string literal (detected at line 24)": 1,
+          "unmatched ')'": 2,
+          "'in' expected after for-loop variables": 1,
+          "'[' was never closed": 1,
+          "unterminated triple-quoted string literal (detected at line 29)": 2,
+          "unterminated triple-quoted string literal (detected at line 20)": 3,
+          "unterminated triple-quoted string literal (detected at line 31)": 1,
+          "unterminated triple-quoted string literal (detected at line 23)": 1,
+          "unterminated triple-quoted string literal (detected at line 11)": 1,
+          "unterminated string literal (detected at line 27)": 1,
+          "unterminated triple-quoted string literal (detected at line 26)": 1,
+          "unterminated triple-quoted string literal (detected at line 37)": 1,
+          "unterminated string literal (detected at line 17)": 1,
+          "expected expression after 'else', but statement is given": 1
+        }
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 4,
+        "canonical_full_function_over_cap": 8,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 23,
+        "fail_near_cap": 22,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "syntax_invalid": 16,
+        "syntax_invalid_near_cap": 13,
+        "unterminated_triple_quote": 3,
+        "tokenizer_available": true,
+        "mean_output_tokens": 220.30769230769232,
+        "mean_specification_tokens": 150.3846153846154,
+        "mean_canonical_full_function_tokens": 219.64102564102564,
+        "syntax_errors": {
+          "'(' was never closed": 1,
+          "unterminated triple-quoted string literal (detected at line 12)": 1,
+          "unterminated triple-quoted string literal (detected at line 24)": 1,
+          "unexpected indent": 1,
+          "expected an indented block after 'if' statement on line 37": 1,
+          "unterminated string literal (detected at line 21)": 1,
+          "invalid syntax": 6,
+          "expected an indented block after 'if' statement on line 36": 1,
+          "invalid syntax. Perhaps you forgot a comma?": 1,
+          "unmatched ')'": 1,
+          "unterminated triple-quoted string literal (detected at line 25)": 1
+        }
+      }
+    },
+    "llama_ar": {
+      "historical_ids": {
+        "n": 125,
+        "correct": 70,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 172.272,
+        "mean_specification_tokens": 125.336,
+        "mean_canonical_full_function_tokens": 174.376,
+        "syntax_errors": {}
+      },
+      "added_ids": {
+        "n": 39,
+        "correct": 14,
+        "canonical_full_function_over_cap": 0,
+        "canonical_body_only_over_cap": 0,
+        "near_cap": 0,
+        "fail_near_cap": 0,
+        "missing_entry": 0,
+        "docstring_only_function": 0,
+        "tokenizer_available": true,
+        "mean_output_tokens": 215.56410256410257,
+        "mean_specification_tokens": 150.3846153846154,
+        "mean_canonical_full_function_tokens": 219.64102564102564,
+        "syntax_errors": {}
+      }
+    }
+  },
+  "math_by_level": {
+    "gemma_d": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 5
+        },
+        "2": {
+          "n": 33,
+          "correct": 14
+        },
+        "3": {
+          "n": 25,
+          "correct": 9
+        },
+        "4": {
+          "n": 27,
+          "correct": 6
+        },
+        "5": {
+          "n": 28,
+          "correct": 2
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 5
+        },
+        "2": {
+          "n": 19,
+          "correct": 8
+        },
+        "3": {
+          "n": 27,
+          "correct": 7
+        },
+        "4": {
+          "n": 37,
+          "correct": 3
+        },
+        "5": {
+          "n": 32,
+          "correct": 2
+        }
+      }
+    },
+    "gemma_ar": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 10
+        },
+        "2": {
+          "n": 33,
+          "correct": 27
+        },
+        "3": {
+          "n": 25,
+          "correct": 17
+        },
+        "4": {
+          "n": 27,
+          "correct": 16
+        },
+        "5": {
+          "n": 28,
+          "correct": 5
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 8
+        },
+        "2": {
+          "n": 19,
+          "correct": 13
+        },
+        "3": {
+          "n": 27,
+          "correct": 15
+        },
+        "4": {
+          "n": 37,
+          "correct": 14
+        },
+        "5": {
+          "n": 32,
+          "correct": 5
+        }
+      }
+    },
+    "llada": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 7
+        },
+        "2": {
+          "n": 33,
+          "correct": 19
+        },
+        "3": {
+          "n": 25,
+          "correct": 10
+        },
+        "4": {
+          "n": 27,
+          "correct": 4
+        },
+        "5": {
+          "n": 28,
+          "correct": 3
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 5
+        },
+        "2": {
+          "n": 19,
+          "correct": 9
+        },
+        "3": {
+          "n": 27,
+          "correct": 5
+        },
+        "4": {
+          "n": 37,
+          "correct": 2
+        },
+        "5": {
+          "n": 32,
+          "correct": 1
+        }
+      }
+    },
+    "qwen_d": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 5
+        },
+        "2": {
+          "n": 33,
+          "correct": 18
+        },
+        "3": {
+          "n": 25,
+          "correct": 7
+        },
+        "4": {
+          "n": 27,
+          "correct": 9
+        },
+        "5": {
+          "n": 28,
+          "correct": 3
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 4
+        },
+        "2": {
+          "n": 19,
+          "correct": 9
+        },
+        "3": {
+          "n": 27,
+          "correct": 11
+        },
+        "4": {
+          "n": 37,
+          "correct": 7
+        },
+        "5": {
+          "n": 32,
+          "correct": 3
+        }
+      }
+    },
+    "qwen_ar": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 11
+        },
+        "2": {
+          "n": 33,
+          "correct": 32
+        },
+        "3": {
+          "n": 25,
+          "correct": 22
+        },
+        "4": {
+          "n": 27,
+          "correct": 20
+        },
+        "5": {
+          "n": 28,
+          "correct": 13
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 10
+        },
+        "2": {
+          "n": 19,
+          "correct": 17
+        },
+        "3": {
+          "n": 27,
+          "correct": 21
+        },
+        "4": {
+          "n": 37,
+          "correct": 23
+        },
+        "5": {
+          "n": 32,
+          "correct": 15
+        }
+      }
+    },
+    "ministral_d": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 2
+        },
+        "2": {
+          "n": 33,
+          "correct": 11
+        },
+        "3": {
+          "n": 25,
+          "correct": 8
+        },
+        "4": {
+          "n": 27,
+          "correct": 4
+        },
+        "5": {
+          "n": 28,
+          "correct": 1
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 5
+        },
+        "2": {
+          "n": 19,
+          "correct": 9
+        },
+        "3": {
+          "n": 27,
+          "correct": 7
+        },
+        "4": {
+          "n": 37,
+          "correct": 4
+        },
+        "5": {
+          "n": 32,
+          "correct": 0
+        }
+      }
+    },
+    "ministral_ar": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 10
+        },
+        "2": {
+          "n": 33,
+          "correct": 27
+        },
+        "3": {
+          "n": 25,
+          "correct": 17
+        },
+        "4": {
+          "n": 27,
+          "correct": 14
+        },
+        "5": {
+          "n": 28,
+          "correct": 4
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 10
+        },
+        "2": {
+          "n": 19,
+          "correct": 15
+        },
+        "3": {
+          "n": 27,
+          "correct": 19
+        },
+        "4": {
+          "n": 37,
+          "correct": 18
+        },
+        "5": {
+          "n": 32,
+          "correct": 6
+        }
+      }
+    },
+    "llama_25k": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 5
+        },
+        "2": {
+          "n": 33,
+          "correct": 11
+        },
+        "3": {
+          "n": 25,
+          "correct": 9
+        },
+        "4": {
+          "n": 27,
+          "correct": 3
+        },
+        "5": {
+          "n": 28,
+          "correct": 4
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 6
+        },
+        "2": {
+          "n": 19,
+          "correct": 6
+        },
+        "3": {
+          "n": 27,
+          "correct": 7
+        },
+        "4": {
+          "n": 37,
+          "correct": 4
+        },
+        "5": {
+          "n": 32,
+          "correct": 2
+        }
+      }
+    },
+    "llama_50k": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 5
+        },
+        "2": {
+          "n": 33,
+          "correct": 15
+        },
+        "3": {
+          "n": 25,
+          "correct": 11
+        },
+        "4": {
+          "n": 27,
+          "correct": 3
+        },
+        "5": {
+          "n": 28,
+          "correct": 1
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 7
+        },
+        "2": {
+          "n": 19,
+          "correct": 6
+        },
+        "3": {
+          "n": 27,
+          "correct": 5
+        },
+        "4": {
+          "n": 37,
+          "correct": 5
+        },
+        "5": {
+          "n": 32,
+          "correct": 3
+        }
+      }
+    },
+    "llama_ar": {
+      "historical_ids": {
+        "1": {
+          "n": 12,
+          "correct": 8
+        },
+        "2": {
+          "n": 33,
+          "correct": 24
+        },
+        "3": {
+          "n": 25,
+          "correct": 12
+        },
+        "4": {
+          "n": 27,
+          "correct": 10
+        },
+        "5": {
+          "n": 28,
+          "correct": 5
+        }
+      },
+      "added_ids": {
+        "1": {
+          "n": 10,
+          "correct": 10
+        },
+        "2": {
+          "n": 19,
+          "correct": 13
+        },
+        "3": {
+          "n": 27,
+          "correct": 12
+        },
+        "4": {
+          "n": 37,
+          "correct": 7
+        },
+        "5": {
+          "n": 32,
+          "correct": 5
+        }
+      }
+    }
+  },
+  "math_standardized": {
+    "gemma_d": {
+      "added_correct_expected_if_historical_level_rates_held": 32.45520923520924,
+      "added_n": 125,
+      "added_correct_observed": 25,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "gemma_ar": {
+      "added_correct_expected_if_historical_level_rates_held": 69.87899951899952,
+      "added_n": 125,
+      "added_correct_observed": 55,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "llada": {
+      "added_correct_expected_if_historical_level_rates_held": 36.48278018278018,
+      "added_n": 125,
+      "added_correct_observed": 22,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "qwen_d": {
+      "added_correct_expected_if_historical_level_rates_held": 37.85220779220779,
+      "added_n": 125,
+      "added_correct_observed": 34,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "qwen_ar": {
+      "added_correct_expected_if_historical_level_rates_held": 93.61545935545936,
+      "added_n": 125,
+      "added_correct_observed": 86,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "ministral_d": {
+      "added_correct_expected_if_historical_level_rates_held": 23.264338624338624,
+      "added_n": 125,
+      "added_correct_observed": 25,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "ministral_ar": {
+      "added_correct_expected_if_historical_level_rates_held": 65.99540163540163,
+      "added_n": 125,
+      "added_correct_observed": 68,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "llama_25k": {
+      "added_correct_expected_if_historical_level_rates_held": 28.902539682539683,
+      "added_n": 125,
+      "added_correct_observed": 25,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "llama_50k": {
+      "added_correct_expected_if_historical_level_rates_held": 29.936998556998557,
+      "added_n": 125,
+      "added_correct_observed": 26,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    },
+    "llama_ar": {
+      "added_correct_expected_if_historical_level_rates_held": 52.8628379028379,
+      "added_n": 125,
+      "added_correct_observed": 47,
+      "note": "Descriptive reweighting using noisy historical level rates, not a causal or predictive guarantee."
+    }
+  },
+  "code_syntax_totals": {
+    "gemma_d": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 41,
+        "syntax_invalid_python311_grammar": 41
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 22,
+        "syntax_invalid_python311_grammar": 22
+      }
+    },
+    "gemma_ar": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 1,
+        "syntax_invalid_python311_grammar": 1
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      }
+    },
+    "llada": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 4,
+        "syntax_invalid_python311_grammar": 4
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 8,
+        "syntax_invalid_python311_grammar": 8
+      }
+    },
+    "qwen_d": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 61,
+        "syntax_invalid_python311_grammar": 61
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 50,
+        "syntax_invalid_python311_grammar": 50
+      }
+    },
+    "qwen_ar": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      }
+    },
+    "ministral_d": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 52,
+        "syntax_invalid_python311_grammar": 52
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 34,
+        "syntax_invalid_python311_grammar": 34
+      }
+    },
+    "ministral_ar": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      }
+    },
+    "llama_25k": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 57,
+        "syntax_invalid_python311_grammar": 57
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 44,
+        "syntax_invalid_python311_grammar": 44
+      }
+    },
+    "llama_50k": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 51,
+        "syntax_invalid_python311_grammar": 51
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 24,
+        "syntax_invalid_python311_grammar": 24
+      }
+    },
+    "llama_ar": {
+      "humaneval": {
+        "n": 164,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      },
+      "mbpp": {
+        "n": 250,
+        "syntax_invalid": 0,
+        "syntax_invalid_python311_grammar": 0
+      }
+    }
+  }
+}

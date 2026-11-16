@@ -1,0 +1,1521 @@
+{
+  "source_workbook": "/Users/rkuiper/Documents/Code/lad-generic/results/Results_training-20260924.xlsx",
+  "source_sheet": "Primary outcomes",
+  "accuracy_cells": "Versioned completed benchmark JSON, integer correct/evaluated counts; historical workbook not used for radar values.",
+  "progression_cells": "rows 42--46",
+  "distinct_progression_cells": "rows 49--53",
+  "distinct_2_progression_cells": "rows 56--60",
+  "distinct_3_progression_cells": "rows 63--67",
+  "radar": {
+    "tasks": [
+      "arc_c",
+      "gpqa",
+      "gsm8k",
+      "hellaswag",
+      "humaneval",
+      "math",
+      "mbpp",
+      "mmlu",
+      "mmlu_pro"
+    ],
+    "task_labels": [
+      "ARC-C",
+      "GPQA",
+      "GSM8K",
+      "HellaSwag",
+      "HumanEval",
+      "MATH-500",
+      "MBPP",
+      "MMLU",
+      "MMLU-Pro"
+    ],
+    "groups": {
+      "llama_comparison": {
+        "LLaDA (DLM)": [
+          0.868,
+          0.312,
+          0.596,
+          0.696,
+          0.3475609756097561,
+          0.26,
+          0.428,
+          0.584,
+          0.368
+        ],
+        "BYOD-Llama (DLM)": [
+          0.828,
+          0.276,
+          0.648,
+          0.728,
+          0.25,
+          0.228,
+          0.408,
+          0.612,
+          0.336
+        ],
+        "Llama (AR)": [
+          0.78,
+          0.272,
+          0.852,
+          0.588,
+          0.5121951219512195,
+          0.424,
+          0.684,
+          0.56,
+          0.432
+        ]
+      },
+      "byod_families": {
+        "BYOD-Gemma": [
+          0.9,
+          0.308,
+          0.688,
+          0.788,
+          0.29878048780487804,
+          0.244,
+          0.436,
+          0.664,
+          0.392
+        ],
+        "BYOD-Llama": [
+          0.828,
+          0.276,
+          0.648,
+          0.728,
+          0.25,
+          0.228,
+          0.408,
+          0.612,
+          0.336
+        ],
+        "BYOD-Qwen": [
+          0.84,
+          0.312,
+          0.592,
+          0.736,
+          0.23780487804878048,
+          0.304,
+          0.4,
+          0.604,
+          0.32
+        ],
+        "BYOD-Ministral": [
+          0.82,
+          0.308,
+          0.664,
+          0.768,
+          0.2926829268292683,
+          0.204,
+          0.4,
+          0.584,
+          0.328
+        ]
+      }
+    },
+    "source": "paper/source_results/benchmark_results_20261116.json",
+    "source_sha256": "ed2f512b3a5d35babd46053a2611dc063ba16849ab938f624a6ed13b22dd48f4",
+    "evaluated_items": {
+      "arc_c": 250,
+      "gpqa": 250,
+      "hellaswag": 250,
+      "mmlu": 250,
+      "mmlu_pro": 250,
+      "gsm8k": 250,
+      "math": 250,
+      "humaneval": 164,
+      "mbpp": 250
+    }
+  },
+  "open_generation_budget": {
+    "nfe": [
+      32,
+      64,
+      128
+    ],
+    "series": {
+      "BYOD-Gemma": {
+        "diffusion": {
+          "32": {
+            "perplexity": 14.56045341491699,
+            "distinct_1": 0.4460812022098379,
+            "distinct_2": 0.7603325085933933,
+            "distinct_3": 0.8755576470532694
+          },
+          "64": {
+            "perplexity": 8.273300170898438,
+            "distinct_1": 0.4546324321975215,
+            "distinct_2": 0.7521706813710155,
+            "distinct_3": 0.8577544695335579
+          },
+          "128": {
+            "perplexity": 4.334245204925537,
+            "distinct_1": 0.5116056723297243,
+            "distinct_2": 0.7902596507204065,
+            "distinct_3": 0.8861040511089949
+          }
+        },
+        "ar": {
+          "perplexity": 3.011403560638428,
+          "distinct_1": 0.6341145833333334,
+          "distinct_2": 0.8934383202099737,
+          "distinct_3": 0.9576719576719577
+        }
+      },
+      "BYOD-Qwen": {
+        "diffusion": {
+          "32": {
+            "perplexity": 20.25466156005859,
+            "distinct_1": 0.4303569491443898,
+            "distinct_2": 0.7277229106029958,
+            "distinct_3": 0.861950580314726
+          },
+          "64": {
+            "perplexity": 11.11720561981201,
+            "distinct_1": 0.5087942813240351,
+            "distinct_2": 0.8036622372713178,
+            "distinct_3": 0.9035906336777694
+          },
+          "128": {
+            "perplexity": 6.211785793304443,
+            "distinct_1": 0.5599972191231884,
+            "distinct_2": 0.8425860182493866,
+            "distinct_3": 0.9210129813688238
+          }
+        },
+        "ar": {
+          "perplexity": 2.23036003112793,
+          "distinct_1": 0.6947916666666667,
+          "distinct_2": 0.9401574803149606,
+          "distinct_3": 0.985978835978836
+        }
+      },
+      "BYOD-Ministral": {
+        "diffusion": {
+          "32": {
+            "perplexity": 15.45159721374512,
+            "distinct_1": 0.4447907275890441,
+            "distinct_2": 0.7537872811024957,
+            "distinct_3": 0.894626545952893
+          },
+          "64": {
+            "perplexity": 9.4239,
+            "distinct_1": 0.492815627490203,
+            "distinct_2": 0.785776238767793,
+            "distinct_3": 0.888396693293717
+          },
+          "128": {
+            "perplexity": 5.081889629364014,
+            "distinct_1": 0.5545360483314484,
+            "distinct_2": 0.833652727111033,
+            "distinct_3": 0.9227146669863873
+          }
+        },
+        "ar": {
+          "perplexity": 2.305343627929688,
+          "distinct_1": 0.6506356627296588,
+          "distinct_2": 0.9128254801483149,
+          "distinct_3": 0.9711555555555555
+        }
+      },
+      "BYOD-Llama-25k": {
+        "diffusion": {
+          "32": {
+            "perplexity": 19.38142967224121,
+            "distinct_1": 0.4951533890047743,
+            "distinct_2": 0.7884458247990315,
+            "distinct_3": 0.8988926655133317
+          },
+          "64": {
+            "perplexity": 10.50314331054688,
+            "distinct_1": 0.5265721303370029,
+            "distinct_2": 0.8015549642306493,
+            "distinct_3": 0.9046894911881981
+          },
+          "128": {
+            "perplexity": 5.081311225891113,
+            "distinct_1": 0.5191720912673317,
+            "distinct_2": 0.8002436861127931,
+            "distinct_3": 0.8917342599831811
+          }
+        },
+        "ar": {
+          "perplexity": 2.488867998123169,
+          "distinct_1": 0.6096354166666667,
+          "distinct_2": 0.889501312335958,
+          "distinct_3": 0.9476190476190476
+        }
+      },
+      "BYOD-Llama-50k": {
+        "diffusion": {
+          "32": {
+            "perplexity": 17.00224113464355,
+            "distinct_1": 0.435041876030047,
+            "distinct_2": 0.7534362806294969,
+            "distinct_3": 0.8887521056913963
+          },
+          "64": {
+            "perplexity": 9.534310340881348,
+            "distinct_1": 0.4961229208330553,
+            "distinct_2": 0.7912437391323626,
+            "distinct_3": 0.8918719251653024
+          },
+          "128": {
+            "perplexity": 4.829687595367432,
+            "distinct_1": 0.5073863484216871,
+            "distinct_2": 0.7923201582427839,
+            "distinct_3": 0.8864252529499462
+          }
+        },
+        "ar": {
+          "perplexity": 2.488867998123169,
+          "distinct_1": 0.6096354166666667,
+          "distinct_2": 0.889501312335958,
+          "distinct_3": 0.9476190476190476
+        }
+      },
+      "LLaDA 8B Instruct": {
+        "diffusion": {
+          "32": {
+            "perplexity": 5.334906578063965,
+            "distinct_1": 0.4518068870489012,
+            "distinct_2": 0.7458363992037593,
+            "distinct_3": 0.8447467723417461
+          },
+          "64": {
+            "perplexity": 4.065366268157959,
+            "distinct_1": 0.5137462150564513,
+            "distinct_2": 0.8228125277351084,
+            "distinct_3": 0.9160808112597255
+          },
+          "128": {
+            "perplexity": 2.794792175292969,
+            "distinct_1": 0.533967388691798,
+            "distinct_2": 0.8494491582491582,
+            "distinct_3": 0.9334603282399547
+          }
+        },
+        "ar": null
+      }
+    }
+  },
+  "training_progression": {
+    "all_steps": [
+      1000,
+      5000,
+      10000,
+      15000,
+      20000,
+      25000,
+      30000,
+      35000,
+      40000,
+      45000,
+      50000
+    ],
+    "series": {
+      "32": {
+        "label": "BYOD-Llama (32 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "perplexity": 20.10424995422363
+          },
+          {
+            "step": 5000,
+            "perplexity": 25.64234352111816
+          },
+          {
+            "step": 10000,
+            "perplexity": 20.30332374572754
+          },
+          {
+            "step": 15000,
+            "perplexity": 19.73834228515625
+          },
+          {
+            "step": 20000,
+            "perplexity": 19.78882598876953
+          },
+          {
+            "step": 25000,
+            "perplexity": 17.31105804443359
+          },
+          {
+            "step": 30000,
+            "perplexity": 19.9335689544678
+          },
+          {
+            "step": 35000,
+            "perplexity": 17.16991996765137
+          },
+          {
+            "step": 40000,
+            "perplexity": 16.59307479858398
+          },
+          {
+            "step": 45000,
+            "perplexity": 19.2020835876465
+          },
+          {
+            "step": 50000,
+            "perplexity": 17.00224113464355
+          }
+        ],
+        "llada_label": "LLaDA (32 it.)",
+        "llada": 5.334906578063965,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 2.638597726821899
+      },
+      "64": {
+        "label": "BYOD-Llama (64 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "perplexity": 11.69381046295166
+          },
+          {
+            "step": 5000,
+            "perplexity": 12.16381454467773
+          },
+          {
+            "step": 10000,
+            "perplexity": 11.07769298553467
+          },
+          {
+            "step": 15000,
+            "perplexity": 10.21605587005615
+          },
+          {
+            "step": 20000,
+            "perplexity": 10.07588672637939
+          },
+          {
+            "step": 25000,
+            "perplexity": 9.757587432861328
+          },
+          {
+            "step": 30000,
+            "perplexity": 10.0080003738403
+          },
+          {
+            "step": 35000,
+            "perplexity": 9.088900566101074
+          },
+          {
+            "step": 40000,
+            "perplexity": 9.759171485900879
+          },
+          {
+            "step": 45000,
+            "perplexity": 9.9321908950806
+          },
+          {
+            "step": 50000,
+            "perplexity": 9.534310340881348
+          }
+        ],
+        "llada_label": "LLaDA (64 it.)",
+        "llada": 4.065366268157959,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 2.638597726821899
+      },
+      "128": {
+        "label": "BYOD-Llama (128 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "perplexity": 6.043358325958252
+          },
+          {
+            "step": 5000,
+            "perplexity": 5.753337860107422
+          },
+          {
+            "step": 10000,
+            "perplexity": 5.449683666229248
+          },
+          {
+            "step": 15000,
+            "perplexity": 5.394126892089844
+          },
+          {
+            "step": 20000,
+            "perplexity": 4.890061378479004
+          },
+          {
+            "step": 25000,
+            "perplexity": 5.126490116119385
+          },
+          {
+            "step": 30000,
+            "perplexity": 5.103343963623047
+          },
+          {
+            "step": 35000,
+            "perplexity": 4.802248001098633
+          },
+          {
+            "step": 40000,
+            "perplexity": 5.045702934265137
+          },
+          {
+            "step": 45000,
+            "perplexity": 5.248916149139404
+          },
+          {
+            "step": 50000,
+            "perplexity": 4.829687595367432
+          }
+        ],
+        "llada_label": "LLaDA (128 it.)",
+        "llada": 2.794792175292969,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 2.638597726821899
+      }
+    }
+  },
+  "distinct_1_progression": {
+    "all_steps": [
+      1000,
+      5000,
+      10000,
+      15000,
+      20000,
+      25000,
+      30000,
+      35000,
+      40000,
+      45000,
+      50000
+    ],
+    "series": {
+      "32": {
+        "label": "BYOD-Llama (32 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_1": 0.434746102302838
+          },
+          {
+            "step": 5000,
+            "distinct_1": 0.4790646472524484
+          },
+          {
+            "step": 10000,
+            "distinct_1": 0.4364320797657731
+          },
+          {
+            "step": 15000,
+            "distinct_1": 0.4396616523783826
+          },
+          {
+            "step": 20000,
+            "distinct_1": 0.4609629263353701
+          },
+          {
+            "step": 25000,
+            "distinct_1": 0.417526379813236
+          },
+          {
+            "step": 30000,
+            "distinct_1": 0.460791321821044
+          },
+          {
+            "step": 35000,
+            "distinct_1": 0.4442292582849558
+          },
+          {
+            "step": 40000,
+            "distinct_1": 0.4429556142795824
+          },
+          {
+            "step": 45000,
+            "distinct_1": 0.462294828090765
+          },
+          {
+            "step": 50000,
+            "distinct_1": 0.435041876030047
+          }
+        ],
+        "llada_label": "LLaDA (32 it.)",
+        "llada": 0.4518068870489012,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.620703125
+      },
+      "64": {
+        "label": "BYOD-Llama (64 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_1": 0.4770001857813828
+          },
+          {
+            "step": 5000,
+            "distinct_1": 0.5036962743523382
+          },
+          {
+            "step": 10000,
+            "distinct_1": 0.4949032341102356
+          },
+          {
+            "step": 15000,
+            "distinct_1": 0.4603871065091548
+          },
+          {
+            "step": 20000,
+            "distinct_1": 0.4900945150578522
+          },
+          {
+            "step": 25000,
+            "distinct_1": 0.4761299096660723
+          },
+          {
+            "step": 30000,
+            "distinct_1": 0.50601573007565
+          },
+          {
+            "step": 35000,
+            "distinct_1": 0.4829679223470319
+          },
+          {
+            "step": 40000,
+            "distinct_1": 0.4940800474890126
+          },
+          {
+            "step": 45000,
+            "distinct_1": 0.508827367508841
+          },
+          {
+            "step": 50000,
+            "distinct_1": 0.4961229208330553
+          }
+        ],
+        "llada_label": "LLaDA (64 it.)",
+        "llada": 0.5137462150564513,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.620703125
+      },
+      "128": {
+        "label": "BYOD-Llama (128 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_1": 0.5054446859283357
+          },
+          {
+            "step": 5000,
+            "distinct_1": 0.519199366453035
+          },
+          {
+            "step": 10000,
+            "distinct_1": 0.5178086392366672
+          },
+          {
+            "step": 15000,
+            "distinct_1": 0.4954837457655661
+          },
+          {
+            "step": 20000,
+            "distinct_1": 0.511337848264892
+          },
+          {
+            "step": 25000,
+            "distinct_1": 0.50891858524168
+          },
+          {
+            "step": 30000,
+            "distinct_1": 0.521742090223588
+          },
+          {
+            "step": 35000,
+            "distinct_1": 0.517574864737579
+          },
+          {
+            "step": 40000,
+            "distinct_1": 0.5119562703885332
+          },
+          {
+            "step": 45000,
+            "distinct_1": 0.514312297298687
+          },
+          {
+            "step": 50000,
+            "distinct_1": 0.5073863484216871
+          }
+        ],
+        "llada_label": "LLaDA (128 it.)",
+        "llada": 0.533967388691798,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.620703125
+      }
+    }
+  },
+  "distinct_2_progression": {
+    "all_steps": [
+      1000,
+      5000,
+      10000,
+      15000,
+      20000,
+      25000,
+      30000,
+      35000,
+      40000,
+      45000,
+      50000
+    ],
+    "series": {
+      "32": {
+        "label": "BYOD-Llama (32 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_2": 0.7465254717246519
+          },
+          {
+            "step": 5000,
+            "distinct_2": 0.8112197857165926
+          },
+          {
+            "step": 10000,
+            "distinct_2": 0.7541232515973145
+          },
+          {
+            "step": 15000,
+            "distinct_2": 0.7475555564315401
+          },
+          {
+            "step": 20000,
+            "distinct_2": 0.775354750100294
+          },
+          {
+            "step": 25000,
+            "distinct_2": 0.7197307073257307
+          },
+          {
+            "step": 30000,
+            "distinct_2": 0.786255175135961
+          },
+          {
+            "step": 35000,
+            "distinct_2": 0.7554570041544331
+          },
+          {
+            "step": 40000,
+            "distinct_2": 0.7478366088477502
+          },
+          {
+            "step": 45000,
+            "distinct_2": 0.781363213113944
+          },
+          {
+            "step": 50000,
+            "distinct_2": 0.7534362806294969
+          }
+        ],
+        "llada_label": "LLaDA (32 it.)",
+        "llada": 0.7458363992037593,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.8956692913385826
+      },
+      "64": {
+        "label": "BYOD-Llama (64 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_2": 0.7653417136140228
+          },
+          {
+            "step": 5000,
+            "distinct_2": 0.8087142432097123
+          },
+          {
+            "step": 10000,
+            "distinct_2": 0.7868520256811472
+          },
+          {
+            "step": 15000,
+            "distinct_2": 0.7448636685412484
+          },
+          {
+            "step": 20000,
+            "distinct_2": 0.7818280329221895
+          },
+          {
+            "step": 25000,
+            "distinct_2": 0.7680126304153245
+          },
+          {
+            "step": 30000,
+            "distinct_2": 0.776591123560292
+          },
+          {
+            "step": 35000,
+            "distinct_2": 0.7773631990335352
+          },
+          {
+            "step": 40000,
+            "distinct_2": 0.7854051040450196
+          },
+          {
+            "step": 45000,
+            "distinct_2": 0.798191330172648
+          },
+          {
+            "step": 50000,
+            "distinct_2": 0.7912437391323626
+          }
+        ],
+        "llada_label": "LLaDA (64 it.)",
+        "llada": 0.8228125277351084,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.8956692913385826
+      },
+      "128": {
+        "label": "BYOD-Llama (128 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_2": 0.7830597621110132
+          },
+          {
+            "step": 5000,
+            "distinct_2": 0.8064073298678864
+          },
+          {
+            "step": 10000,
+            "distinct_2": 0.7937104727462332
+          },
+          {
+            "step": 15000,
+            "distinct_2": 0.7627448026242314
+          },
+          {
+            "step": 20000,
+            "distinct_2": 0.8009410518420114
+          },
+          {
+            "step": 25000,
+            "distinct_2": 0.7909752895896033
+          },
+          {
+            "step": 30000,
+            "distinct_2": 0.81191656043516
+          },
+          {
+            "step": 35000,
+            "distinct_2": 0.8160420765709792
+          },
+          {
+            "step": 40000,
+            "distinct_2": 0.798767023558475
+          },
+          {
+            "step": 45000,
+            "distinct_2": 0.815259855126898
+          },
+          {
+            "step": 50000,
+            "distinct_2": 0.7923201582427839
+          }
+        ],
+        "llada_label": "LLaDA (128 it.)",
+        "llada": 0.8494491582491582,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.8956692913385826
+      }
+    }
+  },
+  "distinct_3_progression": {
+    "all_steps": [
+      1000,
+      5000,
+      10000,
+      15000,
+      20000,
+      25000,
+      30000,
+      35000,
+      40000,
+      45000,
+      50000
+    ],
+    "series": {
+      "32": {
+        "label": "BYOD-Llama (32 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_3": 0.8753198735850859
+          },
+          {
+            "step": 5000,
+            "distinct_3": 0.9270532721013484
+          },
+          {
+            "step": 10000,
+            "distinct_3": 0.8870699154063673
+          },
+          {
+            "step": 15000,
+            "distinct_3": 0.8829006774858779
+          },
+          {
+            "step": 20000,
+            "distinct_3": 0.9014486115784099
+          },
+          {
+            "step": 25000,
+            "distinct_3": 0.8518325451056051
+          },
+          {
+            "step": 30000,
+            "distinct_3": 0.906731741430072
+          },
+          {
+            "step": 35000,
+            "distinct_3": 0.8862653099083593
+          },
+          {
+            "step": 40000,
+            "distinct_3": 0.875386421713143
+          },
+          {
+            "step": 45000,
+            "distinct_3": 0.909996116041545
+          },
+          {
+            "step": 50000,
+            "distinct_3": 0.8887521056913963
+          }
+        ],
+        "llada_label": "LLaDA (32 it.)",
+        "llada": 0.8447467723417461,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.954047619047619
+      },
+      "64": {
+        "label": "BYOD-Llama (64 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_3": 0.8638053978946415
+          },
+          {
+            "step": 5000,
+            "distinct_3": 0.9064424200671979
+          },
+          {
+            "step": 10000,
+            "distinct_3": 0.8838037665060672
+          },
+          {
+            "step": 15000,
+            "distinct_3": 0.8523986307869598
+          },
+          {
+            "step": 20000,
+            "distinct_3": 0.8801325382828397
+          },
+          {
+            "step": 25000,
+            "distinct_3": 0.8735682715414933
+          },
+          {
+            "step": 30000,
+            "distinct_3": 0.904239333389216
+          },
+          {
+            "step": 35000,
+            "distinct_3": 0.8778186678489756
+          },
+          {
+            "step": 40000,
+            "distinct_3": 0.8864254779840042
+          },
+          {
+            "step": 45000,
+            "distinct_3": 0.913263915722658
+          },
+          {
+            "step": 50000,
+            "distinct_3": 0.8918719251653024
+          }
+        ],
+        "llada_label": "LLaDA (64 it.)",
+        "llada": 0.9160808112597255,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.954047619047619
+      },
+      "128": {
+        "label": "BYOD-Llama (128 it.)",
+        "points": [
+          {
+            "step": 1000,
+            "distinct_3": 0.8727189519854217
+          },
+          {
+            "step": 5000,
+            "distinct_3": 0.8991272440231518
+          },
+          {
+            "step": 10000,
+            "distinct_3": 0.8846654157733219
+          },
+          {
+            "step": 15000,
+            "distinct_3": 0.8559358721535252
+          },
+          {
+            "step": 20000,
+            "distinct_3": 0.8956816655050087
+          },
+          {
+            "step": 25000,
+            "distinct_3": 0.8853025773993753
+          },
+          {
+            "step": 30000,
+            "distinct_3": 0.904269660884659
+          },
+          {
+            "step": 35000,
+            "distinct_3": 0.9041828997570535
+          },
+          {
+            "step": 40000,
+            "distinct_3": 0.8914650348851834
+          },
+          {
+            "step": 45000,
+            "distinct_3": 0.911845728688712
+          },
+          {
+            "step": 50000,
+            "distinct_3": 0.8864252529499462
+          }
+        ],
+        "llada_label": "LLaDA (128 it.)",
+        "llada": 0.9334603282399547,
+        "ar_label": "Llama 3.1 8B AR",
+        "ar": 0.954047619047619
+      }
+    }
+  },
+  "validation_loss": {
+    "source_sheet": "Long validation loss",
+    "points": [
+      {
+        "step": 500,
+        "weighted_loss": 0.9326033782958985,
+        "unweighted_masked_token_ce": 1.400905139286184
+      },
+      {
+        "step": 1000,
+        "weighted_loss": 0.8369197082519532,
+        "unweighted_masked_token_ce": 1.274006599551194
+      },
+      {
+        "step": 1500,
+        "weighted_loss": 0.7949595642089844,
+        "unweighted_masked_token_ce": 1.22095884091208
+      },
+      {
+        "step": 2000,
+        "weighted_loss": 0.7763642883300781,
+        "unweighted_masked_token_ce": 1.194531095876899
+      },
+      {
+        "step": 2500,
+        "weighted_loss": 0.7588334655761719,
+        "unweighted_masked_token_ce": 1.16974553248504
+      },
+      {
+        "step": 3000,
+        "weighted_loss": 0.7443574523925781,
+        "unweighted_masked_token_ce": 1.152170233075229
+      },
+      {
+        "step": 3500,
+        "weighted_loss": 0.73343017578125,
+        "unweighted_masked_token_ce": 1.140523278753206
+      },
+      {
+        "step": 4000,
+        "weighted_loss": 0.7220189666748047,
+        "unweighted_masked_token_ce": 1.124025428256724
+      },
+      {
+        "step": 4500,
+        "weighted_loss": 0.716419677734375,
+        "unweighted_masked_token_ce": 1.118823773591109
+      },
+      {
+        "step": 5000,
+        "weighted_loss": 0.7027589416503907,
+        "unweighted_masked_token_ce": 1.098851346213915
+      },
+      {
+        "step": 5500,
+        "weighted_loss": 0.6984004211425782,
+        "unweighted_masked_token_ce": 1.095057349205958
+      },
+      {
+        "step": 6000,
+        "weighted_loss": 0.7002952575683594,
+        "unweighted_masked_token_ce": 1.09357584089564
+      },
+      {
+        "step": 6500,
+        "weighted_loss": 0.6915941619873047,
+        "unweighted_masked_token_ce": 1.085743561764319
+      },
+      {
+        "step": 7000,
+        "weighted_loss": 0.6836807250976562,
+        "unweighted_masked_token_ce": 1.074490777273624
+      },
+      {
+        "step": 7500,
+        "weighted_loss": 0.6969524383544922,
+        "unweighted_masked_token_ce": 1.098278907328862
+      },
+      {
+        "step": 8000,
+        "weighted_loss": 0.6735015869140625,
+        "unweighted_masked_token_ce": 1.062478551201749
+      },
+      {
+        "step": 8500,
+        "weighted_loss": 0.6668059539794922,
+        "unweighted_masked_token_ce": 1.052012565142697
+      },
+      {
+        "step": 9000,
+        "weighted_loss": 0.6711317443847656,
+        "unweighted_masked_token_ce": 1.064239728722792
+      },
+      {
+        "step": 9500,
+        "weighted_loss": 0.6699082183837891,
+        "unweighted_masked_token_ce": 1.056910789952818
+      },
+      {
+        "step": 10000,
+        "weighted_loss": 0.6590463256835938,
+        "unweighted_masked_token_ce": 1.044484422264418
+      },
+      {
+        "step": 10500,
+        "weighted_loss": 0.6620808410644531,
+        "unweighted_masked_token_ce": 1.046954951358749
+      },
+      {
+        "step": 11000,
+        "weighted_loss": 0.6596360778808594,
+        "unweighted_masked_token_ce": 1.043326829338463
+      },
+      {
+        "step": 11500,
+        "weighted_loss": 0.6571797943115234,
+        "unweighted_masked_token_ce": 1.0398726095507
+      },
+      {
+        "step": 12000,
+        "weighted_loss": 0.6581926727294922,
+        "unweighted_masked_token_ce": 1.035926544416223
+      },
+      {
+        "step": 12500,
+        "weighted_loss": 0.6537845611572266,
+        "unweighted_masked_token_ce": 1.030603774680246
+      },
+      {
+        "step": 13000,
+        "weighted_loss": 0.6549585723876953,
+        "unweighted_masked_token_ce": 1.033580598162031
+      },
+      {
+        "step": 13500,
+        "weighted_loss": 0.6486707305908204,
+        "unweighted_masked_token_ce": 1.023277468846584
+      },
+      {
+        "step": 14000,
+        "weighted_loss": 0.6449297332763672,
+        "unweighted_masked_token_ce": 1.020627578993227
+      },
+      {
+        "step": 14500,
+        "weighted_loss": 0.6436686706542969,
+        "unweighted_masked_token_ce": 1.02002007710265
+      },
+      {
+        "step": 15000,
+        "weighted_loss": 0.6438728332519531,
+        "unweighted_masked_token_ce": 1.022220698115999
+      },
+      {
+        "step": 15500,
+        "weighted_loss": 0.633804931640625,
+        "unweighted_masked_token_ce": 1.009838769255113
+      },
+      {
+        "step": 16000,
+        "weighted_loss": 0.6378579330444336,
+        "unweighted_masked_token_ce": 1.013021475512922
+      },
+      {
+        "step": 16500,
+        "weighted_loss": 0.636617317199707,
+        "unweighted_masked_token_ce": 1.010306982392977
+      },
+      {
+        "step": 17000,
+        "weighted_loss": 0.6304290390014649,
+        "unweighted_masked_token_ce": 1.006618945017097
+      },
+      {
+        "step": 17500,
+        "weighted_loss": 0.6277615737915039,
+        "unweighted_masked_token_ce": 1.001732407875485
+      },
+      {
+        "step": 18000,
+        "weighted_loss": 0.6318768310546875,
+        "unweighted_masked_token_ce": 1.004371830201552
+      },
+      {
+        "step": 18500,
+        "weighted_loss": 0.6322880554199218,
+        "unweighted_masked_token_ce": 1.002844662922503
+      },
+      {
+        "step": 19000,
+        "weighted_loss": 0.6240024185180664,
+        "unweighted_masked_token_ce": 0.9923990339564016
+      },
+      {
+        "step": 19500,
+        "weighted_loss": 0.6250827026367187,
+        "unweighted_masked_token_ce": 0.9930757628066023
+      },
+      {
+        "step": 20000,
+        "weighted_loss": 0.618851318359375,
+        "unweighted_masked_token_ce": 0.9842967183081804
+      },
+      {
+        "step": 20500,
+        "weighted_loss": 0.6266111373901367,
+        "unweighted_masked_token_ce": 0.9958219795982114
+      },
+      {
+        "step": 21000,
+        "weighted_loss": 0.6237908172607421,
+        "unweighted_masked_token_ce": 0.9948389953023279
+      },
+      {
+        "step": 21500,
+        "weighted_loss": 0.6260768127441406,
+        "unweighted_masked_token_ce": 0.9950749963010456
+      },
+      {
+        "step": 22000,
+        "weighted_loss": 0.6192929458618164,
+        "unweighted_masked_token_ce": 0.9838923378213981
+      },
+      {
+        "step": 22500,
+        "weighted_loss": 0.620650749206543,
+        "unweighted_masked_token_ce": 0.9878259446718617
+      },
+      {
+        "step": 23000,
+        "weighted_loss": 0.6165711975097656,
+        "unweighted_masked_token_ce": 0.9808258660690801
+      },
+      {
+        "step": 23500,
+        "weighted_loss": 0.6100642776489258,
+        "unweighted_masked_token_ce": 0.9747649108962978
+      },
+      {
+        "step": 24000,
+        "weighted_loss": 0.6101403045654297,
+        "unweighted_masked_token_ce": 0.9764894199628461
+      },
+      {
+        "step": 24500,
+        "weighted_loss": 0.6105593109130859,
+        "unweighted_masked_token_ce": 0.9767374297198659
+      },
+      {
+        "step": 25000,
+        "weighted_loss": 0.6088002777099609,
+        "unweighted_masked_token_ce": 0.9760831771552575
+      },
+      {
+        "step": 25500,
+        "weighted_loss": 0.6051789093017578,
+        "unweighted_masked_token_ce": 0.9691646553601959
+      },
+      {
+        "step": 26000,
+        "weighted_loss": 0.6047134017944336,
+        "unweighted_masked_token_ce": 0.9685333286068916
+      },
+      {
+        "step": 26500,
+        "weighted_loss": 0.6071147537231445,
+        "unweighted_masked_token_ce": 0.9723390775013152
+      },
+      {
+        "step": 27000,
+        "weighted_loss": 0.6032805252075195,
+        "unweighted_masked_token_ce": 0.9662363806552903
+      },
+      {
+        "step": 27500,
+        "weighted_loss": 0.6037910461425782,
+        "unweighted_masked_token_ce": 0.9679303861913922
+      },
+      {
+        "step": 28000,
+        "weighted_loss": 0.6053174591064453,
+        "unweighted_masked_token_ce": 0.9672595653934044
+      },
+      {
+        "step": 28500,
+        "weighted_loss": 0.6061032485961914,
+        "unweighted_masked_token_ce": 0.9691597747953246
+      },
+      {
+        "step": 29000,
+        "weighted_loss": 0.6051257705688476,
+        "unweighted_masked_token_ce": 0.9658332203097257
+      },
+      {
+        "step": 29500,
+        "weighted_loss": 0.6041581344604492,
+        "unweighted_masked_token_ce": 0.9634102767228908
+      },
+      {
+        "step": 30000,
+        "weighted_loss": 0.6023780822753906,
+        "unweighted_masked_token_ce": 0.9614949118826857
+      },
+      {
+        "step": 30500,
+        "weighted_loss": 0.5997444915771485,
+        "unweighted_masked_token_ce": 0.9591131962254225
+      },
+      {
+        "step": 31000,
+        "weighted_loss": 0.5947803497314453,
+        "unweighted_masked_token_ce": 0.9529699136294141
+      },
+      {
+        "step": 31500,
+        "weighted_loss": 0.5941998672485351,
+        "unweighted_masked_token_ce": 0.9515381742371934
+      },
+      {
+        "step": 32000,
+        "weighted_loss": 0.594937629699707,
+        "unweighted_masked_token_ce": 0.95228014853357
+      },
+      {
+        "step": 32500,
+        "weighted_loss": 0.5902195739746093,
+        "unweighted_masked_token_ce": 0.9460431077176629
+      },
+      {
+        "step": 33000,
+        "weighted_loss": 0.5908211517333984,
+        "unweighted_masked_token_ce": 0.9485492135611889
+      },
+      {
+        "step": 33500,
+        "weighted_loss": 0.5914762115478516,
+        "unweighted_masked_token_ce": 0.9495889023147235
+      },
+      {
+        "step": 34000,
+        "weighted_loss": 0.5879181289672851,
+        "unweighted_masked_token_ce": 0.9449523656868547
+      },
+      {
+        "step": 34500,
+        "weighted_loss": 0.5876692199707031,
+        "unweighted_masked_token_ce": 0.9428571263439535
+      },
+      {
+        "step": 35000,
+        "weighted_loss": 0.5906589889526367,
+        "unweighted_masked_token_ce": 0.9466159319104689
+      },
+      {
+        "step": 35500,
+        "weighted_loss": 0.586286506652832,
+        "unweighted_masked_token_ce": 0.939960639528671
+      },
+      {
+        "step": 36000,
+        "weighted_loss": 0.5885450744628906,
+        "unweighted_masked_token_ce": 0.9435111862546853
+      },
+      {
+        "step": 36500,
+        "weighted_loss": 0.5903310012817383,
+        "unweighted_masked_token_ce": 0.9471531151361215
+      },
+      {
+        "step": 37000,
+        "weighted_loss": 0.5868780899047852,
+        "unweighted_masked_token_ce": 0.9410054015009535
+      },
+      {
+        "step": 37500,
+        "weighted_loss": 0.5872265243530274,
+        "unweighted_masked_token_ce": 0.9440466998134083
+      },
+      {
+        "step": 38000,
+        "weighted_loss": 0.5850784683227539,
+        "unweighted_masked_token_ce": 0.9380775763217597
+      },
+      {
+        "step": 38500,
+        "weighted_loss": 0.585356216430664,
+        "unweighted_masked_token_ce": 0.9390375705883803
+      },
+      {
+        "step": 39000,
+        "weighted_loss": 0.5830998992919922,
+        "unweighted_masked_token_ce": 0.935950227999441
+      },
+      {
+        "step": 39500,
+        "weighted_loss": 0.5821971130371094,
+        "unweighted_masked_token_ce": 0.9336173179908923
+      },
+      {
+        "step": 40000,
+        "weighted_loss": 0.5808587265014649,
+        "unweighted_masked_token_ce": 0.933530816400342
+      },
+      {
+        "step": 40500,
+        "weighted_loss": 0.5817877197265625,
+        "unweighted_masked_token_ce": 0.9349705188194581
+      },
+      {
+        "step": 41000,
+        "weighted_loss": 0.5837049865722657,
+        "unweighted_masked_token_ce": 0.9356345967317683
+      },
+      {
+        "step": 41500,
+        "weighted_loss": 0.5815164184570313,
+        "unweighted_masked_token_ce": 0.9366733864338791
+      },
+      {
+        "step": 42000,
+        "weighted_loss": 0.5785604858398438,
+        "unweighted_masked_token_ce": 0.9308133692542908
+      },
+      {
+        "step": 42500,
+        "weighted_loss": 0.582094383239746,
+        "unweighted_masked_token_ce": 0.9354404658422109
+      },
+      {
+        "step": 43000,
+        "weighted_loss": 0.5798147964477539,
+        "unweighted_masked_token_ce": 0.9321120490358059
+      },
+      {
+        "step": 43500,
+        "weighted_loss": 0.5804045104980469,
+        "unweighted_masked_token_ce": 0.9322205131682778
+      },
+      {
+        "step": 44000,
+        "weighted_loss": 0.5795157241821289,
+        "unweighted_masked_token_ce": 0.9314877862579733
+      },
+      {
+        "step": 44500,
+        "weighted_loss": 0.5797818374633789,
+        "unweighted_masked_token_ce": 0.9314139998232722
+      },
+      {
+        "step": 45000,
+        "weighted_loss": 0.5788670349121093,
+        "unweighted_masked_token_ce": 0.9300084613582561
+      },
+      {
+        "step": 45500,
+        "weighted_loss": 0.5778833389282226,
+        "unweighted_masked_token_ce": 0.9283337854277636
+      },
+      {
+        "step": 46000,
+        "weighted_loss": 0.5763996887207031,
+        "unweighted_masked_token_ce": 0.9253445036619649
+      },
+      {
+        "step": 46500,
+        "weighted_loss": 0.5772357177734375,
+        "unweighted_masked_token_ce": 0.9246220516250739
+      },
+      {
+        "step": 47000,
+        "weighted_loss": 0.5766669464111328,
+        "unweighted_masked_token_ce": 0.9248193934125731
+      },
+      {
+        "step": 47500,
+        "weighted_loss": 0.5744880294799805,
+        "unweighted_masked_token_ce": 0.9234557250567172
+      },
+      {
+        "step": 48000,
+        "weighted_loss": 0.5746777725219726,
+        "unweighted_masked_token_ce": 0.923127828158907
+      },
+      {
+        "step": 48500,
+        "weighted_loss": 0.5751006317138672,
+        "unweighted_masked_token_ce": 0.9243602992248635
+      },
+      {
+        "step": 49000,
+        "weighted_loss": 0.5755753326416015,
+        "unweighted_masked_token_ce": 0.9237662831056421
+      },
+      {
+        "step": 49500,
+        "weighted_loss": 0.5756865692138672,
+        "unweighted_masked_token_ce": 0.9245136517105609
+      },
+      {
+        "step": 50000,
+        "weighted_loss": 0.5746515274047852,
+        "unweighted_masked_token_ce": 0.9230384367602091
+      }
+    ]
+  },
+  "notes": [
+    "Blank checkpoint cells are omitted; lines connect only recorded values.",
+    "Dashed horizontal lines are the LLaDA values stored beside each NFE row.",
+    "No uncertainty ribbons are displayed; horizontal dotted gray lines are the 100-prompt Llama AR reference.",
+    "All radar spokes share the same absolute 0--100% scale; per-task min/max normalization is intentionally avoided.",
+    "Benchmark radars use 250 shared questions/task and all 164 HumanEval items. Other figures retain their original independent measurements."
+  ],
+  "benchmark_source": {
+    "file": "paper/source_results/benchmark_results_20261116.json",
+    "sha256": "ed2f512b3a5d35babd46053a2611dc063ba16849ab938f624a6ed13b22dd48f4"
+  }
+}

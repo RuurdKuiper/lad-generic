@@ -1,0 +1,13 @@
+[
+  {
+    "job_id": "6af04fc8e6320c66fad74304",
+    "phase": "pilot",
+    "timeout_seconds": 7200,
+    "input_revision": "1825d75ddab6369e7bd036c4e786fe2da248a442",
+    "plan_id": "735498944f7504cc3ef0ec92fc144ea538c421439861575516f6d10d4ba974bc",
+    "status": "cancelled_for_user_updated_budget_and_queue",
+    "cancelled_at": "2026-11-08T10:36:42.352672+00:00",
+    "conservative_billed_minutes": 7,
+    "conservative_compute_usd": 0.291669
+  }
+]

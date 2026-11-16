@@ -1,0 +1,349 @@
+{
+  "revision": "ca1698d0028b236b634f58272f7f24d7ba4bbe2d",
+  "tasks": {
+    "gsm8k": {
+      "gemma_d": {
+        "old": {
+          "n": 125,
+          "correct": 80,
+          "percent": 64.0
+        },
+        "added": {
+          "n": 0,
+          "correct": 0,
+          "percent": null
+        },
+        "combined": {
+          "n": 125,
+          "correct": 80,
+          "percent": 64.0
+        }
+      },
+      "gemma_ar": {
+        "old": {
+          "n": 125,
+          "correct": 109,
+          "percent": 87.2
+        },
+        "added": {
+          "n": 125,
+          "correct": 112,
+          "percent": 89.6
+        },
+        "combined": {
+          "n": 250,
+          "correct": 221,
+          "percent": 88.4
+        }
+      },
+      "llada": {
+        "old": {
+          "n": 125,
+          "correct": 81,
+          "percent": 64.8
+        },
+        "added": {
+          "n": 67,
+          "correct": 40,
+          "percent": 59.7
+        },
+        "combined": {
+          "n": 192,
+          "correct": 121,
+          "percent": 63.02
+        }
+      },
+      "qwen_d": {
+        "old": {
+          "n": 125,
+          "correct": 76,
+          "percent": 60.8
+        },
+        "added": {
+          "n": 90,
+          "correct": 50,
+          "percent": 55.56
+        },
+        "combined": {
+          "n": 215,
+          "correct": 126,
+          "percent": 58.6
+        }
+      },
+      "qwen_ar": {
+        "old": {
+          "n": 125,
+          "correct": 115,
+          "percent": 92.0
+        },
+        "added": {
+          "n": 86,
+          "correct": 23,
+          "percent": 26.74
+        },
+        "combined": {
+          "n": 211,
+          "correct": 138,
+          "percent": 65.4
+        }
+      },
+      "ministral_d": {
+        "old": {
+          "n": 125,
+          "correct": 82,
+          "percent": 65.6
+        },
+        "added": {
+          "n": 90,
+          "correct": 59,
+          "percent": 65.56
+        },
+        "combined": {
+          "n": 215,
+          "correct": 141,
+          "percent": 65.58
+        }
+      },
+      "ministral_ar": {
+        "old": {
+          "n": 125,
+          "correct": 109,
+          "percent": 87.2
+        },
+        "added": {
+          "n": 77,
+          "correct": 72,
+          "percent": 93.51
+        },
+        "combined": {
+          "n": 202,
+          "correct": 181,
+          "percent": 89.6
+        }
+      },
+      "llama_25k": {
+        "old": {
+          "n": 125,
+          "correct": 82,
+          "percent": 65.6
+        },
+        "added": {
+          "n": 74,
+          "correct": 43,
+          "percent": 58.11
+        },
+        "combined": {
+          "n": 199,
+          "correct": 125,
+          "percent": 62.81
+        }
+      },
+      "llama_50k": {
+        "old": {
+          "n": 125,
+          "correct": 77,
+          "percent": 61.6
+        },
+        "added": {
+          "n": 76,
+          "correct": 41,
+          "percent": 53.95
+        },
+        "combined": {
+          "n": 201,
+          "correct": 118,
+          "percent": 58.71
+        }
+      },
+      "llama_ar": {
+        "old": {
+          "n": 125,
+          "correct": 108,
+          "percent": 86.4
+        },
+        "added": {
+          "n": 74,
+          "correct": 64,
+          "percent": 86.49
+        },
+        "combined": {
+          "n": 199,
+          "correct": 172,
+          "percent": 86.43
+        }
+      }
+    },
+    "humaneval": {
+      "gemma_d": {
+        "old": {
+          "n": 125,
+          "correct": 32,
+          "percent": 25.6
+        },
+        "added": {
+          "n": 0,
+          "correct": 0,
+          "percent": null
+        },
+        "combined": {
+          "n": 125,
+          "correct": 32,
+          "percent": 25.6
+        }
+      },
+      "gemma_ar": {
+        "old": {
+          "n": 50,
+          "correct": 37,
+          "percent": 74.0
+        },
+        "added": {
+          "n": 114,
+          "correct": 61,
+          "percent": 53.51
+        },
+        "combined": {
+          "n": 164,
+          "correct": 98,
+          "percent": 59.76
+        }
+      },
+      "llada": {
+        "old": {
+          "n": 125,
+          "correct": 50,
+          "percent": 40.0
+        },
+        "added": {
+          "n": 39,
+          "correct": 7,
+          "percent": 17.95
+        },
+        "combined": {
+          "n": 164,
+          "correct": 57,
+          "percent": 34.76
+        }
+      },
+      "qwen_d": {
+        "old": {
+          "n": 125,
+          "correct": 37,
+          "percent": 29.6
+        },
+        "added": {
+          "n": 39,
+          "correct": 2,
+          "percent": 5.13
+        },
+        "combined": {
+          "n": 164,
+          "correct": 39,
+          "percent": 23.78
+        }
+      },
+      "qwen_ar": {
+        "old": {
+          "n": 95,
+          "correct": 83,
+          "percent": 87.37
+        },
+        "added": {
+          "n": 69,
+          "correct": 27,
+          "percent": 39.13
+        },
+        "combined": {
+          "n": 164,
+          "correct": 110,
+          "percent": 67.07
+        }
+      },
+      "ministral_d": {
+        "old": {
+          "n": 125,
+          "correct": 44,
+          "percent": 35.2
+        },
+        "added": {
+          "n": 39,
+          "correct": 4,
+          "percent": 10.26
+        },
+        "combined": {
+          "n": 164,
+          "correct": 48,
+          "percent": 29.27
+        }
+      },
+      "ministral_ar": {
+        "old": {
+          "n": 125,
+          "correct": 107,
+          "percent": 85.6
+        },
+        "added": {
+          "n": 39,
+          "correct": 28,
+          "percent": 71.79
+        },
+        "combined": {
+          "n": 164,
+          "correct": 135,
+          "percent": 82.32
+        }
+      },
+      "llama_25k": {
+        "old": {
+          "n": 125,
+          "correct": 39,
+          "percent": 31.2
+        },
+        "added": {
+          "n": 39,
+          "correct": 2,
+          "percent": 5.13
+        },
+        "combined": {
+          "n": 164,
+          "correct": 41,
+          "percent": 25.0
+        }
+      },
+      "llama_50k": {
+        "old": {
+          "n": 125,
+          "correct": 35,
+          "percent": 28.0
+        },
+        "added": {
+          "n": 39,
+          "correct": 4,
+          "percent": 10.26
+        },
+        "combined": {
+          "n": 164,
+          "correct": 39,
+          "percent": 23.78
+        }
+      },
+      "llama_ar": {
+        "old": {
+          "n": 125,
+          "correct": 70,
+          "percent": 56.0
+        },
+        "added": {
+          "n": 39,
+          "correct": 14,
+          "percent": 35.9
+        },
+        "combined": {
+          "n": 164,
+          "correct": 84,
+          "percent": 51.22
+        }
+      }
+    }
+  }
+}

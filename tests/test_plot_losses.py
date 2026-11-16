@@ -22,3 +22,13 @@ def test_read_metrics_and_extract_loss_series(tmp_path):
     assert train == [(1, 4.0), (3, 1.0)]
     assert validation == [(2, 2.0)]
     assert moving_average([4.0, 2.0, 3.0], 2) == [4.0, 3.0, 2.5]
+
+
+def test_validation_components_can_be_plotted_without_filling_missing_values():
+    records = [
+        {"split": "validation", "step": 250, "weighted_loss": 3.0, "answer_loss": 3.2, "padding_loss": 1.2},
+        {"split": "validation", "step": 500, "weighted_loss": 2.5},
+    ]
+    train, validation = loss_series(records, "answer_loss")
+    assert train == []
+    assert validation == [(250, 3.2)]

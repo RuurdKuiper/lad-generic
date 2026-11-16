@@ -1,0 +1,10 @@
+task,available,split,target,additional_if_125_reusable,worst_case_wilson_halfwidth_pp,approx_finite_n_for_2pp,approx_finite_n_for_1pp,source
+ARC-Challenge,1172,test,250,125,6.150873819109884,788,1045,https://huggingface.co/datasets/allenai/ai2_arc
+GPQA-Main,448,gpqa_main / train (evaluation),250,125,6.150873819109884,378,429,https://huggingface.co/datasets/Idavidrein/gpqa/blob/main/README.md
+GSM8K,1319,main / test,250,125,6.150873819109884,852,1160,https://huggingface.co/datasets/openai/gsm8k
+HellaSwag,10042,validation,250,125,6.150873819109884,1938,4910,https://huggingface.co/datasets/Rowan/hellaswag
+HumanEval,164,test,164,39,7.564295261197104,154,162,https://huggingface.co/datasets/openai/openai_humaneval
+MATH-500,500,test,250,125,6.150873819109884,414,476,https://huggingface.co/datasets/HuggingFaceH4/MATH-500
+MBPP sanitized,257,sanitized / test,250,125,6.150873819109884,233,251,https://huggingface.co/datasets/google-research-datasets/mbpp/raw/main/README.md
+MMLU,14042,all / test,250,125,6.150873819109884,2051,5704,https://huggingface.co/datasets/cais/mmlu
+MMLU-Pro,12032,test,250,125,6.150873819109884,2002,5342,https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro

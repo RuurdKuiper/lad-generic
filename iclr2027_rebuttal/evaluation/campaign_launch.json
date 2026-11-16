@@ -1,0 +1,8 @@
+{
+  "controller_job_id": "6af08fc8e6320c66fad75db2",
+  "url": "https://huggingface.co/jobs/Ruurd/6af08fc8e6320c66fad75db2",
+  "plan_id": "ecc1288ade40c7bdb0f2f3a21f3bf0155eb391945d0ad8226dcd71f86006903d",
+  "input_revision": "cd10b03f4ec52c15d216fc8fa6c69035447e2445",
+  "total_compute_ceiling_usd": 75,
+  "resume_command": ".venv/bin/python iclr2027_rebuttal/evaluation/campaign.py resume"
+}

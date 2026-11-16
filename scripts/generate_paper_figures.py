@@ -21,7 +21,6 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FixedLocator, FuncFormatter
 import numpy as np
-from openpyxl import load_workbook
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -814,6 +813,8 @@ def main() -> None:
     output_dir = args.output_dir.expanduser().resolve()
     if not workbook.is_file():
         raise FileNotFoundError(workbook)
+    from openpyxl import load_workbook
+
     wb = load_workbook(workbook, data_only=True, read_only=True)
     sheet = wb["Primary outcomes"]
     radar = load_radar_data(sheet)

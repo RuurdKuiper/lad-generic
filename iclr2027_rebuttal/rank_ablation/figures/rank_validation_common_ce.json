@@ -1,0 +1,42 @@
+{
+  "metric": "unweighted_masked_token_ce",
+  "sources": {
+    "128": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-128/metrics.jsonl",
+      "sha256": "466959d59ebaa9cd5c11e942dc6380692c5f4d6bfd1a6adab7beea3dc97c6713",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 1.149273746259946
+    },
+    "512": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-512/metrics.jsonl",
+      "sha256": "d57f107186135383dcbaa7806cbc79a8aa0fe7300352f1c20bf479faaa7350a4",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 1.0802653845679622
+    },
+    "1024": {
+      "file": "iclr2027_rebuttal/rank_ablation/reference_1024/metrics.jsonl",
+      "sha256": "9b1540340fa5bfe6b48a62e6f66465c66585670b8021ea65d30b3cbae17de543",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 0.9992731811419083
+    },
+    "2048": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-2048/metrics.jsonl",
+      "sha256": "eab2e4fef5b864563ef37160d04da247a5139fb9d6a4a859b126428c4384bace",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 0.9952323303001906
+    }
+  },
+  "validation_signature": [
+    200.0,
+    15207.0,
+    0.5093340301513671
+  ],
+  "main_axis": "logarithmic, full observed range",
+  "inset_axis": "linear, >=18000 updates, ranks 1024 and 2048",
+  "smoothing": false,
+  "limitation": "The historical rank-1024 run has incompletely documented training loss weighting; this is not a fully controlled four-rank experiment."
+}

@@ -1,0 +1,76 @@
+# Authorized total study cap: $42; no benchmark evaluation.
+model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+tokenizer_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+dataset_name: Ruurd/LAD-training-1m-256
+splits:
+  test: test
+  train: train
+  validation: validation
+batch_size: 16
+eval_batch_size: 8
+gradient_accumulation_steps: 1
+max_updates: 25000
+max_sequence_length: 256
+include_answer_eos: true
+eos_padding_loss: true
+corruption_mode: mask_only
+structured_loss_behavior: corrupted_answer_tokens
+t_min: 0.001
+train_normalization_layers: false
+lora_targets:
+- q_proj
+- v_proj
+lora_dropout: 0.0
+learning_rate: 1.0e-05
+learning_rate_scaling:
+  enabled: false
+  mode: sqrt
+  reference_batch_size: 8
+weight_decay: 0.01
+scheduler: cosine
+warmup_steps: 100
+max_grad_norm: 0.5
+precision: bf16
+fp8:
+  backend: transformer_engine
+  enabled: true
+  format: HYBRID
+gradient_checkpointing: false
+selected_logit_optimization: true
+quantization: none
+seed: 42
+multi_turn_prob: 0.0
+max_history_turns: 2
+pad_to_multiple_of: 8
+validation_samples: 200
+validation_steps: 250
+logging_steps: 100
+num_workers: 4
+prefetch_factor: 4
+optimizer: adamw
+model_revision: 0e9e39f249a16976918f6564b8830bc894c89659
+tokenizer_revision: 0e9e39f249a16976918f6564b8830bc894c89659
+dataset_revision: 6041513b684d6ca627879ffdb547b8629bb8b8de
+cache_dir: data/huggingface
+base_model_cache_dir: base_models
+prepared_data_cache_dir: data/prepared/rank-ablation
+answer_padding_loss:
+  enabled: true
+  answer_weight: 0.9
+  padding_weight: 0.1
+frontier_masking_probability: 0.0
+frontier_padding_mode: iid
+generation_perplexity:
+  enabled: false
+checkpoint_mode: every_checkpoint
+checkpoint_steps: 2500
+checkpoint_total_limit: 2
+save_best_model: false
+run_final_test: false
+lora_r: 128
+lora_alpha: 128
+output_dir: outputs/rank-ablation/rank-128
+prepared_dataset_name: Ruurd/BYOD-tokenized-256
+prepared_dataset_config: llama-3.1-8b-instruct
+prepared_dataset_revision: 2c9d2d97e2b45302cd3f3267fd1c232ff9e9b1a3
+require_prepared_dataset: true

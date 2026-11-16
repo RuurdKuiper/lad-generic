@@ -278,6 +278,64 @@ def test_math_prompt_requests_a_boxed_answer_after_reasoning():
     assert prompt.endswith("What is 1 + 1?")
 
 
+def test_math_declared_final_overrides_intermediate_box():
+    example = BenchmarkExample("math", "0", "problem", r"\boxed{27}", "math", {})
+    assert not score_prediction(example, "Intermediate: \\boxed{27}\nFINAL: 12")
+    assert score_prediction(example, "Reasoning omitted.\n**FINAL:** 27")
+    assert not score_prediction(example, "An intermediate value is $27$, but more work remains.")
+
+
+def test_math_repairs_complete_numeric_answers_with_stray_latex_escapes():
+    for prediction, target in [(r"FINAL: \78", "78"), (r"FINAL: \0.15", "0.15"),
+                               (r"FINAL: \3}", "3"), (r"FINAL: \-3.2", "-3.2")]:
+        assert score_prediction(BenchmarkExample("math", "0", "problem", target, "math", {}), prediction)
+    example = BenchmarkExample("math", "0", "problem", "78", "math", {})
+    assert not score_prediction(example, r"Intermediate: \boxed{78}" + "\n" + r"FINAL: \79")
+    assert not score_prediction(example, r"FINAL: \78 or \79")
+    assert extract_answer(r"\boxed{\frac{1}{2}}", "math") == r"\frac{1}{2}"
+
+
+def test_math_accepts_only_complete_scalar_final_statements():
+    example = BenchmarkExample("math", "0", "problem", "83", "math", {})
+    assert score_prediction(example, "FINAL: The value is 83.")
+    assert score_prediction(example, "FINAL: The result is 83.")
+    assert not score_prediction(example, "FINAL: The value is 83 or 84.")
+    assert not score_prediction(example, "The value is 83, but more work remains.")
+    assert not score_prediction(example, r"Intermediate: \boxed{83}" + "\nFINAL: The value is 84.")
+
+
+def test_math_percentage_answers_respect_the_reference_unit():
+    target = r"The area is .9A. Thus it decreased by $\boxed{10}$ percent."
+    example = BenchmarkExample("math", "0", "problem", target, "math", {})
+    for prediction in [r"FINAL: \boxed{10\%}", "FINAL: 10%", "FINAL: The value is 10 percent."]:
+        assert score_prediction(example, prediction)
+    for prediction in ["FINAL: 0.1%", "FINAL: 15%", "FINAL: 0.1"]:
+        assert not score_prediction(example, prediction)
+    bare_ten = BenchmarkExample("math", "0", "problem", r"\boxed{10}", "math", {})
+    assert not score_prediction(bare_ten, "FINAL: 10%")
+    fraction = BenchmarkExample("math", "0", "problem", "0.1", "math", {})
+    assert score_prediction(fraction, "FINAL: 10%")
+    unrelated_percent = BenchmarkExample("math", "0", "problem", r"Start with 40 percent. Final: \boxed{10}.", "math", {})
+    assert not score_prediction(unrelated_percent, "FINAL: 10%")
+    assert not score_prediction(example, r"Intermediate: \boxed{10\%}" + "\nFINAL: 15%")
+
+
+def test_math_symbolic_comparison_handles_equivalent_final_forms():
+    import pytest
+    pytest.importorskip("math_verify")
+    for reference, prediction in [
+        (r"\frac65", r"\frac{6}{5}"),
+        (r"\dfrac{17}{50}", r"\frac{17}{50}"),
+        (r"x=5", "5"),
+        (r"10,\!080", "10080"),
+        (r"5x-7y+11z+4=0", r"20x-28y+44z+16=0"),
+    ]:
+        example = BenchmarkExample("math", "0", "problem", "\\boxed{" + reference + "}", "math", {})
+        assert score_prediction(example, "\\boxed{" + prediction + "}")
+    example = BenchmarkExample("math", "0", "problem", r"\boxed{\frac{1}{2}}", "math", {})
+    assert not score_prediction(example, r"Intermediate $\frac{1}{2}$. FINAL answer: $\boxed{\frac{3}{4}}$")
+
+
 def _humaneval_add_example():
     prompt = 'def add(a, b):\n    """Return the sum."""\n'
     return BenchmarkExample("humaneval", "0", prompt, "    return a + b\n", "code", {

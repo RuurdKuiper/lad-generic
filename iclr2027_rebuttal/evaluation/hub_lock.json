@@ -1,0 +1,1833 @@
+{
+  "account": "Ruurd",
+  "models": {
+    "Ruurd/BYOD-Gemma-2-9B": {
+      "repo_id": "Ruurd/BYOD-Gemma-2-9B",
+      "revision": "969ae9073e223aec79d0f292c7c76c6d9f94ecd0",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1570
+        },
+        {
+          "name": "README.md",
+          "size": 2522
+        },
+        {
+          "name": "adapter_config.json",
+          "size": 1025
+        },
+        {
+          "name": "adapter_model.safetensors",
+          "size": 2290136656,
+          "sha256": "cf4eafa39c596b237e183f56800a230a8991c50d635d2e21291b90a3b529bfee"
+        },
+        {
+          "name": "chat_template.jinja",
+          "size": 591
+        },
+        {
+          "name": "normalization_initial_state.pt",
+          "size": 1272153,
+          "sha256": "3464302a3d827435bc2d8639eb196c234edcd632b4ba9d239d6ca2b8f1f709b2"
+        },
+        {
+          "name": "normalization_state.pt",
+          "size": 1270689,
+          "sha256": "47ae556661245917370b2a45f3643a940ccb558fdf370c195615d3cf50787c29"
+        },
+        {
+          "name": "resolved_config.json",
+          "size": 2398
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 636
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 34362873,
+          "sha256": "5f7eee611703c5ce5d1eee32d9cdcfe465647b8aff0c1dfb3bed7ad7dbb05060"
+        },
+        {
+          "name": "tokenizer.model",
+          "size": 4241003,
+          "sha256": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 46409
+        }
+      ],
+      "resolved_config.json": {
+        "base_model_cache_dir": "base_models",
+        "batch_size": 16,
+        "cache_dir": "data/huggingface",
+        "checkpoint_mode": "every_model",
+        "checkpoint_steps": 1000,
+        "corruption_mode": "mask_only",
+        "dataset_name": "Ruurd/LAD-training-1m-256",
+        "effective_batch_size": 16,
+        "eos_padding_loss": true,
+        "epochs": 1,
+        "eval_batch_size": 8,
+        "fp8": {
+          "backend": "transformer_engine",
+          "enabled": true,
+          "format": "HYBRID"
+        },
+        "fp8_active": true,
+        "fp8_compute_capability": [
+          12,
+          0
+        ],
+        "fp8_device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "fp8_requested": true,
+        "generation_perplexity": {
+          "confidence_guided": true,
+          "enabled": true,
+          "interval_steps": 1000,
+          "max_new_tokens": 64,
+          "noise_level": 1.0,
+          "num_prompts": 20,
+          "num_steps": 32,
+          "permanent_unmask": true,
+          "proportional_unmask": false,
+          "seed": 1234,
+          "temperature": 0.5,
+          "top_k": 3
+        },
+        "gradient_accumulation_steps": 1,
+        "gradient_checkpointing": false,
+        "include_answer_eos": true,
+        "learning_rate": 1e-05,
+        "learning_rate_scale": 1.0,
+        "learning_rate_scaling": {
+          "enabled": false,
+          "mode": "sqrt",
+          "reference_batch_size": 8
+        },
+        "logging_steps": 100,
+        "lora_alpha": 1024,
+        "lora_dropout": 0.0,
+        "lora_r": 1024,
+        "lora_targets": [
+          "q_proj",
+          "v_proj"
+        ],
+        "max_grad_norm": 0.5,
+        "max_history_turns": 2,
+        "max_sequence_length": 256,
+        "max_updates": 25000,
+        "model_name_or_path": "google/gemma-2-9b-it",
+        "multi_turn_prob": 0.0,
+        "num_workers": 4,
+        "optimizer": "adamw",
+        "output_dir": "/content/drive/MyDrive/lad-generic-results/outputs/gemma-2-9b-mask_2",
+        "pad_to_multiple_of": 16,
+        "precision": "bf16",
+        "prefetch_factor": 4,
+        "quantization": "none",
+        "resolved_learning_rate": 1e-05,
+        "resolved_training_precision": "fp8",
+        "scheduler": "cosine",
+        "seed": 42,
+        "selected_logit_optimization": true,
+        "splits": {
+          "test": "test",
+          "train": "train",
+          "validation": "validation"
+        },
+        "structured_loss_behavior": "corrupted_answer_tokens",
+        "structured_marker_dropped": {},
+        "t_min": 0.001,
+        "tokenizer_name_or_path": "google/gemma-2-9b-it",
+        "train_normalization_layers": false,
+        "training_sample_limit": 400000,
+        "training_samples_used": 400000,
+        "validation_samples": 200,
+        "validation_samples_used": 200,
+        "validation_steps": 250,
+        "warmup_steps": 100,
+        "weight_decay": 0.01
+      },
+      "adapter_config.json": {
+        "alora_invocation_tokens": null,
+        "alpha_pattern": {},
+        "arrow_config": null,
+        "auto_mapping": null,
+        "base_model_name_or_path": "google/gemma-2-9b-it",
+        "bias": "none",
+        "corda_config": null,
+        "ensure_weight_tying": false,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 1024,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "lora_ga_config": null,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "peft_version": "0.19.1",
+        "qalora_group_size": 16,
+        "r": 1024,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "q_proj",
+          "v_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_bdlora": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      }
+    },
+    "Ruurd/BYOD-Qwen2.5-7B": {
+      "repo_id": "Ruurd/BYOD-Qwen2.5-7B",
+      "revision": "322dc07bfd94426aebc0087aa6b7435ac50ffdbf",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1570
+        },
+        {
+          "name": "README.md",
+          "size": 2540
+        },
+        {
+          "name": "adapter_config.json",
+          "size": 1029
+        },
+        {
+          "name": "adapter_model.safetensors",
+          "size": 1291876616,
+          "sha256": "e191a5bf80df7f30c578a73770e97804bb05ebe80cebfae27e5b4e595761baee"
+        },
+        {
+          "name": "added_tokens.json",
+          "size": 605
+        },
+        {
+          "name": "chat_template.jinja",
+          "size": 2507
+        },
+        {
+          "name": "merges.txt",
+          "size": 1671853
+        },
+        {
+          "name": "normalization_initial_state.pt",
+          "size": 429348,
+          "sha256": "5a8d0de97d0b7d3592dc2c52dca50e0ff030c3d3514501bf4b62d6ff8339dc54"
+        },
+        {
+          "name": "normalization_state.pt",
+          "size": 428780,
+          "sha256": "96e1bf1ac2df8cae2d4e432b7cd9f6ad1db72dbcfbfef7b7b4d0b444eec35b9a"
+        },
+        {
+          "name": "resolved_config.json",
+          "size": 2407
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 613
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 11421896,
+          "sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 4686
+        },
+        {
+          "name": "vocab.json",
+          "size": 2776833
+        }
+      ],
+      "resolved_config.json": {
+        "base_model_cache_dir": "base_models",
+        "batch_size": 16,
+        "cache_dir": "data/huggingface",
+        "checkpoint_mode": "every_model",
+        "checkpoint_steps": 1000,
+        "corruption_mode": "mask_only",
+        "dataset_name": "Ruurd/LAD-training-1m-256",
+        "effective_batch_size": 16,
+        "eos_padding_loss": true,
+        "epochs": 1,
+        "eval_batch_size": 8,
+        "fp8": {
+          "backend": "transformer_engine",
+          "enabled": true,
+          "format": "HYBRID"
+        },
+        "fp8_active": true,
+        "fp8_compute_capability": [
+          12,
+          0
+        ],
+        "fp8_device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "fp8_requested": true,
+        "generation_perplexity": {
+          "confidence_guided": true,
+          "enabled": true,
+          "interval_steps": 1000,
+          "max_new_tokens": 64,
+          "noise_level": 1.0,
+          "num_prompts": 20,
+          "num_steps": 32,
+          "permanent_unmask": true,
+          "proportional_unmask": false,
+          "seed": 1234,
+          "temperature": 0.5,
+          "top_k": 3
+        },
+        "gradient_accumulation_steps": 1,
+        "gradient_checkpointing": false,
+        "include_answer_eos": true,
+        "learning_rate": 1e-05,
+        "learning_rate_scale": 1.0,
+        "learning_rate_scaling": {
+          "enabled": false,
+          "mode": "sqrt",
+          "reference_batch_size": 8
+        },
+        "logging_steps": 100,
+        "lora_alpha": 1024,
+        "lora_dropout": 0.0,
+        "lora_r": 1024,
+        "lora_targets": [
+          "q_proj",
+          "v_proj"
+        ],
+        "max_grad_norm": 0.5,
+        "max_history_turns": 2,
+        "max_sequence_length": 256,
+        "max_updates": 25000,
+        "model_name_or_path": "Qwen/Qwen2.5-7B-Instruct",
+        "multi_turn_prob": 0.0,
+        "num_workers": 4,
+        "optimizer": "adamw",
+        "output_dir": "/content/drive/MyDrive/lad-generic-results/outputs/qwen-2.5-7b-mask_2",
+        "pad_to_multiple_of": 16,
+        "precision": "bf16",
+        "prefetch_factor": 4,
+        "quantization": "none",
+        "resolved_learning_rate": 1e-05,
+        "resolved_training_precision": "fp8",
+        "scheduler": "cosine",
+        "seed": 42,
+        "selected_logit_optimization": true,
+        "splits": {
+          "test": "test",
+          "train": "train",
+          "validation": "validation"
+        },
+        "structured_loss_behavior": "corrupted_answer_tokens",
+        "structured_marker_dropped": {},
+        "t_min": 0.001,
+        "tokenizer_name_or_path": "Qwen/Qwen2.5-7B-Instruct",
+        "train_normalization_layers": false,
+        "training_sample_limit": 400000,
+        "training_samples_used": 400000,
+        "validation_samples": 200,
+        "validation_samples_used": 200,
+        "validation_steps": 250,
+        "warmup_steps": 100,
+        "weight_decay": 0.01
+      },
+      "adapter_config.json": {
+        "alora_invocation_tokens": null,
+        "alpha_pattern": {},
+        "arrow_config": null,
+        "auto_mapping": null,
+        "base_model_name_or_path": "Qwen/Qwen2.5-7B-Instruct",
+        "bias": "none",
+        "corda_config": null,
+        "ensure_weight_tying": false,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 1024,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "lora_ga_config": null,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "peft_version": "0.19.1",
+        "qalora_group_size": 16,
+        "r": 1024,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "q_proj",
+          "v_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_bdlora": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      }
+    },
+    "Ruurd/BYOD-Ministral-8B": {
+      "repo_id": "Ruurd/BYOD-Ministral-8B",
+      "revision": "e956cdbe066d6ff114ed36dcda73994ae6f82416",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1570
+        },
+        {
+          "name": "README.md",
+          "size": 2654
+        },
+        {
+          "name": "adapter_config.json",
+          "size": 1095
+        },
+        {
+          "name": "adapter_model.safetensors",
+          "size": 1962974248,
+          "sha256": "29dd4dda4d412423d29fead5c1ac3cd094fe005d442c97efdc97bb2cf31ef426"
+        },
+        {
+          "name": "chat_template.jinja",
+          "size": 3945
+        },
+        {
+          "name": "normalization_initial_state.pt",
+          "size": 624436,
+          "sha256": "6e17910053fd950e9716fcee33d0b27bdcdb2d7ccc8674fb6165c564c86f466b"
+        },
+        {
+          "name": "normalization_state.pt",
+          "size": 623676,
+          "sha256": "5e46342c5cd6667074362553dfeb7e664acf7f2eebe125053422f9d91d5a3e5c"
+        },
+        {
+          "name": "resolved_config.json",
+          "size": 2453
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 437
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 17078136,
+          "sha256": "d7edbeaf20dd7f571b5dd1c54d9ace4f9b6299127cc7ba2afb14a6d51a4a79a4"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 177172
+        }
+      ],
+      "resolved_config.json": {
+        "base_model_cache_dir": "base_models",
+        "batch_size": 16,
+        "cache_dir": "data/huggingface",
+        "checkpoint_mode": "every_model",
+        "checkpoint_steps": 1000,
+        "corruption_mode": "mask_only",
+        "dataset_name": "Ruurd/LAD-training-1m-256",
+        "effective_batch_size": 16,
+        "eos_padding_loss": true,
+        "epochs": 1,
+        "eval_batch_size": 8,
+        "fp8": {
+          "backend": "transformer_engine",
+          "enabled": true,
+          "format": "HYBRID"
+        },
+        "fp8_active": true,
+        "fp8_compute_capability": [
+          12,
+          0
+        ],
+        "fp8_device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "fp8_requested": true,
+        "generation_perplexity": {
+          "confidence_guided": true,
+          "enabled": true,
+          "interval_steps": 1000,
+          "max_new_tokens": 64,
+          "noise_level": 1.0,
+          "num_prompts": 20,
+          "num_steps": 32,
+          "permanent_unmask": true,
+          "proportional_unmask": false,
+          "seed": 1234,
+          "temperature": 0.5,
+          "top_k": 3
+        },
+        "gradient_accumulation_steps": 1,
+        "gradient_checkpointing": false,
+        "include_answer_eos": true,
+        "learning_rate": 1e-05,
+        "learning_rate_scale": 1.0,
+        "learning_rate_scaling": {
+          "enabled": false,
+          "mode": "sqrt",
+          "reference_batch_size": 8
+        },
+        "logging_steps": 100,
+        "lora_alpha": 1024,
+        "lora_dropout": 0.0,
+        "lora_r": 1024,
+        "lora_targets": [
+          "q_proj",
+          "v_proj"
+        ],
+        "mask_token": "<?>",
+        "max_grad_norm": 0.5,
+        "max_history_turns": 2,
+        "max_sequence_length": 256,
+        "max_updates": 25000,
+        "model_name_or_path": "mistralai/Ministral-8B-Instruct-2410",
+        "multi_turn_prob": 0.0,
+        "num_workers": 4,
+        "optimizer": "adamw",
+        "output_dir": "/content/drive/MyDrive/lad-generic-results/outputs/ministral-8b-mask",
+        "pad_to_multiple_of": 16,
+        "precision": "bf16",
+        "prefetch_factor": 4,
+        "quantization": "none",
+        "resolved_learning_rate": 1e-05,
+        "resolved_training_precision": "fp8",
+        "scheduler": "cosine",
+        "seed": 42,
+        "selected_logit_optimization": true,
+        "splits": {
+          "test": "test",
+          "train": "train",
+          "validation": "validation"
+        },
+        "structured_loss_behavior": "corrupted_answer_tokens",
+        "structured_marker_dropped": {},
+        "t_min": 0.001,
+        "tokenizer_name_or_path": "mistralai/Ministral-8B-Instruct-2410",
+        "train_normalization_layers": false,
+        "training_sample_limit": 400000,
+        "training_samples_used": 400000,
+        "validation_samples": 200,
+        "validation_samples_used": 200,
+        "validation_steps": 250,
+        "warmup_steps": 100,
+        "weight_decay": 0.01
+      },
+      "adapter_config.json": {
+        "alora_invocation_tokens": null,
+        "alpha_pattern": {},
+        "arrow_config": null,
+        "auto_mapping": null,
+        "base_model_name_or_path": "mistralai/Ministral-8B-Instruct-2410",
+        "bias": "none",
+        "corda_config": null,
+        "ensure_weight_tying": false,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 1024,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "lora_ga_config": null,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "monteclora_config": null,
+        "peft_type": "LORA",
+        "peft_version": "0.20.0",
+        "qalora_group_size": 16,
+        "r": 1024,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "v_proj",
+          "q_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_bdlora": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false,
+        "velora_config": null
+      }
+    },
+    "Ruurd/BYOD-Llama-3.1-8B": {
+      "repo_id": "Ruurd/BYOD-Llama-3.1-8B",
+      "revision": "11302cf5a7fc19609a242ab8a83e3b17beea4854",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1570
+        },
+        {
+          "name": "README.md",
+          "size": 2571
+        },
+        {
+          "name": "adapter_config.json",
+          "size": 1037
+        },
+        {
+          "name": "adapter_model.safetensors",
+          "size": 1744865976,
+          "sha256": "67f68055159634a61654f38e5fba0b8f640275167a39f6ac2c7a08cbb1554f10"
+        },
+        {
+          "name": "chat_template.jinja",
+          "size": 4614
+        },
+        {
+          "name": "normalization_initial_state.pt",
+          "size": 556076,
+          "sha256": "a9147f4a63ce16415d3bf25c2feef40617cffa2bbe1631375d5b3766cd86e209"
+        },
+        {
+          "name": "normalization_state.pt",
+          "size": 555444,
+          "sha256": "e741e6aa3facc65589ea922f8e077fe209109aea15591ce61e28093cac2df3be"
+        },
+        {
+          "name": "resolved_config.json",
+          "size": 2423
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 325
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 17209920,
+          "sha256": "6b9e4e7fb171f92fd137b777cc2714bf87d11576700a1dcd7a399e7bbe39537b"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 50555
+        }
+      ],
+      "resolved_config.json": {
+        "base_model_cache_dir": "base_models",
+        "batch_size": 16,
+        "cache_dir": "data/huggingface",
+        "checkpoint_mode": "every_model",
+        "checkpoint_steps": 1000,
+        "corruption_mode": "mask_only",
+        "dataset_name": "Ruurd/LAD-training-1m-256",
+        "effective_batch_size": 16,
+        "eos_padding_loss": true,
+        "epochs": 1,
+        "eval_batch_size": 8,
+        "fp8": {
+          "backend": "transformer_engine",
+          "enabled": true,
+          "format": "HYBRID"
+        },
+        "fp8_active": true,
+        "fp8_compute_capability": [
+          12,
+          0
+        ],
+        "fp8_device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "fp8_requested": true,
+        "generation_perplexity": {
+          "confidence_guided": true,
+          "enabled": true,
+          "interval_steps": 1000,
+          "max_new_tokens": 64,
+          "noise_level": 1.0,
+          "num_prompts": 20,
+          "num_steps": 32,
+          "permanent_unmask": true,
+          "proportional_unmask": false,
+          "seed": 1234,
+          "temperature": 0.5,
+          "top_k": 3
+        },
+        "gradient_accumulation_steps": 1,
+        "gradient_checkpointing": false,
+        "include_answer_eos": true,
+        "learning_rate": 1e-05,
+        "learning_rate_scale": 1.0,
+        "learning_rate_scaling": {
+          "enabled": false,
+          "mode": "sqrt",
+          "reference_batch_size": 8
+        },
+        "logging_steps": 100,
+        "lora_alpha": 1024,
+        "lora_dropout": 0.0,
+        "lora_r": 1024,
+        "lora_targets": [
+          "q_proj",
+          "v_proj"
+        ],
+        "max_grad_norm": 0.5,
+        "max_history_turns": 2,
+        "max_sequence_length": 256,
+        "max_updates": 25000,
+        "model_name_or_path": "meta-llama/Llama-3.1-8B-Instruct",
+        "multi_turn_prob": 0.0,
+        "num_workers": 4,
+        "optimizer": "adamw",
+        "output_dir": "/content/drive/MyDrive/lad-generic-results/outputs/llama-3.1-8b-mask_1",
+        "pad_to_multiple_of": 8,
+        "precision": "bf16",
+        "prefetch_factor": 4,
+        "quantization": "none",
+        "resolved_learning_rate": 1e-05,
+        "resolved_training_precision": "fp8",
+        "scheduler": "cosine",
+        "seed": 42,
+        "selected_logit_optimization": true,
+        "splits": {
+          "test": "test",
+          "train": "train",
+          "validation": "validation"
+        },
+        "structured_loss_behavior": "corrupted_answer_tokens",
+        "structured_marker_dropped": {},
+        "t_min": 0.001,
+        "tokenizer_name_or_path": "meta-llama/Llama-3.1-8B-Instruct",
+        "train_normalization_layers": false,
+        "training_sample_limit": 400000,
+        "training_samples_used": 400000,
+        "validation_samples": 200,
+        "validation_samples_used": 200,
+        "validation_steps": 250,
+        "warmup_steps": 100,
+        "weight_decay": 0.01
+      },
+      "adapter_config.json": {
+        "alora_invocation_tokens": null,
+        "alpha_pattern": {},
+        "arrow_config": null,
+        "auto_mapping": null,
+        "base_model_name_or_path": "meta-llama/Llama-3.1-8B-Instruct",
+        "bias": "none",
+        "corda_config": null,
+        "ensure_weight_tying": false,
+        "eva_config": null,
+        "exclude_modules": null,
+        "fan_in_fan_out": false,
+        "inference_mode": true,
+        "init_lora_weights": true,
+        "layer_replication": null,
+        "layers_pattern": null,
+        "layers_to_transform": null,
+        "loftq_config": {},
+        "lora_alpha": 1024,
+        "lora_bias": false,
+        "lora_dropout": 0.0,
+        "lora_ga_config": null,
+        "megatron_config": null,
+        "megatron_core": "megatron.core",
+        "modules_to_save": null,
+        "peft_type": "LORA",
+        "peft_version": "0.19.1",
+        "qalora_group_size": 16,
+        "r": 1024,
+        "rank_pattern": {},
+        "revision": null,
+        "target_modules": [
+          "v_proj",
+          "q_proj"
+        ],
+        "target_parameters": null,
+        "task_type": "CAUSAL_LM",
+        "trainable_token_indices": null,
+        "use_bdlora": null,
+        "use_dora": false,
+        "use_qalora": false,
+        "use_rslora": false
+      }
+    },
+    "GSAI-ML/LLaDA-8B-Instruct": {
+      "repo_id": "GSAI-ML/LLaDA-8B-Instruct",
+      "revision": "08b83a6feb34df1a6011b80c3c00c7563e963b07",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1519
+        },
+        {
+          "name": "README.md",
+          "size": 431
+        },
+        {
+          "name": "config.json",
+          "size": 1385
+        },
+        {
+          "name": "configuration_llada.py",
+          "size": 12000
+        },
+        {
+          "name": "generation_config.json",
+          "size": 128
+        },
+        {
+          "name": "model-00001-of-00006.safetensors",
+          "size": 2109747184,
+          "sha256": "ff6699df9635a267fb4ac801ea8012d39b21bb22ed290d5a57128521b889c230"
+        },
+        {
+          "name": "model-00002-of-00006.safetensors",
+          "size": 2948598128,
+          "sha256": "b8ddf571b47f57ce654913877f3625d2c7b9a4c3f81cb6f41f6c3055473b0281"
+        },
+        {
+          "name": "model-00003-of-00006.safetensors",
+          "size": 2986883656,
+          "sha256": "8347db2fd61a3b5bad2970c2f83ecb84b93632e276a41ca169dcc5efae15462c"
+        },
+        {
+          "name": "model-00004-of-00006.safetensors",
+          "size": 2952797224,
+          "sha256": "93d8706872e7432d5cd40c9a61f9f9d270c101828cef2adaf27c67743d3dcf1a"
+        },
+        {
+          "name": "model-00005-of-00006.safetensors",
+          "size": 2919239128,
+          "sha256": "ff5f765eb7ec8bfdbe3b962a9e920d71de43d55e04eb4844710c0efcc8855092"
+        },
+        {
+          "name": "model-00006-of-00006.safetensors",
+          "size": 2113931792,
+          "sha256": "f25d4cc57b24a79a840d49c3b25d9a22dd5caf3a9766f591e4625377901194e2"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "size": 24941
+        },
+        {
+          "name": "modeling_llada.py",
+          "size": 61443
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 747
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 6098988
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 51692
+        }
+      ],
+      "config.json": {
+        "activation_type": "silu",
+        "alibi": false,
+        "alibi_bias_max": 8.0,
+        "architectures": [
+          "LLaDAModelLM"
+        ],
+        "attention_dropout": 0.0,
+        "attention_layer_norm": false,
+        "attention_layer_norm_with_affine": true,
+        "auto_map": {
+          "AutoConfig": "configuration_llada.LLaDAConfig",
+          "AutoModelForCausalLM": "modeling_llada.LLaDAModelLM",
+          "AutoModel": "modeling_llada.LLaDAModelLM"
+        },
+        "bias_for_layer_norm": false,
+        "block_group_size": 1,
+        "block_type": "llama",
+        "d_model": 4096,
+        "embedding_dropout": 0.0,
+        "embedding_size": 126464,
+        "eos_token_id": 126081,
+        "flash_attention": false,
+        "include_bias": false,
+        "include_qkv_bias": false,
+        "init_cutoff_factor": null,
+        "init_device": "meta",
+        "init_fn": "mitchell",
+        "init_std": 0.02,
+        "input_emb_norm": false,
+        "layer_norm_type": "rms",
+        "layer_norm_with_affine": true,
+        "mask_token_id": 126336,
+        "max_sequence_length": 4096,
+        "mlp_hidden_size": 12288,
+        "mlp_ratio": 4,
+        "model_type": "llada",
+        "multi_query_attention": null,
+        "n_heads": 32,
+        "n_kv_heads": 32,
+        "n_layers": 32,
+        "pad_token_id": 126081,
+        "precision": "amp_bf16",
+        "residual_dropout": 0.0,
+        "rms_norm_eps": 1e-05,
+        "rope": true,
+        "rope_full_precision": true,
+        "rope_theta": 500000.0,
+        "scale_logits": false,
+        "transformers_version": "4.46.3",
+        "use_cache": false,
+        "vocab_size": 126464,
+        "weight_tying": false
+      }
+    },
+    "google/gemma-2-9b-it": {
+      "repo_id": "google/gemma-2-9b-it",
+      "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1661
+        },
+        {
+          "name": "README.md",
+          "size": 25789
+        },
+        {
+          "name": "config.json",
+          "size": 857
+        },
+        {
+          "name": "generation_config.json",
+          "size": 173
+        },
+        {
+          "name": "model-00001-of-00004.safetensors",
+          "size": 4903351912,
+          "sha256": "a0d4eb4fcbddfe01b0dc7a58386a3980826ededaf0ecd67d1ef38995b89615ba"
+        },
+        {
+          "name": "model-00002-of-00004.safetensors",
+          "size": 4947570872,
+          "sha256": "712a589c333f49f7b6f3870838a9e0ab4b3c0260abd5130e8c54316e6c99640b"
+        },
+        {
+          "name": "model-00003-of-00004.safetensors",
+          "size": 4962221464,
+          "sha256": "5a9f84eb9846840802200c6502ccaaebf0a146ee89dcb8822fab795c392dd667"
+        },
+        {
+          "name": "model-00004-of-00004.safetensors",
+          "size": 3670322200,
+          "sha256": "3349b4960bbc0bf7e47a624e5c520881adb06e2da4bda6ed14b51c7f647fe26c"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "size": 39072
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 636
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 17525357,
+          "sha256": "3f289bc05132635a8bc7aca7aa21255efd5e18f3710f43e3cdb96bcd41be4922"
+        },
+        {
+          "name": "tokenizer.model",
+          "size": 4241003,
+          "sha256": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 46996
+        },
+        {
+          "name": "transformers/transformers-4.42.0.dev0-py3-none-any.whl",
+          "size": 9205686,
+          "sha256": "dbdec549ad82a5c45d4fbd5384e9d12f4f2899ca94dccdf0544cdd06101fad25"
+        }
+      ],
+      "config.json": {
+        "architectures": [
+          "Gemma2ForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "attn_logit_softcapping": 50.0,
+        "bos_token_id": 2,
+        "cache_implementation": "hybrid",
+        "eos_token_id": 1,
+        "final_logit_softcapping": 30.0,
+        "head_dim": 256,
+        "hidden_act": "gelu_pytorch_tanh",
+        "hidden_activation": "gelu_pytorch_tanh",
+        "hidden_size": 3584,
+        "initializer_range": 0.02,
+        "intermediate_size": 14336,
+        "max_position_embeddings": 8192,
+        "model_type": "gemma2",
+        "num_attention_heads": 16,
+        "num_hidden_layers": 42,
+        "num_key_value_heads": 8,
+        "pad_token_id": 0,
+        "query_pre_attn_scalar": 256,
+        "rms_norm_eps": 1e-06,
+        "rope_theta": 10000.0,
+        "sliding_window": 4096,
+        "sliding_window_size": 4096,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.42.0.dev0",
+        "use_cache": true,
+        "vocab_size": 256000
+      }
+    },
+    "meta-llama/Llama-3.1-8B-Instruct": {
+      "repo_id": "meta-llama/Llama-3.1-8B-Instruct",
+      "revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1519
+        },
+        {
+          "name": "LICENSE",
+          "size": 7627
+        },
+        {
+          "name": "README.md",
+          "size": 44044
+        },
+        {
+          "name": "USE_POLICY.md",
+          "size": 4691
+        },
+        {
+          "name": "config.json",
+          "size": 855
+        },
+        {
+          "name": "generation_config.json",
+          "size": 184
+        },
+        {
+          "name": "model-00001-of-00004.safetensors",
+          "size": 4976698672,
+          "sha256": "2b1879f356aed350030bb40eb45ad362c89d9891096f79a3ab323d3ba5607668"
+        },
+        {
+          "name": "model-00002-of-00004.safetensors",
+          "size": 4999802720,
+          "sha256": "09d433f650646834a83c580877bd60c6d1f88f7755305c12576b5c7058f9af15"
+        },
+        {
+          "name": "model-00003-of-00004.safetensors",
+          "size": 4915916176,
+          "sha256": "fc1cdddd6bfa91128d6e94ee73d0ce62bfcdb7af29e978ddcab30c66ae9ea7fa"
+        },
+        {
+          "name": "model-00004-of-00004.safetensors",
+          "size": 1168138808,
+          "sha256": "92ecfe1a2414458b4821ac8c13cf8cb70aed66b5eea8dc5ad9eeb4ff309d6d7b"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "size": 23950
+        },
+        {
+          "name": "original/consolidated.00.pth",
+          "size": 16060617592,
+          "sha256": "ab33d910f405204e5d388bc3521503584800461dc96808e287821dd451c1edac"
+        },
+        {
+          "name": "original/params.json",
+          "size": 199
+        },
+        {
+          "name": "original/tokenizer.model",
+          "size": 2183982,
+          "sha256": "82e9d31979e92ab929cd544440f129d9ecd797b69e327f80f17e1c50d5551b55"
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 296
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 9085657
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 55351
+        }
+      ],
+      "config.json": {
+        "architectures": [
+          "LlamaForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bos_token_id": 128000,
+        "eos_token_id": [
+          128001,
+          128008,
+          128009
+        ],
+        "hidden_act": "silu",
+        "hidden_size": 4096,
+        "initializer_range": 0.02,
+        "intermediate_size": 14336,
+        "max_position_embeddings": 131072,
+        "mlp_bias": false,
+        "model_type": "llama",
+        "num_attention_heads": 32,
+        "num_hidden_layers": 32,
+        "num_key_value_heads": 8,
+        "pretraining_tp": 1,
+        "rms_norm_eps": 1e-05,
+        "rope_scaling": {
+          "factor": 8.0,
+          "low_freq_factor": 1.0,
+          "high_freq_factor": 4.0,
+          "original_max_position_embeddings": 8192,
+          "rope_type": "llama3"
+        },
+        "rope_theta": 500000.0,
+        "tie_word_embeddings": false,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.42.3",
+        "use_cache": true,
+        "vocab_size": 128256
+      }
+    },
+    "Qwen/Qwen2.5-7B-Instruct": {
+      "repo_id": "Qwen/Qwen2.5-7B-Instruct",
+      "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1519
+        },
+        {
+          "name": "LICENSE",
+          "size": 11343
+        },
+        {
+          "name": "README.md",
+          "size": 6240
+        },
+        {
+          "name": "config.json",
+          "size": 663
+        },
+        {
+          "name": "generation_config.json",
+          "size": 243
+        },
+        {
+          "name": "merges.txt",
+          "size": 1671839
+        },
+        {
+          "name": "model-00001-of-00004.safetensors",
+          "size": 3945441440,
+          "sha256": "a1333e6293854747c481288ea83b348226af178dd565c49b6f9495ba1966aba7"
+        },
+        {
+          "name": "model-00002-of-00004.safetensors",
+          "size": 3864726352,
+          "sha256": "f5d25a2772cb825164a2a2c0fb6d51a87e282abf21e4dd75bc5cfb3cd0ea6185"
+        },
+        {
+          "name": "model-00003-of-00004.safetensors",
+          "size": 3864726424,
+          "sha256": "8efdec4c1bc12317ae1a38dc42b595ce777738a64deea3fcb8a0a91381bcdfd5"
+        },
+        {
+          "name": "model-00004-of-00004.safetensors",
+          "size": 3556377672,
+          "sha256": "1a72d403cdf0c1ec3cb7f289f17b394a01e64394c2e9b3c0f94dbce3faf879bd"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "size": 27752
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 7031645
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 7305
+        },
+        {
+          "name": "vocab.json",
+          "size": 2776833
+        }
+      ],
+      "config.json": {
+        "architectures": [
+          "Qwen2ForCausalLM"
+        ],
+        "attention_dropout": 0.0,
+        "bos_token_id": 151643,
+        "eos_token_id": 151645,
+        "hidden_act": "silu",
+        "hidden_size": 3584,
+        "initializer_range": 0.02,
+        "intermediate_size": 18944,
+        "max_position_embeddings": 32768,
+        "max_window_layers": 28,
+        "model_type": "qwen2",
+        "num_attention_heads": 28,
+        "num_hidden_layers": 28,
+        "num_key_value_heads": 4,
+        "rms_norm_eps": 1e-06,
+        "rope_theta": 1000000.0,
+        "sliding_window": 131072,
+        "tie_word_embeddings": false,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.43.1",
+        "use_cache": true,
+        "use_sliding_window": false,
+        "vocab_size": 152064
+      }
+    },
+    "mistralai/Ministral-8B-Instruct-2410": {
+      "repo_id": "mistralai/Ministral-8B-Instruct-2410",
+      "revision": "2f494a194c5b980dfb9772cb92d26cbb671fce5a",
+      "files": [
+        {
+          "name": ".gitattributes",
+          "size": 1618
+        },
+        {
+          "name": "README.md",
+          "size": 29359
+        },
+        {
+          "name": "config.json",
+          "size": 1412
+        },
+        {
+          "name": "consolidated.safetensors",
+          "size": 16039651824,
+          "sha256": "8c0a9601a697d1220b7122e7aa6682411a8140ab5afde39c786b87513c9db862"
+        },
+        {
+          "name": "generation_config.json",
+          "size": 116
+        },
+        {
+          "name": "model-00001-of-00004.safetensors",
+          "size": 4983007904,
+          "sha256": "7c2954774d8f600560e5d75b4db7f6aa7a148a5c4dea6860148908503f649ecf"
+        },
+        {
+          "name": "model-00002-of-00004.safetensors",
+          "size": 4999836776,
+          "sha256": "888d9728a60744c4ce88984ae86952a6f07f47ee90588aa1faa4a5063951f0c1"
+        },
+        {
+          "name": "model-00003-of-00004.safetensors",
+          "size": 4983067960,
+          "sha256": "a10db8c522602eee5fb8be78980217a51c75b160c0584d110a1c694bfd4f671a"
+        },
+        {
+          "name": "model-00004-of-00004.safetensors",
+          "size": 1073741952,
+          "sha256": "e75c6183282198d40135032c9e757fb70c2455f8c0f4ded7b0895b49b72bbd5f"
+        },
+        {
+          "name": "model.safetensors.index.json",
+          "size": 26922
+        },
+        {
+          "name": "params.json",
+          "size": 296
+        },
+        {
+          "name": "passkey_example.json",
+          "size": 406397
+        },
+        {
+          "name": "special_tokens_map.json",
+          "size": 414
+        },
+        {
+          "name": "tekken.json",
+          "size": 14801223,
+          "sha256": "eccd1665d2e477697c33cb7f0daa6f6dfefc57a0a6bceb66d4be52952f827516"
+        },
+        {
+          "name": "tokenizer.json",
+          "size": 17078136,
+          "sha256": "d7edbeaf20dd7f571b5dd1c54d9ace4f9b6299127cc7ba2afb14a6d51a4a79a4"
+        },
+        {
+          "name": "tokenizer_config.json",
+          "size": 181258
+        }
+      ],
+      "config.json": {
+        "architectures": [
+          "MistralForCausalLM"
+        ],
+        "attention_dropout": 0.0,
+        "bos_token_id": 1,
+        "eos_token_id": 2,
+        "head_dim": 128,
+        "hidden_act": "silu",
+        "hidden_size": 4096,
+        "initializer_range": 0.02,
+        "intermediate_size": 12288,
+        "layer_types": [
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "full_attention",
+          "sliding_attention",
+          "sliding_attention",
+          "sliding_attention"
+        ],
+        "max_position_embeddings": 32768,
+        "model_type": "mistral",
+        "num_attention_heads": 32,
+        "num_hidden_layers": 36,
+        "num_key_value_heads": 8,
+        "rms_norm_eps": 1e-05,
+        "rope_theta": 100000000.0,
+        "sliding_window": 32768,
+        "tie_word_embeddings": false,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.46.0.dev0",
+        "use_cache": true,
+        "vocab_size": 131072
+      }
+    }
+  },
+  "datasets": {
+    "cais/mmlu": {
+      "repo_id": "cais/mmlu",
+      "revision": "c30699e8356da336a370243923dbaf21066bb9fe",
+      "gated": false
+    },
+    "TIGER-Lab/MMLU-Pro": {
+      "repo_id": "TIGER-Lab/MMLU-Pro",
+      "revision": "b189ec765aa7ed75c8acfea42df31fdae71f97be",
+      "gated": false
+    },
+    "Rowan/hellaswag": {
+      "repo_id": "Rowan/hellaswag",
+      "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+      "gated": false
+    },
+    "allenai/ai2_arc": {
+      "repo_id": "allenai/ai2_arc",
+      "revision": "210d026faf9955653af8916fad021475a3f00453",
+      "gated": false
+    },
+    "openai/gsm8k": {
+      "repo_id": "openai/gsm8k",
+      "revision": "740312add88f781978c0658806c59bc2815b9866",
+      "gated": false
+    },
+    "HuggingFaceH4/MATH-500": {
+      "repo_id": "HuggingFaceH4/MATH-500",
+      "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be",
+      "gated": false
+    },
+    "Idavidrein/gpqa": {
+      "repo_id": "Idavidrein/gpqa",
+      "revision": "83022cefff930aea54f654c0b282e74b9eeda5c6",
+      "gated": "auto",
+      "data_access": true
+    },
+    "openai/openai_humaneval": {
+      "repo_id": "openai/openai_humaneval",
+      "revision": "7dce6050a7d6d172f3cc5c32aa97f52fa1a2e544",
+      "gated": false
+    },
+    "google-research-datasets/mbpp": {
+      "repo_id": "google-research-datasets/mbpp",
+      "revision": "4bb6404fdc6cacfda99d4ac4205087b89d32030c",
+      "gated": false
+    }
+  },
+  "hardware": [
+    {
+      "name": "cpu-basic",
+      "prettyName": "CPU Basic",
+      "cpu": "2 vCPU",
+      "ram": "16 GB",
+      "ephemeralStorage": "50 GB",
+      "accelerator": null,
+      "unitCostMicroUSD": 167,
+      "unitCostUSD": 0.000167,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "cpu-upgrade",
+      "prettyName": "CPU Upgrade",
+      "cpu": "8 vCPU",
+      "ram": "32 GB",
+      "ephemeralStorage": "50 GB",
+      "accelerator": null,
+      "unitCostMicroUSD": 500,
+      "unitCostUSD": 0.0005,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "cpu-performance",
+      "prettyName": "CPU Performance",
+      "cpu": "32 vCPU",
+      "ram": "256 GB",
+      "ephemeralStorage": "1024 GB",
+      "accelerator": null,
+      "unitCostMicroUSD": 31667,
+      "unitCostUSD": 0.031667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "cpu-xl",
+      "prettyName": "CPU XL",
+      "cpu": "16 vCPU",
+      "ram": "124 GB",
+      "ephemeralStorage": "1000 GB",
+      "accelerator": null,
+      "unitCostMicroUSD": 16667,
+      "unitCostUSD": 0.016667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "t4-small",
+      "prettyName": "Nvidia T4 - small",
+      "cpu": "4 vCPU",
+      "ram": "15 GB",
+      "ephemeralStorage": "50 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "T4",
+        "quantity": "1",
+        "vram": "16 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 6667,
+      "unitCostUSD": 0.006667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "t4-medium",
+      "prettyName": "Nvidia T4 - medium",
+      "cpu": "8 vCPU",
+      "ram": "30 GB",
+      "ephemeralStorage": "100 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "T4",
+        "quantity": "1",
+        "vram": "16 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 10000,
+      "unitCostUSD": 0.01,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a10g-small",
+      "prettyName": "Nvidia A10G - small",
+      "cpu": "4 vCPU",
+      "ram": "15 GB",
+      "ephemeralStorage": "110 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A10G",
+        "quantity": "1",
+        "vram": "24 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 16667,
+      "unitCostUSD": 0.016667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a10g-large",
+      "prettyName": "Nvidia A10G - large",
+      "cpu": "12 vCPU",
+      "ram": "46 GB",
+      "ephemeralStorage": "200 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A10G",
+        "quantity": "1",
+        "vram": "24 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 25000,
+      "unitCostUSD": 0.025,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a10g-largex2",
+      "prettyName": "2x Nvidia A10G - large",
+      "cpu": "24 vCPU",
+      "ram": "92 GB",
+      "ephemeralStorage": "1000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A10G",
+        "quantity": "2",
+        "vram": "48 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 50000,
+      "unitCostUSD": 0.05,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a10g-largex4",
+      "prettyName": "4x Nvidia A10G - large",
+      "cpu": "48 vCPU",
+      "ram": "184 GB",
+      "ephemeralStorage": "2000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A10G",
+        "quantity": "4",
+        "vram": "96 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 83334,
+      "unitCostUSD": 0.083334,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a100-large",
+      "prettyName": "Nvidia A100 - large",
+      "cpu": "12 vCPU",
+      "ram": "142 GB",
+      "ephemeralStorage": "1000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A100",
+        "quantity": "1",
+        "vram": "80 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 41667,
+      "unitCostUSD": 0.041667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a100x4",
+      "prettyName": "4x Nvidia A100",
+      "cpu": "48 vCPU",
+      "ram": "568 GB",
+      "ephemeralStorage": "4000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A100",
+        "quantity": "4",
+        "vram": "320 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 166667,
+      "unitCostUSD": 0.166667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "a100x8",
+      "prettyName": "8x Nvidia A100",
+      "cpu": "96 vCPU",
+      "ram": "1136 GB",
+      "ephemeralStorage": "8000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "A100",
+        "quantity": "8",
+        "vram": "640 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 333333,
+      "unitCostUSD": 0.333333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "h200",
+      "prettyName": "Nvidia H200",
+      "cpu": "23 vCPU",
+      "ram": "256 GB",
+      "ephemeralStorage": "3000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "H200",
+        "quantity": "1",
+        "vram": "141 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 83333,
+      "unitCostUSD": 0.083333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "h200x2",
+      "prettyName": "Nvidia H200",
+      "cpu": "46 vCPU",
+      "ram": "512 GB",
+      "ephemeralStorage": "6000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "H200",
+        "quantity": "2",
+        "vram": "282 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 166667,
+      "unitCostUSD": 0.166667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "h200x4",
+      "prettyName": "Nvidia H200",
+      "cpu": "92 vCPU",
+      "ram": "1024 GB",
+      "ephemeralStorage": "12000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "H200",
+        "quantity": "4",
+        "vram": "564 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 333333,
+      "unitCostUSD": 0.333333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "h200x8",
+      "prettyName": "Nvidia H200",
+      "cpu": "184 vCPU",
+      "ram": "2048 GB",
+      "ephemeralStorage": "24000 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "H200",
+        "quantity": "8",
+        "vram": "1128 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 666667,
+      "unitCostUSD": 0.666667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "rtx-pro-6000",
+      "prettyName": "Nvidia RTX PRO 6000",
+      "cpu": "23 vCPU",
+      "ram": "256 GB",
+      "ephemeralStorage": "475 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "RTX PRO 6000",
+        "quantity": "1",
+        "vram": "96 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 45833,
+      "unitCostUSD": 0.045833,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "rtx-pro-6000x2",
+      "prettyName": "Nvidia RTX PRO 6000",
+      "cpu": "46 vCPU",
+      "ram": "512 GB",
+      "ephemeralStorage": "950 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "RTX PRO 6000",
+        "quantity": "2",
+        "vram": "192 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 91667,
+      "unitCostUSD": 0.091667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "rtx-pro-6000x4",
+      "prettyName": "Nvidia RTX PRO 6000",
+      "cpu": "92 vCPU",
+      "ram": "1024 GB",
+      "ephemeralStorage": "1900 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "RTX PRO 6000",
+        "quantity": "4",
+        "vram": "384 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 183333,
+      "unitCostUSD": 0.183333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "rtx-pro-6000x8",
+      "prettyName": "Nvidia RTX PRO 6000",
+      "cpu": "184 vCPU",
+      "ram": "2048 GB",
+      "ephemeralStorage": "3800 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "RTX PRO 6000",
+        "quantity": "8",
+        "vram": "768 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 366667,
+      "unitCostUSD": 0.366667,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "l4x1",
+      "prettyName": "1x Nvidia L4",
+      "cpu": "8 vCPU",
+      "ram": "30 GB",
+      "ephemeralStorage": "400 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "L4",
+        "quantity": "1",
+        "vram": "24 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 13333,
+      "unitCostUSD": 0.013333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "l4x4",
+      "prettyName": "4x Nvidia L4",
+      "cpu": "48 vCPU",
+      "ram": "186 GB",
+      "ephemeralStorage": "3200 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "L4",
+        "quantity": "4",
+        "vram": "96 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 63333,
+      "unitCostUSD": 0.063333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "l40sx1",
+      "prettyName": "1x Nvidia L40S",
+      "cpu": "8 vCPU",
+      "ram": "62 GB",
+      "ephemeralStorage": "380 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "L40S",
+        "quantity": "1",
+        "vram": "48 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 30000,
+      "unitCostUSD": 0.03,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "l40sx4",
+      "prettyName": "4x Nvidia L40S",
+      "cpu": "48 vCPU",
+      "ram": "382 GB",
+      "ephemeralStorage": "3200 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "L40S",
+        "quantity": "4",
+        "vram": "192 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 138333,
+      "unitCostUSD": 0.138333,
+      "unitLabel": "minute"
+    },
+    {
+      "name": "l40sx8",
+      "prettyName": "8x Nvidia L40S",
+      "cpu": "192 vCPU",
+      "ram": "1534 GB",
+      "ephemeralStorage": "6500 GB",
+      "accelerator": {
+        "type": "gpu",
+        "model": "L40S",
+        "quantity": "8",
+        "vram": "384 GB",
+        "manufacturer": "Nvidia"
+      },
+      "unitCostMicroUSD": 391666,
+      "unitCostUSD": 0.391666,
+      "unitLabel": "minute"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "repo": "Ruurd/iclr2027-rebuttal-eval",
+  "revision": "da01145525f780cdf9dd5f058a6710472297639b",
+  "plan_id": "23df4ab50ba12c30ac5d673db707ea2f5ad2996787942e744153178e8433c5ce",
+  "prior_compute_reserved_usd": 71.76094900000001,
+  "total_compute_ceiling_usd": 77.76094900000001,
+  "additional_phase_ceiling_usd": 6,
+  "master_ceiling_usd": 93,
+  "active_tasks": [
+    "humaneval"
+  ],
+  "qwen_historical_reuse_candidates": 95,
+  "qwen_new_replacements": 69,
+  "gemma_fresh_items": 164,
+  "budget_note": "Includes all prior observed/reserved spend and latest diagnostics; other campaigns remain stopped."
+}

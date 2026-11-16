@@ -243,6 +243,8 @@ def load_denoising_model(config: dict[str, Any]) -> tuple[torch.nn.Module, dict[
     if full_finetuning and (train_last_n_layers or train_lm_head):
         raise ValueError("train_last_n_layers/train_lm_head are redundant with full_finetuning")
     load_kwargs = dict(dtype=dtype, trust_remote_code=False, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache))
+    if config.get("model_revision"):
+        load_kwargs["revision"] = config["model_revision"]
     if quantization in {"4bit", "4-bit", "qlora"}:
         try:
             from transformers import BitsAndBytesConfig

@@ -1,0 +1,46 @@
+{
+  "metric": "weighted_loss",
+  "sources": {
+    "128": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-128/metrics.jsonl",
+      "sha256": "466959d59ebaa9cd5c11e942dc6380692c5f4d6bfd1a6adab7beea3dc97c6713",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 1.2683631896972656
+    },
+    "512": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-512/metrics.jsonl",
+      "sha256": "d57f107186135383dcbaa7806cbc79a8aa0fe7300352f1c20bf479faaa7350a4",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 1.1951189422607422
+    },
+    "1024": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-1024/metrics.jsonl",
+      "sha256": "e6d0fdfee07cb9cdde4a817808bb2859163e3e6ea5c6e7ade28471e083165220",
+      "points": 20,
+      "last_update": 5000,
+      "last_loss": 1.265038070678711
+    },
+    "2048": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-2048/metrics.jsonl",
+      "sha256": "eab2e4fef5b864563ef37160d04da247a5139fb9d6a4a859b126428c4384bace",
+      "points": 100,
+      "last_update": 25000,
+      "last_loss": 1.1020887756347657
+    }
+  },
+  "objective_weights": {
+    "answer": 0.9,
+    "padding": 0.1
+  },
+  "validation_signature": [
+    200.0,
+    15207.0,
+    0.5093340301513671
+  ],
+  "main_axis": "logarithmic, full observed range",
+  "inset_axis": "linear, >=18000 updates, ranks [128, 512, 2048]",
+  "smoothing": false,
+  "limitation": "Fresh rank-1024 curve is partial until 25k updates; historical 1024 is not included."
+}

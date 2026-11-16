@@ -1,0 +1,35 @@
+{
+  "historical_1024": {
+    "weighted_loss_sum": 126.24955749511719,
+    "unweighted_ce_sum": 15195.947265625,
+    "valid_examples": 200.0,
+    "supervised_tokens": 15207.0,
+    "eligible_answer_tokens": 12355.0,
+    "masked_tokens": 15207.0,
+    "t_sum": 101.86680603027344,
+    "t_count": 200.0,
+    "weighted_loss": 0.631247787475586,
+    "unweighted_masked_token_ce": 0.9992731811419083,
+    "realized_masked_fraction": 1.2308377175232699,
+    "mean_sampled_t": 0.5093340301513671,
+    "generation_perplexity": 29.524425506591797,
+    "generation_mean_nll": 3.3852178988861423,
+    "generation_tokens": 271,
+    "split": "validation",
+    "step": 25000
+  },
+  "current_2048_snapshot": {
+    "step": 24500,
+    "weighted_loss": 1.1012879943847655,
+    "unweighted_masked_token_ce": 0.9950173927919708
+  },
+  "common_metric": "unweighted_masked_token_ce",
+  "common_metric_relative_decrease_percent": 0.42588837869883656,
+  "limits": [
+    "2048 is an interim update-24500 snapshot; 1024 is the historical update-25000 log.",
+    "Weighted loss normalization differs or is incompletely documented for the historical run; do not compare raw weighted losses.",
+    "The historical config exactly matches the archived llama_25k config, but does not record explicit answer_padding_loss weights.",
+    "The common metric uses 200 validation examples and 15207 supervised tokens in both logs.",
+    "These are not a fully controlled four-rank training comparison; historical objective provenance remains unresolved."
+  ]
+}

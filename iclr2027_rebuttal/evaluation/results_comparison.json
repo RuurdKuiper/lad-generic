@@ -1,0 +1,2013 @@
+{
+  "before": {
+    "models": {
+      "gemma_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 125,
+            "correct": 108,
+            "accuracy": 0.864,
+            "wilson95": [
+              0.7929706949475033,
+              0.913323698432835
+            ]
+          },
+          "gpqa": {
+            "n": 125,
+            "correct": 40,
+            "accuracy": 0.32,
+            "wilson95": [
+              0.2446411126139047,
+              0.40609242912109295
+            ]
+          },
+          "hellaswag": {
+            "n": 125,
+            "correct": 94,
+            "accuracy": 0.752,
+            "wilson95": [
+              0.6695405133205623,
+              0.8194325282504411
+            ]
+          },
+          "mmlu": {
+            "n": 125,
+            "correct": 86,
+            "accuracy": 0.688,
+            "wilson95": [
+              0.6021982442599294,
+              0.7625911677057398
+            ]
+          },
+          "mmlu_pro": {
+            "n": 125,
+            "correct": 46,
+            "accuracy": 0.368,
+            "wilson95": [
+              0.2885699663384549,
+              0.4553012976005434
+            ]
+          },
+          "gsm8k": {
+            "n": 125,
+            "correct": 80,
+            "accuracy": 0.64,
+            "wilson95": [
+              0.5528385550024603,
+              0.7188131347592083
+            ]
+          },
+          "math": {
+            "n": 125,
+            "correct": 37,
+            "accuracy": 0.296,
+            "wilson95": [
+              0.22302510872923897,
+              0.38113957190375825
+            ]
+          },
+          "humaneval": {
+            "n": 125,
+            "correct": 32,
+            "accuracy": 0.256,
+            "wilson95": [
+              0.18756706920350186,
+              0.33898284292616154
+            ]
+          },
+          "mbpp": {
+            "n": 125,
+            "correct": 46,
+            "accuracy": 0.368,
+            "wilson95": [
+              0.2885699663384549,
+              0.4553012976005434
+            ]
+          }
+        },
+        "macro_mean": 0.5057777777777778,
+        "macro95_normal": [
+          0.4793172736526833,
+          0.5322382819028723
+        ]
+      },
+      "gemma_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 125,
+            "correct": 111,
+            "accuracy": 0.888,
+            "wilson95": [
+              0.8207616439023667,
+              0.9321016105799721
+            ]
+          },
+          "gpqa": {
+            "n": 125,
+            "correct": 35,
+            "accuracy": 0.28,
+            "wilson95": [
+              0.2087531598446115,
+              0.3643656133870522
+            ]
+          },
+          "hellaswag": {
+            "n": 125,
+            "correct": 87,
+            "accuracy": 0.696,
+            "wilson95": [
+              0.6105156751661401,
+              0.7697966905001957
+            ]
+          },
+          "mmlu": {
+            "n": 125,
+            "correct": 81,
+            "accuracy": 0.648,
+            "wilson95": [
+              0.5610025545352819,
+              0.7261720889270535
+            ]
+          },
+          "mmlu_pro": {
+            "n": 125,
+            "correct": 56,
+            "accuracy": 0.448,
+            "wilson95": [
+              0.36366890453732625,
+              0.5354318964083398
+            ]
+          },
+          "gsm8k": {
+            "n": 125,
+            "correct": 109,
+            "accuracy": 0.872,
+            "wilson95": [
+              0.8021643758872008,
+              0.9196529711938044
+            ]
+          },
+          "math": {
+            "n": 125,
+            "correct": 75,
+            "accuracy": 0.6,
+            "wilson95": [
+              0.5123745945370625,
+              0.6816623267212721
+            ]
+          },
+          "humaneval": {
+            "n": 50,
+            "correct": 37,
+            "accuracy": 0.74,
+            "wilson95": [
+              0.6044684273515117,
+              0.8412847250644762
+            ]
+          },
+          "mbpp": {
+            "n": 50,
+            "correct": 37,
+            "accuracy": 0.74,
+            "wilson95": [
+              0.6044684273515117,
+              0.8412847250644762
+            ]
+          }
+        },
+        "macro_mean": 0.6568888888888889,
+        "macro95_normal": [
+          0.6271432913261831,
+          0.6866344864515946
+        ]
+      },
+      "llada": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "qwen_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "qwen_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "ministral_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "ministral_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_25k": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_50k": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      }
+    },
+    "paired_macro": {},
+    "scope": "Item uncertainty on nine fixed tasks; no multiplicity adjustment; incomplete queues are not final tables."
+  },
+  "rescored_same_items": {
+    "models": {
+      "gemma_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 125,
+            "correct": 108,
+            "accuracy": 0.864,
+            "wilson95": [
+              0.7929706949475033,
+              0.913323698432835
+            ]
+          },
+          "gpqa": {
+            "n": 125,
+            "correct": 40,
+            "accuracy": 0.32,
+            "wilson95": [
+              0.2446411126139047,
+              0.40609242912109295
+            ]
+          },
+          "hellaswag": {
+            "n": 125,
+            "correct": 94,
+            "accuracy": 0.752,
+            "wilson95": [
+              0.6695405133205623,
+              0.8194325282504411
+            ]
+          },
+          "mmlu": {
+            "n": 125,
+            "correct": 86,
+            "accuracy": 0.688,
+            "wilson95": [
+              0.6021982442599294,
+              0.7625911677057398
+            ]
+          },
+          "mmlu_pro": {
+            "n": 125,
+            "correct": 46,
+            "accuracy": 0.368,
+            "wilson95": [
+              0.2885699663384549,
+              0.4553012976005434
+            ]
+          },
+          "gsm8k": {
+            "n": 125,
+            "correct": 80,
+            "accuracy": 0.64,
+            "wilson95": [
+              0.5528385550024603,
+              0.7188131347592083
+            ]
+          },
+          "math": {
+            "n": 125,
+            "correct": 28,
+            "accuracy": 0.224,
+            "wilson95": [
+              0.15976976190284642,
+              0.3046883354241498
+            ]
+          },
+          "humaneval": {
+            "n": 125,
+            "correct": 32,
+            "accuracy": 0.256,
+            "wilson95": [
+              0.18756706920350186,
+              0.33898284292616154
+            ]
+          },
+          "mbpp": {
+            "n": 125,
+            "correct": 46,
+            "accuracy": 0.368,
+            "wilson95": [
+              0.2885699663384549,
+              0.4553012976005434
+            ]
+          }
+        },
+        "macro_mean": 0.4977777777777777,
+        "macro95_normal": [
+          0.47156823074770243,
+          0.5239873248078529
+        ]
+      },
+      "gemma_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 125,
+            "correct": 111,
+            "accuracy": 0.888,
+            "wilson95": [
+              0.8207616439023667,
+              0.9321016105799721
+            ]
+          },
+          "gpqa": {
+            "n": 125,
+            "correct": 35,
+            "accuracy": 0.28,
+            "wilson95": [
+              0.2087531598446115,
+              0.3643656133870522
+            ]
+          },
+          "hellaswag": {
+            "n": 125,
+            "correct": 87,
+            "accuracy": 0.696,
+            "wilson95": [
+              0.6105156751661401,
+              0.7697966905001957
+            ]
+          },
+          "mmlu": {
+            "n": 125,
+            "correct": 81,
+            "accuracy": 0.648,
+            "wilson95": [
+              0.5610025545352819,
+              0.7261720889270535
+            ]
+          },
+          "mmlu_pro": {
+            "n": 125,
+            "correct": 56,
+            "accuracy": 0.448,
+            "wilson95": [
+              0.36366890453732625,
+              0.5354318964083398
+            ]
+          },
+          "gsm8k": {
+            "n": 125,
+            "correct": 109,
+            "accuracy": 0.872,
+            "wilson95": [
+              0.8021643758872008,
+              0.9196529711938044
+            ]
+          },
+          "math": {
+            "n": 125,
+            "correct": 71,
+            "accuracy": 0.568,
+            "wilson95": [
+              0.4804150136010523,
+              0.6515300928546153
+            ]
+          },
+          "humaneval": {
+            "n": 50,
+            "correct": 37,
+            "accuracy": 0.74,
+            "wilson95": [
+              0.6044684273515117,
+              0.8412847250644762
+            ]
+          },
+          "mbpp": {
+            "n": 50,
+            "correct": 37,
+            "accuracy": 0.74,
+            "wilson95": [
+              0.6044684273515117,
+              0.8412847250644762
+            ]
+          }
+        },
+        "macro_mean": 0.6533333333333333,
+        "macro95_normal": [
+          0.6235531940501962,
+          0.6831134726164705
+        ]
+      },
+      "llada": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "qwen_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "qwen_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "ministral_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "ministral_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_25k": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_50k": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      }
+    },
+    "paired_macro": {},
+    "scope": "Item uncertainty on nine fixed tasks; no multiplicity adjustment; incomplete queues are not final tables."
+  },
+  "current": {
+    "models": {
+      "gemma_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 125,
+            "correct": 108,
+            "accuracy": 0.864,
+            "wilson95": [
+              0.7929706949475033,
+              0.913323698432835
+            ]
+          },
+          "gpqa": {
+            "n": 125,
+            "correct": 40,
+            "accuracy": 0.32,
+            "wilson95": [
+              0.2446411126139047,
+              0.40609242912109295
+            ]
+          },
+          "hellaswag": {
+            "n": 125,
+            "correct": 94,
+            "accuracy": 0.752,
+            "wilson95": [
+              0.6695405133205623,
+              0.8194325282504411
+            ]
+          },
+          "mmlu": {
+            "n": 125,
+            "correct": 86,
+            "accuracy": 0.688,
+            "wilson95": [
+              0.6021982442599294,
+              0.7625911677057398
+            ]
+          },
+          "mmlu_pro": {
+            "n": 125,
+            "correct": 46,
+            "accuracy": 0.368,
+            "wilson95": [
+              0.2885699663384549,
+              0.4553012976005434
+            ]
+          },
+          "gsm8k": {
+            "n": 125,
+            "correct": 80,
+            "accuracy": 0.64,
+            "wilson95": [
+              0.5528385550024603,
+              0.7188131347592083
+            ]
+          },
+          "math": {
+            "n": 125,
+            "correct": 28,
+            "accuracy": 0.224,
+            "wilson95": [
+              0.15976976190284642,
+              0.3046883354241498
+            ]
+          },
+          "humaneval": {
+            "n": 125,
+            "correct": 32,
+            "accuracy": 0.256,
+            "wilson95": [
+              0.18756706920350186,
+              0.33898284292616154
+            ]
+          },
+          "mbpp": {
+            "n": 125,
+            "correct": 46,
+            "accuracy": 0.368,
+            "wilson95": [
+              0.2885699663384549,
+              0.4553012976005434
+            ]
+          }
+        },
+        "macro_mean": 0.4977777777777777,
+        "macro95_normal": [
+          0.47156823074770243,
+          0.5239873248078529
+        ]
+      },
+      "gemma_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 206,
+            "correct": 183,
+            "accuracy": 0.8883495145631068,
+            "wilson95": [
+              0.8380399189306096,
+              0.9244404836514046
+            ]
+          },
+          "gpqa": {
+            "n": 206,
+            "correct": 61,
+            "accuracy": 0.2961165048543689,
+            "wilson95": [
+              0.23796530570533952,
+              0.36173248293910293
+            ]
+          },
+          "hellaswag": {
+            "n": 206,
+            "correct": 143,
+            "accuracy": 0.6941747572815534,
+            "wilson95": [
+              0.6281778760439555,
+              0.7530623252470515
+            ]
+          },
+          "mmlu": {
+            "n": 206,
+            "correct": 134,
+            "accuracy": 0.6504854368932039,
+            "wilson95": [
+              0.5831578010555558,
+              0.7123033549449747
+            ]
+          },
+          "mmlu_pro": {
+            "n": 206,
+            "correct": 93,
+            "accuracy": 0.45145631067961167,
+            "wilson95": [
+              0.38500797827613664,
+              0.5196819714011115
+            ]
+          },
+          "gsm8k": {
+            "n": 206,
+            "correct": 181,
+            "accuracy": 0.8786407766990292,
+            "wilson95": [
+              0.8269868503380563,
+              0.9164315421794075
+            ]
+          },
+          "math": {
+            "n": 206,
+            "correct": 105,
+            "accuracy": 0.5097087378640777,
+            "wilson95": [
+              0.44189280246597484,
+              0.5771692075985756
+            ]
+          },
+          "humaneval": {
+            "n": 131,
+            "correct": 79,
+            "accuracy": 0.6030534351145038,
+            "wilson95": [
+              0.5174843764419536,
+              0.6827507755368108
+            ]
+          },
+          "mbpp": {
+            "n": 130,
+            "correct": 82,
+            "accuracy": 0.6307692307692307,
+            "wilson95": [
+              0.5451705848983546,
+              0.7088613144815634
+            ]
+          }
+        },
+        "macro_mean": 0.6225283005242984,
+        "macro95_normal": [
+          0.6004919720650252,
+          0.6445646289835716
+        ]
+      },
+      "llada": {
+        "tasks": {
+          "arc_c": {
+            "n": 125,
+            "correct": 108,
+            "accuracy": 0.864,
+            "wilson95": [
+              0.7929706949475033,
+              0.913323698432835
+            ]
+          },
+          "gpqa": {
+            "n": 125,
+            "correct": 39,
+            "accuracy": 0.312,
+            "wilson95": [
+              0.23740883229426024,
+              0.3978017557400706
+            ]
+          },
+          "hellaswag": {
+            "n": 125,
+            "correct": 87,
+            "accuracy": 0.696,
+            "wilson95": [
+              0.6105156751661401,
+              0.7697966905001957
+            ]
+          },
+          "mmlu": {
+            "n": 65,
+            "correct": 35,
+            "accuracy": 0.5384615384615384,
+            "wilson95": [
+              0.4185339926647454,
+              0.6540966587719579
+            ]
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "qwen_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "qwen_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "ministral_d": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "ministral_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_25k": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_ar": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      },
+      "llama_50k": {
+        "tasks": {
+          "arc_c": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gpqa": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "hellaswag": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mmlu_pro": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "gsm8k": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "math": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "humaneval": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          },
+          "mbpp": {
+            "n": 0,
+            "correct": 0,
+            "accuracy": null,
+            "wilson95": null
+          }
+        },
+        "macro_mean": null,
+        "macro95_normal": null
+      }
+    },
+    "paired_macro": {},
+    "scope": "Item uncertainty on nine fixed tasks; no multiplicity adjustment; incomplete queues are not final tables."
+  },
+  "source_job": "6af05e99e6320c66fad74a2a"
+}

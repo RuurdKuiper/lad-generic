@@ -1,0 +1,4049 @@
+{
+  "analysis_script_sha256": "24868c9d689399fc329377ce836c8f2556fa53cdd40cca2530ef805a48288c4b",
+  "inputs": {
+    "evaluation/generation_diagnostic/nov15/main_results.jsonl": "76233d2d1e0b0db225b8b00f5220f3bec96956416a5d4ac2fa4d78d65a4fd8c5",
+    "evaluation/generation_diagnostic/nov15_gemma/assembled_results.jsonl": "c25ba5167bc8301724ce6c8d222528500aa6992ec967eda16da8019adf02ed6b",
+    "evaluation/generation_diagnostic/nov15_gemma/assembled_audit.json": "abd4b9da3b6d731e8e124efe0d973d8bd52348f28ab64b493348dbaebba3824d",
+    "analysis/final_discrepancy_explanations.json": "0c7e3d01063cf95ad0cf879e74d175d6cfd8350028abcadd626d69c273828d76",
+    "evaluation/DISCREPANCY_EXPLANATIONS_AND_REVISION_PLAN.md": "31456c7e416b379f1facdedf02576cdacf7378add9276ca888864c2654955a04"
+  },
+  "source_revision": "3d68a562325f857ccca3905c894f12cd96deed12",
+  "original_outcomes": 11070,
+  "final_outcomes": 21640,
+  "cells": [
+    {
+      "model": "gemma_d",
+      "task": "arc_c",
+      "original": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "rescored": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "same_ids": {
+        "k": 111,
+        "n": 125,
+        "pct": 88.8
+      },
+      "added": {
+        "k": 114,
+        "n": 125,
+        "pct": 91.2
+      },
+      "final": {
+        "k": 225,
+        "n": 250,
+        "pct": 90.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 2.3999999999999915,
+      "expansion_delta": 1.2000000000000028,
+      "total_delta": 3.5999999999999943,
+      "cohort_difference": 2.4000000000000057,
+      "p": 0.6740295981784635,
+      "cohort_ci95_pp": [
+        -5.267271434913785,
+        10.130816826420947
+      ],
+      "paired_gains": 7,
+      "paired_losses": 4,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "gpqa",
+      "original": {
+        "k": 40,
+        "n": 125,
+        "pct": 32.0
+      },
+      "rescored": {
+        "k": 40,
+        "n": 125,
+        "pct": 32.0
+      },
+      "same_ids": {
+        "k": 40,
+        "n": 125,
+        "pct": 32.0
+      },
+      "added": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "final": {
+        "k": 77,
+        "n": 250,
+        "pct": 30.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.1999999999999993,
+      "total_delta": -1.1999999999999993,
+      "cohort_difference": -2.3999999999999986,
+      "p": 0.7842074162139238,
+      "cohort_ci95_pp": [
+        -13.685938644149104,
+        8.970008184704799
+      ],
+      "paired_gains": 15,
+      "paired_losses": 15,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "hellaswag",
+      "original": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "rescored": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "same_ids": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "added": {
+        "k": 103,
+        "n": 125,
+        "pct": 82.4
+      },
+      "final": {
+        "k": 197,
+        "n": 250,
+        "pct": 78.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 3.5999999999999943,
+      "total_delta": 3.5999999999999943,
+      "cohort_difference": 7.200000000000003,
+      "p": 0.2155208618279832,
+      "cohort_ci95_pp": [
+        -2.969470406475368,
+        17.213027606109456
+      ],
+      "paired_gains": 8,
+      "paired_losses": 8,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "mmlu",
+      "original": {
+        "k": 86,
+        "n": 125,
+        "pct": 68.8
+      },
+      "rescored": {
+        "k": 86,
+        "n": 125,
+        "pct": 68.8
+      },
+      "same_ids": {
+        "k": 80,
+        "n": 125,
+        "pct": 64.0
+      },
+      "added": {
+        "k": 86,
+        "n": 125,
+        "pct": 68.8
+      },
+      "final": {
+        "k": 166,
+        "n": 250,
+        "pct": 66.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": -4.799999999999997,
+      "expansion_delta": 2.4000000000000057,
+      "total_delta": -2.3999999999999915,
+      "cohort_difference": 4.799999999999997,
+      "p": 0.5033037392595019,
+      "cohort_ci95_pp": [
+        -6.850515653245511,
+        16.272122643070432
+      ],
+      "paired_gains": 5,
+      "paired_losses": 11,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "rescored": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "same_ids": {
+        "k": 48,
+        "n": 125,
+        "pct": 38.4
+      },
+      "added": {
+        "k": 50,
+        "n": 125,
+        "pct": 40.0
+      },
+      "final": {
+        "k": 98,
+        "n": 250,
+        "pct": 39.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 1.6000000000000014,
+      "expansion_delta": 0.8000000000000043,
+      "total_delta": 2.4000000000000057,
+      "cohort_difference": 1.6000000000000014,
+      "p": 0.8969643874151281,
+      "cohort_ci95_pp": [
+        -10.369422998290476,
+        13.50520509479436
+      ],
+      "paired_gains": 10,
+      "paired_losses": 8,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "gsm8k",
+      "original": {
+        "k": 80,
+        "n": 125,
+        "pct": 64.0
+      },
+      "rescored": {
+        "k": 80,
+        "n": 125,
+        "pct": 64.0
+      },
+      "same_ids": {
+        "k": 85,
+        "n": 125,
+        "pct": 68.0
+      },
+      "added": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "final": {
+        "k": 172,
+        "n": 250,
+        "pct": 68.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 4.0,
+      "expansion_delta": 0.7999999999999972,
+      "total_delta": 4.799999999999997,
+      "cohort_difference": 1.5999999999999943,
+      "p": 0.8914800301192707,
+      "cohort_ci95_pp": [
+        -9.79584648035024,
+        12.939249481668552
+      ],
+      "paired_gains": 17,
+      "paired_losses": 12,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "math",
+      "original": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "rescored": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "same_ids": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "added": {
+        "k": 25,
+        "n": 125,
+        "pct": 20.0
+      },
+      "final": {
+        "k": 61,
+        "n": 250,
+        "pct": 24.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": -0.8000000000000007,
+      "expansion_delta": -4.400000000000002,
+      "total_delta": -5.200000000000003,
+      "cohort_difference": -8.8,
+      "p": 0.14050129775484668,
+      "cohort_ci95_pp": [
+        -19.225928829837276,
+        1.8669656262855536
+      ],
+      "paired_gains": 17,
+      "paired_losses": 18,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "mbpp",
+      "original": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "rescored": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "same_ids": {
+        "k": 61,
+        "n": 125,
+        "pct": 48.8
+      },
+      "added": {
+        "k": 48,
+        "n": 125,
+        "pct": 38.4
+      },
+      "final": {
+        "k": 109,
+        "n": 250,
+        "pct": 43.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 12.0,
+      "expansion_delta": -5.199999999999996,
+      "total_delta": 6.800000000000004,
+      "cohort_difference": -10.399999999999999,
+      "p": 0.12571987332875206,
+      "cohort_ci95_pp": [
+        -22.235012500282078,
+        1.8662228131827565
+      ],
+      "paired_gains": 20,
+      "paired_losses": 5,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "humaneval",
+      "original": {
+        "k": 32,
+        "n": 125,
+        "pct": 25.6
+      },
+      "rescored": {
+        "k": 32,
+        "n": 125,
+        "pct": 25.6
+      },
+      "same_ids": {
+        "k": 47,
+        "n": 125,
+        "pct": 37.6
+      },
+      "added": {
+        "k": 2,
+        "n": 39,
+        "pct": 5.128205128205129
+      },
+      "final": {
+        "k": 49,
+        "n": 164,
+        "pct": 29.878048780487806
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 12.0,
+      "expansion_delta": -7.721951219512196,
+      "total_delta": 4.278048780487804,
+      "cohort_difference": -32.47179487179487,
+      "p": 4.03570860469341e-05,
+      "cohort_ci95_pp": [
+        -41.9683751152214,
+        -18.24947923478723
+      ],
+      "paired_gains": 20,
+      "paired_losses": 5,
+      "holm_p": 0.0036321377442240688
+    },
+    {
+      "model": "gemma_ar",
+      "task": "arc_c",
+      "original": {
+        "k": 111,
+        "n": 125,
+        "pct": 88.8
+      },
+      "rescored": {
+        "k": 111,
+        "n": 125,
+        "pct": 88.8
+      },
+      "same_ids": {
+        "k": 111,
+        "n": 125,
+        "pct": 88.8
+      },
+      "added": {
+        "k": 111,
+        "n": 125,
+        "pct": 88.8
+      },
+      "final": {
+        "k": 222,
+        "n": 250,
+        "pct": 88.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.0,
+      "total_delta": 0.0,
+      "cohort_difference": 0.0,
+      "p": 0.9999999999999852,
+      "cohort_ci95_pp": [
+        -8.041112228081165,
+        8.041112228081165
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "gpqa",
+      "original": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "rescored": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "same_ids": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "added": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "final": {
+        "k": 74,
+        "n": 250,
+        "pct": 29.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 1.6000000000000014,
+      "total_delta": 1.6000000000000014,
+      "cohort_difference": 3.1999999999999993,
+      "p": 0.6778290264679822,
+      "cohort_ci95_pp": [
+        -8.061171795989686,
+        14.352602171783147
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "hellaswag",
+      "original": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "rescored": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "same_ids": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "added": {
+        "k": 89,
+        "n": 125,
+        "pct": 71.2
+      },
+      "final": {
+        "k": 176,
+        "n": 250,
+        "pct": 70.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.8000000000000114,
+      "total_delta": 0.8000000000000114,
+      "cohort_difference": 1.6000000000000085,
+      "p": 0.8898744458778166,
+      "cohort_ci95_pp": [
+        -9.638939783518184,
+        12.784636149499262
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "mmlu",
+      "original": {
+        "k": 81,
+        "n": 125,
+        "pct": 64.8
+      },
+      "rescored": {
+        "k": 81,
+        "n": 125,
+        "pct": 64.8
+      },
+      "same_ids": {
+        "k": 81,
+        "n": 125,
+        "pct": 64.8
+      },
+      "added": {
+        "k": 83,
+        "n": 125,
+        "pct": 66.4
+      },
+      "final": {
+        "k": 164,
+        "n": 250,
+        "pct": 65.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.7999999999999972,
+      "total_delta": 0.7999999999999972,
+      "cohort_difference": 1.6000000000000085,
+      "p": 0.8941358965658288,
+      "cohort_ci95_pp": [
+        -10.06604728573287,
+        13.205718374372719
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 56,
+        "n": 125,
+        "pct": 44.8
+      },
+      "rescored": {
+        "k": 56,
+        "n": 125,
+        "pct": 44.8
+      },
+      "same_ids": {
+        "k": 56,
+        "n": 125,
+        "pct": 44.8
+      },
+      "added": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "final": {
+        "k": 111,
+        "n": 250,
+        "pct": 44.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.3999999999999986,
+      "total_delta": -0.3999999999999986,
+      "cohort_difference": -0.7999999999999972,
+      "p": 1.0,
+      "cohort_ci95_pp": [
+        -12.920445327470558,
+        11.353755669851516
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "gsm8k",
+      "original": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "rescored": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "same_ids": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "added": {
+        "k": 112,
+        "n": 125,
+        "pct": 89.6
+      },
+      "final": {
+        "k": 221,
+        "n": 250,
+        "pct": 88.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 1.2000000000000028,
+      "total_delta": 1.2000000000000028,
+      "cohort_difference": 2.3999999999999915,
+      "p": 0.6934299532142778,
+      "cohort_ci95_pp": [
+        -5.726161309552112,
+        10.560034775995332
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "math",
+      "original": {
+        "k": 75,
+        "n": 125,
+        "pct": 60.0
+      },
+      "rescored": {
+        "k": 75,
+        "n": 125,
+        "pct": 60.0
+      },
+      "same_ids": {
+        "k": 75,
+        "n": 125,
+        "pct": 60.0
+      },
+      "added": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "final": {
+        "k": 130,
+        "n": 250,
+        "pct": 52.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -8.0,
+      "total_delta": -8.0,
+      "cohort_difference": -16.0,
+      "p": 0.015990690201196436,
+      "cohort_ci95_pp": [
+        -27.71107108235341,
+        -3.6153903134356318
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "mbpp",
+      "original": {
+        "k": 37,
+        "n": 50,
+        "pct": 74.0
+      },
+      "rescored": {
+        "k": 37,
+        "n": 50,
+        "pct": 74.0
+      },
+      "same_ids": {
+        "k": 37,
+        "n": 50,
+        "pct": 74.0
+      },
+      "added": {
+        "k": 127,
+        "n": 200,
+        "pct": 63.5
+      },
+      "final": {
+        "k": 164,
+        "n": 250,
+        "pct": 65.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -8.400000000000006,
+      "total_delta": -8.400000000000006,
+      "cohort_difference": -10.5,
+      "p": 0.1852866148989701,
+      "cohort_ci95_pp": [
+        -22.737624923335236,
+        4.471004491650551
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_ar",
+      "task": "humaneval",
+      "original": {
+        "k": 37,
+        "n": 50,
+        "pct": 74.0
+      },
+      "rescored": {
+        "k": 37,
+        "n": 50,
+        "pct": 74.0
+      },
+      "same_ids": {
+        "k": 37,
+        "n": 50,
+        "pct": 74.0
+      },
+      "added": {
+        "k": 61,
+        "n": 114,
+        "pct": 53.50877192982456
+      },
+      "final": {
+        "k": 98,
+        "n": 164,
+        "pct": 59.75609756097561
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -14.243902439024389,
+      "total_delta": -14.243902439024389,
+      "cohort_difference": -20.49122807017544,
+      "p": 0.015694969427968133,
+      "cohort_ci95_pp": [
+        -34.1208776762551,
+        -4.281693560315245
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "arc_c",
+      "original": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "rescored": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "same_ids": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "added": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "final": {
+        "k": 217,
+        "n": 250,
+        "pct": 86.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.3999999999999915,
+      "total_delta": 0.3999999999999915,
+      "cohort_difference": 0.7999999999999972,
+      "p": 0.999999999999868,
+      "cohort_ci95_pp": [
+        -7.749761179306374,
+        9.353343112396573
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "gpqa",
+      "original": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "rescored": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "same_ids": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "added": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "final": {
+        "k": 78,
+        "n": 250,
+        "pct": 31.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.0,
+      "total_delta": 0.0,
+      "cohort_difference": 0.0,
+      "p": 1.0,
+      "cohort_ci95_pp": [
+        -11.369161617192594,
+        11.369161617192594
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "hellaswag",
+      "original": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "rescored": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "same_ids": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "added": {
+        "k": 87,
+        "n": 125,
+        "pct": 69.6
+      },
+      "final": {
+        "k": 174,
+        "n": 250,
+        "pct": 69.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.0,
+      "total_delta": 0.0,
+      "cohort_difference": 0.0,
+      "p": 0.9999999999999936,
+      "cohort_ci95_pp": [
+        -11.293148950174414,
+        11.293148950174414
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "mmlu",
+      "original": {
+        "k": 70,
+        "n": 125,
+        "pct": 56.0
+      },
+      "rescored": {
+        "k": 70,
+        "n": 125,
+        "pct": 56.0
+      },
+      "same_ids": {
+        "k": 70,
+        "n": 125,
+        "pct": 56.0
+      },
+      "added": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "final": {
+        "k": 146,
+        "n": 250,
+        "pct": 58.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.3999999999999986,
+      "total_delta": 2.3999999999999986,
+      "cohort_difference": 4.799999999999997,
+      "p": 0.5212455454811792,
+      "cohort_ci95_pp": [
+        -7.331069672062005,
+        16.734479641697277
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "rescored": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "same_ids": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "added": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "final": {
+        "k": 92,
+        "n": 250,
+        "pct": 36.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -5.600000000000001,
+      "total_delta": -5.600000000000001,
+      "cohort_difference": -11.2,
+      "p": 0.08795881232463376,
+      "cohort_ci95_pp": [
+        -22.707651502431943,
+        0.7444494148677108
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "gsm8k",
+      "original": {
+        "k": 81,
+        "n": 125,
+        "pct": 64.8
+      },
+      "rescored": {
+        "k": 81,
+        "n": 125,
+        "pct": 64.8
+      },
+      "same_ids": {
+        "k": 81,
+        "n": 125,
+        "pct": 64.8
+      },
+      "added": {
+        "k": 68,
+        "n": 125,
+        "pct": 54.4
+      },
+      "final": {
+        "k": 149,
+        "n": 250,
+        "pct": 59.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -5.199999999999996,
+      "total_delta": -5.199999999999996,
+      "cohort_difference": -10.399999999999999,
+      "p": 0.12174672335083578,
+      "cohort_ci95_pp": [
+        -22.120117075630677,
+        1.7418500716017387
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "math",
+      "original": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "rescored": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "same_ids": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "added": {
+        "k": 22,
+        "n": 125,
+        "pct": 17.6
+      },
+      "final": {
+        "k": 65,
+        "n": 250,
+        "pct": 26.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -8.399999999999999,
+      "total_delta": -8.399999999999999,
+      "cohort_difference": -16.799999999999997,
+      "p": 0.0037353359268984658,
+      "cohort_ci95_pp": [
+        -27.17414961053909,
+        -5.936330774018171
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 0.321238889713268
+    },
+    {
+      "model": "llada",
+      "task": "mbpp",
+      "original": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "rescored": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "same_ids": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "added": {
+        "k": 54,
+        "n": 125,
+        "pct": 43.2
+      },
+      "final": {
+        "k": 107,
+        "n": 250,
+        "pct": 42.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.3999999999999986,
+      "total_delta": 0.3999999999999986,
+      "cohort_difference": 0.8000000000000043,
+      "p": 0.999999999999969,
+      "cohort_ci95_pp": [
+        -11.306212629364005,
+        12.87318339828335
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llada",
+      "task": "humaneval",
+      "original": {
+        "k": 50,
+        "n": 125,
+        "pct": 40.0
+      },
+      "rescored": {
+        "k": 50,
+        "n": 125,
+        "pct": 40.0
+      },
+      "same_ids": {
+        "k": 50,
+        "n": 125,
+        "pct": 40.0
+      },
+      "added": {
+        "k": 7,
+        "n": 39,
+        "pct": 17.94871794871795
+      },
+      "final": {
+        "k": 57,
+        "n": 164,
+        "pct": 34.75609756097561
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -5.243902439024389,
+      "total_delta": -5.243902439024389,
+      "cohort_difference": -22.05128205128205,
+      "p": 0.012361602499252547,
+      "cohort_ci95_pp": [
+        -34.59197885590882,
+        -5.2183986267814815
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "arc_c",
+      "original": {
+        "k": 105,
+        "n": 125,
+        "pct": 84.0
+      },
+      "rescored": {
+        "k": 105,
+        "n": 125,
+        "pct": 84.0
+      },
+      "same_ids": {
+        "k": 105,
+        "n": 125,
+        "pct": 84.0
+      },
+      "added": {
+        "k": 105,
+        "n": 125,
+        "pct": 84.0
+      },
+      "final": {
+        "k": 210,
+        "n": 250,
+        "pct": 84.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.0,
+      "total_delta": 0.0,
+      "cohort_difference": 0.0,
+      "p": 1.0,
+      "cohort_ci95_pp": [
+        -9.17901512701382,
+        9.17901512701382
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "gpqa",
+      "original": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "rescored": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "same_ids": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "added": {
+        "k": 42,
+        "n": 125,
+        "pct": 33.6
+      },
+      "final": {
+        "k": 78,
+        "n": 250,
+        "pct": 31.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.3999999999999986,
+      "total_delta": 2.3999999999999986,
+      "cohort_difference": 4.800000000000001,
+      "p": 0.49503220277064597,
+      "cohort_ci95_pp": [
+        -6.639466595130964,
+        16.069795573764452
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "hellaswag",
+      "original": {
+        "k": 91,
+        "n": 125,
+        "pct": 72.8
+      },
+      "rescored": {
+        "k": 91,
+        "n": 125,
+        "pct": 72.8
+      },
+      "same_ids": {
+        "k": 91,
+        "n": 125,
+        "pct": 72.8
+      },
+      "added": {
+        "k": 93,
+        "n": 125,
+        "pct": 74.4
+      },
+      "final": {
+        "k": 184,
+        "n": 250,
+        "pct": 73.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.7999999999999972,
+      "total_delta": 0.7999999999999972,
+      "cohort_difference": 1.6000000000000085,
+      "p": 0.8859938140180734,
+      "cohort_ci95_pp": [
+        -9.278307726000454,
+        12.42966142091503
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "mmlu",
+      "original": {
+        "k": 71,
+        "n": 125,
+        "pct": 56.8
+      },
+      "rescored": {
+        "k": 71,
+        "n": 125,
+        "pct": 56.8
+      },
+      "same_ids": {
+        "k": 71,
+        "n": 125,
+        "pct": 56.8
+      },
+      "added": {
+        "k": 80,
+        "n": 125,
+        "pct": 64.0
+      },
+      "final": {
+        "k": 151,
+        "n": 250,
+        "pct": 60.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 3.6000000000000014,
+      "total_delta": 3.6000000000000014,
+      "cohort_difference": 7.200000000000003,
+      "p": 0.30086859775168867,
+      "cohort_ci95_pp": [
+        -4.872445446702084,
+        18.98246156500287
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "rescored": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "same_ids": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "added": {
+        "k": 44,
+        "n": 125,
+        "pct": 35.2
+      },
+      "final": {
+        "k": 80,
+        "n": 250,
+        "pct": 32.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 3.1999999999999993,
+      "total_delta": 3.1999999999999993,
+      "cohort_difference": 6.400000000000002,
+      "p": 0.34261804700088516,
+      "cohort_ci95_pp": [
+        -5.13095863499312,
+        17.700705422562923
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "gsm8k",
+      "original": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "rescored": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "same_ids": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "added": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "final": {
+        "k": 148,
+        "n": 250,
+        "pct": 59.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.5999999999999943,
+      "total_delta": -1.5999999999999943,
+      "cohort_difference": -3.1999999999999957,
+      "p": 0.6995443334756657,
+      "cohort_ci95_pp": [
+        -15.142486514932779,
+        8.872757783180788
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "math",
+      "original": {
+        "k": 44,
+        "n": 125,
+        "pct": 35.2
+      },
+      "rescored": {
+        "k": 42,
+        "n": 125,
+        "pct": 33.6
+      },
+      "same_ids": {
+        "k": 42,
+        "n": 125,
+        "pct": 33.6
+      },
+      "added": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "final": {
+        "k": 76,
+        "n": 250,
+        "pct": 30.4
+      },
+      "scoring_delta": -1.6000000000000014,
+      "rerun_delta": 0.0,
+      "expansion_delta": -3.200000000000003,
+      "total_delta": -4.800000000000004,
+      "cohort_difference": -6.400000000000002,
+      "p": 0.33584340009524466,
+      "cohort_ci95_pp": [
+        -17.55634174724157,
+        4.977963355937602
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "mbpp",
+      "original": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "rescored": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "same_ids": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "added": {
+        "k": 45,
+        "n": 125,
+        "pct": 36.0
+      },
+      "final": {
+        "k": 100,
+        "n": 250,
+        "pct": 40.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.0,
+      "total_delta": -4.0,
+      "cohort_difference": -8.0,
+      "p": 0.24521908337473536,
+      "cohort_ci95_pp": [
+        -19.777586440728555,
+        4.100950573455283
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_d",
+      "task": "humaneval",
+      "original": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "rescored": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "same_ids": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "added": {
+        "k": 2,
+        "n": 39,
+        "pct": 5.128205128205129
+      },
+      "final": {
+        "k": 39,
+        "n": 164,
+        "pct": 23.78048780487805
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -5.819512195121952,
+      "total_delta": -5.819512195121952,
+      "cohort_difference": -24.471794871794874,
+      "p": 0.0010518122468335933,
+      "cohort_ci95_pp": [
+        -33.75913067602108,
+        -10.63378116158632
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 0.09255947772135621
+    },
+    {
+      "model": "qwen_ar",
+      "task": "arc_c",
+      "original": {
+        "k": 114,
+        "n": 125,
+        "pct": 91.2
+      },
+      "rescored": {
+        "k": 114,
+        "n": 125,
+        "pct": 91.2
+      },
+      "same_ids": {
+        "k": 114,
+        "n": 125,
+        "pct": 91.2
+      },
+      "added": {
+        "k": 111,
+        "n": 125,
+        "pct": 88.8
+      },
+      "final": {
+        "k": 225,
+        "n": 250,
+        "pct": 90.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.2000000000000028,
+      "total_delta": -1.2000000000000028,
+      "cohort_difference": -2.4000000000000057,
+      "p": 0.6740295981784635,
+      "cohort_ci95_pp": [
+        -10.130816826420947,
+        5.267271434913785
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "gpqa",
+      "original": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "rescored": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "same_ids": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "added": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "final": {
+        "k": 84,
+        "n": 250,
+        "pct": 33.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.7999999999999972,
+      "total_delta": -0.7999999999999972,
+      "cohort_difference": -1.6000000000000014,
+      "p": 0.8935356748596415,
+      "cohort_ci95_pp": [
+        -13.144288401566312,
+        10.003780667579978
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "hellaswag",
+      "original": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "rescored": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "same_ids": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "added": {
+        "k": 92,
+        "n": 125,
+        "pct": 73.6
+      },
+      "final": {
+        "k": 186,
+        "n": 250,
+        "pct": 74.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.7999999999999972,
+      "total_delta": -0.7999999999999972,
+      "cohort_difference": -1.6000000000000085,
+      "p": 0.8848622389710576,
+      "cohort_ci95_pp": [
+        -12.33085273852583,
+        9.177819274312396
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "mmlu",
+      "original": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "rescored": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "same_ids": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "added": {
+        "k": 91,
+        "n": 125,
+        "pct": 72.8
+      },
+      "final": {
+        "k": 173,
+        "n": 250,
+        "pct": 69.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 3.6000000000000085,
+      "total_delta": 3.6000000000000085,
+      "cohort_difference": 7.200000000000003,
+      "p": 0.2730534710874291,
+      "cohort_ci95_pp": [
+        -4.224690178884684,
+        18.37291298256561
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "rescored": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "same_ids": {
+        "k": 53,
+        "n": 125,
+        "pct": 42.4
+      },
+      "added": {
+        "k": 63,
+        "n": 125,
+        "pct": 50.4
+      },
+      "final": {
+        "k": 116,
+        "n": 250,
+        "pct": 46.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 4.0,
+      "total_delta": 4.0,
+      "cohort_difference": 8.0,
+      "p": 0.2536665823154485,
+      "cohort_ci95_pp": [
+        -4.30965241392728,
+        19.974077544628713
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "gsm8k",
+      "original": {
+        "k": 115,
+        "n": 125,
+        "pct": 92.0
+      },
+      "rescored": {
+        "k": 115,
+        "n": 125,
+        "pct": 92.0
+      },
+      "same_ids": {
+        "k": 115,
+        "n": 125,
+        "pct": 92.0
+      },
+      "added": {
+        "k": 116,
+        "n": 125,
+        "pct": 92.8
+      },
+      "final": {
+        "k": 231,
+        "n": 250,
+        "pct": 92.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.4000000000000057,
+      "total_delta": 0.4000000000000057,
+      "cohort_difference": 0.7999999999999972,
+      "p": 0.9999999999999547,
+      "cohort_ci95_pp": [
+        -6.125482768775065,
+        7.768145630707939
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "math",
+      "original": {
+        "k": 98,
+        "n": 125,
+        "pct": 78.4
+      },
+      "rescored": {
+        "k": 98,
+        "n": 125,
+        "pct": 78.4
+      },
+      "same_ids": {
+        "k": 98,
+        "n": 125,
+        "pct": 78.4
+      },
+      "added": {
+        "k": 86,
+        "n": 125,
+        "pct": 68.8
+      },
+      "final": {
+        "k": 184,
+        "n": 250,
+        "pct": 73.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.800000000000011,
+      "total_delta": -4.800000000000011,
+      "cohort_difference": -9.600000000000009,
+      "p": 0.11412140978424991,
+      "cohort_ci95_pp": [
+        -20.250130964416215,
+        1.3399130644593749
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "mbpp",
+      "original": {
+        "k": 95,
+        "n": 125,
+        "pct": 76.0
+      },
+      "rescored": {
+        "k": 95,
+        "n": 125,
+        "pct": 76.0
+      },
+      "same_ids": {
+        "k": 95,
+        "n": 125,
+        "pct": 76.0
+      },
+      "added": {
+        "k": 93,
+        "n": 125,
+        "pct": 74.4
+      },
+      "final": {
+        "k": 188,
+        "n": 250,
+        "pct": 75.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.7999999999999972,
+      "total_delta": -0.7999999999999972,
+      "cohort_difference": -1.5999999999999943,
+      "p": 0.8836568115505502,
+      "cohort_ci95_pp": [
+        -12.22780521760248,
+        9.072967558551836
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "qwen_ar",
+      "task": "humaneval",
+      "original": {
+        "k": 83,
+        "n": 95,
+        "pct": 87.36842105263158
+      },
+      "rescored": {
+        "k": 83,
+        "n": 95,
+        "pct": 87.36842105263158
+      },
+      "same_ids": {
+        "k": 83,
+        "n": 95,
+        "pct": 87.36842105263158
+      },
+      "added": {
+        "k": 50,
+        "n": 69,
+        "pct": 72.46376811594203
+      },
+      "final": {
+        "k": 133,
+        "n": 164,
+        "pct": 81.09756097560975
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -6.270860077021823,
+      "total_delta": -6.270860077021823,
+      "cohort_difference": -14.904652936689544,
+      "p": 0.02520770881410577,
+      "cohort_ci95_pp": [
+        -27.558876342629546,
+        -2.6504444770707307
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "arc_c",
+      "original": {
+        "k": 104,
+        "n": 125,
+        "pct": 83.2
+      },
+      "rescored": {
+        "k": 104,
+        "n": 125,
+        "pct": 83.2
+      },
+      "same_ids": {
+        "k": 104,
+        "n": 125,
+        "pct": 83.2
+      },
+      "added": {
+        "k": 101,
+        "n": 125,
+        "pct": 80.8
+      },
+      "final": {
+        "k": 205,
+        "n": 250,
+        "pct": 82.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.2000000000000028,
+      "total_delta": -1.2000000000000028,
+      "cohort_difference": -2.4000000000000057,
+      "p": 0.7422642492174116,
+      "cohort_ci95_pp": [
+        -11.952488743901919,
+        7.186495129670396
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "gpqa",
+      "original": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "rescored": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "same_ids": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "added": {
+        "k": 43,
+        "n": 125,
+        "pct": 34.4
+      },
+      "final": {
+        "k": 77,
+        "n": 250,
+        "pct": 30.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 3.6000000000000014,
+      "total_delta": 3.6000000000000014,
+      "cohort_difference": 7.199999999999999,
+      "p": 0.2730534710874291,
+      "cohort_ci95_pp": [
+        -4.224690178884688,
+        18.3729129825656
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "hellaswag",
+      "original": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "rescored": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "same_ids": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "added": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "final": {
+        "k": 192,
+        "n": 250,
+        "pct": 76.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.0,
+      "total_delta": 0.0,
+      "cohort_difference": 0.0,
+      "p": 0.9999999999999386,
+      "cohort_ci95_pp": [
+        -10.430804940510741,
+        10.430804940510741
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "mmlu",
+      "original": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "rescored": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "same_ids": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "added": {
+        "k": 74,
+        "n": 125,
+        "pct": 59.2
+      },
+      "final": {
+        "k": 146,
+        "n": 250,
+        "pct": 58.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.7999999999999972,
+      "total_delta": 0.7999999999999972,
+      "cohort_difference": 1.6000000000000014,
+      "p": 0.8979380994163993,
+      "cohort_ci95_pp": [
+        -10.477823368046579,
+        13.61228729062249
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 45,
+        "n": 125,
+        "pct": 36.0
+      },
+      "rescored": {
+        "k": 45,
+        "n": 125,
+        "pct": 36.0
+      },
+      "same_ids": {
+        "k": 45,
+        "n": 125,
+        "pct": 36.0
+      },
+      "added": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "final": {
+        "k": 82,
+        "n": 250,
+        "pct": 32.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -3.200000000000003,
+      "total_delta": -3.200000000000003,
+      "cohort_difference": -6.399999999999999,
+      "p": 0.3457216623272261,
+      "cohort_ci95_pp": [
+        -17.767696446527122,
+        5.2018347318552784
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "gsm8k",
+      "original": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "rescored": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "same_ids": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "added": {
+        "k": 84,
+        "n": 125,
+        "pct": 67.2
+      },
+      "final": {
+        "k": 166,
+        "n": 250,
+        "pct": 66.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.8000000000000114,
+      "total_delta": 0.8000000000000114,
+      "cohort_difference": 1.6000000000000085,
+      "p": 0.8935356748596415,
+      "cohort_ci95_pp": [
+        -10.00378066757997,
+        13.144288401566323
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "math",
+      "original": {
+        "k": 26,
+        "n": 125,
+        "pct": 20.8
+      },
+      "rescored": {
+        "k": 26,
+        "n": 125,
+        "pct": 20.8
+      },
+      "same_ids": {
+        "k": 26,
+        "n": 125,
+        "pct": 20.8
+      },
+      "added": {
+        "k": 25,
+        "n": 125,
+        "pct": 20.0
+      },
+      "final": {
+        "k": 51,
+        "n": 250,
+        "pct": 20.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.40000000000000213,
+      "total_delta": -0.40000000000000213,
+      "cohort_difference": -0.8000000000000007,
+      "p": 1.0,
+      "cohort_ci95_pp": [
+        -10.788752812498643,
+        9.204975881197965
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "mbpp",
+      "original": {
+        "k": 58,
+        "n": 125,
+        "pct": 46.4
+      },
+      "rescored": {
+        "k": 58,
+        "n": 125,
+        "pct": 46.4
+      },
+      "same_ids": {
+        "k": 58,
+        "n": 125,
+        "pct": 46.4
+      },
+      "added": {
+        "k": 42,
+        "n": 125,
+        "pct": 33.6
+      },
+      "final": {
+        "k": 100,
+        "n": 250,
+        "pct": 40.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -6.399999999999999,
+      "total_delta": -6.399999999999999,
+      "cohort_difference": -12.799999999999997,
+      "p": 0.05255538787603877,
+      "cohort_ci95_pp": [
+        -24.420282736225772,
+        -0.6626891591956507
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_d",
+      "task": "humaneval",
+      "original": {
+        "k": 44,
+        "n": 125,
+        "pct": 35.2
+      },
+      "rescored": {
+        "k": 44,
+        "n": 125,
+        "pct": 35.2
+      },
+      "same_ids": {
+        "k": 44,
+        "n": 125,
+        "pct": 35.2
+      },
+      "added": {
+        "k": 4,
+        "n": 39,
+        "pct": 10.256410256410257
+      },
+      "final": {
+        "k": 48,
+        "n": 164,
+        "pct": 29.26829268292683
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -5.9317073170731724,
+      "total_delta": -5.9317073170731724,
+      "cohort_difference": -24.943589743589747,
+      "p": 0.002338471509962012,
+      "cohort_ci95_pp": [
+        -35.623690768232485,
+        -9.497027844381705
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 0.203447021366695
+    },
+    {
+      "model": "ministral_ar",
+      "task": "arc_c",
+      "original": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "rescored": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "same_ids": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "added": {
+        "k": 84,
+        "n": 125,
+        "pct": 67.2
+      },
+      "final": {
+        "k": 180,
+        "n": 250,
+        "pct": 72.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.799999999999997,
+      "total_delta": -4.799999999999997,
+      "cohort_difference": -9.599999999999994,
+      "p": 0.120937950218921,
+      "cohort_ci95_pp": [
+        -20.428581385451725,
+        1.5369327134601776
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "gpqa",
+      "original": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "rescored": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "same_ids": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "added": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "final": {
+        "k": 81,
+        "n": 250,
+        "pct": 32.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.399999999999999,
+      "total_delta": -4.399999999999999,
+      "cohort_difference": -8.799999999999997,
+      "p": 0.17638640837110148,
+      "cohort_ci95_pp": [
+        -20.068375568317787,
+        2.7873581845249586
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "hellaswag",
+      "original": {
+        "k": 85,
+        "n": 125,
+        "pct": 68.0
+      },
+      "rescored": {
+        "k": 85,
+        "n": 125,
+        "pct": 68.0
+      },
+      "same_ids": {
+        "k": 85,
+        "n": 125,
+        "pct": 68.0
+      },
+      "added": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "final": {
+        "k": 181,
+        "n": 250,
+        "pct": 72.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 4.400000000000006,
+      "total_delta": 4.400000000000006,
+      "cohort_difference": 8.799999999999997,
+      "p": 0.15684564565530237,
+      "cohort_ci95_pp": [
+        -2.286398079710322,
+        19.607504426350452
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "mmlu",
+      "original": {
+        "k": 68,
+        "n": 125,
+        "pct": 54.4
+      },
+      "rescored": {
+        "k": 68,
+        "n": 125,
+        "pct": 54.4
+      },
+      "same_ids": {
+        "k": 68,
+        "n": 125,
+        "pct": 54.4
+      },
+      "added": {
+        "k": 69,
+        "n": 125,
+        "pct": 55.2
+      },
+      "final": {
+        "k": 137,
+        "n": 250,
+        "pct": 54.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.3999999999999986,
+      "total_delta": 0.3999999999999986,
+      "cohort_difference": 0.8000000000000043,
+      "p": 0.9999999999999979,
+      "cohort_ci95_pp": [
+        -11.373016597498566,
+        12.93959332159213
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "rescored": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "same_ids": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "added": {
+        "k": 48,
+        "n": 125,
+        "pct": 38.4
+      },
+      "final": {
+        "k": 89,
+        "n": 250,
+        "pct": 35.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.8000000000000043,
+      "total_delta": 2.8000000000000043,
+      "cohort_difference": 5.600000000000001,
+      "p": 0.4281386589360762,
+      "cohort_ci95_pp": [
+        -6.212149590110451,
+        17.197085746847083
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "gsm8k",
+      "original": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "rescored": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "same_ids": {
+        "k": 109,
+        "n": 125,
+        "pct": 87.2
+      },
+      "added": {
+        "k": 116,
+        "n": 125,
+        "pct": 92.8
+      },
+      "final": {
+        "k": 225,
+        "n": 250,
+        "pct": 90.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.799999999999997,
+      "total_delta": 2.799999999999997,
+      "cohort_difference": 5.599999999999994,
+      "p": 0.20522896170987565,
+      "cohort_ci95_pp": [
+        -1.9982985319799598,
+        13.352462836714402
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "math",
+      "original": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "rescored": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "same_ids": {
+        "k": 72,
+        "n": 125,
+        "pct": 57.6
+      },
+      "added": {
+        "k": 68,
+        "n": 125,
+        "pct": 54.4
+      },
+      "final": {
+        "k": 140,
+        "n": 250,
+        "pct": 56.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.6000000000000014,
+      "total_delta": -1.6000000000000014,
+      "cohort_difference": -3.200000000000003,
+      "p": 0.702375162884651,
+      "cohort_ci95_pp": [
+        -15.254163112296276,
+        8.987148480746244
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "mbpp",
+      "original": {
+        "k": 90,
+        "n": 125,
+        "pct": 72.0
+      },
+      "rescored": {
+        "k": 90,
+        "n": 125,
+        "pct": 72.0
+      },
+      "same_ids": {
+        "k": 90,
+        "n": 125,
+        "pct": 72.0
+      },
+      "added": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "final": {
+        "k": 172,
+        "n": 250,
+        "pct": 68.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -3.200000000000003,
+      "total_delta": -3.200000000000003,
+      "cohort_difference": -6.400000000000006,
+      "p": 0.3393276967338818,
+      "cohort_ci95_pp": [
+        -17.630273819314326,
+        5.056360966186753
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "ministral_ar",
+      "task": "humaneval",
+      "original": {
+        "k": 107,
+        "n": 125,
+        "pct": 85.6
+      },
+      "rescored": {
+        "k": 107,
+        "n": 125,
+        "pct": 85.6
+      },
+      "same_ids": {
+        "k": 107,
+        "n": 125,
+        "pct": 85.6
+      },
+      "added": {
+        "k": 28,
+        "n": 39,
+        "pct": 71.7948717948718
+      },
+      "final": {
+        "k": 135,
+        "n": 164,
+        "pct": 82.3170731707317
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -3.282926829268291,
+      "total_delta": -3.282926829268291,
+      "cohort_difference": -13.805128205128199,
+      "p": 0.05711531654384115,
+      "cohort_ci95_pp": [
+        -30.187148065739922,
+        -0.09149082625505844
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "arc_c",
+      "original": {
+        "k": 104,
+        "n": 125,
+        "pct": 83.2
+      },
+      "rescored": {
+        "k": 104,
+        "n": 125,
+        "pct": 83.2
+      },
+      "same_ids": {
+        "k": 104,
+        "n": 125,
+        "pct": 83.2
+      },
+      "added": {
+        "k": 103,
+        "n": 125,
+        "pct": 82.4
+      },
+      "final": {
+        "k": 207,
+        "n": 250,
+        "pct": 82.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.4000000000000057,
+      "total_delta": -0.4000000000000057,
+      "cohort_difference": -0.7999999999999972,
+      "p": 1.0,
+      "cohort_ci95_pp": [
+        -10.215483506324958,
+        8.624929750582522
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "gpqa",
+      "original": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "rescored": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "same_ids": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "added": {
+        "k": 32,
+        "n": 125,
+        "pct": 25.6
+      },
+      "final": {
+        "k": 69,
+        "n": 250,
+        "pct": 27.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.0,
+      "total_delta": -2.0,
+      "cohort_difference": -4.0,
+      "p": 0.5716216383815284,
+      "cohort_ci95_pp": [
+        -14.923283719355423,
+        7.05055970351158
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "hellaswag",
+      "original": {
+        "k": 88,
+        "n": 125,
+        "pct": 70.4
+      },
+      "rescored": {
+        "k": 88,
+        "n": 125,
+        "pct": 70.4
+      },
+      "same_ids": {
+        "k": 88,
+        "n": 125,
+        "pct": 70.4
+      },
+      "added": {
+        "k": 94,
+        "n": 125,
+        "pct": 75.2
+      },
+      "final": {
+        "k": 182,
+        "n": 250,
+        "pct": 72.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.3999999999999915,
+      "total_delta": 2.3999999999999915,
+      "cohort_difference": 4.799999999999997,
+      "p": 0.47746626887285903,
+      "cohort_ci95_pp": [
+        -6.211313136686175,
+        15.660889728839788
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "mmlu",
+      "original": {
+        "k": 74,
+        "n": 125,
+        "pct": 59.2
+      },
+      "rescored": {
+        "k": 74,
+        "n": 125,
+        "pct": 59.2
+      },
+      "same_ids": {
+        "k": 74,
+        "n": 125,
+        "pct": 59.2
+      },
+      "added": {
+        "k": 79,
+        "n": 125,
+        "pct": 63.2
+      },
+      "final": {
+        "k": 153,
+        "n": 250,
+        "pct": 61.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.0,
+      "total_delta": 2.0,
+      "cohort_difference": 4.0,
+      "p": 0.6037627073595392,
+      "cohort_ci95_pp": [
+        -7.988435739306056,
+        15.82855277880299
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 38,
+        "n": 125,
+        "pct": 30.4
+      },
+      "rescored": {
+        "k": 38,
+        "n": 125,
+        "pct": 30.4
+      },
+      "same_ids": {
+        "k": 38,
+        "n": 125,
+        "pct": 30.4
+      },
+      "added": {
+        "k": 46,
+        "n": 125,
+        "pct": 36.8
+      },
+      "final": {
+        "k": 84,
+        "n": 250,
+        "pct": 33.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 3.200000000000003,
+      "total_delta": 3.200000000000003,
+      "cohort_difference": 6.399999999999999,
+      "p": 0.3486452034079717,
+      "cohort_ci95_pp": [
+        -5.269061675976797,
+        17.831302677962963
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "gsm8k",
+      "original": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "rescored": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "same_ids": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "added": {
+        "k": 80,
+        "n": 125,
+        "pct": 64.0
+      },
+      "final": {
+        "k": 162,
+        "n": 250,
+        "pct": 64.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.7999999999999972,
+      "total_delta": -0.7999999999999972,
+      "cohort_difference": -1.5999999999999943,
+      "p": 0.8946968050894094,
+      "cohort_ci95_pp": [
+        -13.263782161306997,
+        10.124889331726465
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "math",
+      "original": {
+        "k": 32,
+        "n": 125,
+        "pct": 25.6
+      },
+      "rescored": {
+        "k": 32,
+        "n": 125,
+        "pct": 25.6
+      },
+      "same_ids": {
+        "k": 32,
+        "n": 125,
+        "pct": 25.6
+      },
+      "added": {
+        "k": 25,
+        "n": 125,
+        "pct": 20.0
+      },
+      "final": {
+        "k": 57,
+        "n": 250,
+        "pct": 22.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.8000000000000007,
+      "total_delta": -2.8000000000000007,
+      "cohort_difference": -5.600000000000001,
+      "p": 0.3658274655170651,
+      "cohort_ci95_pp": [
+        -15.88140369775359,
+        4.820865029960977
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "mbpp",
+      "original": {
+        "k": 54,
+        "n": 125,
+        "pct": 43.2
+      },
+      "rescored": {
+        "k": 54,
+        "n": 125,
+        "pct": 43.2
+      },
+      "same_ids": {
+        "k": 54,
+        "n": 125,
+        "pct": 43.2
+      },
+      "added": {
+        "k": 48,
+        "n": 125,
+        "pct": 38.4
+      },
+      "final": {
+        "k": 102,
+        "n": 250,
+        "pct": 40.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.4000000000000057,
+      "total_delta": -2.4000000000000057,
+      "cohort_difference": -4.800000000000004,
+      "p": 0.5200353976018266,
+      "cohort_ci95_pp": [
+        -16.70223046108224,
+        7.2976235261183975
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_25k",
+      "task": "humaneval",
+      "original": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "rescored": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "same_ids": {
+        "k": 39,
+        "n": 125,
+        "pct": 31.2
+      },
+      "added": {
+        "k": 2,
+        "n": 39,
+        "pct": 5.128205128205129
+      },
+      "final": {
+        "k": 41,
+        "n": 164,
+        "pct": 25.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -6.199999999999999,
+      "total_delta": -6.199999999999999,
+      "cohort_difference": -26.07179487179487,
+      "p": 0.0005715982515241683,
+      "cohort_ci95_pp": [
+        -35.41987233091433,
+        -12.147869459714272
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 0.05087224438565098
+    },
+    {
+      "model": "llama_50k",
+      "task": "arc_c",
+      "original": {
+        "k": 103,
+        "n": 125,
+        "pct": 82.4
+      },
+      "rescored": {
+        "k": 103,
+        "n": 125,
+        "pct": 82.4
+      },
+      "same_ids": {
+        "k": 103,
+        "n": 125,
+        "pct": 82.4
+      },
+      "added": {
+        "k": 101,
+        "n": 125,
+        "pct": 80.8
+      },
+      "final": {
+        "k": 204,
+        "n": 250,
+        "pct": 81.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.8000000000000114,
+      "total_delta": -0.8000000000000114,
+      "cohort_difference": -1.6000000000000085,
+      "p": 0.8705035008262971,
+      "cohort_ci95_pp": [
+        -11.233817189284569,
+        8.058328538615674
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "gpqa",
+      "original": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "rescored": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "same_ids": {
+        "k": 34,
+        "n": 125,
+        "pct": 27.2
+      },
+      "added": {
+        "k": 36,
+        "n": 125,
+        "pct": 28.8
+      },
+      "final": {
+        "k": 70,
+        "n": 250,
+        "pct": 28.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 0.8000000000000007,
+      "total_delta": 0.8000000000000007,
+      "cohort_difference": 1.6000000000000014,
+      "p": 0.8880549476083618,
+      "cohort_ci95_pp": [
+        -9.466674938361091,
+        12.615003810721637
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "hellaswag",
+      "original": {
+        "k": 95,
+        "n": 125,
+        "pct": 76.0
+      },
+      "rescored": {
+        "k": 95,
+        "n": 125,
+        "pct": 76.0
+      },
+      "same_ids": {
+        "k": 95,
+        "n": 125,
+        "pct": 76.0
+      },
+      "added": {
+        "k": 98,
+        "n": 125,
+        "pct": 78.4
+      },
+      "final": {
+        "k": 193,
+        "n": 250,
+        "pct": 77.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 1.2000000000000028,
+      "total_delta": 1.2000000000000028,
+      "cohort_difference": 2.4000000000000057,
+      "p": 0.7632292927377763,
+      "cohort_ci95_pp": [
+        -7.998653586070156,
+        12.738638837407295
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "mmlu",
+      "original": {
+        "k": 77,
+        "n": 125,
+        "pct": 61.6
+      },
+      "rescored": {
+        "k": 77,
+        "n": 125,
+        "pct": 61.6
+      },
+      "same_ids": {
+        "k": 77,
+        "n": 125,
+        "pct": 61.6
+      },
+      "added": {
+        "k": 73,
+        "n": 125,
+        "pct": 58.4
+      },
+      "final": {
+        "k": 150,
+        "n": 250,
+        "pct": 60.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.6000000000000014,
+      "total_delta": -1.6000000000000014,
+      "cohort_difference": -3.200000000000003,
+      "p": 0.6986334768270147,
+      "cohort_ci95_pp": [
+        -15.107009443738475,
+        8.8364017916654
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "rescored": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "same_ids": {
+        "k": 41,
+        "n": 125,
+        "pct": 32.8
+      },
+      "added": {
+        "k": 38,
+        "n": 125,
+        "pct": 30.4
+      },
+      "final": {
+        "k": 79,
+        "n": 250,
+        "pct": 31.6
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.1999999999999957,
+      "total_delta": -1.1999999999999957,
+      "cohort_difference": -2.3999999999999986,
+      "p": 0.785673059485289,
+      "cohort_ci95_pp": [
+        -13.75933984451948,
+        9.045014848659886
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "gsm8k",
+      "original": {
+        "k": 77,
+        "n": 125,
+        "pct": 61.6
+      },
+      "rescored": {
+        "k": 77,
+        "n": 125,
+        "pct": 61.6
+      },
+      "same_ids": {
+        "k": 77,
+        "n": 125,
+        "pct": 61.6
+      },
+      "added": {
+        "k": 75,
+        "n": 125,
+        "pct": 60.0
+      },
+      "final": {
+        "k": 152,
+        "n": 250,
+        "pct": 60.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.8000000000000043,
+      "total_delta": -0.8000000000000043,
+      "cohort_difference": -1.6000000000000014,
+      "p": 0.8969643874151281,
+      "cohort_ci95_pp": [
+        -13.50520509479436,
+        10.369422998290473
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "math",
+      "original": {
+        "k": 37,
+        "n": 125,
+        "pct": 29.6
+      },
+      "rescored": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "same_ids": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "added": {
+        "k": 26,
+        "n": 125,
+        "pct": 20.8
+      },
+      "final": {
+        "k": 61,
+        "n": 250,
+        "pct": 24.4
+      },
+      "scoring_delta": -1.6000000000000014,
+      "rerun_delta": 0.0,
+      "expansion_delta": -3.6000000000000014,
+      "total_delta": -5.200000000000003,
+      "cohort_difference": -7.199999999999999,
+      "p": 0.23864108526994698,
+      "cohort_ci95_pp": [
+        -17.66476668666856,
+        3.4625777969200815
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "mbpp",
+      "original": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "rescored": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "same_ids": {
+        "k": 55,
+        "n": 125,
+        "pct": 44.0
+      },
+      "added": {
+        "k": 52,
+        "n": 125,
+        "pct": 41.6
+      },
+      "final": {
+        "k": 107,
+        "n": 250,
+        "pct": 42.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.2000000000000028,
+      "total_delta": -1.2000000000000028,
+      "cohort_difference": -2.3999999999999986,
+      "p": 0.7982925418125881,
+      "cohort_ci95_pp": [
+        -14.437095891319515,
+        9.736181945332637
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_50k",
+      "task": "humaneval",
+      "original": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "rescored": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "same_ids": {
+        "k": 35,
+        "n": 125,
+        "pct": 28.0
+      },
+      "added": {
+        "k": 4,
+        "n": 39,
+        "pct": 10.256410256410257
+      },
+      "final": {
+        "k": 39,
+        "n": 164,
+        "pct": 23.78048780487805
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.2195121951219505,
+      "total_delta": -4.2195121951219505,
+      "cohort_difference": -17.743589743589745,
+      "p": 0.02990883088170213,
+      "cohort_ci95_pp": [
+        -28.21042163984395,
+        -2.6356897586431756
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "arc_c",
+      "original": {
+        "k": 99,
+        "n": 125,
+        "pct": 79.2
+      },
+      "rescored": {
+        "k": 99,
+        "n": 125,
+        "pct": 79.2
+      },
+      "same_ids": {
+        "k": 99,
+        "n": 125,
+        "pct": 79.2
+      },
+      "added": {
+        "k": 96,
+        "n": 125,
+        "pct": 76.8
+      },
+      "final": {
+        "k": 195,
+        "n": 250,
+        "pct": 78.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.2000000000000028,
+      "total_delta": -1.2000000000000028,
+      "cohort_difference": -2.4000000000000057,
+      "p": 0.7603046277178108,
+      "cohort_ci95_pp": [
+        -12.620292455980659,
+        7.876795773001375
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "gpqa",
+      "original": {
+        "k": 40,
+        "n": 125,
+        "pct": 32.0
+      },
+      "rescored": {
+        "k": 40,
+        "n": 125,
+        "pct": 32.0
+      },
+      "same_ids": {
+        "k": 40,
+        "n": 125,
+        "pct": 32.0
+      },
+      "added": {
+        "k": 28,
+        "n": 125,
+        "pct": 22.4
+      },
+      "final": {
+        "k": 68,
+        "n": 250,
+        "pct": 27.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.800000000000001,
+      "total_delta": -4.800000000000001,
+      "cohort_difference": -9.600000000000001,
+      "p": 0.11759870801047861,
+      "cohort_ci95_pp": [
+        -20.341242869420395,
+        1.4406382884280298
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "hellaswag",
+      "original": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "rescored": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "same_ids": {
+        "k": 76,
+        "n": 125,
+        "pct": 60.8
+      },
+      "added": {
+        "k": 71,
+        "n": 125,
+        "pct": 56.8
+      },
+      "final": {
+        "k": 147,
+        "n": 250,
+        "pct": 58.8
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.0,
+      "total_delta": -2.0,
+      "cohort_difference": -4.0,
+      "p": 0.6073640691080809,
+      "cohort_ci95_pp": [
+        -15.939290702551117,
+        8.102635484505536
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "mmlu",
+      "original": {
+        "k": 67,
+        "n": 125,
+        "pct": 53.6
+      },
+      "rescored": {
+        "k": 67,
+        "n": 125,
+        "pct": 53.6
+      },
+      "same_ids": {
+        "k": 67,
+        "n": 125,
+        "pct": 53.6
+      },
+      "added": {
+        "k": 73,
+        "n": 125,
+        "pct": 58.4
+      },
+      "final": {
+        "k": 140,
+        "n": 250,
+        "pct": 56.0
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 2.3999999999999986,
+      "total_delta": 2.3999999999999986,
+      "cohort_difference": 4.799999999999997,
+      "p": 0.5241777854939875,
+      "cohort_ci95_pp": [
+        -7.412759410352142,
+        16.813286989502885
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "mmlu_pro",
+      "original": {
+        "k": 52,
+        "n": 125,
+        "pct": 41.6
+      },
+      "rescored": {
+        "k": 52,
+        "n": 125,
+        "pct": 41.6
+      },
+      "same_ids": {
+        "k": 52,
+        "n": 125,
+        "pct": 41.6
+      },
+      "added": {
+        "k": 56,
+        "n": 125,
+        "pct": 44.8
+      },
+      "final": {
+        "k": 108,
+        "n": 250,
+        "pct": 43.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": 1.6000000000000014,
+      "total_delta": 1.6000000000000014,
+      "cohort_difference": 3.1999999999999957,
+      "p": 0.7017858456703855,
+      "cohort_ci95_pp": [
+        -8.96315826539092,
+        15.230735735162076
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "gsm8k",
+      "original": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "rescored": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "same_ids": {
+        "k": 108,
+        "n": 125,
+        "pct": 86.4
+      },
+      "added": {
+        "k": 105,
+        "n": 125,
+        "pct": 84.0
+      },
+      "final": {
+        "k": 213,
+        "n": 250,
+        "pct": 85.2
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.2000000000000028,
+      "total_delta": -1.2000000000000028,
+      "cohort_difference": -2.4000000000000057,
+      "p": 0.7220853458531966,
+      "cohort_ci95_pp": [
+        -11.313650880440603,
+        6.520820630239567
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "math",
+      "original": {
+        "k": 60,
+        "n": 125,
+        "pct": 48.0
+      },
+      "rescored": {
+        "k": 59,
+        "n": 125,
+        "pct": 47.2
+      },
+      "same_ids": {
+        "k": 59,
+        "n": 125,
+        "pct": 47.2
+      },
+      "added": {
+        "k": 47,
+        "n": 125,
+        "pct": 37.6
+      },
+      "final": {
+        "k": 106,
+        "n": 250,
+        "pct": 42.4
+      },
+      "scoring_delta": -0.7999999999999972,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.800000000000004,
+      "total_delta": -5.600000000000001,
+      "cohort_difference": -9.600000000000001,
+      "p": 0.15905681890340578,
+      "cohort_ci95_pp": [
+        -21.42349254779487,
+        2.6187253045288794
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "mbpp",
+      "original": {
+        "k": 89,
+        "n": 125,
+        "pct": 71.2
+      },
+      "rescored": {
+        "k": 89,
+        "n": 125,
+        "pct": 71.2
+      },
+      "same_ids": {
+        "k": 89,
+        "n": 125,
+        "pct": 71.2
+      },
+      "added": {
+        "k": 82,
+        "n": 125,
+        "pct": 65.6
+      },
+      "final": {
+        "k": 171,
+        "n": 250,
+        "pct": 68.4
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.799999999999997,
+      "total_delta": -2.799999999999997,
+      "cohort_difference": -5.6000000000000085,
+      "p": 0.41446417348412357,
+      "cohort_ci95_pp": [
+        -16.886200229004388,
+        5.885943214885006
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "llama_ar",
+      "task": "humaneval",
+      "original": {
+        "k": 70,
+        "n": 125,
+        "pct": 56.0
+      },
+      "rescored": {
+        "k": 70,
+        "n": 125,
+        "pct": 56.0
+      },
+      "same_ids": {
+        "k": 70,
+        "n": 125,
+        "pct": 56.0
+      },
+      "added": {
+        "k": 14,
+        "n": 39,
+        "pct": 35.8974358974359
+      },
+      "final": {
+        "k": 84,
+        "n": 164,
+        "pct": 51.21951219512195
+      },
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -4.7804878048780495,
+      "total_delta": -4.7804878048780495,
+      "cohort_difference": -20.102564102564102,
+      "p": 0.04275269980416361,
+      "cohort_ci95_pp": [
+        -35.70785407099659,
+        -2.141569386538769
+      ],
+      "paired_gains": 0,
+      "paired_losses": 0,
+      "holm_p": 1.0
+    }
+  ],
+  "averages": [
+    {
+      "original": 50.577777777777776,
+      "rescored": 50.577777777777776,
+      "same_ids": 53.51111111111111,
+      "final": 52.43089430894309,
+      "model": "gemma_d",
+      "scoring_delta": 0.0,
+      "rerun_delta": 2.933333333333337,
+      "expansion_delta": -1.0802168021680245,
+      "total_delta": 1.8531165311653126
+    },
+    {
+      "original": 65.6888888888889,
+      "rescored": 65.6888888888889,
+      "same_ids": 65.6888888888889,
+      "final": 62.72845528455284,
+      "model": "gemma_ar",
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.9604336043360604,
+      "total_delta": -2.9604336043360604
+    },
+    {
+      "original": 51.91111111111111,
+      "rescored": 51.91111111111111,
+      "same_ids": 51.91111111111111,
+      "final": 49.55067750677507,
+      "model": "llada",
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -2.3604336043360448,
+      "total_delta": -2.3604336043360448
+    },
+    {
+      "original": 48.97777777777778,
+      "rescored": 48.8,
+      "same_ids": 48.8,
+      "final": 48.28672086720867,
+      "model": "qwen_d",
+      "scoring_delta": -0.17777777777778425,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.5132791327913253,
+      "total_delta": -0.6910569105691096
+    },
+    {
+      "original": 71.39649122807018,
+      "rescored": 71.39649122807018,
+      "same_ids": 71.39649122807018,
+      "final": 70.65528455284553,
+      "model": "qwen_ar",
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.741206675224646,
+      "total_delta": -0.741206675224646
+    },
+    {
+      "original": 49.86666666666667,
+      "rescored": 49.86666666666667,
+      "same_ids": 49.86666666666667,
+      "final": 48.54092140921409,
+      "model": "ministral_d",
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.3257452574525743,
+      "total_delta": -1.3257452574525743
+    },
+    {
+      "original": 63.46666666666667,
+      "rescored": 63.46666666666667,
+      "same_ids": 63.46666666666667,
+      "final": 62.701897018970186,
+      "model": "ministral_ar",
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.7647696476964825,
+      "total_delta": -0.7647696476964825
+    },
+    {
+      "original": 48.711111111111116,
+      "rescored": 48.711111111111116,
+      "same_ids": 48.711111111111116,
+      "final": 47.93333333333333,
+      "model": "llama_25k",
+      "scoring_delta": 0.0,
+      "rerun_delta": 0.0,
+      "expansion_delta": -0.7777777777777857,
+      "total_delta": -0.7777777777777857
+    },
+    {
+      "original": 49.24444444444444,
+      "rescored": 49.06666666666667,
+      "same_ids": 49.06666666666667,
+      "final": 47.797831978319785,
+      "model": "llama_50k",
+      "scoring_delta": -0.17777777777777004,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.2688346883468853,
+      "total_delta": -1.4466124661246553
+    },
+    {
+      "original": 58.75555555555555,
+      "rescored": 58.666666666666664,
+      "same_ids": 58.666666666666664,
+      "final": 56.71327913279133,
+      "model": "llama_ar",
+      "scoring_delta": -0.08888888888888857,
+      "rerun_delta": 0.0,
+      "expansion_delta": -1.9533875338753361,
+      "total_delta": -2.0422764227642247
+    }
+  ],
+  "gemma_paired_checks": [
+    {
+      "model": "gemma_d",
+      "task": "arc_c",
+      "gains": 7,
+      "losses": 4,
+      "p": 0.5488281250000006,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "gpqa",
+      "gains": 15,
+      "losses": 15,
+      "p": 1.0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "hellaswag",
+      "gains": 8,
+      "losses": 8,
+      "p": 1.0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "mmlu",
+      "gains": 5,
+      "losses": 11,
+      "p": 0.21011352539062508,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "mmlu_pro",
+      "gains": 10,
+      "losses": 8,
+      "p": 0.814529418945313,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "gsm8k",
+      "gains": 17,
+      "losses": 12,
+      "p": 0.4582583196461151,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "math",
+      "gains": 17,
+      "losses": 18,
+      "p": 1.0,
+      "holm_p": 1.0
+    },
+    {
+      "model": "gemma_d",
+      "task": "mbpp",
+      "gains": 20,
+      "losses": 5,
+      "p": 0.004077315330505339,
+      "holm_p": 0.03669583797454805
+    },
+    {
+      "model": "gemma_d",
+      "task": "humaneval",
+      "gains": 20,
+      "losses": 5,
+      "p": 0.004077315330505339,
+      "holm_p": 0.03669583797454805
+    }
+  ],
+  "paired_macro_comparisons": [
+    {
+      "first": "gemma_d",
+      "second": "llada",
+      "difference_pp": 2.8802168021680217,
+      "ci95_pp": [
+        0.7446070460704606,
+        4.975609756097561
+      ],
+      "replicates": 20000,
+      "seed": 20261115,
+      "task_counts": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        164
+      ]
+    },
+    {
+      "first": "gemma_d",
+      "second": "gemma_ar",
+      "difference_pp": -10.297560975609757,
+      "ci95_pp": [
+        -12.325203252032521,
+        -8.314363143631438
+      ],
+      "replicates": 20000,
+      "seed": 20261115,
+      "task_counts": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        164
+      ]
+    },
+    {
+      "first": "llama_50k",
+      "second": "llama_25k",
+      "difference_pp": -0.13550135501355012,
+      "ci95_pp": [
+        -1.8097560975609754,
+        1.4856368563685636
+      ],
+      "replicates": 20000,
+      "seed": 20261115,
+      "task_counts": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        164
+      ]
+    }
+  ]
+}

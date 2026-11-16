@@ -1,0 +1,7 @@
+kind,system,parameters,tokens,peak_tflops,assumed_mfu,predicted_gpu_hours,reported_gpu_hours,reported_over_predicted,implied_mfu,note
+table_estimate,DiffuLLaMA 7B,7000000000,65000000000,989,0.4000,1916.919,,,,
+table_estimate,Dream 7B,7000000000,580000000000,989,0.4000,17104.820,,,,
+table_estimate,iLLaDA 8B,8000000000,12000000000000,989,0.4000,404448.938,,,,
+table_estimate,Efficient-DLM 8B,8000000000,500000000000,989,0.4000,16852.039,,,,
+calibration,LLaDA 8B,8000000000,2300000000000,989,0.4000,77519.380,130000.000,1.677,0.238521,H800; 989 TFLOP/s dense-BF16 H100-class proxy
+calibration,Fast-dLLM v2 7B,7000000000,1310720000,312,0.4000,122.530,768.000,6.268,0.063818,64 A100 GPUs for 12 h; 312 TFLOP/s dense-BF16 peak

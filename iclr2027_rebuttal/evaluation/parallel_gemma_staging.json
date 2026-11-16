@@ -1,0 +1,15 @@
+{
+  "repo": "Ruurd/iclr2027-rebuttal-eval",
+  "revision": "682a97d1c93dbbe8b4c665b3617def9f18cbb045",
+  "plan_id": "78228989046f2f731ff00bbf9414758d87ea456c484f5e5a68d1fee543bdb587",
+  "total_compute_ceiling_usd": 12.75,
+  "prior_compute_reserved_usd": 0,
+  "max_gpu_timeout_seconds": 18000,
+  "controller_timeout_seconds": 28800,
+  "parallel_lane": "gemma",
+  "resume_outcomes": 1261,
+  "remaining_outcomes": 739,
+  "parent_humaneval_cumulative_ceiling_usd": 77.76094900000001,
+  "shared_additional_ceiling_usd": 25.5,
+  "budget_note": "Static disjoint allocation: two lanes at USD12.75 each, max 5 allocated GPU hours each; HumanEval separate and fully reserved in cumulative budget."
+}

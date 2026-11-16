@@ -6,9 +6,11 @@ import hashlib
 import importlib.util
 import math
 import os
+import shutil
+import time
 from pathlib import Path
 from statistics import median
-from typing import Any
+from typing import Any, Callable
 
 import torch
 from tqdm.auto import tqdm
@@ -34,6 +36,99 @@ def _append_jsonl(path: Path, value: Any) -> None:
     """Append one metrics record to a JSON Lines file."""
     with path.open("a") as f:
         f.write(json.dumps(value, default=float) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+
+
+def _checkpoint_limit(config: dict[str, Any]) -> int | None:
+    """Keep unlimited checkpoints unless a positive retention limit is set."""
+    limit = config.get("checkpoint_total_limit")
+    if limit is not None and (isinstance(limit, bool) or not isinstance(limit, int) or limit < 1):
+        raise ValueError("checkpoint_total_limit must be a positive integer or null")
+    return limit
+
+
+def _save_recovery_state(accelerator, model, path: Path, fp8_active: bool) -> None:
+    """Preserve TE calibration and empty extra-state entries in recovery saves.
+
+    Accelerate's safetensors cleanup treats separate empty TE state tensors as
+    shared storage and removes keys required by strict restoration. Native
+    Torch checkpoints retain those entries. Enable FP8-state capture explicitly
+    because the most recent forward pass was BF16 validation.
+    """
+    previous = []
+    if fp8_active:
+        for module in accelerator.unwrap_model(model).modules():
+            metadata = getattr(module, "fp8_meta", None)
+            if isinstance(metadata, dict) and "scaling_fwd" in metadata:
+                previous.append((metadata, metadata.get("fp8_checkpoint", False)))
+                metadata["fp8_checkpoint"] = True
+    try:
+        accelerator.save_state(path, safe_serialization=not fp8_active, save_embedding_layers=False)
+    finally:
+        for metadata, original in previous:
+            metadata["fp8_checkpoint"] = original
+
+
+def _prune_checkpoints(output: Path, limit: int | None, current_step: int) -> None:
+    """Remove older completed recovery checkpoints only after a new save succeeds.
+
+    An interrupted save has no matching state.json and is never selected for
+    retention or deletion. Metrics, final/best models, and future checkpoints
+    from a different continuation are outside this operation.
+    """
+    if limit is None:
+        return
+    completed = []
+    for path in output.glob("checkpoint-*"):
+        suffix = path.name.removeprefix("checkpoint-")
+        if not path.is_dir() or path.is_symlink() or not suffix.isdecimal():
+            continue
+        step = int(suffix)
+        if step > current_step:
+            continue
+        try:
+            state = json.loads((path / "state.json").read_text())
+        except (OSError, ValueError):
+            continue
+        if state.get("step") == step:
+            completed.append((step, path))
+    for _, path in sorted(completed, reverse=True)[limit:]:
+        shutil.rmtree(path)
+
+
+def _resume_metrics(path: Path, step: int, gradient_accumulation_steps: int = 1) -> None:
+    """Keep a backup, then discard an interrupted/replayed metrics tail.
+
+    Updates after the restored checkpoint will be run again. Retaining their
+    previous log entries in the active curve would mix two continuations.
+    """
+    if not path.exists():
+        return
+    original = path.read_text()
+    kept = []
+    lines = original.splitlines()
+    for index, line in enumerate(lines):
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            # A process killed while appending can leave one partial last line.
+            # A malformed interior line is corruption, not an interruption tail.
+            if index != len(lines) - 1:
+                raise ValueError(f"Malformed metrics record in {path}")
+            break
+        # Historical train records use microsteps; validation/interval records
+        # use optimizer updates. Compare each against the corresponding bound.
+        bound = step * gradient_accumulation_steps if record.get("split") == "train" else step
+        if int(record.get("step", 0)) <= bound:
+            kept.append(line)
+    rewritten = "".join(line + "\n" for line in kept)
+    if rewritten != original:
+        backup = _available_output_dir(path.with_name(f"metrics.before-resume-{step}.jsonl"))
+        backup.write_text(original)
+        path.write_text(rewritten)
 
 
 def _save_adapter(model, tokenizer, path: Path, initial_norms: dict[str, torch.Tensor] | None = None) -> None:
@@ -467,7 +562,11 @@ def evaluate(model, loader, accelerator, mode: str, all_tokens: bool = False, eo
     return d
 
 
-def run_training(config: dict[str, Any]) -> dict[str, Any]:
+def run_training(
+    config: dict[str, Any],
+    *,
+    artifact_callback: Callable[[str, Path, Path | None], None] | None = None,
+) -> dict[str, Any]:
     """Execute model setup, training, validation, selection, and final testing."""
     answer_padding_weights = _resolve_answer_padding_weights(config)
     if answer_padding_weights is not None:
@@ -560,6 +659,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     checkpoint_mode = config.get("checkpoint_mode", "only_best_model")
     if checkpoint_mode not in {"only_best_model", "every_checkpoint", "every_model"}:
         raise ValueError("checkpoint_mode must be 'only_best_model', 'every_model', or 'every_checkpoint'")
+    checkpoint_limit = _checkpoint_limit(config)
     generation_settings = config.get("generation_perplexity", {})
     if (
         config.get("full_finetuning")
@@ -574,14 +674,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     from datasets import load_dataset
     cache_dir = Path(config.get("cache_dir", "data/huggingface")); cache_dir.mkdir(parents=True, exist_ok=True)
     hf_token = os.getenv("HF_TOKEN")
-    # Serialize the initial dataset download/cache population so distributed
-    # workers do not all perform the expensive preparation concurrently.
-    with accelerator.main_process_first():
-        raw = load_dataset(config["dataset_name"], config.get("dataset_config"), cache_dir=str(cache_dir), token=hf_token)
+    # Defer raw downloads entirely when matching published clean tokens exist.
+    raw = None
     split_names = config.get("splits", {"train": "train", "validation": "validation", "test": "test"})
     token_name = config.get("tokenizer_name_or_path", config["model_name_or_path"])
     model_cache = Path(config.get("base_model_cache_dir", "base_models")); model_cache.mkdir(parents=True, exist_ok=True)
-    tokenizer = AutoTokenizer.from_pretrained(token_name, use_fast=True, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache), clean_up_tokenization_spaces=False)
+    tokenizer = AutoTokenizer.from_pretrained(token_name, revision=config.get("tokenizer_revision", config.get("model_revision") if token_name == config["model_name_or_path"] else None), use_fast=True, token=os.getenv("HF_TOKEN"), cache_dir=str(model_cache), clean_up_tokenization_spaces=False)
     if tokenizer.pad_token_id is None: tokenizer.pad_token = tokenizer.eos_token
     seed = int(config.get("seed", 42)); torch.manual_seed(seed)
     def indexed(ds):
@@ -589,10 +687,13 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         return ds.map(lambda _, index: {"_index": index}, with_indices=True)
     def get_split(spec):
         """Resolve either a named split or a Hugging Face split expression."""
+        nonlocal raw
+        if raw is None:
+            raw = load_dataset(config["dataset_name"], config.get("dataset_config"), revision=config.get("dataset_revision"), cache_dir=str(cache_dir), token=hf_token)
         if spec in raw:
             return raw[spec]
         # Hugging Face split expressions (e.g. train[:8]) are valid smoke-test inputs.
-        return load_dataset(config["dataset_name"], config.get("dataset_config"), split=spec, cache_dir=str(cache_dir), token=hf_token)
+        return load_dataset(config["dataset_name"], config.get("dataset_config"), revision=config.get("dataset_revision"), split=spec, cache_dir=str(cache_dir), token=hf_token)
     def bounded_filter(dataset, predicate, limit: int | None):
         """Filter only as many source rows as needed for a capped run."""
         if limit is None or len(dataset) <= limit:
@@ -614,7 +715,16 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         result = concatenate_datasets(chunks)
         return result.select(range(min(limit, len(result))))
 
-    prep_key = hashlib.sha256(json.dumps({"format": 2, "dataset": config["dataset_name"], "config": config.get("dataset_config"), "splits": split_names, "tokenizer": token_name, "chat_template": getattr(tokenizer, "chat_template", None), "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True)), "train_sample_limit": train_sample_limit, "seed": seed}, sort_keys=True).encode()).hexdigest()[:16]
+    prep_settings = {"format": 2, "dataset": config["dataset_name"], "config": config.get("dataset_config"), "splits": split_names, "tokenizer": token_name, "chat_template": getattr(tokenizer, "chat_template", None), "mode": config["corruption_mode"], "max_length": int(config["max_sequence_length"]), "include_answer_eos": bool(config.get("include_answer_eos", True)), "train_sample_limit": train_sample_limit, "seed": seed}
+    # Preserve existing unpinned caches, but never share a cache across pinned
+    # dataset or tokenizer revisions.
+    for key, revision in (
+        ("dataset_revision", config.get("dataset_revision")),
+        ("tokenizer_revision", config.get("tokenizer_revision", config.get("model_revision") if token_name == config["model_name_or_path"] else None)),
+    ):
+        if revision:
+            prep_settings[key] = revision
+    prep_key = hashlib.sha256(json.dumps(prep_settings, sort_keys=True).encode()).hexdigest()[:16]
     prep_root = Path(config.get("prepared_data_cache_dir", "data/prepared")) / prep_key
     prepared_cache_loaded = False
     with accelerator.main_process_first():
@@ -623,7 +733,18 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             train_data, val_data, test_data = (load_from_disk(str(prep_root / split)) for split in ("train", "validation", "test"))
             prepared_cache_loaded = True
         else:
-            train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
+            from .prepared_cache import load_published_prepared_data
+            published = load_published_prepared_data(config, tokenizer, train_sample_limit)
+            if published is not None:
+                train_data, val_data, test_data = (published[split] for split in ("train", "validation", "test"))
+                prep_root.mkdir(parents=True, exist_ok=True)
+                for split, dataset in zip(("train", "validation", "test"), (train_data, val_data, test_data)):
+                    dataset.save_to_disk(str(prep_root / split))
+                prepared_cache_loaded = True
+            else:
+                if config.get("require_prepared_dataset", False):
+                    raise ValueError("Pinned clean-token profile did not match; refusing paid raw preprocessing")
+                train_data, val_data, test_data = (indexed(get_split(split_names[k])) for k in ("train", "validation", "test"))
     if config["corruption_mode"] == "structured" and prepared_cache_loaded and train_sample_limit is not None and len(train_data) > train_sample_limit:
         train_data = train_data.shuffle(seed=int(config.get("seed", 42))).select(range(train_sample_limit))
     if config["corruption_mode"] != "structured" and not prepared_cache_loaded:
@@ -721,6 +842,8 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     resolved_learning_rate, effective_batch_size, learning_rate_scale = _resolve_learning_rate(config, accelerator.num_processes)
     resolved = dict(config); resolved["eos_padding_loss"] = train_collator.eos_padding_loss; resolved["frontier_padding_mode"] = train_collator.frontier_padding_mode; resolved["training_samples_used"] = len(train_data); resolved["training_sample_limit"] = train_sample_limit; resolved["validation_samples_used"] = len(val_data); resolved["structured_marker_dropped"] = marker_dropped if config["corruption_mode"] == "structured" else {}; resolved["effective_batch_size"] = effective_batch_size; resolved["learning_rate_scale"] = learning_rate_scale; resolved["resolved_learning_rate"] = resolved_learning_rate; resolved["fp8_requested"] = fp8_resolution["requested"]; resolved["fp8_active"] = fp8_resolution["active"]; resolved["fp8_device_name"] = fp8_resolution["device_name"]; resolved["fp8_compute_capability"] = fp8_resolution["capability"]; resolved["resolved_training_precision"] = fp8_resolution["mixed_precision"] or "fp32"
     _write_json(output / "resolved_config.json", resolved); _write_json(output / "parameter_audit.json", audit); _write_json(output / "mask_token.json", train_collator.mask_info)
+    if accelerator.is_main_process and artifact_callback:
+        artifact_callback("metadata", output, None)
     trainable_parameter_names = {name for name, parameter in model.named_parameters() if parameter.requires_grad}
     trainable_parameters = [p for p in model.parameters() if p.requires_grad]
     optimizer_name = str(config.get("optimizer", "adamw")).lower()
@@ -781,11 +904,15 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         audit["fp8_transformer_engine"] = True
         _write_json(output / "parameter_audit.json", audit)
     start_step = 0
+    best = float("inf")
+    metrics_path = output / "metrics.jsonl"
     if resume := config.get("resume_from_checkpoint"):
         accelerator.load_state(resume)
         state = json.loads((Path(resume) / "state.json").read_text()); start_step = int(state["step"])
+        best = float(state.get("best_validation_loss", float("inf")))
+        if accelerator.is_main_process:
+            _resume_metrics(metrics_path, start_step, int(config.get("gradient_accumulation_steps", 1)))
         train_loader = accelerator.skip_first_batches(train_loader, start_step * int(config.get("gradient_accumulation_steps", 1)))
-    best = float("inf"); metrics_path = output / "metrics.jsonl"
     model.train()
     progress = tqdm(total=max_updates, initial=start_step, desc="training", unit="update", disable=not accelerator.is_local_main_process)
     # Keep training aggregates on-device. Calling float()/int() on CUDA tensors
@@ -798,6 +925,7 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
         for name in (("answer_loss", "padding_loss") if answer_padding_weights is not None else ())
     }
     update_step = start_step
+    training_started = time.monotonic()
     for microstep, batch in enumerate(train_loader, start=start_step * grad_accumulation + 1):
         step = microstep
         if step > max_steps: break
@@ -875,10 +1003,13 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
             train_avg = (interval_loss_sum / interval_examples.clamp_min(1)).item()
             progress.set_postfix(train_loss=f"{loss_value:.4f}", train_avg=f"{train_avg:.4f}")
             _append_jsonl(metrics_path, {"split": "train", "step": step, "weighted_loss": loss_value,
+                                        "elapsed_seconds": time.monotonic() - training_started,
                                         "supervised_tokens": supervised_tokens,
                                         **{name: info[name].item() for name in interval_component_sums}})
         if update_step % int(config.get("validation_steps", 100)) == 0 or update_step == max_updates:
+            validation_started = time.monotonic()
             metrics = evaluate(model, val_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
+            metrics["validation_seconds"] = time.monotonic() - validation_started
             if accelerator.is_main_process:
                 generation_due = generation_interval is not None and (update_step % generation_interval == 0 or update_step == max_updates)
                 if generation_due:
@@ -910,14 +1041,29 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
                     best = metrics["weighted_loss"]
                     if bool(config.get("save_best_model", True)):
                         _save_training_model(model, tokenizer, output / "best", initial_norms, config, accelerator)
+                if artifact_callback:
+                    artifact_callback("metrics", output, None)
             accelerator.wait_for_everyone()
             model.train()
         if checkpoint_mode in {"every_checkpoint", "every_model"} and (update_step % int(config.get("checkpoint_steps", 500)) == 0 or update_step == max_updates):
             checkpoint = output / f"checkpoint-{update_step}"
             if checkpoint_mode == "every_checkpoint":
-                accelerator.save_state(checkpoint, safe_serialization=True, save_embedding_layers=False)
                 if accelerator.is_main_process:
-                    _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best})
+                    # A retry may overwrite an older checkpoint at this step.
+                    # Do not leave its completion marker visible during saving.
+                    (checkpoint / "state.json").unlink(missing_ok=True)
+                accelerator.wait_for_everyone()
+                checkpoint_started = time.monotonic()
+                _save_recovery_state(accelerator, model, checkpoint, fp8_resolution["active"])
+                if accelerator.is_main_process:
+                    _write_json(checkpoint / "state.json", {"step": update_step, "best_validation_loss": best,
+                                                           "save_seconds": time.monotonic() - checkpoint_started})
+                accelerator.wait_for_everyone()
+                if accelerator.is_main_process:
+                    if artifact_callback:
+                        artifact_callback("checkpoint", output, checkpoint)
+                    _prune_checkpoints(output, checkpoint_limit, update_step)
+                accelerator.wait_for_everyone()
             elif accelerator.is_main_process:
                 # Inference-ready snapshot without optimizer/scheduler/RNG
                 # state. Adapter snapshots can warm-start through
@@ -931,7 +1077,12 @@ def run_training(config: dict[str, Any]) -> dict[str, Any]:
     elif accelerator.is_main_process and checkpoint_mode == "every_model":
         _save_training_model(model, tokenizer, output / "final", initial_norms, config, accelerator)
     # Test is deliberately after best-model selection/finalization.
-    test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
-    if accelerator.is_main_process: _write_json(output / "test_metrics.json", test_metrics)
+    test_metrics = {}
+    if bool(config.get("run_final_test", True)):
+        test_metrics = evaluate(model, test_loader, accelerator, config["corruption_mode"], config.get("structured_loss_behavior") == "all_tokens", bool(config.get("eos_padding_loss", False)), answer_padding_weights)
+        if accelerator.is_main_process:
+            _write_json(output / "test_metrics.json", test_metrics)
+    if accelerator.is_main_process and artifact_callback:
+        artifact_callback("final", output, output / "final" if checkpoint_mode in {"every_checkpoint", "every_model"} else output / "best")
     accelerator.end_training()
     return test_metrics

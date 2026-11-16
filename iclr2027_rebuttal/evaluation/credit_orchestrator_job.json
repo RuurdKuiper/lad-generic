@@ -1,0 +1,17 @@
+{
+  "orchestrator_job_id": "6af052770e0338d1bb84ab4f",
+  "url": "https://huggingface.co/jobs/Ruurd/6af052770e0338d1bb84ab4f",
+  "status": "waiting/staging",
+  "limits": {
+    "approved_credit_usd": 4.95,
+    "prior_cost_reserved_usd": 0.291669,
+    "cpu_max_usd": 0.01503,
+    "gpu_minutes": 110,
+    "gpu_max_usd": 4.58337,
+    "total_max_usd": 4.890069,
+    "gpu_timeout_seconds": 6600,
+    "worker_seconds": 6300
+  },
+  "source_input_revision": "1825d75ddab6369e7bd036c4e786fe2da248a442",
+  "user_approved_credit_usd": 4.95
+}

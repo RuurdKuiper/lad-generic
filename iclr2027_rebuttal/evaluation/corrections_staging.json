@@ -1,0 +1,14 @@
+{
+  "repo": "Ruurd/iclr2027-rebuttal-eval",
+  "revision": "e4a64b8157d5a6dd710baafbef859ff8dec4dc85",
+  "plan_id": "28f51c173d7dc462d2c3a90199f3ddabedac01eaf77bae9abcc5608885d8a9ad",
+  "total_compute_ceiling_usd": 18.0,
+  "prior_compute_reserved_usd": 2.375193,
+  "budget_note": "Includes upper reservations of Qwen/Gemma diagnostic and HumanEval CPU audit; original controller has separate USD75 cap; aggregate maximum USD93.",
+  "deferred_tasks": [
+    "humaneval"
+  ],
+  "qwen_historical_reuse_candidates": 1000,
+  "gemma_fresh_items": 2000,
+  "superseded_failed_start_plan": "e2978e5b6ca53f00ab1f176d4169c4f7ca809ddf7338dfb044784f016756e6ea"
+}

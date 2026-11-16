@@ -1,0 +1,635 @@
+{
+  "plan_id": "735498944f7504cc3ef0ec92fc144ea538c421439861575516f6d10d4ba974bc",
+  "counts": [
+    {
+      "model": "gemma_d",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_d",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "gemma_d",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "gemma_ar",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 50,
+      "requires_generation": 114
+    },
+    {
+      "model": "gemma_ar",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 50,
+      "requires_generation": 200
+    },
+    {
+      "model": "llada",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llada",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "llada",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_d",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "qwen_d",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "qwen_ar",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 95,
+      "requires_generation": 69
+    },
+    {
+      "model": "qwen_ar",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_d",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "ministral_d",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "ministral_ar",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "ministral_ar",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_25k",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "llama_25k",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_ar",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "llama_ar",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "arc_c",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "gpqa",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "hellaswag",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "mmlu",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "mmlu_pro",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "gsm8k",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "math",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    },
+    {
+      "model": "llama_50k",
+      "task": "humaneval",
+      "target": 164,
+      "reusable_generations": 125,
+      "requires_generation": 39
+    },
+    {
+      "model": "llama_50k",
+      "task": "mbpp",
+      "target": 250,
+      "reusable_generations": 125,
+      "requires_generation": 125
+    }
+  ]
+}

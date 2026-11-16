@@ -1,0 +1,9 @@
+{
+  "basis": "Measured initial rank timings; future training, validation and checkpoint transfers have 20% headroom; prior stopped job is conservatively accounted.",
+  "forecast_compute_usd_with_20pct_margin": 31.557274986011194,
+  "forecast_usd_with_full_startup_contingency": 34.557274986011194,
+  "planning_envelope_usd": 41.973217,
+  "cap_usd": 42,
+  "status": "budget_gate_passed_training",
+  "job_id": "6afa1def23985fb9cd83bc2c"
+}

@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "models": {
+    "qwen_d": {
+      "model": "qwen_d",
+      "source": "qwen-2.5-7b-mask/best",
+      "repo": "Ruurd/iclr2027-rebuttal-eval",
+      "revision": "82a7443c3cf7e4776ec5b5ccfca5a619245850bc",
+      "path": "assets/checkpoints/qwen_d",
+      "hashes": {
+        "adapter_model.safetensors": "e191a5bf80df7f30c578a73770e97804bb05ebe80cebfae27e5b4e595761baee",
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "normalization_state.pt": "96e1bf1ac2df8cae2d4e432b7cd9f6ad1db72dbcfbfef7b7b4d0b444eec35b9a",
+        "adapter_config.json": "2616ede8acc757732f60ff1e181e33588f3c49d91fbe4beefeb266fdc0a8bc8a",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "normalization_initial_state.pt": "5a8d0de97d0b7d3592dc2c52dca50e0ff030c3d3514501bf4b62d6ff8339dc54",
+        "resolved_config.json": "30cd0ada76e3273e18e94f8841363373f0278a22c884842eea1ae996e09b6de4"
+      },
+      "published_tensor_files_match": true
+    },
+    "llama_50k": {
+      "model": "llama_50k",
+      "source": "llama-3.1-8b-mask-long/checkpoint-50000",
+      "repo": "Ruurd/iclr2027-rebuttal-eval",
+      "revision": "d029656ad35a0ea002a86dde25a3e0bc9d4434cd",
+      "path": "assets/checkpoints/llama_50k",
+      "hashes": {
+        "adapter_model.safetensors": "7ca9c7fa4ecfcefdb725ef9ab26da48b4d7f339e875b61cd2a956ece40039c0e",
+        "tokenizer_config.json": "f7c8ae5015455e3b4e292841200f9a52d4ceebe2f57f44e7e986dd16057cae00",
+        "special_tokens_map.json": "1b1835caa5b4d70acaa210fa222b0036f1882f9525c4660fd4810fb3e1e40ff8",
+        "tokenizer.json": "6b9e4e7fb171f92fd137b777cc2714bf87d11576700a1dcd7a399e7bbe39537b",
+        "normalization_state.pt": "e741e6aa3facc65589ea922f8e077fe209109aea15591ce61e28093cac2df3be",
+        "adapter_config.json": "fb616ec38a6a5cd066b2b9534521d13e4d1e77cbcdebd6108ab71a14df2f389f",
+        "chat_template.jinja": "e10ca381b1ccc5cf9db52e371f3b6651576caee0a630b452e2816b2d404d4b65",
+        "normalization_initial_state.pt": "a9147f4a63ce16415d3bf25c2feef40617cffa2bbe1631375d5b3766cd86e209",
+        "resolved_config.json": "5470a2d0f0c4c457156547f82c5a6c6a23de78e4c2ee03048f8db0a83d40a1db"
+      }
+    },
+    "llama_25k": {
+      "model": "llama_25k",
+      "source": "llama-3.1-8b-mask/best",
+      "repo": "Ruurd/iclr2027-rebuttal-eval",
+      "revision": "9e1207d9aa6e129d1d5b4fc687480c54b6e8c5a7",
+      "path": "assets/checkpoints/llama_25k",
+      "hashes": {
+        "adapter_model.safetensors": "67f68055159634a61654f38e5fba0b8f640275167a39f6ac2c7a08cbb1554f10",
+        "tokenizer_config.json": "f7c8ae5015455e3b4e292841200f9a52d4ceebe2f57f44e7e986dd16057cae00",
+        "special_tokens_map.json": "1b1835caa5b4d70acaa210fa222b0036f1882f9525c4660fd4810fb3e1e40ff8",
+        "tokenizer.json": "6b9e4e7fb171f92fd137b777cc2714bf87d11576700a1dcd7a399e7bbe39537b",
+        "normalization_state.pt": "e741e6aa3facc65589ea922f8e077fe209109aea15591ce61e28093cac2df3be",
+        "adapter_config.json": "395e0a5474d9e2b64839ae6967f30d755d6669f4620f1b8250d78e104b01a80f",
+        "chat_template.jinja": "e10ca381b1ccc5cf9db52e371f3b6651576caee0a630b452e2816b2d404d4b65",
+        "normalization_initial_state.pt": "a9147f4a63ce16415d3bf25c2feef40617cffa2bbe1631375d5b3766cd86e209",
+        "resolved_config.json": "15462a8cd8a6fdbc158560cd6aec25e855db3caccbed557dea1d2855d1b014b7"
+      },
+      "published_tensor_files_match": true
+    },
+    "ministral_d": {
+      "model": "ministral_d",
+      "source": "ministral-8b-mask/best",
+      "repo": "Ruurd/iclr2027-rebuttal-eval",
+      "revision": "d06ea3d67be655c766881748fc1ed71fd6edb203",
+      "path": "assets/checkpoints/ministral_d",
+      "hashes": {
+        "adapter_model.safetensors": "29dd4dda4d412423d29fead5c1ac3cd094fe005d442c97efdc97bb2cf31ef426",
+        "tokenizer_config.json": "6f427d6bd59d646856486adda864537cf0253aaa2d1f5fd22e411ae919a3a8be",
+        "special_tokens_map.json": "4452b845ab9ca2afa863f59f1411a959e8a32bb4334e264b0e71d5d17dd4dcb9",
+        "tokenizer.json": "d7edbeaf20dd7f571b5dd1c54d9ace4f9b6299127cc7ba2afb14a6d51a4a79a4",
+        "normalization_state.pt": "5e46342c5cd6667074362553dfeb7e664acf7f2eebe125053422f9d91d5a3e5c",
+        "adapter_config.json": "e6f462003d5020b10a8e2ca9f0abb44b6d601aa17a932d55b385a71dd40295c9",
+        "chat_template.jinja": "e4676cb56dffea7782fd3e2b577cfaf1e123537e6ef49b3ec7caa6c095c62272",
+        "normalization_initial_state.pt": "6e17910053fd950e9716fcee33d0b27bdcdb2d7ccc8674fb6165c564c86f466b",
+        "resolved_config.json": "f5751bcdaffd039572ac633ff5d53e847f5283b366300d672aedd547a37ea686"
+      },
+      "published_tensor_files_match": true
+    },
+    "gemma_d": {
+      "model": "gemma_d",
+      "source": "gemma-2-9b-mask/best",
+      "repo": "Ruurd/iclr2027-rebuttal-eval",
+      "revision": "5dfa62394d2a6d316bc1b1c4fec50a594fec4096",
+      "path": "assets/checkpoints/gemma_d",
+      "hashes": {
+        "adapter_model.safetensors": "cf4eafa39c596b237e183f56800a230a8991c50d635d2e21291b90a3b529bfee",
+        "tokenizer_config.json": "5db39e7ccbeceb1dc1136ff54d717f6f84f3556893e6cc30ee4972c408ed4dc2",
+        "special_tokens_map.json": "baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351",
+        "tokenizer.json": "5f7eee611703c5ce5d1eee32d9cdcfe465647b8aff0c1dfb3bed7ad7dbb05060",
+        "tokenizer.model": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2",
+        "normalization_state.pt": "47ae556661245917370b2a45f3643a940ccb558fdf370c195615d3cf50787c29",
+        "adapter_config.json": "dd1af3a2bf245a236aa0e2670f59fed77035b5788d26c7753a441246039974ea",
+        "chat_template.jinja": "ecd6ae513fe103f0eb62e8ab5bfa8d0fe45c1074fa398b089c93a7e70c15cfd6",
+        "normalization_initial_state.pt": "3464302a3d827435bc2d8639eb196c234edcd632b4ba9d239d6ca2b8f1f709b2",
+        "resolved_config.json": "f0f5eb5aa21b5b06814de2d8c4f32d332ead984ca90ee046cbaa9bb7c2883c1a"
+      },
+      "published_tensor_files_match": true
+    }
+  }
+}

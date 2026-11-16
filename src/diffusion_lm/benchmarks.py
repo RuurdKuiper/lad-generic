@@ -359,8 +359,20 @@ def _last_number(text: str) -> str:
     return candidates[-1].replace(",", "").rstrip(".") if candidates else ""
 
 
+_MATH_NUMBER = r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
+
+
 def _normalize_math_answer(text: str) -> str:
     """Normalize a generated or reference final MATH answer for comparison."""
+    # The evaluation prompt explicitly requests FINAL:. Honor that terminal
+    # marker before searching for boxes, so an earlier intermediate box cannot
+    # override the model's subsequently declared final answer.
+    markers = list(re.finditer(
+        r"(?im)^[ \t]*(?:\*{1,2})?(?:final(?:[ \t]+answer)?|answer)(?:\*{1,2})?[ \t]*:(?:\*{1,2})?[ \t]*",
+        text or "",
+    ))
+    if markers:
+        text = text[markers[-1].end():].strip()
     has_box = re.search(r"\\(?:boxed|fbox)\s*\{", text) is not None
     value = _boxed(text).strip()
     if not has_box:
@@ -405,6 +417,19 @@ def _normalize_math_answer(text: str) -> str:
             break
         value = value[1:-1]
     value = re.sub(r"(?:\^\{?\\circ\}?|\\circ|°|degrees?)\Z", "", value, flags=re.IGNORECASE)
+    # Repair only complete scalar answers, never search a rationale for a
+    # convenient number. A stray command escape / closing brace is a common
+    # damaged-box presentation, e.g. FINAL: \78 or FINAL: \3}.
+    escaped_number = re.fullmatch(r"\\+(" + _MATH_NUMBER + r")\}?", value)
+    if escaped_number:
+        value = escaped_number.group(1)
+    scalar_statement = re.fullmatch(
+        r"(?:the)?(?:value|result|answer)(?:is|=|:)(" + _MATH_NUMBER + r"(?:\\?%|percent)?)",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if scalar_statement:
+        value = scalar_statement.group(1)
     return value
 
 
@@ -416,16 +441,55 @@ def _numeric_answers_equal(left: str, right: str) -> bool:
         return False
 
 
+def _math_numeric_percentage(value: str) -> tuple[Decimal, bool] | None:
+    match = re.fullmatch(r"(" + _MATH_NUMBER + r")(\\?%|percent)?", value, flags=re.IGNORECASE)
+    if match:
+        return Decimal(match.group(1)), match.group(2) is not None
+    return None
+
+
+def _math_reference_uses_percent(target: str) -> bool:
+    # The reference may put the unit outside its final box: \boxed{10} percent.
+    # A percentage mentioned elsewhere in the reasoning is insufficient.
+    return re.search(
+        r"\\(?:boxed|fbox)\s*\{[^{}]+\}\s*(?:\$|\\\)|\\\])?\s*(?:\\?%|percent)\s*[.!]?\s*\Z",
+        target,
+        flags=re.IGNORECASE,
+    ) is not None
+
+
 def _math_answers_equal(prediction: str, target: str) -> bool:
     """Use symbolic MATH verification when installed, with a strict fallback."""
     normalized_prediction = _normalize_math_answer(prediction)
     normalized_target = _normalize_math_answer(target)
+    if not normalized_prediction or not normalized_target:
+        return False
     if normalized_prediction == normalized_target or _numeric_answers_equal(normalized_prediction, normalized_target):
         return True
+    answer_number = _math_numeric_percentage(normalized_prediction)
+    target_number = _math_numeric_percentage(normalized_target)
+    if answer_number is not None and target_number is not None and (answer_number[1] or target_number[1]):
+        if target_number[1] or _math_reference_uses_percent(target):
+            # Gold explicitly gives a percentage: bare 10 and 10% denote the
+            # same requested percentage coefficient, whereas 0.1% does not.
+            return answer_number[0] == target_number[0]
+        # Without a percentage unit in gold, retain the scale: 10% = 0.1,
+        # not 10. Do not strip '%' indiscriminately.
+        return answer_number[0] / 100 == target_number[0]
     try:
-        from math_verify import parse, verify
+        from math_verify import LatexExtractionConfig, parse, verify
 
-        return bool(verify(parse(target), parse(prediction)))
+        # Remaining unescaped delimiters mean extraction retained a rationale,
+        # not a single final expression. Do not search its intermediate math.
+        if re.search(r"(?<!\\)\$", normalized_prediction) or re.search(r"(?<!\\)\$", normalized_target):
+            return False
+        # Compare final answers only. Parsing a complete rationale can accept
+        # a correct intermediate expression despite an incorrect final answer.
+        # Wrapping also makes bare normalized LaTeX (e.g. \frac65) parseable.
+        options = dict(extraction_config=[LatexExtractionConfig()], fallback_mode="no_fallback", parsing_timeout=2)
+        gold = parse("$" + normalized_target + "$", **options)
+        answer = parse("$" + normalized_prediction + "$", **options)
+        return bool(gold and answer and verify(gold, answer, timeout_seconds=2))
     except (ImportError, TypeError, ValueError):
         return False
 

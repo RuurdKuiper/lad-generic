@@ -1,0 +1,450 @@
+{"split": "train", "step": 100, "weighted_loss": 0.8328987956047058, "supervised_tokens": 1111}
+{"split": "train", "step": 200, "weighted_loss": 0.44636908173561096, "supervised_tokens": 1099}
+{"weighted_loss_sum": 200.766357421875, "unweighted_ce_sum": 22425.859375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 1.003831787109375, "unweighted_masked_token_ce": 1.4747063441178405, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 250}
+{"split": "train_interval", "step": 250, "weighted_loss": 1.2571352339982986, "examples": 4000}
+{"split": "train", "step": 300, "weighted_loss": 0.7127959728240967, "supervised_tokens": 1124}
+{"split": "train", "step": 400, "weighted_loss": 1.1601860523223877, "supervised_tokens": 643}
+{"split": "train", "step": 500, "weighted_loss": 0.6963554620742798, "supervised_tokens": 1553}
+{"weighted_loss_sum": 183.30972290039062, "unweighted_ce_sum": 20953.23828125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.9165486145019531, "unweighted_masked_token_ce": 1.3778679740415598, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 500}
+{"split": "train_interval", "step": 500, "weighted_loss": 0.7597820954322815, "examples": 4000}
+{"split": "train", "step": 600, "weighted_loss": 0.5288523435592651, "supervised_tokens": 1452}
+{"split": "train", "step": 700, "weighted_loss": 0.48053786158561707, "supervised_tokens": 1086}
+{"weighted_loss_sum": 173.5997772216797, "unweighted_ce_sum": 20046.578125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.8679988861083985, "unweighted_masked_token_ce": 1.3182467367002038, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 750}
+{"split": "train_interval", "step": 750, "weighted_loss": 0.7073854592442512, "examples": 4000}
+{"split": "train", "step": 800, "weighted_loss": 0.7827663421630859, "supervised_tokens": 1001}
+{"split": "train", "step": 900, "weighted_loss": 1.4702720642089844, "supervised_tokens": 1994}
+{"split": "train", "step": 1000, "weighted_loss": 0.6775165796279907, "supervised_tokens": 1242}
+{"weighted_loss_sum": 169.2349090576172, "unweighted_ce_sum": 19506.197265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.8461745452880859, "unweighted_masked_token_ce": 1.2827117291789965, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 26.027082443237305, "generation_mean_nll": 3.2591376976956514, "generation_tokens": 461, "split": "validation", "step": 1000}
+{"split": "train_interval", "step": 1000, "weighted_loss": 0.6802960261106491, "examples": 4000}
+{"split": "train", "step": 1100, "weighted_loss": 0.8746216893196106, "supervised_tokens": 1452}
+{"split": "train", "step": 1200, "weighted_loss": 0.6644565463066101, "supervised_tokens": 1500}
+{"weighted_loss_sum": 165.15736389160156, "unweighted_ce_sum": 19082.009765625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.8257868194580078, "unweighted_masked_token_ce": 1.254817502835865, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 1250}
+{"split": "train_interval", "step": 1250, "weighted_loss": 0.6613488035202026, "examples": 4000}
+{"split": "train", "step": 1300, "weighted_loss": 1.0250506401062012, "supervised_tokens": 1548}
+{"split": "train", "step": 1400, "weighted_loss": 0.6243000030517578, "supervised_tokens": 1344}
+{"split": "train", "step": 1500, "weighted_loss": 0.396282434463501, "supervised_tokens": 1126}
+{"weighted_loss_sum": 160.37326049804688, "unweighted_ce_sum": 18635.037109375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.8018663024902344, "unweighted_masked_token_ce": 1.2254249430772013, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 1500}
+{"split": "train_interval", "step": 1500, "weighted_loss": 0.6539339762926102, "examples": 4000}
+{"split": "train", "step": 1600, "weighted_loss": 0.29028981924057007, "supervised_tokens": 870}
+{"split": "train", "step": 1700, "weighted_loss": 0.32351893186569214, "supervised_tokens": 1229}
+{"weighted_loss_sum": 157.925048828125, "unweighted_ce_sum": 18446.431640625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.789625244140625, "unweighted_masked_token_ce": 1.2130224002515289, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 1750}
+{"split": "train_interval", "step": 1750, "weighted_loss": 0.6062553176283836, "examples": 4000}
+{"split": "train", "step": 1800, "weighted_loss": 0.3242074251174927, "supervised_tokens": 1212}
+{"split": "train", "step": 1900, "weighted_loss": 0.6128832101821899, "supervised_tokens": 1424}
+{"split": "train", "step": 2000, "weighted_loss": 0.7288126945495605, "supervised_tokens": 1791}
+{"weighted_loss_sum": 155.372314453125, "unweighted_ce_sum": 18228.833984375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.776861572265625, "unweighted_masked_token_ce": 1.1987133546639706, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 26.69687843322754, "generation_mean_nll": 3.2845467244546245, "generation_tokens": 381, "split": "validation", "step": 2000}
+{"split": "train_interval", "step": 2000, "weighted_loss": 0.6284414305686951, "examples": 4000}
+{"split": "train", "step": 2100, "weighted_loss": 1.081812858581543, "supervised_tokens": 1381}
+{"split": "train", "step": 2200, "weighted_loss": 0.5342270135879517, "supervised_tokens": 1720}
+{"weighted_loss_sum": 153.1122589111328, "unweighted_ce_sum": 17923.029296875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.765561294555664, "unweighted_masked_token_ce": 1.1786038861626225, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 2250}
+{"split": "train_interval", "step": 2250, "weighted_loss": 0.6333254604935646, "examples": 4000}
+{"split": "train", "step": 2300, "weighted_loss": 0.3444713354110718, "supervised_tokens": 1307}
+{"split": "train", "step": 2400, "weighted_loss": 0.7242881059646606, "supervised_tokens": 1681}
+{"split": "train", "step": 2500, "weighted_loss": 0.4601081609725952, "supervised_tokens": 1655}
+{"weighted_loss_sum": 153.28439331054688, "unweighted_ce_sum": 18020.94921875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7664219665527344, "unweighted_masked_token_ce": 1.1850430208949825, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 2500}
+{"split": "train_interval", "step": 2500, "weighted_loss": 0.6215393083095551, "examples": 4000}
+{"split": "train", "step": 2600, "weighted_loss": 0.7235370874404907, "supervised_tokens": 1201}
+{"split": "train", "step": 2700, "weighted_loss": 0.5261809229850769, "supervised_tokens": 1256}
+{"weighted_loss_sum": 150.55697631835938, "unweighted_ce_sum": 17669.515625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7527848815917969, "unweighted_masked_token_ce": 1.1619330324850399, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 2750}
+{"split": "train_interval", "step": 2750, "weighted_loss": 0.6054371236562729, "examples": 4000}
+{"split": "train", "step": 2800, "weighted_loss": 0.7810781002044678, "supervised_tokens": 1096}
+{"split": "train", "step": 2900, "weighted_loss": 0.63160240650177, "supervised_tokens": 1642}
+{"split": "train", "step": 3000, "weighted_loss": 0.2555678188800812, "supervised_tokens": 1322}
+{"weighted_loss_sum": 150.1888885498047, "unweighted_ce_sum": 17660.404296875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7509444427490234, "unweighted_masked_token_ce": 1.1613338789291117, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 40.00537109375, "generation_mean_nll": 3.6890137752639913, "generation_tokens": 214, "split": "validation", "step": 3000}
+{"split": "train_interval", "step": 3000, "weighted_loss": 0.5971940562129021, "examples": 4000}
+{"split": "train", "step": 3100, "weighted_loss": 0.625198483467102, "supervised_tokens": 1058}
+{"split": "train", "step": 3200, "weighted_loss": 0.648316502571106, "supervised_tokens": 1627}
+{"weighted_loss_sum": 148.16380310058594, "unweighted_ce_sum": 17441.0390625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7408190155029297, "unweighted_masked_token_ce": 1.1469085988360623, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 3250}
+{"split": "train_interval", "step": 3250, "weighted_loss": 0.5778843967318534, "examples": 4000}
+{"split": "train", "step": 3300, "weighted_loss": 0.42137837409973145, "supervised_tokens": 902}
+{"split": "train", "step": 3400, "weighted_loss": 0.598482608795166, "supervised_tokens": 1841}
+{"split": "train", "step": 3500, "weighted_loss": 0.7204269170761108, "supervised_tokens": 1564}
+{"weighted_loss_sum": 146.77243041992188, "unweighted_ce_sum": 17325.3515625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7338621520996094, "unweighted_masked_token_ce": 1.1393010825606629, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 3500}
+{"split": "train_interval", "step": 3500, "weighted_loss": 0.6005058298110962, "examples": 4000}
+{"split": "train", "step": 3600, "weighted_loss": 0.14953067898750305, "supervised_tokens": 912}
+{"split": "train", "step": 3700, "weighted_loss": 1.08344566822052, "supervised_tokens": 1628}
+{"weighted_loss_sum": 146.60511779785156, "unweighted_ce_sum": 17272.34765625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7330255889892578, "unweighted_masked_token_ce": 1.135815588626948, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 3750}
+{"split": "train_interval", "step": 3750, "weighted_loss": 0.5887681512832642, "examples": 4000}
+{"split": "train", "step": 3800, "weighted_loss": 1.006643533706665, "supervised_tokens": 1460}
+{"split": "train", "step": 3900, "weighted_loss": 0.6490375995635986, "supervised_tokens": 1170}
+{"split": "train", "step": 4000, "weighted_loss": 0.3949946463108063, "supervised_tokens": 1484}
+{"weighted_loss_sum": 145.60775756835938, "unweighted_ce_sum": 17184.7265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7280387878417969, "unweighted_masked_token_ce": 1.1300536964884593, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 78.94572448730469, "generation_mean_nll": 4.368760612067275, "generation_tokens": 127, "split": "validation", "step": 4000}
+{"split": "train_interval", "step": 4000, "weighted_loss": 0.590500972867012, "examples": 4000}
+{"split": "train", "step": 4100, "weighted_loss": 0.6386150121688843, "supervised_tokens": 1342}
+{"split": "train", "step": 4200, "weighted_loss": 0.32573285698890686, "supervised_tokens": 637}
+{"weighted_loss_sum": 145.23976135253906, "unweighted_ce_sum": 17113.517578125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7261988067626953, "unweighted_masked_token_ce": 1.1253710513661472, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 4250}
+{"split": "train_interval", "step": 4250, "weighted_loss": 0.5704809827506542, "examples": 4000}
+{"split": "train", "step": 4300, "weighted_loss": 0.6350216865539551, "supervised_tokens": 1434}
+{"split": "train", "step": 4400, "weighted_loss": 0.3911983370780945, "supervised_tokens": 1393}
+{"split": "train", "step": 4500, "weighted_loss": 0.40192192792892456, "supervised_tokens": 1410}
+{"weighted_loss_sum": 143.2899627685547, "unweighted_ce_sum": 16899.25, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7164498138427734, "unweighted_masked_token_ce": 1.1112809890182154, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 4500}
+{"split": "train_interval", "step": 4500, "weighted_loss": 0.572391373872757, "examples": 4000}
+{"split": "train", "step": 4600, "weighted_loss": 0.6116061806678772, "supervised_tokens": 1088}
+{"split": "train", "step": 4700, "weighted_loss": 0.5770362615585327, "supervised_tokens": 1385}
+{"weighted_loss_sum": 143.0557403564453, "unweighted_ce_sum": 16855.607421875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7152787017822265, "unweighted_masked_token_ce": 1.1084110884378904, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 4750}
+{"split": "train_interval", "step": 4750, "weighted_loss": 0.5748628926277161, "examples": 4000}
+{"split": "train", "step": 4800, "weighted_loss": 0.47756385803222656, "supervised_tokens": 1701}
+{"split": "train", "step": 4900, "weighted_loss": 0.28441035747528076, "supervised_tokens": 910}
+{"split": "train", "step": 5000, "weighted_loss": 0.8260761499404907, "supervised_tokens": 1474}
+{"weighted_loss_sum": 143.404296875, "unweighted_ce_sum": 16904.263671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.717021484375, "unweighted_masked_token_ce": 1.1116106840188729, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 53.80734634399414, "generation_mean_nll": 3.9854100711884035, "generation_tokens": 248, "split": "validation", "step": 5000}
+{"split": "train_interval", "step": 5000, "weighted_loss": 0.5775444855690003, "examples": 4000}
+{"split": "train", "step": 5100, "weighted_loss": 0.9567621946334839, "supervised_tokens": 1859}
+{"split": "train", "step": 5200, "weighted_loss": 0.4050605297088623, "supervised_tokens": 1434}
+{"weighted_loss_sum": 142.01686096191406, "unweighted_ce_sum": 16843.388671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7100843048095703, "unweighted_masked_token_ce": 1.10760759333695, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 5250}
+{"split": "train_interval", "step": 5250, "weighted_loss": 0.5597289756834507, "examples": 4000}
+{"split": "train", "step": 5300, "weighted_loss": 0.2902650833129883, "supervised_tokens": 1485}
+{"split": "train", "step": 5400, "weighted_loss": 0.20698948204517365, "supervised_tokens": 906}
+{"split": "train", "step": 5500, "weighted_loss": 1.1116132736206055, "supervised_tokens": 1552}
+{"weighted_loss_sum": 141.327392578125, "unweighted_ce_sum": 16711.33203125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.706636962890625, "unweighted_masked_token_ce": 1.0989236556355626, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 5500}
+{"split": "train_interval", "step": 5500, "weighted_loss": 0.5705619411468505, "examples": 4000}
+{"split": "train", "step": 5600, "weighted_loss": 0.6060032844543457, "supervised_tokens": 1471}
+{"split": "train", "step": 5700, "weighted_loss": 0.6903957724571228, "supervised_tokens": 1397}
+{"weighted_loss_sum": 139.88165283203125, "unweighted_ce_sum": 16628.35546875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6994082641601562, "unweighted_masked_token_ce": 1.0934671841092918, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 5750}
+{"split": "train_interval", "step": 5750, "weighted_loss": 0.5514360621571541, "examples": 4000}
+{"split": "train", "step": 5800, "weighted_loss": 0.7224579453468323, "supervised_tokens": 1859}
+{"split": "train", "step": 5900, "weighted_loss": 0.7835724353790283, "supervised_tokens": 1271}
+{"split": "train", "step": 6000, "weighted_loss": 0.2886616587638855, "supervised_tokens": 939}
+{"weighted_loss_sum": 140.0106658935547, "unweighted_ce_sum": 16617.986328125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.7000533294677734, "unweighted_masked_token_ce": 1.0927853178223845, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 50.02665328979492, "generation_mean_nll": 3.912555997067086, "generation_tokens": 227, "split": "validation", "step": 6000}
+{"split": "train_interval", "step": 6000, "weighted_loss": 0.5565382434725762, "examples": 4000}
+{"split": "train", "step": 6100, "weighted_loss": 0.5363437533378601, "supervised_tokens": 1807}
+{"split": "train", "step": 6200, "weighted_loss": 0.5547665357589722, "supervised_tokens": 1057}
+{"weighted_loss_sum": 138.7769775390625, "unweighted_ce_sum": 16493.3828125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6938848876953125, "unweighted_masked_token_ce": 1.0845914915828236, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 6250}
+{"split": "train_interval", "step": 6250, "weighted_loss": 0.5502961666584015, "examples": 4000}
+{"split": "train", "step": 6300, "weighted_loss": 0.3338109850883484, "supervised_tokens": 758}
+{"split": "train", "step": 6400, "weighted_loss": 0.6199647188186646, "supervised_tokens": 1440}
+{"split": "train", "step": 6500, "weighted_loss": 0.26959818601608276, "supervised_tokens": 1228}
+{"weighted_loss_sum": 138.62261962890625, "unweighted_ce_sum": 16449.15234375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6931130981445313, "unweighted_masked_token_ce": 1.0816829317912804, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 6500}
+{"split": "train_interval", "step": 6500, "weighted_loss": 0.559519130885601, "examples": 4000}
+{"split": "train", "step": 6600, "weighted_loss": 0.764394223690033, "supervised_tokens": 1894}
+{"split": "train", "step": 6700, "weighted_loss": 0.6910618543624878, "supervised_tokens": 1674}
+{"weighted_loss_sum": 138.87831115722656, "unweighted_ce_sum": 16510.07421875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6943915557861328, "unweighted_masked_token_ce": 1.0856891049352273, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 6750}
+{"split": "train_interval", "step": 6750, "weighted_loss": 0.5637068120241165, "examples": 4000}
+{"split": "train", "step": 6800, "weighted_loss": 0.774233341217041, "supervised_tokens": 1251}
+{"split": "train", "step": 6900, "weighted_loss": 0.5248132944107056, "supervised_tokens": 1127}
+{"split": "train", "step": 7000, "weighted_loss": 0.4231233298778534, "supervised_tokens": 1632}
+{"weighted_loss_sum": 138.24281311035156, "unweighted_ce_sum": 16411.482421875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6912140655517578, "unweighted_masked_token_ce": 1.0792057882471888, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 33.433319091796875, "generation_mean_nll": 3.509553000861006, "generation_tokens": 253, "split": "validation", "step": 7000}
+{"split": "train_interval", "step": 7000, "weighted_loss": 0.5495594602227211, "examples": 4000}
+{"split": "train", "step": 7100, "weighted_loss": 0.5073297023773193, "supervised_tokens": 1259}
+{"split": "train", "step": 7200, "weighted_loss": 0.8610750436782837, "supervised_tokens": 1911}
+{"weighted_loss_sum": 137.90023803710938, "unweighted_ce_sum": 16395.658203125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6895011901855469, "unweighted_masked_token_ce": 1.0781652004422306, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 7250}
+{"split": "train_interval", "step": 7250, "weighted_loss": 0.5485288229286671, "examples": 4000}
+{"split": "train", "step": 7300, "weighted_loss": 0.4274851977825165, "supervised_tokens": 1551}
+{"split": "train", "step": 7400, "weighted_loss": 0.47987619042396545, "supervised_tokens": 1467}
+{"split": "train", "step": 7500, "weighted_loss": 0.8216289281845093, "supervised_tokens": 1286}
+{"weighted_loss_sum": 136.84754943847656, "unweighted_ce_sum": 16314.919921875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6842377471923828, "unweighted_masked_token_ce": 1.072855916477609, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 7500}
+{"split": "train_interval", "step": 7500, "weighted_loss": 0.5492484785914421, "examples": 4000}
+{"split": "train", "step": 7600, "weighted_loss": 0.9147205352783203, "supervised_tokens": 1751}
+{"split": "train", "step": 7700, "weighted_loss": 0.20818403363227844, "supervised_tokens": 1146}
+{"weighted_loss_sum": 136.7650909423828, "unweighted_ce_sum": 16305.796875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.683825454711914, "unweighted_masked_token_ce": 1.0722559923061747, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 7750}
+{"split": "train_interval", "step": 7750, "weighted_loss": 0.5567179991006851, "examples": 4000}
+{"split": "train", "step": 7800, "weighted_loss": 1.0847969055175781, "supervised_tokens": 1582}
+{"split": "train", "step": 7900, "weighted_loss": 0.2883395850658417, "supervised_tokens": 1252}
+{"split": "train", "step": 8000, "weighted_loss": 0.6258931159973145, "supervised_tokens": 940}
+{"weighted_loss_sum": 137.60824584960938, "unweighted_ce_sum": 16381.837890625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6880412292480469, "unweighted_masked_token_ce": 1.0772563878888013, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 42.18595504760742, "generation_mean_nll": 3.742087435278093, "generation_tokens": 161, "split": "validation", "step": 8000}
+{"split": "train_interval", "step": 8000, "weighted_loss": 0.518401525914669, "examples": 4000}
+{"split": "train", "step": 8100, "weighted_loss": 0.4788993000984192, "supervised_tokens": 1548}
+{"split": "train", "step": 8200, "weighted_loss": 0.585303544998169, "supervised_tokens": 1464}
+{"weighted_loss_sum": 136.97740173339844, "unweighted_ce_sum": 16315.4208984375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6848870086669921, "unweighted_masked_token_ce": 1.0728888602904911, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 8250}
+{"split": "train_interval", "step": 8250, "weighted_loss": 0.5282886455953121, "examples": 4000}
+{"split": "train", "step": 8300, "weighted_loss": 0.46401137113571167, "supervised_tokens": 1373}
+{"split": "train", "step": 8400, "weighted_loss": 0.29799216985702515, "supervised_tokens": 722}
+{"split": "train", "step": 8500, "weighted_loss": 0.5549963712692261, "supervised_tokens": 1500}
+{"weighted_loss_sum": 135.6558074951172, "unweighted_ce_sum": 16206.11328125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6782790374755859, "unweighted_masked_token_ce": 1.065700879940159, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 8500}
+{"split": "train_interval", "step": 8500, "weighted_loss": 0.5354982696771622, "examples": 4000}
+{"split": "train", "step": 8600, "weighted_loss": 0.4586024284362793, "supervised_tokens": 1307}
+{"split": "train", "step": 8700, "weighted_loss": 0.41301822662353516, "supervised_tokens": 991}
+{"weighted_loss_sum": 135.6067352294922, "unweighted_ce_sum": 16132.7744140625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6780336761474609, "unweighted_masked_token_ce": 1.0608781754496284, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 8750}
+{"split": "train_interval", "step": 8750, "weighted_loss": 0.5199898069500923, "examples": 4000}
+{"split": "train", "step": 8800, "weighted_loss": 0.4866154193878174, "supervised_tokens": 1593}
+{"split": "train", "step": 8900, "weighted_loss": 0.39428943395614624, "supervised_tokens": 1582}
+{"split": "train", "step": 9000, "weighted_loss": 0.21855300664901733, "supervised_tokens": 1160}
+{"weighted_loss_sum": 136.23011779785156, "unweighted_ce_sum": 16200.197265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6811505889892578, "unweighted_masked_token_ce": 1.0653118475455383, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 34.41590118408203, "generation_mean_nll": 3.538518572263526, "generation_tokens": 349, "split": "validation", "step": 9000}
+{"split": "train_interval", "step": 9000, "weighted_loss": 0.5353021810948849, "examples": 4000}
+{"split": "train", "step": 9100, "weighted_loss": 0.19671684503555298, "supervised_tokens": 932}
+{"split": "train", "step": 9200, "weighted_loss": 0.6137771606445312, "supervised_tokens": 1643}
+{"weighted_loss_sum": 135.96255493164062, "unweighted_ce_sum": 16140.8154296875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6798127746582031, "unweighted_masked_token_ce": 1.0614069461226738, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 9250}
+{"split": "train_interval", "step": 9250, "weighted_loss": 0.5164057447910309, "examples": 4000}
+{"split": "train", "step": 9300, "weighted_loss": 0.8667705059051514, "supervised_tokens": 1488}
+{"split": "train", "step": 9400, "weighted_loss": 0.23953287303447723, "supervised_tokens": 1198}
+{"split": "train", "step": 9500, "weighted_loss": 0.3105063736438751, "supervised_tokens": 781}
+{"weighted_loss_sum": 135.27041625976562, "unweighted_ce_sum": 16083.595703125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6763520812988282, "unweighted_masked_token_ce": 1.0576442232606695, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 9500}
+{"split": "train_interval", "step": 9500, "weighted_loss": 0.5202595943212509, "examples": 4000}
+{"split": "train", "step": 9600, "weighted_loss": 0.2837672829627991, "supervised_tokens": 1092}
+{"split": "train", "step": 9700, "weighted_loss": 0.4475259780883789, "supervised_tokens": 1258}
+{"weighted_loss_sum": 133.85128784179688, "unweighted_ce_sum": 15914.2080078125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6692564392089844, "unweighted_masked_token_ce": 1.046505425646906, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 9750}
+{"split": "train_interval", "step": 9750, "weighted_loss": 0.5251317239403724, "examples": 4000}
+{"split": "train", "step": 9800, "weighted_loss": 0.6965745687484741, "supervised_tokens": 936}
+{"split": "train", "step": 9900, "weighted_loss": 0.6353365778923035, "supervised_tokens": 1871}
+{"split": "train", "step": 10000, "weighted_loss": 0.20962125062942505, "supervised_tokens": 1351}
+{"weighted_loss_sum": 134.7294921875, "unweighted_ce_sum": 16025.6181640625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6736474609375, "unweighted_masked_token_ce": 1.0538316672626094, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 27.83831024169922, "generation_mean_nll": 3.326413101291064, "generation_tokens": 322, "split": "validation", "step": 10000}
+{"split": "train_interval", "step": 10000, "weighted_loss": 0.5279461759328842, "examples": 4000}
+{"split": "train", "step": 10100, "weighted_loss": 0.6924883127212524, "supervised_tokens": 1458}
+{"split": "train", "step": 10200, "weighted_loss": 0.5475879907608032, "supervised_tokens": 1384}
+{"weighted_loss_sum": 133.9571990966797, "unweighted_ce_sum": 15944.4072265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6697859954833985, "unweighted_masked_token_ce": 1.0484913018059117, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 10250}
+{"split": "train_interval", "step": 10250, "weighted_loss": 0.5369149243235588, "examples": 4000}
+{"split": "train", "step": 10300, "weighted_loss": 0.6731993556022644, "supervised_tokens": 1712}
+{"split": "train", "step": 10400, "weighted_loss": 0.3270963430404663, "supervised_tokens": 1533}
+{"split": "train", "step": 10500, "weighted_loss": 0.1749284416437149, "supervised_tokens": 1110}
+{"weighted_loss_sum": 133.48883056640625, "unweighted_ce_sum": 15864.92578125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6674441528320313, "unweighted_masked_token_ce": 1.0432646663543106, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 10500}
+{"split": "train_interval", "step": 10500, "weighted_loss": 0.516456468641758, "examples": 4000}
+{"split": "train", "step": 10600, "weighted_loss": 0.2532197833061218, "supervised_tokens": 884}
+{"split": "train", "step": 10700, "weighted_loss": 0.4897323250770569, "supervised_tokens": 1584}
+{"weighted_loss_sum": 132.64537048339844, "unweighted_ce_sum": 15752.1181640625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6632268524169922, "unweighted_masked_token_ce": 1.0358465288395147, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 10750}
+{"split": "train_interval", "step": 10750, "weighted_loss": 0.5172066049873829, "examples": 4000}
+{"split": "train", "step": 10800, "weighted_loss": 0.26902738213539124, "supervised_tokens": 1125}
+{"split": "train", "step": 10900, "weighted_loss": 0.30914413928985596, "supervised_tokens": 1442}
+{"split": "train", "step": 11000, "weighted_loss": 0.7219516038894653, "supervised_tokens": 1258}
+{"weighted_loss_sum": 132.2920684814453, "unweighted_ce_sum": 15811.8369140625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6614603424072265, "unweighted_masked_token_ce": 1.039773585458177, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 45.5244255065918, "generation_mean_nll": 3.8182488855067973, "generation_tokens": 279, "split": "validation", "step": 11000}
+{"split": "train_interval", "step": 11000, "weighted_loss": 0.5219900391995906, "examples": 4000}
+{"split": "train", "step": 11100, "weighted_loss": 0.5682626962661743, "supervised_tokens": 1358}
+{"split": "train", "step": 11200, "weighted_loss": 0.6346020698547363, "supervised_tokens": 1754}
+{"weighted_loss_sum": 133.00222778320312, "unweighted_ce_sum": 15828.5419921875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6650111389160156, "unweighted_masked_token_ce": 1.0408720978620043, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 11250}
+{"split": "train_interval", "step": 11250, "weighted_loss": 0.5293568039238453, "examples": 4000}
+{"split": "train", "step": 11300, "weighted_loss": 0.6989309787750244, "supervised_tokens": 1257}
+{"split": "train", "step": 11400, "weighted_loss": 0.731127142906189, "supervised_tokens": 1280}
+{"split": "train", "step": 11500, "weighted_loss": 0.7322540283203125, "supervised_tokens": 1535}
+{"weighted_loss_sum": 132.79702758789062, "unweighted_ce_sum": 15860.4638671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6639851379394531, "unweighted_masked_token_ce": 1.0429712545003946, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 11500}
+{"split": "train_interval", "step": 11500, "weighted_loss": 0.5373365000784397, "examples": 4000}
+{"split": "train", "step": 11600, "weighted_loss": 0.27146413922309875, "supervised_tokens": 1140}
+{"split": "train", "step": 11700, "weighted_loss": 0.4795580506324768, "supervised_tokens": 1543}
+{"weighted_loss_sum": 131.4961395263672, "unweighted_ce_sum": 15713.8935546875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6574806976318359, "unweighted_masked_token_ce": 1.033332909494805, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 11750}
+{"split": "train_interval", "step": 11750, "weighted_loss": 0.5093540567755699, "examples": 4000}
+{"split": "train", "step": 11800, "weighted_loss": 0.8862708806991577, "supervised_tokens": 1052}
+{"split": "train", "step": 11900, "weighted_loss": 0.36593684554100037, "supervised_tokens": 1498}
+{"split": "train", "step": 12000, "weighted_loss": 0.7259224653244019, "supervised_tokens": 1093}
+{"weighted_loss_sum": 132.44830322265625, "unweighted_ce_sum": 15775.546875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6622415161132813, "unweighted_masked_token_ce": 1.0373871818899192, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 32.85785675048828, "generation_mean_nll": 3.492190773104444, "generation_tokens": 324, "split": "validation", "step": 12000}
+{"split": "train_interval", "step": 12000, "weighted_loss": 0.5427783147692681, "examples": 4000}
+{"split": "train", "step": 12100, "weighted_loss": 0.2958943843841553, "supervised_tokens": 1333}
+{"split": "train", "step": 12200, "weighted_loss": 0.5978831648826599, "supervised_tokens": 1382}
+{"weighted_loss_sum": 132.01712036132812, "unweighted_ce_sum": 15783.041015625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6600856018066407, "unweighted_masked_token_ce": 1.037879990506017, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 12250}
+{"split": "train_interval", "step": 12250, "weighted_loss": 0.49559299221634867, "examples": 4000}
+{"split": "train", "step": 12300, "weighted_loss": 0.55518639087677, "supervised_tokens": 1448}
+{"split": "train", "step": 12400, "weighted_loss": 0.35540682077407837, "supervised_tokens": 1436}
+{"split": "train", "step": 12500, "weighted_loss": 0.6158132553100586, "supervised_tokens": 1138}
+{"weighted_loss_sum": 131.2591094970703, "unweighted_ce_sum": 15657.255859375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6562955474853516, "unweighted_masked_token_ce": 1.029608460536266, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 12500}
+{"split": "train_interval", "step": 12500, "weighted_loss": 0.5096818853765727, "examples": 4000}
+{"split": "train", "step": 12600, "weighted_loss": 0.3754849433898926, "supervised_tokens": 1412}
+{"split": "train", "step": 12700, "weighted_loss": 0.40490251779556274, "supervised_tokens": 1143}
+{"weighted_loss_sum": 131.16354370117188, "unweighted_ce_sum": 15706.4580078125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6558177185058593, "unweighted_masked_token_ce": 1.0328439539562373, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 12750}
+{"split": "train_interval", "step": 12750, "weighted_loss": 0.5124768744707108, "examples": 4000}
+{"split": "train", "step": 12800, "weighted_loss": 0.7667864561080933, "supervised_tokens": 1424}
+{"split": "train", "step": 12900, "weighted_loss": 0.6893698573112488, "supervised_tokens": 1086}
+{"split": "train", "step": 13000, "weighted_loss": 0.5311176180839539, "supervised_tokens": 1059}
+{"weighted_loss_sum": 130.4262237548828, "unweighted_ce_sum": 15608.2724609375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6521311187744141, "unweighted_masked_token_ce": 1.026387351939074, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 24.551021575927734, "generation_mean_nll": 3.2007535049338744, "generation_tokens": 306, "split": "validation", "step": 13000}
+{"split": "train_interval", "step": 13000, "weighted_loss": 0.4909411775767803, "examples": 4000}
+{"split": "train", "step": 13100, "weighted_loss": 0.6880210638046265, "supervised_tokens": 1095}
+{"split": "train", "step": 13200, "weighted_loss": 0.2556857466697693, "supervised_tokens": 1290}
+{"weighted_loss_sum": 130.7347412109375, "unweighted_ce_sum": 15655.0751953125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6536737060546876, "unweighted_masked_token_ce": 1.0294650618341883, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 13250}
+{"split": "train_interval", "step": 13250, "weighted_loss": 0.4846382677853108, "examples": 4000}
+{"split": "train", "step": 13300, "weighted_loss": 0.3160034418106079, "supervised_tokens": 1376}
+{"split": "train", "step": 13400, "weighted_loss": 0.9984951019287109, "supervised_tokens": 1651}
+{"split": "train", "step": 13500, "weighted_loss": 0.20803865790367126, "supervised_tokens": 1600}
+{"weighted_loss_sum": 130.19580078125, "unweighted_ce_sum": 15607.4375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.65097900390625, "unweighted_masked_token_ce": 1.0263324455842704, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 13500}
+{"split": "train_interval", "step": 13500, "weighted_loss": 0.5078124165534973, "examples": 4000}
+{"split": "train", "step": 13600, "weighted_loss": 0.7497787475585938, "supervised_tokens": 1786}
+{"split": "train", "step": 13700, "weighted_loss": 0.5980109572410583, "supervised_tokens": 1698}
+{"weighted_loss_sum": 129.32444763183594, "unweighted_ce_sum": 15504.470703125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6466222381591797, "unweighted_masked_token_ce": 1.0195614324406523, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 13750}
+{"split": "train_interval", "step": 13750, "weighted_loss": 0.515311397716403, "examples": 4000}
+{"split": "train", "step": 13800, "weighted_loss": 0.678686261177063, "supervised_tokens": 1385}
+{"split": "train", "step": 13900, "weighted_loss": 0.4819468557834625, "supervised_tokens": 1280}
+{"split": "train", "step": 14000, "weighted_loss": 0.3862534165382385, "supervised_tokens": 1134}
+{"weighted_loss_sum": 128.89085388183594, "unweighted_ce_sum": 15490.814453125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6444542694091797, "unweighted_masked_token_ce": 1.0186634085043071, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 28.038253784179688, "generation_mean_nll": 3.333569832097471, "generation_tokens": 306, "split": "validation", "step": 14000}
+{"split": "train_interval", "step": 14000, "weighted_loss": 0.5062411081790924, "examples": 4000}
+{"split": "train", "step": 14100, "weighted_loss": 0.379021555185318, "supervised_tokens": 1548}
+{"split": "train", "step": 14200, "weighted_loss": 0.40484297275543213, "supervised_tokens": 1161}
+{"weighted_loss_sum": 128.9858856201172, "unweighted_ce_sum": 15523.0263671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.644929428100586, "unweighted_masked_token_ce": 1.0207816378764714, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 14250}
+{"split": "train_interval", "step": 14250, "weighted_loss": 0.5178516254723072, "examples": 4000}
+{"split": "train", "step": 14300, "weighted_loss": 0.795424222946167, "supervised_tokens": 1157}
+{"split": "train", "step": 14400, "weighted_loss": 0.6538187861442566, "supervised_tokens": 1228}
+{"split": "train", "step": 14500, "weighted_loss": 0.42210692167282104, "supervised_tokens": 1273}
+{"weighted_loss_sum": 128.7401580810547, "unweighted_ce_sum": 15464.2919921875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6437007904052734, "unweighted_masked_token_ce": 1.0169193129603142, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 14500}
+{"split": "train_interval", "step": 14500, "weighted_loss": 0.510177718937397, "examples": 4000}
+{"split": "train", "step": 14600, "weighted_loss": 0.4716217517852783, "supervised_tokens": 1190}
+{"split": "train", "step": 14700, "weighted_loss": 0.3663210868835449, "supervised_tokens": 1440}
+{"weighted_loss_sum": 128.205810546875, "unweighted_ce_sum": 15406.75390625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.641029052734375, "unweighted_masked_token_ce": 1.0131356550437298, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 14750}
+{"split": "train_interval", "step": 14750, "weighted_loss": 0.5027123183310032, "examples": 4000}
+{"split": "train", "step": 14800, "weighted_loss": 0.5055763125419617, "supervised_tokens": 1154}
+{"split": "train", "step": 14900, "weighted_loss": 0.4361274838447571, "supervised_tokens": 1265}
+{"split": "train", "step": 15000, "weighted_loss": 0.35708847641944885, "supervised_tokens": 1543}
+{"weighted_loss_sum": 128.59649658203125, "unweighted_ce_sum": 15414.921875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6429824829101562, "unweighted_masked_token_ce": 1.0136727740514238, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 30.333969116210938, "generation_mean_nll": 3.4122680985783957, "generation_tokens": 249, "split": "validation", "step": 15000}
+{"split": "train_interval", "step": 15000, "weighted_loss": 0.5138642491698265, "examples": 4000}
+{"split": "train", "step": 15100, "weighted_loss": 0.5049556493759155, "supervised_tokens": 1054}
+{"split": "train", "step": 15200, "weighted_loss": 0.8983869552612305, "supervised_tokens": 1353}
+{"weighted_loss_sum": 129.42979431152344, "unweighted_ce_sum": 15503.5205078125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6471489715576172, "unweighted_masked_token_ce": 1.019498948366706, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 15250}
+{"split": "train_interval", "step": 15250, "weighted_loss": 0.5059588605165481, "examples": 4000}
+{"split": "train", "step": 15300, "weighted_loss": 0.6227849721908569, "supervised_tokens": 1150}
+{"split": "train", "step": 15400, "weighted_loss": 0.29572582244873047, "supervised_tokens": 1403}
+{"split": "train", "step": 15500, "weighted_loss": 0.21512921154499054, "supervised_tokens": 588}
+{"weighted_loss_sum": 128.51380920410156, "unweighted_ce_sum": 15431.4072265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6425690460205078, "unweighted_masked_token_ce": 1.014756837414513, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 15500}
+{"split": "train_interval", "step": 15500, "weighted_loss": 0.4796910007745028, "examples": 4000}
+{"split": "train", "step": 15600, "weighted_loss": 0.8596435785293579, "supervised_tokens": 1534}
+{"split": "train", "step": 15700, "weighted_loss": 0.5643660426139832, "supervised_tokens": 1645}
+{"weighted_loss_sum": 127.80583190917969, "unweighted_ce_sum": 15345.4599609375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6390291595458985, "unweighted_masked_token_ce": 1.009105014857467, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 15750}
+{"split": "train_interval", "step": 15750, "weighted_loss": 0.5215142436623573, "examples": 4000}
+{"split": "train", "step": 15800, "weighted_loss": 0.7976073026657104, "supervised_tokens": 1400}
+{"split": "train", "step": 15900, "weighted_loss": 0.5630141496658325, "supervised_tokens": 1461}
+{"split": "train", "step": 16000, "weighted_loss": 0.8184652328491211, "supervised_tokens": 1514}
+{"weighted_loss_sum": 128.16152954101562, "unweighted_ce_sum": 15405.7470703125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6408076477050781, "unweighted_masked_token_ce": 1.0130694463281713, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 80.33625030517578, "generation_mean_nll": 4.3862208188590355, "generation_tokens": 177, "split": "validation", "step": 16000}
+{"split": "train_interval", "step": 16000, "weighted_loss": 0.4877032452821732, "examples": 4000}
+{"split": "train", "step": 16100, "weighted_loss": 0.5784703493118286, "supervised_tokens": 1241}
+{"split": "train", "step": 16200, "weighted_loss": 0.4454650580883026, "supervised_tokens": 1193}
+{"weighted_loss_sum": 127.57615661621094, "unweighted_ce_sum": 15351.0224609375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6378807830810547, "unweighted_masked_token_ce": 1.0094708003509896, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 16250}
+{"split": "train_interval", "step": 16250, "weighted_loss": 0.5196425393670797, "examples": 4000}
+{"split": "train", "step": 16300, "weighted_loss": 0.43225979804992676, "supervised_tokens": 1366}
+{"split": "train", "step": 16400, "weighted_loss": 0.2809697687625885, "supervised_tokens": 1208}
+{"split": "train", "step": 16500, "weighted_loss": 0.6300029754638672, "supervised_tokens": 1123}
+{"weighted_loss_sum": 126.90235900878906, "unweighted_ce_sum": 15261.650390625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6345117950439453, "unweighted_masked_token_ce": 1.0035937654123102, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 16500}
+{"split": "train_interval", "step": 16500, "weighted_loss": 0.5041309183835984, "examples": 4000}
+{"split": "train", "step": 16600, "weighted_loss": 0.3332834243774414, "supervised_tokens": 1256}
+{"split": "train", "step": 16700, "weighted_loss": 0.2691675126552582, "supervised_tokens": 1723}
+{"weighted_loss_sum": 127.1826400756836, "unweighted_ce_sum": 15306.4482421875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6359132003784179, "unweighted_masked_token_ce": 1.0065396358379364, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 16750}
+{"split": "train_interval", "step": 16750, "weighted_loss": 0.5202220414876938, "examples": 4000}
+{"split": "train", "step": 16800, "weighted_loss": 0.34015795588493347, "supervised_tokens": 1281}
+{"split": "train", "step": 16900, "weighted_loss": 0.19238170981407166, "supervised_tokens": 1184}
+{"split": "train", "step": 17000, "weighted_loss": 0.2693534791469574, "supervised_tokens": 1400}
+{"weighted_loss_sum": 126.89155578613281, "unweighted_ce_sum": 15273.2138671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.634457778930664, "unweighted_masked_token_ce": 1.0043541702628724, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 33.61057662963867, "generation_mean_nll": 3.514840735329522, "generation_tokens": 288, "split": "validation", "step": 17000}
+{"split": "train_interval", "step": 17000, "weighted_loss": 0.49642893560230733, "examples": 4000}
+{"split": "train", "step": 17100, "weighted_loss": 0.6679149270057678, "supervised_tokens": 1249}
+{"split": "train", "step": 17200, "weighted_loss": 0.42040523886680603, "supervised_tokens": 910}
+{"weighted_loss_sum": 127.45701599121094, "unweighted_ce_sum": 15334.4755859375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6372850799560547, "unweighted_masked_token_ce": 1.0083826912564937, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 17250}
+{"split": "train_interval", "step": 17250, "weighted_loss": 0.52623036724329, "examples": 4000}
+{"split": "train", "step": 17300, "weighted_loss": 0.4336868226528168, "supervised_tokens": 750}
+{"split": "train", "step": 17400, "weighted_loss": 0.6108920574188232, "supervised_tokens": 1499}
+{"split": "train", "step": 17500, "weighted_loss": 0.3044680655002594, "supervised_tokens": 1418}
+{"weighted_loss_sum": 127.27517700195312, "unweighted_ce_sum": 15301.2060546875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6363758850097656, "unweighted_masked_token_ce": 1.0061949138349116, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 17500}
+{"split": "train_interval", "step": 17500, "weighted_loss": 0.5088150942921639, "examples": 4000}
+{"split": "train", "step": 17600, "weighted_loss": 0.28951624035835266, "supervised_tokens": 970}
+{"split": "train", "step": 17700, "weighted_loss": 0.27690571546554565, "supervised_tokens": 1306}
+{"weighted_loss_sum": 127.14960479736328, "unweighted_ce_sum": 15274.2255859375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6357480239868164, "unweighted_masked_token_ce": 1.0044207000682253, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 17750}
+{"split": "train_interval", "step": 17750, "weighted_loss": 0.5061141063272953, "examples": 4000}
+{"split": "train", "step": 17800, "weighted_loss": 0.5840511322021484, "supervised_tokens": 1239}
+{"split": "train", "step": 17900, "weighted_loss": 0.3641672134399414, "supervised_tokens": 1482}
+{"split": "train", "step": 18000, "weighted_loss": 0.12130032479763031, "supervised_tokens": 1195}
+{"weighted_loss_sum": 126.50791931152344, "unweighted_ce_sum": 15199.951171875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6325395965576172, "unweighted_masked_token_ce": 0.9995364747731308, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 30.8768367767334, "generation_mean_nll": 3.4300062570975736, "generation_tokens": 307, "split": "validation", "step": 18000}
+{"split": "train_interval", "step": 18000, "weighted_loss": 0.4829075745642185, "examples": 4000}
+{"split": "train", "step": 18100, "weighted_loss": 0.6725283861160278, "supervised_tokens": 1554}
+{"split": "train", "step": 18200, "weighted_loss": 0.3180232048034668, "supervised_tokens": 1796}
+{"weighted_loss_sum": 126.39546966552734, "unweighted_ce_sum": 15187.7666015625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6319773483276367, "unweighted_masked_token_ce": 0.9987352273007497, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 18250}
+{"split": "train_interval", "step": 18250, "weighted_loss": 0.5138136112689972, "examples": 4000}
+{"split": "train", "step": 18300, "weighted_loss": 0.4012984335422516, "supervised_tokens": 1292}
+{"split": "train", "step": 18400, "weighted_loss": 0.1613072007894516, "supervised_tokens": 481}
+{"split": "train", "step": 18500, "weighted_loss": 0.543449342250824, "supervised_tokens": 948}
+{"weighted_loss_sum": 126.84127044677734, "unweighted_ce_sum": 15225.3701171875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6342063522338868, "unweighted_masked_token_ce": 1.0012080040236404, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 18500}
+{"split": "train_interval", "step": 18500, "weighted_loss": 0.49318107119202614, "examples": 4000}
+{"split": "train", "step": 18600, "weighted_loss": 0.42519891262054443, "supervised_tokens": 1276}
+{"split": "train", "step": 18700, "weighted_loss": 0.3584989607334137, "supervised_tokens": 1388}
+{"weighted_loss_sum": 126.67665100097656, "unweighted_ce_sum": 15210.146484375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6333832550048828, "unweighted_masked_token_ce": 1.0002069102633655, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 18750}
+{"split": "train_interval", "step": 18750, "weighted_loss": 0.49210673227906226, "examples": 4000}
+{"split": "train", "step": 18800, "weighted_loss": 0.2283569872379303, "supervised_tokens": 1275}
+{"split": "train", "step": 18900, "weighted_loss": 0.18853972852230072, "supervised_tokens": 1111}
+{"split": "train", "step": 19000, "weighted_loss": 0.6640733480453491, "supervised_tokens": 1247}
+{"weighted_loss_sum": 126.49776458740234, "unweighted_ce_sum": 15213.84375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6324888229370117, "unweighted_masked_token_ce": 1.0004500394555138, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 25.252737045288086, "generation_mean_nll": 3.22893445632037, "generation_tokens": 272, "split": "validation", "step": 19000}
+{"split": "train_interval", "step": 19000, "weighted_loss": 0.515103053689003, "examples": 4000}
+{"split": "train", "step": 19100, "weighted_loss": 0.3295215368270874, "supervised_tokens": 1202}
+{"split": "train", "step": 19200, "weighted_loss": 0.2683866620063782, "supervised_tokens": 1346}
+{"weighted_loss_sum": 126.50261688232422, "unweighted_ce_sum": 15215.169921875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6325130844116211, "unweighted_masked_token_ce": 1.0005372474436114, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 19250}
+{"split": "train_interval", "step": 19250, "weighted_loss": 0.5150785580873489, "examples": 4000}
+{"split": "train", "step": 19300, "weighted_loss": 0.3221406936645508, "supervised_tokens": 982}
+{"split": "train", "step": 19400, "weighted_loss": 0.8041868209838867, "supervised_tokens": 1117}
+{"split": "train", "step": 19500, "weighted_loss": 0.3879685401916504, "supervised_tokens": 1113}
+{"weighted_loss_sum": 126.67193603515625, "unweighted_ce_sum": 15228.140625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6333596801757813, "unweighted_masked_token_ce": 1.0013901903728546, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 19500}
+{"split": "train_interval", "step": 19500, "weighted_loss": 0.5062981911152601, "examples": 4000}
+{"split": "train", "step": 19600, "weighted_loss": 0.44320350885391235, "supervised_tokens": 1477}
+{"split": "train", "step": 19700, "weighted_loss": 0.2796644866466522, "supervised_tokens": 1649}
+{"weighted_loss_sum": 126.52529907226562, "unweighted_ce_sum": 15214.0283203125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6326264953613281, "unweighted_masked_token_ce": 1.0004621766497337, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 19750}
+{"split": "train_interval", "step": 19750, "weighted_loss": 0.5266848725676536, "examples": 4000}
+{"split": "train", "step": 19800, "weighted_loss": 0.3393089771270752, "supervised_tokens": 1524}
+{"split": "train", "step": 19900, "weighted_loss": 0.6499916315078735, "supervised_tokens": 1437}
+{"split": "train", "step": 20000, "weighted_loss": 0.5575548410415649, "supervised_tokens": 1322}
+{"weighted_loss_sum": 126.54884338378906, "unweighted_ce_sum": 15215.87109375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6327442169189453, "unweighted_masked_token_ce": 1.0005833559380548, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 21.109439849853516, "generation_mean_nll": 3.049720204671224, "generation_tokens": 300, "split": "validation", "step": 20000}
+{"split": "train_interval", "step": 20000, "weighted_loss": 0.4878851060271263, "examples": 4000}
+{"split": "train", "step": 20100, "weighted_loss": 0.5928679704666138, "supervised_tokens": 1363}
+{"split": "train", "step": 20200, "weighted_loss": 0.49475720524787903, "supervised_tokens": 1410}
+{"weighted_loss_sum": 126.35563659667969, "unweighted_ce_sum": 15210.216796875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6317781829833984, "unweighted_masked_token_ce": 1.0002115339564017, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 20250}
+{"split": "train_interval", "step": 20250, "weighted_loss": 0.5084248919487, "examples": 4000}
+{"split": "train", "step": 20300, "weighted_loss": 0.21188916265964508, "supervised_tokens": 1309}
+{"split": "train", "step": 20400, "weighted_loss": 1.394471287727356, "supervised_tokens": 1654}
+{"split": "train", "step": 20500, "weighted_loss": 0.5584646463394165, "supervised_tokens": 1568}
+{"weighted_loss_sum": 126.71593475341797, "unweighted_ce_sum": 15237.240234375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6335796737670898, "unweighted_masked_token_ce": 1.0019885733132767, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 20500}
+{"split": "train_interval", "step": 20500, "weighted_loss": 0.511148637920618, "examples": 4000}
+{"split": "train", "step": 20600, "weighted_loss": 0.3104154169559479, "supervised_tokens": 1471}
+{"split": "train", "step": 20700, "weighted_loss": 0.1420147716999054, "supervised_tokens": 1548}
+{"weighted_loss_sum": 126.56673431396484, "unweighted_ce_sum": 15221.955078125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6328336715698242, "unweighted_masked_token_ce": 1.0009834338215953, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 20750}
+{"split": "train_interval", "step": 20750, "weighted_loss": 0.49564393949508667, "examples": 4000}
+{"split": "train", "step": 20800, "weighted_loss": 0.29095691442489624, "supervised_tokens": 1076}
+{"split": "train", "step": 20900, "weighted_loss": 0.26038724184036255, "supervised_tokens": 1391}
+{"split": "train", "step": 21000, "weighted_loss": 0.174056738615036, "supervised_tokens": 789}
+{"weighted_loss_sum": 126.4305191040039, "unweighted_ce_sum": 15210.083984375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6321525955200196, "unweighted_masked_token_ce": 1.0002028003140002, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 29.756208419799805, "generation_mean_nll": 3.3930377617156764, "generation_tokens": 278, "split": "validation", "step": 21000}
+{"split": "train_interval", "step": 21000, "weighted_loss": 0.4997239502072334, "examples": 4000}
+{"split": "train", "step": 21100, "weighted_loss": 0.49420058727264404, "supervised_tokens": 1406}
+{"split": "train", "step": 21200, "weighted_loss": 0.4786892533302307, "supervised_tokens": 953}
+{"weighted_loss_sum": 126.38375091552734, "unweighted_ce_sum": 15206.5380859375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6319187545776367, "unweighted_masked_token_ce": 0.9999696249054711, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 21250}
+{"split": "train_interval", "step": 21250, "weighted_loss": 0.4991879079043865, "examples": 4000}
+{"split": "train", "step": 21300, "weighted_loss": 0.28108441829681396, "supervised_tokens": 971}
+{"split": "train", "step": 21400, "weighted_loss": 0.2299128770828247, "supervised_tokens": 1464}
+{"split": "train", "step": 21500, "weighted_loss": 0.408633828163147, "supervised_tokens": 1501}
+{"weighted_loss_sum": 126.35183715820312, "unweighted_ce_sum": 15202.0546875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6317591857910156, "unweighted_masked_token_ce": 0.9996748002564608, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 21500}
+{"split": "train_interval", "step": 21500, "weighted_loss": 0.46997741556167605, "examples": 4000}
+{"split": "train", "step": 21600, "weighted_loss": 0.2684403955936432, "supervised_tokens": 965}
+{"split": "train", "step": 21700, "weighted_loss": 0.27275943756103516, "supervised_tokens": 1236}
+{"weighted_loss_sum": 126.32499694824219, "unweighted_ce_sum": 15201.9638671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.631624984741211, "unweighted_masked_token_ce": 0.9996688279862892, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 21750}
+{"split": "train_interval", "step": 21750, "weighted_loss": 0.49406517602503297, "examples": 4000}
+{"split": "train", "step": 21800, "weighted_loss": 0.6825202703475952, "supervised_tokens": 1411}
+{"split": "train", "step": 21900, "weighted_loss": 0.24054977297782898, "supervised_tokens": 1151}
+{"split": "train", "step": 22000, "weighted_loss": 0.5009781122207642, "supervised_tokens": 1368}
+{"weighted_loss_sum": 126.49556732177734, "unweighted_ce_sum": 15220.865234375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6324778366088867, "unweighted_masked_token_ce": 1.0009117665795357, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 37.77492141723633, "generation_mean_nll": 3.631645332192475, "generation_tokens": 265, "split": "validation", "step": 22000}
+{"split": "train_interval", "step": 22000, "weighted_loss": 0.4859617351591587, "examples": 4000}
+{"split": "train", "step": 22100, "weighted_loss": 0.5854027271270752, "supervised_tokens": 1360}
+{"split": "train", "step": 22200, "weighted_loss": 0.6090768575668335, "supervised_tokens": 1655}
+{"weighted_loss_sum": 126.58892822265625, "unweighted_ce_sum": 15224.7265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6329446411132813, "unweighted_masked_token_ce": 1.0011656843887684, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 22250}
+{"split": "train_interval", "step": 22250, "weighted_loss": 0.48541444194316863, "examples": 4000}
+{"split": "train", "step": 22300, "weighted_loss": 0.3208051919937134, "supervised_tokens": 1332}
+{"split": "train", "step": 22400, "weighted_loss": 0.9957568645477295, "supervised_tokens": 1456}
+{"split": "train", "step": 22500, "weighted_loss": 0.3872777223587036, "supervised_tokens": 1489}
+{"weighted_loss_sum": 126.3490219116211, "unweighted_ce_sum": 15203.5263671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6317451095581055, "unweighted_masked_token_ce": 0.9997715767204248, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 22500}
+{"split": "train_interval", "step": 22500, "weighted_loss": 0.4987420653104782, "examples": 4000}
+{"split": "train", "step": 22600, "weighted_loss": 0.17110729217529297, "supervised_tokens": 1445}
+{"split": "train", "step": 22700, "weighted_loss": 0.25177085399627686, "supervised_tokens": 993}
+{"weighted_loss_sum": 126.25170135498047, "unweighted_ce_sum": 15203.2109375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6312585067749024, "unweighted_masked_token_ce": 0.9997508343197212, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 22750}
+{"split": "train_interval", "step": 22750, "weighted_loss": 0.46794993251562117, "examples": 4000}
+{"split": "train", "step": 22800, "weighted_loss": 0.22069063782691956, "supervised_tokens": 1073}
+{"split": "train", "step": 22900, "weighted_loss": 0.41363325715065, "supervised_tokens": 1425}
+{"split": "train", "step": 23000, "weighted_loss": 0.7961934804916382, "supervised_tokens": 1741}
+{"weighted_loss_sum": 126.19058227539062, "unweighted_ce_sum": 15194.4541015625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6309529113769531, "unweighted_masked_token_ce": 0.99917499188285, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 35.968788146972656, "generation_mean_nll": 3.582651716290098, "generation_tokens": 264, "split": "validation", "step": 23000}
+{"split": "train_interval", "step": 23000, "weighted_loss": 0.48478467744588855, "examples": 4000}
+{"split": "train", "step": 23100, "weighted_loss": 0.22097887098789215, "supervised_tokens": 851}
+{"split": "train", "step": 23200, "weighted_loss": 0.10608905553817749, "supervised_tokens": 1102}
+{"weighted_loss_sum": 126.20934295654297, "unweighted_ce_sum": 15195.12890625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6310467147827148, "unweighted_masked_token_ce": 0.9992193664924048, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 23250}
+{"split": "train_interval", "step": 23250, "weighted_loss": 0.5223375149965286, "examples": 4000}
+{"split": "train", "step": 23300, "weighted_loss": 0.2881334722042084, "supervised_tokens": 1057}
+{"split": "train", "step": 23400, "weighted_loss": 0.9438760876655579, "supervised_tokens": 1117}
+{"split": "train", "step": 23500, "weighted_loss": 0.29975706338882446, "supervised_tokens": 1322}
+{"weighted_loss_sum": 126.20478820800781, "unweighted_ce_sum": 15193.3037109375, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6310239410400391, "unweighted_masked_token_ce": 0.9990993431273427, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 23500}
+{"split": "train_interval", "step": 23500, "weighted_loss": 0.5059808163642884, "examples": 4000}
+{"split": "train", "step": 23600, "weighted_loss": 0.27509602904319763, "supervised_tokens": 1384}
+{"split": "train", "step": 23700, "weighted_loss": 0.2681344747543335, "supervised_tokens": 1471}
+{"weighted_loss_sum": 126.16508483886719, "unweighted_ce_sum": 15191.6513671875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.630825424194336, "unweighted_masked_token_ce": 0.9989906863409943, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 23750}
+{"split": "train_interval", "step": 23750, "weighted_loss": 0.5068486817777157, "examples": 4000}
+{"split": "train", "step": 23800, "weighted_loss": 0.46639949083328247, "supervised_tokens": 1379}
+{"split": "train", "step": 23900, "weighted_loss": 0.2146393358707428, "supervised_tokens": 1687}
+{"split": "train", "step": 24000, "weighted_loss": 0.6973992586135864, "supervised_tokens": 1385}
+{"weighted_loss_sum": 126.22579956054688, "unweighted_ce_sum": 15193.22265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6311289978027343, "unweighted_masked_token_ce": 0.9990940130367594, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 33.301124572753906, "generation_mean_nll": 3.5055910650289284, "generation_tokens": 265, "split": "validation", "step": 24000}
+{"split": "train_interval", "step": 24000, "weighted_loss": 0.49700589007139206, "examples": 4000}
+{"split": "train", "step": 24100, "weighted_loss": 0.24636472761631012, "supervised_tokens": 1514}
+{"split": "train", "step": 24200, "weighted_loss": 0.396079421043396, "supervised_tokens": 1362}
+{"weighted_loss_sum": 126.24186706542969, "unweighted_ce_sum": 15197.07421875, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6312093353271484, "unweighted_masked_token_ce": 0.9993472886664037, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 24250}
+{"split": "train_interval", "step": 24250, "weighted_loss": 0.47455272459983827, "examples": 4000}
+{"split": "train", "step": 24300, "weighted_loss": 0.4774191975593567, "supervised_tokens": 1350}
+{"split": "train", "step": 24400, "weighted_loss": 0.44129064679145813, "supervised_tokens": 1367}
+{"split": "train", "step": 24500, "weighted_loss": 0.4415736496448517, "supervised_tokens": 1686}
+{"weighted_loss_sum": 126.20793914794922, "unweighted_ce_sum": 15193.7548828125, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.631039695739746, "unweighted_masked_token_ce": 0.9991290118243243, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 24500}
+{"split": "train_interval", "step": 24500, "weighted_loss": 0.47926661011576654, "examples": 4000}
+{"split": "train", "step": 24600, "weighted_loss": 0.23665578663349152, "supervised_tokens": 1142}
+{"split": "train", "step": 24700, "weighted_loss": 0.40516549348831177, "supervised_tokens": 1057}
+{"weighted_loss_sum": 126.18633270263672, "unweighted_ce_sum": 15189.337890625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.6309316635131836, "unweighted_masked_token_ce": 0.9988385539965148, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "split": "validation", "step": 24750}
+{"split": "train_interval", "step": 24750, "weighted_loss": 0.47360172581672666, "examples": 4000}
+{"split": "train", "step": 24800, "weighted_loss": 0.14396706223487854, "supervised_tokens": 1296}
+{"split": "train", "step": 24900, "weighted_loss": 0.34870046377182007, "supervised_tokens": 1329}
+{"split": "train", "step": 25000, "weighted_loss": 0.7072411775588989, "supervised_tokens": 2073}
+{"weighted_loss_sum": 126.24955749511719, "unweighted_ce_sum": 15195.947265625, "valid_examples": 200.0, "supervised_tokens": 15207.0, "eligible_answer_tokens": 12355.0, "masked_tokens": 15207.0, "t_sum": 101.86680603027344, "t_count": 200.0, "weighted_loss": 0.631247787475586, "unweighted_masked_token_ce": 0.9992731811419083, "realized_masked_fraction": 1.2308377175232699, "mean_sampled_t": 0.5093340301513671, "generation_perplexity": 29.524425506591797, "generation_mean_nll": 3.3852178988861423, "generation_tokens": 271, "split": "validation", "step": 25000}
+{"split": "train_interval", "step": 25000, "weighted_loss": 0.5118017755746841, "examples": 4000}

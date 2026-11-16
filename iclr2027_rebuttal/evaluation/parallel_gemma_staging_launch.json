@@ -1,0 +1,10 @@
+{
+  "controller_job_id": "6af9812b29dd05ff03687f61",
+  "url": "https://huggingface.co/jobs/Ruurd/6af9812b29dd05ff03687f61",
+  "plan_id": "78228989046f2f731ff00bbf9414758d87ea456c484f5e5a68d1fee543bdb587",
+  "input_revision": "682a97d1c93dbbe8b4c665b3617def9f18cbb045",
+  "total_compute_ceiling_usd": 12.75,
+  "resume_command": ".venv/bin/python iclr2027_rebuttal/evaluation/campaign.py resume --staging iclr2027_rebuttal/evaluation/parallel_gemma_staging.json",
+  "max_gpu_timeout_seconds": 18000,
+  "controller_timeout_seconds": 28800
+}

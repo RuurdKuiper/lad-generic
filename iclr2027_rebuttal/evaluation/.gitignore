@@ -1,0 +1,22 @@
+# Private benchmark prompts, answers, predictions and original checkpoint weights.
+cache/
+bundle/
+audit/legacy_records.jsonl
+run_inventory.json
+pilot_runs/
+credit_overrides.zip
+original_checkpoints/
+campaign_bundle/
+qwen_diagnostic/
+humaneval_diagnostic/
+generation_diagnostic/
+correction_bundle/
+correction_bundle_pre_priority/
+correction_bundle_failed_start/
+humaneval_bundle/
+humaneval_runs/
+remaining_bundle/
+remaining_runs/
+parallel_bundles/
+parallel_runs/
+llada_manual_check/

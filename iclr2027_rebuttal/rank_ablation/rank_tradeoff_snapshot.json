@@ -1,0 +1,2488 @@
+{
+  "metric": "weighted_loss = 0.9 * answer_loss + 0.1 * padding_loss",
+  "matched_update": 5000,
+  "latest_matched_comparison": {
+    "step": 5000,
+    "loss_128": 1.4143739318847657,
+    "loss_512": 1.3179031372070313,
+    "loss_1024": 1.265038070678711,
+    "loss_2048": 1.254511260986328,
+    "improvement_512_to_1024": 0.05286506652832035,
+    "improvement_1024_to_2048": 0.010526809692382955
+  },
+  "rank1024_finished_25k": false,
+  "slower_2048_vs_512_percent": 12.414999738743205,
+  "slower_2048_vs_1024_percent": 7.183051676752239,
+  "adapter_state_parameter_ratio_2048_to_1024": 2.0,
+  "resources": {
+    "128": {
+      "validation_through_update": 25000,
+      "lora_parameters": 54525952,
+      "median_seconds_per_update": 0.37357641600538044,
+      "mean_seconds_per_update": 0.3735839138701713,
+      "clean_100_update_intervals": 150,
+      "intervals": [
+        {
+          "from": 100,
+          "to": 200,
+          "seconds_per_update": 0.3787094646296464
+        },
+        {
+          "from": 300,
+          "to": 400,
+          "seconds_per_update": 0.37693423456978054
+        },
+        {
+          "from": 400,
+          "to": 500,
+          "seconds_per_update": 0.37595818588044494
+        },
+        {
+          "from": 600,
+          "to": 700,
+          "seconds_per_update": 0.3737543416302651
+        },
+        {
+          "from": 800,
+          "to": 900,
+          "seconds_per_update": 0.37535511014051737
+        },
+        {
+          "from": 900,
+          "to": 1000,
+          "seconds_per_update": 0.37760964520974083
+        },
+        {
+          "from": 1100,
+          "to": 1200,
+          "seconds_per_update": 0.3841010909201577
+        },
+        {
+          "from": 1300,
+          "to": 1400,
+          "seconds_per_update": 0.371311370980693
+        },
+        {
+          "from": 1400,
+          "to": 1500,
+          "seconds_per_update": 0.3797269636893179
+        },
+        {
+          "from": 1600,
+          "to": 1700,
+          "seconds_per_update": 0.37066706964978946
+        },
+        {
+          "from": 1800,
+          "to": 1900,
+          "seconds_per_update": 0.37356444664066657
+        },
+        {
+          "from": 1900,
+          "to": 2000,
+          "seconds_per_update": 0.3757187487091869
+        },
+        {
+          "from": 2100,
+          "to": 2200,
+          "seconds_per_update": 0.37758765189908444
+        },
+        {
+          "from": 2300,
+          "to": 2400,
+          "seconds_per_update": 0.37679713880992494
+        },
+        {
+          "from": 2400,
+          "to": 2500,
+          "seconds_per_update": 0.37692411286057903
+        },
+        {
+          "from": 2600,
+          "to": 2700,
+          "seconds_per_update": 0.37607281886041166
+        },
+        {
+          "from": 2800,
+          "to": 2900,
+          "seconds_per_update": 0.37841706034960226
+        },
+        {
+          "from": 2900,
+          "to": 3000,
+          "seconds_per_update": 0.37384200396947564
+        },
+        {
+          "from": 3100,
+          "to": 3200,
+          "seconds_per_update": 0.3729245242197067
+        },
+        {
+          "from": 3300,
+          "to": 3400,
+          "seconds_per_update": 0.37165743296034637
+        },
+        {
+          "from": 3400,
+          "to": 3500,
+          "seconds_per_update": 0.37053402737015856
+        },
+        {
+          "from": 3600,
+          "to": 3700,
+          "seconds_per_update": 0.3757498031796422
+        },
+        {
+          "from": 3800,
+          "to": 3900,
+          "seconds_per_update": 0.3747979499201756
+        },
+        {
+          "from": 3900,
+          "to": 4000,
+          "seconds_per_update": 0.3721125241799746
+        },
+        {
+          "from": 4100,
+          "to": 4200,
+          "seconds_per_update": 0.3733923189004418
+        },
+        {
+          "from": 4300,
+          "to": 4400,
+          "seconds_per_update": 0.37681439113919624
+        },
+        {
+          "from": 4400,
+          "to": 4500,
+          "seconds_per_update": 0.3724971190199722
+        },
+        {
+          "from": 4600,
+          "to": 4700,
+          "seconds_per_update": 0.36611255530966447
+        },
+        {
+          "from": 4800,
+          "to": 4900,
+          "seconds_per_update": 0.3779203650797717
+        },
+        {
+          "from": 4900,
+          "to": 5000,
+          "seconds_per_update": 0.37007974869105964
+        },
+        {
+          "from": 5100,
+          "to": 5200,
+          "seconds_per_update": 0.3720001738099381
+        },
+        {
+          "from": 5300,
+          "to": 5400,
+          "seconds_per_update": 0.3733917512197513
+        },
+        {
+          "from": 5400,
+          "to": 5500,
+          "seconds_per_update": 0.3781180524197407
+        },
+        {
+          "from": 5600,
+          "to": 5700,
+          "seconds_per_update": 0.3682436502305791
+        },
+        {
+          "from": 5800,
+          "to": 5900,
+          "seconds_per_update": 0.3720672277896665
+        },
+        {
+          "from": 5900,
+          "to": 6000,
+          "seconds_per_update": 0.37545361055992543
+        },
+        {
+          "from": 6100,
+          "to": 6200,
+          "seconds_per_update": 0.37582065613009036
+        },
+        {
+          "from": 6300,
+          "to": 6400,
+          "seconds_per_update": 0.3723766964499373
+        },
+        {
+          "from": 6400,
+          "to": 6500,
+          "seconds_per_update": 0.37125405042083004
+        },
+        {
+          "from": 6600,
+          "to": 6700,
+          "seconds_per_update": 0.38268570393091067
+        },
+        {
+          "from": 6800,
+          "to": 6900,
+          "seconds_per_update": 0.3774327082699165
+        },
+        {
+          "from": 6900,
+          "to": 7000,
+          "seconds_per_update": 0.3812221838592086
+        },
+        {
+          "from": 7100,
+          "to": 7200,
+          "seconds_per_update": 0.3735883853700943
+        },
+        {
+          "from": 7300,
+          "to": 7400,
+          "seconds_per_update": 0.37257630783016793
+        },
+        {
+          "from": 7400,
+          "to": 7500,
+          "seconds_per_update": 0.3720867966604419
+        },
+        {
+          "from": 7600,
+          "to": 7700,
+          "seconds_per_update": 0.3750303748203441
+        },
+        {
+          "from": 7800,
+          "to": 7900,
+          "seconds_per_update": 0.3718105172796641
+        },
+        {
+          "from": 7900,
+          "to": 8000,
+          "seconds_per_update": 0.3773617590405047
+        },
+        {
+          "from": 8100,
+          "to": 8200,
+          "seconds_per_update": 0.36549672920955345
+        },
+        {
+          "from": 8300,
+          "to": 8400,
+          "seconds_per_update": 0.37936790758976713
+        },
+        {
+          "from": 8400,
+          "to": 8500,
+          "seconds_per_update": 0.373493057199521
+        },
+        {
+          "from": 8600,
+          "to": 8700,
+          "seconds_per_update": 0.37347515793982894
+        },
+        {
+          "from": 8800,
+          "to": 8900,
+          "seconds_per_update": 0.3743200947402511
+        },
+        {
+          "from": 8900,
+          "to": 9000,
+          "seconds_per_update": 0.37858973316964695
+        },
+        {
+          "from": 9100,
+          "to": 9200,
+          "seconds_per_update": 0.3771086734707933
+        },
+        {
+          "from": 9300,
+          "to": 9400,
+          "seconds_per_update": 0.3728270510199945
+        },
+        {
+          "from": 9400,
+          "to": 9500,
+          "seconds_per_update": 0.36929334554006343
+        },
+        {
+          "from": 9600,
+          "to": 9700,
+          "seconds_per_update": 0.37290964904008433
+        },
+        {
+          "from": 9800,
+          "to": 9900,
+          "seconds_per_update": 0.37279217423987576
+        },
+        {
+          "from": 9900,
+          "to": 10000,
+          "seconds_per_update": 0.3804880019102711
+        },
+        {
+          "from": 10100,
+          "to": 10200,
+          "seconds_per_update": 0.3713439300004393
+        },
+        {
+          "from": 10300,
+          "to": 10400,
+          "seconds_per_update": 0.36955660342006014
+        },
+        {
+          "from": 10400,
+          "to": 10500,
+          "seconds_per_update": 0.37564918186049906
+        },
+        {
+          "from": 10600,
+          "to": 10700,
+          "seconds_per_update": 0.3744114247499965
+        },
+        {
+          "from": 10800,
+          "to": 10900,
+          "seconds_per_update": 0.3706764621008187
+        },
+        {
+          "from": 10900,
+          "to": 11000,
+          "seconds_per_update": 0.3702622587897349
+        },
+        {
+          "from": 11100,
+          "to": 11200,
+          "seconds_per_update": 0.371197919039987
+        },
+        {
+          "from": 11300,
+          "to": 11400,
+          "seconds_per_update": 0.3738044245098717
+        },
+        {
+          "from": 11400,
+          "to": 11500,
+          "seconds_per_update": 0.3688064265600406
+        },
+        {
+          "from": 11600,
+          "to": 11700,
+          "seconds_per_update": 0.3702658127807081
+        },
+        {
+          "from": 11800,
+          "to": 11900,
+          "seconds_per_update": 0.366609887459781
+        },
+        {
+          "from": 11900,
+          "to": 12000,
+          "seconds_per_update": 0.3735965974291321
+        },
+        {
+          "from": 12100,
+          "to": 12200,
+          "seconds_per_update": 0.3701096938108094
+        },
+        {
+          "from": 12300,
+          "to": 12400,
+          "seconds_per_update": 0.3687833917408716
+        },
+        {
+          "from": 12400,
+          "to": 12500,
+          "seconds_per_update": 0.3711712293792516
+        },
+        {
+          "from": 12600,
+          "to": 12700,
+          "seconds_per_update": 0.3724500288197305
+        },
+        {
+          "from": 12800,
+          "to": 12900,
+          "seconds_per_update": 0.37117636812035926
+        },
+        {
+          "from": 12900,
+          "to": 13000,
+          "seconds_per_update": 0.3765771636995487
+        },
+        {
+          "from": 13100,
+          "to": 13200,
+          "seconds_per_update": 0.378486796739744
+        },
+        {
+          "from": 13300,
+          "to": 13400,
+          "seconds_per_update": 0.370007010869449
+        },
+        {
+          "from": 13400,
+          "to": 13500,
+          "seconds_per_update": 0.37528390752035196
+        },
+        {
+          "from": 13600,
+          "to": 13700,
+          "seconds_per_update": 0.37150960640981795
+        },
+        {
+          "from": 13800,
+          "to": 13900,
+          "seconds_per_update": 0.3734887582005467
+        },
+        {
+          "from": 13900,
+          "to": 14000,
+          "seconds_per_update": 0.37341517096967436
+        },
+        {
+          "from": 14100,
+          "to": 14200,
+          "seconds_per_update": 0.3759898809099104
+        },
+        {
+          "from": 14300,
+          "to": 14400,
+          "seconds_per_update": 0.38039446698967366
+        },
+        {
+          "from": 14400,
+          "to": 14500,
+          "seconds_per_update": 0.3737136171606835
+        },
+        {
+          "from": 14600,
+          "to": 14700,
+          "seconds_per_update": 0.37897315228008666
+        },
+        {
+          "from": 14800,
+          "to": 14900,
+          "seconds_per_update": 0.37055832796031607
+        },
+        {
+          "from": 14900,
+          "to": 15000,
+          "seconds_per_update": 0.3746850056189578
+        },
+        {
+          "from": 15100,
+          "to": 15200,
+          "seconds_per_update": 0.37170994337066077
+        },
+        {
+          "from": 15300,
+          "to": 15400,
+          "seconds_per_update": 0.374307309249416
+        },
+        {
+          "from": 15400,
+          "to": 15500,
+          "seconds_per_update": 0.3726023311004974
+        },
+        {
+          "from": 15600,
+          "to": 15700,
+          "seconds_per_update": 0.3739633119793143
+        },
+        {
+          "from": 15800,
+          "to": 15900,
+          "seconds_per_update": 0.3723249125003349
+        },
+        {
+          "from": 15900,
+          "to": 16000,
+          "seconds_per_update": 0.3749540738097858
+        },
+        {
+          "from": 16100,
+          "to": 16200,
+          "seconds_per_update": 0.3730844395200256
+        },
+        {
+          "from": 16300,
+          "to": 16400,
+          "seconds_per_update": 0.37110942126950247
+        },
+        {
+          "from": 16400,
+          "to": 16500,
+          "seconds_per_update": 0.374375614260789
+        },
+        {
+          "from": 16600,
+          "to": 16700,
+          "seconds_per_update": 0.3780542255297769
+        },
+        {
+          "from": 16800,
+          "to": 16900,
+          "seconds_per_update": 0.36498534093028867
+        },
+        {
+          "from": 16900,
+          "to": 17000,
+          "seconds_per_update": 0.3719176609499846
+        },
+        {
+          "from": 17100,
+          "to": 17200,
+          "seconds_per_update": 0.37236777393962256
+        },
+        {
+          "from": 17300,
+          "to": 17400,
+          "seconds_per_update": 0.37535670978948477
+        },
+        {
+          "from": 17400,
+          "to": 17500,
+          "seconds_per_update": 0.37513981381081973
+        },
+        {
+          "from": 17600,
+          "to": 17700,
+          "seconds_per_update": 0.37368642288958653
+        },
+        {
+          "from": 17800,
+          "to": 17900,
+          "seconds_per_update": 0.3780696580104996
+        },
+        {
+          "from": 17900,
+          "to": 18000,
+          "seconds_per_update": 0.3679652987897862
+        },
+        {
+          "from": 18100,
+          "to": 18200,
+          "seconds_per_update": 0.3756746697996277
+        },
+        {
+          "from": 18300,
+          "to": 18400,
+          "seconds_per_update": 0.3722493862104602
+        },
+        {
+          "from": 18400,
+          "to": 18500,
+          "seconds_per_update": 0.37589844536036254
+        },
+        {
+          "from": 18600,
+          "to": 18700,
+          "seconds_per_update": 0.3690045283699874
+        },
+        {
+          "from": 18800,
+          "to": 18900,
+          "seconds_per_update": 0.36784564251080154
+        },
+        {
+          "from": 18900,
+          "to": 19000,
+          "seconds_per_update": 0.3750846326490864
+        },
+        {
+          "from": 19100,
+          "to": 19200,
+          "seconds_per_update": 0.3699226096202619
+        },
+        {
+          "from": 19300,
+          "to": 19400,
+          "seconds_per_update": 0.37061199589050375
+        },
+        {
+          "from": 19400,
+          "to": 19500,
+          "seconds_per_update": 0.37056436063954606
+        },
+        {
+          "from": 19600,
+          "to": 19700,
+          "seconds_per_update": 0.36970364112057724
+        },
+        {
+          "from": 19800,
+          "to": 19900,
+          "seconds_per_update": 0.3789204580197111
+        },
+        {
+          "from": 19900,
+          "to": 20000,
+          "seconds_per_update": 0.37006488754064776
+        },
+        {
+          "from": 20100,
+          "to": 20200,
+          "seconds_per_update": 0.37822983126039617
+        },
+        {
+          "from": 20300,
+          "to": 20400,
+          "seconds_per_update": 0.3718692284799181
+        },
+        {
+          "from": 20400,
+          "to": 20500,
+          "seconds_per_update": 0.3736935476504732
+        },
+        {
+          "from": 20600,
+          "to": 20700,
+          "seconds_per_update": 0.3754288725100923
+        },
+        {
+          "from": 20800,
+          "to": 20900,
+          "seconds_per_update": 0.37553275874000974
+        },
+        {
+          "from": 20900,
+          "to": 21000,
+          "seconds_per_update": 0.36729576995945534
+        },
+        {
+          "from": 21100,
+          "to": 21200,
+          "seconds_per_update": 0.37449545082054103
+        },
+        {
+          "from": 21300,
+          "to": 21400,
+          "seconds_per_update": 0.377084961530054
+        },
+        {
+          "from": 21400,
+          "to": 21500,
+          "seconds_per_update": 0.37951524410978893
+        },
+        {
+          "from": 21600,
+          "to": 21700,
+          "seconds_per_update": 0.36739320316002705
+        },
+        {
+          "from": 21800,
+          "to": 21900,
+          "seconds_per_update": 0.36861884714104237
+        },
+        {
+          "from": 21900,
+          "to": 22000,
+          "seconds_per_update": 0.3806415357196238
+        },
+        {
+          "from": 22100,
+          "to": 22200,
+          "seconds_per_update": 0.3667439559206832
+        },
+        {
+          "from": 22300,
+          "to": 22400,
+          "seconds_per_update": 0.37228180639096536
+        },
+        {
+          "from": 22400,
+          "to": 22500,
+          "seconds_per_update": 0.37151018776930866
+        },
+        {
+          "from": 22600,
+          "to": 22700,
+          "seconds_per_update": 0.3743428354896605
+        },
+        {
+          "from": 22800,
+          "to": 22900,
+          "seconds_per_update": 0.37532063908991403
+        },
+        {
+          "from": 22900,
+          "to": 23000,
+          "seconds_per_update": 0.3742204416799359
+        },
+        {
+          "from": 23100,
+          "to": 23200,
+          "seconds_per_update": 0.36720814133994284
+        },
+        {
+          "from": 23300,
+          "to": 23400,
+          "seconds_per_update": 0.37642844501999206
+        },
+        {
+          "from": 23400,
+          "to": 23500,
+          "seconds_per_update": 0.373229659589706
+        },
+        {
+          "from": 23600,
+          "to": 23700,
+          "seconds_per_update": 0.3772948378301226
+        },
+        {
+          "from": 23800,
+          "to": 23900,
+          "seconds_per_update": 0.3719652900996152
+        },
+        {
+          "from": 23900,
+          "to": 24000,
+          "seconds_per_update": 0.37678500832058487
+        },
+        {
+          "from": 24100,
+          "to": 24200,
+          "seconds_per_update": 0.37433521843981
+        },
+        {
+          "from": 24300,
+          "to": 24400,
+          "seconds_per_update": 0.3741072676505428
+        },
+        {
+          "from": 24400,
+          "to": 24500,
+          "seconds_per_update": 0.37513347284984777
+        },
+        {
+          "from": 24600,
+          "to": 24700,
+          "seconds_per_update": 0.36667846434982493
+        },
+        {
+          "from": 24800,
+          "to": 24900,
+          "seconds_per_update": 0.3623097126709763
+        },
+        {
+          "from": 24900,
+          "to": 25000,
+          "seconds_per_update": 0.3730920190794859
+        }
+      ],
+      "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "peak_vram_bytes": null
+    },
+    "512": {
+      "validation_through_update": 25000,
+      "lora_parameters": 218103808,
+      "median_seconds_per_update": 0.38571714267018253,
+      "mean_seconds_per_update": 0.38587469380410233,
+      "clean_100_update_intervals": 150,
+      "intervals": [
+        {
+          "from": 100,
+          "to": 200,
+          "seconds_per_update": 0.38993914038990624
+        },
+        {
+          "from": 300,
+          "to": 400,
+          "seconds_per_update": 0.3895349392306525
+        },
+        {
+          "from": 400,
+          "to": 500,
+          "seconds_per_update": 0.3874341206089593
+        },
+        {
+          "from": 600,
+          "to": 700,
+          "seconds_per_update": 0.38583934741909615
+        },
+        {
+          "from": 800,
+          "to": 900,
+          "seconds_per_update": 0.3866803462000098
+        },
+        {
+          "from": 900,
+          "to": 1000,
+          "seconds_per_update": 0.3894374454789795
+        },
+        {
+          "from": 1100,
+          "to": 1200,
+          "seconds_per_update": 0.39263197874999606
+        },
+        {
+          "from": 1300,
+          "to": 1400,
+          "seconds_per_update": 0.38353802197030745
+        },
+        {
+          "from": 1400,
+          "to": 1500,
+          "seconds_per_update": 0.3916391217394266
+        },
+        {
+          "from": 1600,
+          "to": 1700,
+          "seconds_per_update": 0.38306896419962866
+        },
+        {
+          "from": 1800,
+          "to": 1900,
+          "seconds_per_update": 0.3880630482407287
+        },
+        {
+          "from": 1900,
+          "to": 2000,
+          "seconds_per_update": 0.3883413734298665
+        },
+        {
+          "from": 2100,
+          "to": 2200,
+          "seconds_per_update": 0.38948504672036505
+        },
+        {
+          "from": 2300,
+          "to": 2400,
+          "seconds_per_update": 0.3889987758989446
+        },
+        {
+          "from": 2400,
+          "to": 2500,
+          "seconds_per_update": 0.3889747233001981
+        },
+        {
+          "from": 2600,
+          "to": 2700,
+          "seconds_per_update": 0.3881834850995801
+        },
+        {
+          "from": 2800,
+          "to": 2900,
+          "seconds_per_update": 0.391571469589835
+        },
+        {
+          "from": 2900,
+          "to": 3000,
+          "seconds_per_update": 0.384012415149482
+        },
+        {
+          "from": 3100,
+          "to": 3200,
+          "seconds_per_update": 0.3854474980698433
+        },
+        {
+          "from": 3300,
+          "to": 3400,
+          "seconds_per_update": 0.38212935033952816
+        },
+        {
+          "from": 3400,
+          "to": 3500,
+          "seconds_per_update": 0.382276316320058
+        },
+        {
+          "from": 3600,
+          "to": 3700,
+          "seconds_per_update": 0.38840461664949544
+        },
+        {
+          "from": 3800,
+          "to": 3900,
+          "seconds_per_update": 0.3874647413904313
+        },
+        {
+          "from": 3900,
+          "to": 4000,
+          "seconds_per_update": 0.38336462851031683
+        },
+        {
+          "from": 4100,
+          "to": 4200,
+          "seconds_per_update": 0.38571510251029395
+        },
+        {
+          "from": 4300,
+          "to": 4400,
+          "seconds_per_update": 0.3886650155601092
+        },
+        {
+          "from": 4400,
+          "to": 4500,
+          "seconds_per_update": 0.38410868525039404
+        },
+        {
+          "from": 4600,
+          "to": 4700,
+          "seconds_per_update": 0.37898816430941223
+        },
+        {
+          "from": 4800,
+          "to": 4900,
+          "seconds_per_update": 0.3891991370904725
+        },
+        {
+          "from": 4900,
+          "to": 5000,
+          "seconds_per_update": 0.38275734449969606
+        },
+        {
+          "from": 5100,
+          "to": 5200,
+          "seconds_per_update": 0.3841363602201454
+        },
+        {
+          "from": 5300,
+          "to": 5400,
+          "seconds_per_update": 0.38584311787039044
+        },
+        {
+          "from": 5400,
+          "to": 5500,
+          "seconds_per_update": 0.3902321808598936
+        },
+        {
+          "from": 5600,
+          "to": 5700,
+          "seconds_per_update": 0.3791421978699509
+        },
+        {
+          "from": 5800,
+          "to": 5900,
+          "seconds_per_update": 0.3845064996392466
+        },
+        {
+          "from": 5900,
+          "to": 6000,
+          "seconds_per_update": 0.38806340813986023
+        },
+        {
+          "from": 6100,
+          "to": 6200,
+          "seconds_per_update": 0.38826310390024443
+        },
+        {
+          "from": 6300,
+          "to": 6400,
+          "seconds_per_update": 0.38480381927918644
+        },
+        {
+          "from": 6400,
+          "to": 6500,
+          "seconds_per_update": 0.383820218880428
+        },
+        {
+          "from": 6600,
+          "to": 6700,
+          "seconds_per_update": 0.3960699222795665
+        },
+        {
+          "from": 6800,
+          "to": 6900,
+          "seconds_per_update": 0.3889317030494567
+        },
+        {
+          "from": 6900,
+          "to": 7000,
+          "seconds_per_update": 0.39406178446952256
+        },
+        {
+          "from": 7100,
+          "to": 7200,
+          "seconds_per_update": 0.38568170682061464
+        },
+        {
+          "from": 7300,
+          "to": 7400,
+          "seconds_per_update": 0.3858891788206529
+        },
+        {
+          "from": 7400,
+          "to": 7500,
+          "seconds_per_update": 0.3848220396693796
+        },
+        {
+          "from": 7600,
+          "to": 7700,
+          "seconds_per_update": 0.38709638322005047
+        },
+        {
+          "from": 7800,
+          "to": 7900,
+          "seconds_per_update": 0.3846268867899198
+        },
+        {
+          "from": 7900,
+          "to": 8000,
+          "seconds_per_update": 0.38970670840004457
+        },
+        {
+          "from": 8100,
+          "to": 8200,
+          "seconds_per_update": 0.37753349366015754
+        },
+        {
+          "from": 8300,
+          "to": 8400,
+          "seconds_per_update": 0.3917051387100946
+        },
+        {
+          "from": 8400,
+          "to": 8500,
+          "seconds_per_update": 0.3856950184900779
+        },
+        {
+          "from": 8600,
+          "to": 8700,
+          "seconds_per_update": 0.3865727208403405
+        },
+        {
+          "from": 8800,
+          "to": 8900,
+          "seconds_per_update": 0.38567574257031084
+        },
+        {
+          "from": 8900,
+          "to": 9000,
+          "seconds_per_update": 0.39114958202000705
+        },
+        {
+          "from": 9100,
+          "to": 9200,
+          "seconds_per_update": 0.389882373129949
+        },
+        {
+          "from": 9300,
+          "to": 9400,
+          "seconds_per_update": 0.38548794043017554
+        },
+        {
+          "from": 9400,
+          "to": 9500,
+          "seconds_per_update": 0.38116122866980734
+        },
+        {
+          "from": 9600,
+          "to": 9700,
+          "seconds_per_update": 0.384341722499812
+        },
+        {
+          "from": 9800,
+          "to": 9900,
+          "seconds_per_update": 0.38544180374010467
+        },
+        {
+          "from": 9900,
+          "to": 10000,
+          "seconds_per_update": 0.39353372805053366
+        },
+        {
+          "from": 10100,
+          "to": 10200,
+          "seconds_per_update": 0.38435098333051426
+        },
+        {
+          "from": 10300,
+          "to": 10400,
+          "seconds_per_update": 0.3819567469100002
+        },
+        {
+          "from": 10400,
+          "to": 10500,
+          "seconds_per_update": 0.3876953574107029
+        },
+        {
+          "from": 10600,
+          "to": 10700,
+          "seconds_per_update": 0.38571918283007106
+        },
+        {
+          "from": 10800,
+          "to": 10900,
+          "seconds_per_update": 0.38332371719996444
+        },
+        {
+          "from": 10900,
+          "to": 11000,
+          "seconds_per_update": 0.3827033869700972
+        },
+        {
+          "from": 11100,
+          "to": 11200,
+          "seconds_per_update": 0.38461601818911734
+        },
+        {
+          "from": 11300,
+          "to": 11400,
+          "seconds_per_update": 0.38648662306019105
+        },
+        {
+          "from": 11400,
+          "to": 11500,
+          "seconds_per_update": 0.3806382989301346
+        },
+        {
+          "from": 11600,
+          "to": 11700,
+          "seconds_per_update": 0.38316169996978716
+        },
+        {
+          "from": 11800,
+          "to": 11900,
+          "seconds_per_update": 0.3782150349195581
+        },
+        {
+          "from": 11900,
+          "to": 12000,
+          "seconds_per_update": 0.38598322637961247
+        },
+        {
+          "from": 12100,
+          "to": 12200,
+          "seconds_per_update": 0.38209839001996443
+        },
+        {
+          "from": 12300,
+          "to": 12400,
+          "seconds_per_update": 0.38060403552022765
+        },
+        {
+          "from": 12400,
+          "to": 12500,
+          "seconds_per_update": 0.38321080290013926
+        },
+        {
+          "from": 12600,
+          "to": 12700,
+          "seconds_per_update": 0.3849321000801865
+        },
+        {
+          "from": 12800,
+          "to": 12900,
+          "seconds_per_update": 0.38312272807001135
+        },
+        {
+          "from": 12900,
+          "to": 13000,
+          "seconds_per_update": 0.3885797711007763
+        },
+        {
+          "from": 13100,
+          "to": 13200,
+          "seconds_per_update": 0.3905496804206632
+        },
+        {
+          "from": 13300,
+          "to": 13400,
+          "seconds_per_update": 0.38001012585009447
+        },
+        {
+          "from": 13400,
+          "to": 13500,
+          "seconds_per_update": 0.38723977559944617
+        },
+        {
+          "from": 13600,
+          "to": 13700,
+          "seconds_per_update": 0.384905465610791
+        },
+        {
+          "from": 13800,
+          "to": 13900,
+          "seconds_per_update": 0.3856065395893529
+        },
+        {
+          "from": 13900,
+          "to": 14000,
+          "seconds_per_update": 0.38563192207016983
+        },
+        {
+          "from": 14100,
+          "to": 14200,
+          "seconds_per_update": 0.38880853447946717
+        },
+        {
+          "from": 14300,
+          "to": 14400,
+          "seconds_per_update": 0.3935395301191602
+        },
+        {
+          "from": 14400,
+          "to": 14500,
+          "seconds_per_update": 0.38629818517016246
+        },
+        {
+          "from": 14600,
+          "to": 14700,
+          "seconds_per_update": 0.3909660355304368
+        },
+        {
+          "from": 14800,
+          "to": 14900,
+          "seconds_per_update": 0.3819047582405619
+        },
+        {
+          "from": 14900,
+          "to": 15000,
+          "seconds_per_update": 0.3870489189494401
+        },
+        {
+          "from": 15100,
+          "to": 15200,
+          "seconds_per_update": 0.38447725599980914
+        },
+        {
+          "from": 15300,
+          "to": 15400,
+          "seconds_per_update": 0.38601325706928036
+        },
+        {
+          "from": 15400,
+          "to": 15500,
+          "seconds_per_update": 0.3848668166901916
+        },
+        {
+          "from": 15600,
+          "to": 15700,
+          "seconds_per_update": 0.38506101606995796
+        },
+        {
+          "from": 15800,
+          "to": 15900,
+          "seconds_per_update": 0.38481348439003343
+        },
+        {
+          "from": 15900,
+          "to": 16000,
+          "seconds_per_update": 0.387527935130056
+        },
+        {
+          "from": 16100,
+          "to": 16200,
+          "seconds_per_update": 0.38500322722946295
+        },
+        {
+          "from": 16300,
+          "to": 16400,
+          "seconds_per_update": 0.38360095339012334
+        },
+        {
+          "from": 16400,
+          "to": 16500,
+          "seconds_per_update": 0.38694510695058854
+        },
+        {
+          "from": 16600,
+          "to": 16700,
+          "seconds_per_update": 0.3902817879000213
+        },
+        {
+          "from": 16800,
+          "to": 16900,
+          "seconds_per_update": 0.3782744995702524
+        },
+        {
+          "from": 16900,
+          "to": 17000,
+          "seconds_per_update": 0.3836130557500292
+        },
+        {
+          "from": 17100,
+          "to": 17200,
+          "seconds_per_update": 0.3856190862401854
+        },
+        {
+          "from": 17300,
+          "to": 17400,
+          "seconds_per_update": 0.3881758245895617
+        },
+        {
+          "from": 17400,
+          "to": 17500,
+          "seconds_per_update": 0.38756955015007405
+        },
+        {
+          "from": 17600,
+          "to": 17700,
+          "seconds_per_update": 0.3845709756400902
+        },
+        {
+          "from": 17800,
+          "to": 17900,
+          "seconds_per_update": 0.3913917397207115
+        },
+        {
+          "from": 17900,
+          "to": 18000,
+          "seconds_per_update": 0.3810272319894284
+        },
+        {
+          "from": 18100,
+          "to": 18200,
+          "seconds_per_update": 0.3885357789602131
+        },
+        {
+          "from": 18300,
+          "to": 18400,
+          "seconds_per_update": 0.38493658144026993
+        },
+        {
+          "from": 18400,
+          "to": 18500,
+          "seconds_per_update": 0.3870534533599857
+        },
+        {
+          "from": 18600,
+          "to": 18700,
+          "seconds_per_update": 0.3806511253397912
+        },
+        {
+          "from": 18800,
+          "to": 18900,
+          "seconds_per_update": 0.38018791005946695
+        },
+        {
+          "from": 18900,
+          "to": 19000,
+          "seconds_per_update": 0.38957559811067766
+        },
+        {
+          "from": 19100,
+          "to": 19200,
+          "seconds_per_update": 0.3809605893096887
+        },
+        {
+          "from": 19300,
+          "to": 19400,
+          "seconds_per_update": 0.38394862225046383
+        },
+        {
+          "from": 19400,
+          "to": 19500,
+          "seconds_per_update": 0.38330742412013935
+        },
+        {
+          "from": 19600,
+          "to": 19700,
+          "seconds_per_update": 0.38102156918030233
+        },
+        {
+          "from": 19800,
+          "to": 19900,
+          "seconds_per_update": 0.39145761249936184
+        },
+        {
+          "from": 19900,
+          "to": 20000,
+          "seconds_per_update": 0.3818610923807137
+        },
+        {
+          "from": 20100,
+          "to": 20200,
+          "seconds_per_update": 0.39200555269955656
+        },
+        {
+          "from": 20300,
+          "to": 20400,
+          "seconds_per_update": 0.3837829635106027
+        },
+        {
+          "from": 20400,
+          "to": 20500,
+          "seconds_per_update": 0.38603373140911573
+        },
+        {
+          "from": 20600,
+          "to": 20700,
+          "seconds_per_update": 0.38842516331002114
+        },
+        {
+          "from": 20800,
+          "to": 20900,
+          "seconds_per_update": 0.3876825887907762
+        },
+        {
+          "from": 20900,
+          "to": 21000,
+          "seconds_per_update": 0.37934535841923206
+        },
+        {
+          "from": 21100,
+          "to": 21200,
+          "seconds_per_update": 0.38738535045064054
+        },
+        {
+          "from": 21300,
+          "to": 21400,
+          "seconds_per_update": 0.3890618646692019
+        },
+        {
+          "from": 21400,
+          "to": 21500,
+          "seconds_per_update": 0.3919522027403582
+        },
+        {
+          "from": 21600,
+          "to": 21700,
+          "seconds_per_update": 0.37983517920947635
+        },
+        {
+          "from": 21800,
+          "to": 21900,
+          "seconds_per_update": 0.38299858337966725
+        },
+        {
+          "from": 21900,
+          "to": 22000,
+          "seconds_per_update": 0.39335919613949955
+        },
+        {
+          "from": 22100,
+          "to": 22200,
+          "seconds_per_update": 0.37934100319980646
+        },
+        {
+          "from": 22300,
+          "to": 22400,
+          "seconds_per_update": 0.3846996201307047
+        },
+        {
+          "from": 22400,
+          "to": 22500,
+          "seconds_per_update": 0.38399305803934114
+        },
+        {
+          "from": 22600,
+          "to": 22700,
+          "seconds_per_update": 0.38689289142028427
+        },
+        {
+          "from": 22800,
+          "to": 22900,
+          "seconds_per_update": 0.3876142155495472
+        },
+        {
+          "from": 22900,
+          "to": 23000,
+          "seconds_per_update": 0.3876616494206246
+        },
+        {
+          "from": 23100,
+          "to": 23200,
+          "seconds_per_update": 0.3789061076997314
+        },
+        {
+          "from": 23300,
+          "to": 23400,
+          "seconds_per_update": 0.3884354395105038
+        },
+        {
+          "from": 23400,
+          "to": 23500,
+          "seconds_per_update": 0.38524702631984836
+        },
+        {
+          "from": 23600,
+          "to": 23700,
+          "seconds_per_update": 0.3897416511306073
+        },
+        {
+          "from": 23800,
+          "to": 23900,
+          "seconds_per_update": 0.38623091769986784
+        },
+        {
+          "from": 23900,
+          "to": 24000,
+          "seconds_per_update": 0.38940161362988873
+        },
+        {
+          "from": 24100,
+          "to": 24200,
+          "seconds_per_update": 0.3849048121296801
+        },
+        {
+          "from": 24300,
+          "to": 24400,
+          "seconds_per_update": 0.38678426573984326
+        },
+        {
+          "from": 24400,
+          "to": 24500,
+          "seconds_per_update": 0.3866679110995028
+        },
+        {
+          "from": 24600,
+          "to": 24700,
+          "seconds_per_update": 0.3799179576500319
+        },
+        {
+          "from": 24800,
+          "to": 24900,
+          "seconds_per_update": 0.3749915677797981
+        },
+        {
+          "from": 24900,
+          "to": 25000,
+          "seconds_per_update": 0.3858948139299173
+        }
+      ],
+      "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "peak_vram_bytes": null
+    },
+    "1024": {
+      "validation_through_update": 5000,
+      "lora_parameters": 436207616,
+      "median_seconds_per_update": 0.404545231864322,
+      "mean_seconds_per_update": 0.4036421887517596,
+      "clean_100_update_intervals": 30,
+      "intervals": [
+        {
+          "from": 100,
+          "to": 200,
+          "seconds_per_update": 0.4072983560524881
+        },
+        {
+          "from": 300,
+          "to": 400,
+          "seconds_per_update": 0.40499588965903965
+        },
+        {
+          "from": 400,
+          "to": 500,
+          "seconds_per_update": 0.4047274556197226
+        },
+        {
+          "from": 600,
+          "to": 700,
+          "seconds_per_update": 0.4034869728377089
+        },
+        {
+          "from": 800,
+          "to": 900,
+          "seconds_per_update": 0.4039051449205726
+        },
+        {
+          "from": 900,
+          "to": 1000,
+          "seconds_per_update": 0.40671095345169306
+        },
+        {
+          "from": 1100,
+          "to": 1200,
+          "seconds_per_update": 0.40944569346960635
+        },
+        {
+          "from": 1300,
+          "to": 1400,
+          "seconds_per_update": 0.4006820559129119
+        },
+        {
+          "from": 1400,
+          "to": 1500,
+          "seconds_per_update": 0.4088307147892192
+        },
+        {
+          "from": 1600,
+          "to": 1700,
+          "seconds_per_update": 0.39957118678838016
+        },
+        {
+          "from": 1800,
+          "to": 1900,
+          "seconds_per_update": 0.4028535822406411
+        },
+        {
+          "from": 1900,
+          "to": 2000,
+          "seconds_per_update": 0.405012555969879
+        },
+        {
+          "from": 2100,
+          "to": 2200,
+          "seconds_per_update": 0.4063576444098726
+        },
+        {
+          "from": 2300,
+          "to": 2400,
+          "seconds_per_update": 0.40690696086734535
+        },
+        {
+          "from": 2400,
+          "to": 2500,
+          "seconds_per_update": 0.40516189828980714
+        },
+        {
+          "from": 2600,
+          "to": 2700,
+          "seconds_per_update": 0.40533971461001783
+        },
+        {
+          "from": 2800,
+          "to": 2900,
+          "seconds_per_update": 0.4069483405770734
+        },
+        {
+          "from": 2900,
+          "to": 3000,
+          "seconds_per_update": 0.4009201426710933
+        },
+        {
+          "from": 3100,
+          "to": 3200,
+          "seconds_per_update": 0.4021700938930735
+        },
+        {
+          "from": 3300,
+          "to": 3400,
+          "seconds_per_update": 0.39925036071799697
+        },
+        {
+          "from": 3400,
+          "to": 3500,
+          "seconds_per_update": 0.39933561192825434
+        },
+        {
+          "from": 3600,
+          "to": 3700,
+          "seconds_per_update": 0.40560207223054023
+        },
+        {
+          "from": 3800,
+          "to": 3900,
+          "seconds_per_update": 0.40436300810892134
+        },
+        {
+          "from": 3900,
+          "to": 4000,
+          "seconds_per_update": 0.40032871859148145
+        },
+        {
+          "from": 4100,
+          "to": 4200,
+          "seconds_per_update": 0.4029499588580802
+        },
+        {
+          "from": 4300,
+          "to": 4400,
+          "seconds_per_update": 0.40505316136870534
+        },
+        {
+          "from": 4400,
+          "to": 4500,
+          "seconds_per_update": 0.4010818432783708
+        },
+        {
+          "from": 4600,
+          "to": 4700,
+          "seconds_per_update": 0.3952324682893231
+        },
+        {
+          "from": 4800,
+          "to": 4900,
+          "seconds_per_update": 0.40502641137689355
+        },
+        {
+          "from": 4900,
+          "to": 5000,
+          "seconds_per_update": 0.3997166907740757
+        }
+      ],
+      "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "peak_vram_bytes": null
+    },
+    "2048": {
+      "validation_through_update": 25000,
+      "lora_parameters": 872415232,
+      "median_seconds_per_update": 0.4336039249249734,
+      "mean_seconds_per_update": 0.43368734843589674,
+      "clean_100_update_intervals": 150,
+      "intervals": [
+        {
+          "from": 100,
+          "to": 200,
+          "seconds_per_update": 0.4367105520004407
+        },
+        {
+          "from": 300,
+          "to": 400,
+          "seconds_per_update": 0.4356404953193851
+        },
+        {
+          "from": 400,
+          "to": 500,
+          "seconds_per_update": 0.4358769894798752
+        },
+        {
+          "from": 600,
+          "to": 700,
+          "seconds_per_update": 0.43365119594032875
+        },
+        {
+          "from": 800,
+          "to": 900,
+          "seconds_per_update": 0.4347623842803296
+        },
+        {
+          "from": 900,
+          "to": 1000,
+          "seconds_per_update": 0.4382817137998063
+        },
+        {
+          "from": 1100,
+          "to": 1200,
+          "seconds_per_update": 0.4404635688092094
+        },
+        {
+          "from": 1300,
+          "to": 1400,
+          "seconds_per_update": 0.43130938956048337
+        },
+        {
+          "from": 1400,
+          "to": 1500,
+          "seconds_per_update": 0.43917642149026503
+        },
+        {
+          "from": 1600,
+          "to": 1700,
+          "seconds_per_update": 0.4301440578501206
+        },
+        {
+          "from": 1800,
+          "to": 1900,
+          "seconds_per_update": 0.43403355754096995
+        },
+        {
+          "from": 1900,
+          "to": 2000,
+          "seconds_per_update": 0.43587406640988774
+        },
+        {
+          "from": 2100,
+          "to": 2200,
+          "seconds_per_update": 0.43780663394951264
+        },
+        {
+          "from": 2300,
+          "to": 2400,
+          "seconds_per_update": 0.43867163835908285
+        },
+        {
+          "from": 2400,
+          "to": 2500,
+          "seconds_per_update": 0.43707098319078797
+        },
+        {
+          "from": 2600,
+          "to": 2700,
+          "seconds_per_update": 0.4373920592805371
+        },
+        {
+          "from": 2800,
+          "to": 2900,
+          "seconds_per_update": 0.43826662793988364
+        },
+        {
+          "from": 2900,
+          "to": 3000,
+          "seconds_per_update": 0.43176309967064297
+        },
+        {
+          "from": 3100,
+          "to": 3200,
+          "seconds_per_update": 0.433122629809659
+        },
+        {
+          "from": 3300,
+          "to": 3400,
+          "seconds_per_update": 0.4308737937593833
+        },
+        {
+          "from": 3400,
+          "to": 3500,
+          "seconds_per_update": 0.4297550368402153
+        },
+        {
+          "from": 3600,
+          "to": 3700,
+          "seconds_per_update": 0.435882866330212
+        },
+        {
+          "from": 3800,
+          "to": 3900,
+          "seconds_per_update": 0.43538624862907455
+        },
+        {
+          "from": 3900,
+          "to": 4000,
+          "seconds_per_update": 0.43106779027031733
+        },
+        {
+          "from": 4100,
+          "to": 4200,
+          "seconds_per_update": 0.4329406802891754
+        },
+        {
+          "from": 4300,
+          "to": 4400,
+          "seconds_per_update": 0.43682609012001195
+        },
+        {
+          "from": 4400,
+          "to": 4500,
+          "seconds_per_update": 0.4326593430899084
+        },
+        {
+          "from": 4600,
+          "to": 4700,
+          "seconds_per_update": 0.4256693616101984
+        },
+        {
+          "from": 4800,
+          "to": 4900,
+          "seconds_per_update": 0.4382761654199567
+        },
+        {
+          "from": 4900,
+          "to": 5000,
+          "seconds_per_update": 0.42990157050080596
+        },
+        {
+          "from": 5100,
+          "to": 5200,
+          "seconds_per_update": 0.4322435578505974
+        },
+        {
+          "from": 5300,
+          "to": 5400,
+          "seconds_per_update": 0.4343907597602811
+        },
+        {
+          "from": 5400,
+          "to": 5500,
+          "seconds_per_update": 0.4389258217206225
+        },
+        {
+          "from": 5600,
+          "to": 5700,
+          "seconds_per_update": 0.4266219418006949
+        },
+        {
+          "from": 5800,
+          "to": 5900,
+          "seconds_per_update": 0.4321513572207186
+        },
+        {
+          "from": 5900,
+          "to": 6000,
+          "seconds_per_update": 0.43599935083999297
+        },
+        {
+          "from": 6100,
+          "to": 6200,
+          "seconds_per_update": 0.43615903077065016
+        },
+        {
+          "from": 6300,
+          "to": 6400,
+          "seconds_per_update": 0.43224547371966765
+        },
+        {
+          "from": 6400,
+          "to": 6500,
+          "seconds_per_update": 0.43194791082991285
+        },
+        {
+          "from": 6600,
+          "to": 6700,
+          "seconds_per_update": 0.4436654124595225
+        },
+        {
+          "from": 6800,
+          "to": 6900,
+          "seconds_per_update": 0.43731547440052965
+        },
+        {
+          "from": 6900,
+          "to": 7000,
+          "seconds_per_update": 0.441669194039423
+        },
+        {
+          "from": 7100,
+          "to": 7200,
+          "seconds_per_update": 0.4338534542697016
+        },
+        {
+          "from": 7300,
+          "to": 7400,
+          "seconds_per_update": 0.4326254603196867
+        },
+        {
+          "from": 7400,
+          "to": 7500,
+          "seconds_per_update": 0.43235342349973505
+        },
+        {
+          "from": 7600,
+          "to": 7700,
+          "seconds_per_update": 0.43505909365951084
+        },
+        {
+          "from": 7800,
+          "to": 7900,
+          "seconds_per_update": 0.43254185436991976
+        },
+        {
+          "from": 7900,
+          "to": 8000,
+          "seconds_per_update": 0.437050455090357
+        },
+        {
+          "from": 8100,
+          "to": 8200,
+          "seconds_per_update": 0.42521619696053675
+        },
+        {
+          "from": 8300,
+          "to": 8400,
+          "seconds_per_update": 0.43874544541933574
+        },
+        {
+          "from": 8400,
+          "to": 8500,
+          "seconds_per_update": 0.4335827120998874
+        },
+        {
+          "from": 8600,
+          "to": 8700,
+          "seconds_per_update": 0.4334571811801288
+        },
+        {
+          "from": 8800,
+          "to": 8900,
+          "seconds_per_update": 0.43336381345055996
+        },
+        {
+          "from": 8900,
+          "to": 9000,
+          "seconds_per_update": 0.4394277525297366
+        },
+        {
+          "from": 9100,
+          "to": 9200,
+          "seconds_per_update": 0.4370112003502436
+        },
+        {
+          "from": 9300,
+          "to": 9400,
+          "seconds_per_update": 0.43235345804016106
+        },
+        {
+          "from": 9400,
+          "to": 9500,
+          "seconds_per_update": 0.4289319537801202
+        },
+        {
+          "from": 9600,
+          "to": 9700,
+          "seconds_per_update": 0.4327308871108107
+        },
+        {
+          "from": 9800,
+          "to": 9900,
+          "seconds_per_update": 0.43307743398007004
+        },
+        {
+          "from": 9900,
+          "to": 10000,
+          "seconds_per_update": 0.44036592859076334
+        },
+        {
+          "from": 10100,
+          "to": 10200,
+          "seconds_per_update": 0.43141477496013975
+        },
+        {
+          "from": 10300,
+          "to": 10400,
+          "seconds_per_update": 0.43000749044003894
+        },
+        {
+          "from": 10400,
+          "to": 10500,
+          "seconds_per_update": 0.43610097714932633
+        },
+        {
+          "from": 10600,
+          "to": 10700,
+          "seconds_per_update": 0.4342571212199982
+        },
+        {
+          "from": 10800,
+          "to": 10900,
+          "seconds_per_update": 0.43112477171001956
+        },
+        {
+          "from": 10900,
+          "to": 11000,
+          "seconds_per_update": 0.43007276198011823
+        },
+        {
+          "from": 11100,
+          "to": 11200,
+          "seconds_per_update": 0.4315795866900589
+        },
+        {
+          "from": 11300,
+          "to": 11400,
+          "seconds_per_update": 0.43392745875986294
+        },
+        {
+          "from": 11400,
+          "to": 11500,
+          "seconds_per_update": 0.4277034745493438
+        },
+        {
+          "from": 11600,
+          "to": 11700,
+          "seconds_per_update": 0.4304522501397878
+        },
+        {
+          "from": 11800,
+          "to": 11900,
+          "seconds_per_update": 0.42605270668049344
+        },
+        {
+          "from": 11900,
+          "to": 12000,
+          "seconds_per_update": 0.4336082962201908
+        },
+        {
+          "from": 12100,
+          "to": 12200,
+          "seconds_per_update": 0.4306759130489081
+        },
+        {
+          "from": 12300,
+          "to": 12400,
+          "seconds_per_update": 0.42828585622017273
+        },
+        {
+          "from": 12400,
+          "to": 12500,
+          "seconds_per_update": 0.4315591899503488
+        },
+        {
+          "from": 12600,
+          "to": 12700,
+          "seconds_per_update": 0.43307759950053876
+        },
+        {
+          "from": 12800,
+          "to": 12900,
+          "seconds_per_update": 0.43210585894994435
+        },
+        {
+          "from": 12900,
+          "to": 13000,
+          "seconds_per_update": 0.4370452450495213
+        },
+        {
+          "from": 13100,
+          "to": 13200,
+          "seconds_per_update": 0.43877594599034636
+        },
+        {
+          "from": 13300,
+          "to": 13400,
+          "seconds_per_update": 0.42968483255011963
+        },
+        {
+          "from": 13400,
+          "to": 13500,
+          "seconds_per_update": 0.43478968531009743
+        },
+        {
+          "from": 13600,
+          "to": 13700,
+          "seconds_per_update": 0.43227393888053484
+        },
+        {
+          "from": 13800,
+          "to": 13900,
+          "seconds_per_update": 0.43436299986089577
+        },
+        {
+          "from": 13900,
+          "to": 14000,
+          "seconds_per_update": 0.43388013941934334
+        },
+        {
+          "from": 14100,
+          "to": 14200,
+          "seconds_per_update": 0.4364976043696515
+        },
+        {
+          "from": 14300,
+          "to": 14400,
+          "seconds_per_update": 0.4413614715298172
+        },
+        {
+          "from": 14400,
+          "to": 14500,
+          "seconds_per_update": 0.43469491075957195
+        },
+        {
+          "from": 14600,
+          "to": 14700,
+          "seconds_per_update": 0.4378026863699779
+        },
+        {
+          "from": 14800,
+          "to": 14900,
+          "seconds_per_update": 0.42968915661098434
+        },
+        {
+          "from": 14900,
+          "to": 15000,
+          "seconds_per_update": 0.43506018883897923
+        },
+        {
+          "from": 15100,
+          "to": 15200,
+          "seconds_per_update": 0.43203081406070853
+        },
+        {
+          "from": 15300,
+          "to": 15400,
+          "seconds_per_update": 0.4340736128890421
+        },
+        {
+          "from": 15400,
+          "to": 15500,
+          "seconds_per_update": 0.4332574279606342
+        },
+        {
+          "from": 15600,
+          "to": 15700,
+          "seconds_per_update": 0.4332133875298314
+        },
+        {
+          "from": 15800,
+          "to": 15900,
+          "seconds_per_update": 0.433599553629756
+        },
+        {
+          "from": 15900,
+          "to": 16000,
+          "seconds_per_update": 0.43588606734992935
+        },
+        {
+          "from": 16100,
+          "to": 16200,
+          "seconds_per_update": 0.43282572670956143
+        },
+        {
+          "from": 16300,
+          "to": 16400,
+          "seconds_per_update": 0.43183027030900123
+        },
+        {
+          "from": 16400,
+          "to": 16500,
+          "seconds_per_update": 0.4348260927305091
+        },
+        {
+          "from": 16600,
+          "to": 16700,
+          "seconds_per_update": 0.4386610682995524
+        },
+        {
+          "from": 16800,
+          "to": 16900,
+          "seconds_per_update": 0.42500243442016655
+        },
+        {
+          "from": 16900,
+          "to": 17000,
+          "seconds_per_update": 0.4313198559591547
+        },
+        {
+          "from": 17100,
+          "to": 17200,
+          "seconds_per_update": 0.4327284085203428
+        },
+        {
+          "from": 17300,
+          "to": 17400,
+          "seconds_per_update": 0.43557799987029283
+        },
+        {
+          "from": 17400,
+          "to": 17500,
+          "seconds_per_update": 0.43583834821009076
+        },
+        {
+          "from": 17600,
+          "to": 17700,
+          "seconds_per_update": 0.43272946316050365
+        },
+        {
+          "from": 17800,
+          "to": 17900,
+          "seconds_per_update": 0.4390670765098184
+        },
+        {
+          "from": 17900,
+          "to": 18000,
+          "seconds_per_update": 0.4283882753702346
+        },
+        {
+          "from": 18100,
+          "to": 18200,
+          "seconds_per_update": 0.43629757561022414
+        },
+        {
+          "from": 18300,
+          "to": 18400,
+          "seconds_per_update": 0.4327094503096305
+        },
+        {
+          "from": 18400,
+          "to": 18500,
+          "seconds_per_update": 0.4352930859895423
+        },
+        {
+          "from": 18600,
+          "to": 18700,
+          "seconds_per_update": 0.42836509777000176
+        },
+        {
+          "from": 18800,
+          "to": 18900,
+          "seconds_per_update": 0.42807467246893793
+        },
+        {
+          "from": 18900,
+          "to": 19000,
+          "seconds_per_update": 0.4381790429505054
+        },
+        {
+          "from": 19100,
+          "to": 19200,
+          "seconds_per_update": 0.42974266033037567
+        },
+        {
+          "from": 19300,
+          "to": 19400,
+          "seconds_per_update": 0.43137326005031357
+        },
+        {
+          "from": 19400,
+          "to": 19500,
+          "seconds_per_update": 0.4306815275200643
+        },
+        {
+          "from": 19600,
+          "to": 19700,
+          "seconds_per_update": 0.4286566729308106
+        },
+        {
+          "from": 19800,
+          "to": 19900,
+          "seconds_per_update": 0.4398930274497252
+        },
+        {
+          "from": 19900,
+          "to": 20000,
+          "seconds_per_update": 0.42954835877055303
+        },
+        {
+          "from": 20100,
+          "to": 20200,
+          "seconds_per_update": 0.4390379744395614
+        },
+        {
+          "from": 20300,
+          "to": 20400,
+          "seconds_per_update": 0.4317770862602629
+        },
+        {
+          "from": 20400,
+          "to": 20500,
+          "seconds_per_update": 0.43394294698955493
+        },
+        {
+          "from": 20600,
+          "to": 20700,
+          "seconds_per_update": 0.43616952165029943
+        },
+        {
+          "from": 20800,
+          "to": 20900,
+          "seconds_per_update": 0.4370085455605295
+        },
+        {
+          "from": 20900,
+          "to": 21000,
+          "seconds_per_update": 0.4269386251200922
+        },
+        {
+          "from": 21100,
+          "to": 21200,
+          "seconds_per_update": 0.4346676132490393
+        },
+        {
+          "from": 21300,
+          "to": 21400,
+          "seconds_per_update": 0.43726024065050295
+        },
+        {
+          "from": 21400,
+          "to": 21500,
+          "seconds_per_update": 0.43933650898048654
+        },
+        {
+          "from": 21600,
+          "to": 21700,
+          "seconds_per_update": 0.42734175954945386
+        },
+        {
+          "from": 21800,
+          "to": 21900,
+          "seconds_per_update": 0.4286096691899002
+        },
+        {
+          "from": 21900,
+          "to": 22000,
+          "seconds_per_update": 0.4414264968200587
+        },
+        {
+          "from": 22100,
+          "to": 22200,
+          "seconds_per_update": 0.42686900280998086
+        },
+        {
+          "from": 22300,
+          "to": 22400,
+          "seconds_per_update": 0.43290423761005514
+        },
+        {
+          "from": 22400,
+          "to": 22500,
+          "seconds_per_update": 0.43168777151033283
+        },
+        {
+          "from": 22600,
+          "to": 22700,
+          "seconds_per_update": 0.4359137873502914
+        },
+        {
+          "from": 22800,
+          "to": 22900,
+          "seconds_per_update": 0.43544474911992437
+        },
+        {
+          "from": 22900,
+          "to": 23000,
+          "seconds_per_update": 0.4346962002501823
+        },
+        {
+          "from": 23100,
+          "to": 23200,
+          "seconds_per_update": 0.4270219654694665
+        },
+        {
+          "from": 23300,
+          "to": 23400,
+          "seconds_per_update": 0.4368539374496322
+        },
+        {
+          "from": 23400,
+          "to": 23500,
+          "seconds_per_update": 0.4334716405207291
+        },
+        {
+          "from": 23600,
+          "to": 23700,
+          "seconds_per_update": 0.4381660480296705
+        },
+        {
+          "from": 23800,
+          "to": 23900,
+          "seconds_per_update": 0.43235049031092787
+        },
+        {
+          "from": 23900,
+          "to": 24000,
+          "seconds_per_update": 0.4369464427197818
+        },
+        {
+          "from": 24100,
+          "to": 24200,
+          "seconds_per_update": 0.4328599415998906
+        },
+        {
+          "from": 24300,
+          "to": 24400,
+          "seconds_per_update": 0.43441696061054247
+        },
+        {
+          "from": 24400,
+          "to": 24500,
+          "seconds_per_update": 0.4340298521099612
+        },
+        {
+          "from": 24600,
+          "to": 24700,
+          "seconds_per_update": 0.42698189872084186
+        },
+        {
+          "from": 24800,
+          "to": 24900,
+          "seconds_per_update": 0.42143043208983727
+        },
+        {
+          "from": 24900,
+          "to": 25000,
+          "seconds_per_update": 0.4356047076394316
+        }
+      ],
+      "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "peak_vram_bytes": null
+    }
+  },
+  "sources": {
+    "128": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-128/metrics.jsonl",
+      "sha256": "466959d59ebaa9cd5c11e942dc6380692c5f4d6bfd1a6adab7beea3dc97c6713",
+      "hub_revision": "40e4f893ecebf18c09654afc6f3c9efb30f2b7ac"
+    },
+    "512": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-512/metrics.jsonl",
+      "sha256": "d57f107186135383dcbaa7806cbc79a8aa0fe7300352f1c20bf479faaa7350a4",
+      "hub_revision": "40e4f893ecebf18c09654afc6f3c9efb30f2b7ac"
+    },
+    "1024": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-1024/metrics.jsonl",
+      "sha256": "e6d0fdfee07cb9cdde4a817808bb2859163e3e6ea5c6e7ade28471e083165220",
+      "hub_revision": "40e4f893ecebf18c09654afc6f3c9efb30f2b7ac"
+    },
+    "2048": {
+      "file": "outputs/rank-ablation/fp8-checkpoint-v2/rank-2048/metrics.jsonl",
+      "sha256": "eab2e4fef5b864563ef37160d04da247a5139fb9d6a4a859b126428c4384bace",
+      "hub_revision": "40e4f893ecebf18c09654afc6f3c9efb30f2b7ac"
+    }
+  },
+  "memory_evidence": "Parameter counts are measured; increased adapter/gradient/Adam-state storage is inferred under identical precision/optimizer. Peak GPU VRAM was not recorded.",
+  "timing_method": "Median clean logged intervals, excluding validation/checkpoint boundaries and process-clock resets. Training-update times are not end-to-end job durations.",
+  "limits": "One parent, one seed, validation loss only. Diminishing returns and the rank-1024 compromise remain provisional until its matched 25k endpoint."
+}

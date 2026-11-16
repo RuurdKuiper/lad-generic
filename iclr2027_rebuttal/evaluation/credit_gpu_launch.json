@@ -1,0 +1,28 @@
+{
+  "gpu_job_id": "6af05e99e6320c66fad74a2a",
+  "gpu_job_url": "https://huggingface.co/jobs/Ruurd/6af05e99e6320c66fad74a2a",
+  "plan_id": "291d1d8d8680df7e4b1c89d6b3af24fc4c0810155eecfc7f549e2aa37f9cdbce",
+  "input_revision": "9d0a0556433c738c5101501572416060e2091e8b",
+  "limits": {
+    "approved_credit_usd": 4.95,
+    "prior_cost_reserved_usd": 0.291669,
+    "cpu_max_usd": 0.01503,
+    "gpu_minutes": 110,
+    "gpu_max_usd": 4.58337,
+    "total_max_usd": 4.890069,
+    "gpu_timeout_seconds": 6600,
+    "worker_seconds": 6300
+  },
+  "queue": [
+    "gemma_ar",
+    "gemma_d",
+    "llada",
+    "qwen_ar",
+    "qwen_d",
+    "ministral_ar",
+    "ministral_d",
+    "llama_ar",
+    "llama_25k"
+  ],
+  "automatic_followup_gpu_jobs": false
+}

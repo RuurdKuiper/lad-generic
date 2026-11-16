@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "plan_id": "ecc1288ade40c7bdb0f2f3a21f3bf0155eb391945d0ad8226dcd71f86006903d",
+  "input_revision": "cd10b03f4ec52c15d216fc8fa6c69035447e2445",
+  "status": "gpu_running",
+  "total_compute_ceiling_usd": 75.0,
+  "prior_compute_reserved_usd": 4.890069,
+  "cpu_reservations": [
+    {
+      "controller_key": "b0f310a1-097d-4784-aa4b-116488890d80",
+      "reserved_usd": 0.37
+    }
+  ],
+  "gpu_jobs": [
+    {
+      "job_id": "6af08fd00e0338d1bb84bd02",
+      "url": "https://huggingface.co/jobs/Ruurd/6af08fd00e0338d1bb84bd02",
+      "created_at": "2026-11-08T15:05:52.125000+00:00",
+      "timeout_seconds": 14400,
+      "reserved_usd": 10.041747,
+      "status": "COMPLETED",
+      "observed_finished_at": "2026-11-08T18:53:58.153954+00:00",
+      "cost_upper_usd": 9.58341,
+      "progress_status": "time_limit"
+    },
+    {
+      "job_id": "6af0c5470e0338d1bb84d18b",
+      "url": "https://huggingface.co/jobs/Ruurd/6af0c5470e0338d1bb84d18b",
+      "created_at": "2026-11-08T18:53:59.498000+00:00",
+      "timeout_seconds": 14400,
+      "reserved_usd": 10.041747,
+      "status": "COMPLETED",
+      "observed_finished_at": "2026-11-08T22:41:36.483578+00:00",
+      "cost_upper_usd": 9.541743,
+      "progress_status": "time_limit"
+    },
+    {
+      "job_id": "6af0faa1e6320c66fad79409",
+      "url": "https://huggingface.co/jobs/Ruurd/6af0faa1e6320c66fad79409",
+      "created_at": "2026-11-08T22:41:37.321000+00:00",
+      "timeout_seconds": 14400,
+      "reserved_usd": 10.041747,
+      "status": "COMPLETED",
+      "observed_finished_at": "2026-11-09T02:29:13.926012+00:00",
+      "cost_upper_usd": 9.541743,
+      "progress_status": "time_limit"
+    },
+    {
+      "job_id": "6af12ffae6320c66fad7b98d",
+      "url": "https://huggingface.co/jobs/Ruurd/6af12ffae6320c66fad7b98d",
+      "created_at": "2026-11-09T02:29:14.704000+00:00",
+      "timeout_seconds": 14400,
+      "reserved_usd": 10.041747,
+      "status": "SCHEDULING"
+    }
+  ]
+}

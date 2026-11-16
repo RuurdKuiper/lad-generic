@@ -1,0 +1,48 @@
+{
+  "plan_id": "ecc1288ade40c7bdb0f2f3a21f3bf0155eb391945d0ad8226dcd71f86006903d",
+  "status": "running",
+  "scored_items": 17594,
+  "target_items": 21640,
+  "elapsed_seconds": 9746.069933554973,
+  "current_model": "ministral_d",
+  "counts_by_model": {
+    "gemma_d": 1125,
+    "gemma_ar": 2164,
+    "llada": 1709,
+    "qwen_d": 1893,
+    "qwen_ar": 1858,
+    "ministral_d": 1777,
+    "ministral_ar": 1765,
+    "llama_25k": 1765,
+    "llama_50k": 1773,
+    "llama_ar": 1765
+  },
+  "blocked_models": {
+    "gemma_d": {
+      "reason": "replay_score_mismatch",
+      "count": 3
+    }
+  },
+  "original_assets_used": {
+    "gemma_d": {
+      "revision": "5dfa62394d2a6d316bc1b1c4fec50a594fec4096",
+      "sha256": "cf4eafa39c596b237e183f56800a230a8991c50d635d2e21291b90a3b529bfee"
+    },
+    "qwen_d": {
+      "revision": "82a7443c3cf7e4776ec5b5ccfca5a619245850bc",
+      "sha256": "e191a5bf80df7f30c578a73770e97804bb05ebe80cebfae27e5b4e595761baee"
+    },
+    "ministral_d": {
+      "revision": "d06ea3d67be655c766881748fc1ed71fd6edb203",
+      "sha256": "29dd4dda4d412423d29fead5c1ac3cd094fe005d442c97efdc97bb2cf31ef426"
+    },
+    "llama_25k": {
+      "revision": "9e1207d9aa6e129d1d5b4fc687480c54b6e8c5a7",
+      "sha256": "67f68055159634a61654f38e5fba0b8f640275167a39f6ac2c7a08cbb1554f10"
+    },
+    "llama_50k": {
+      "revision": "d029656ad35a0ea002a86dde25a3e0bc9d4434cd",
+      "sha256": "7ca9c7fa4ecfcefdb725ef9ab26da48b4d7f339e875b61cd2a956ece40039c0e"
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "cap_usd": 42.0,
+  "jobs": [
+    {
+      "role": "build",
+      "job_id": "6afa176023985fb9cd83b58a",
+      "url": "https://huggingface.co/jobs/Ruurd/6afa176023985fb9cd83b58a",
+      "flavor": "cpu-upgrade",
+      "timeout_seconds": 3600,
+      "reserved_usd": 0.0305,
+      "created_at": "2026-11-15T20:34:40.025000+00:00",
+      "input_revision": "fc44dd3f488fb0f6ed533b6a1845e9e14ef45336",
+      "status": "ERROR",
+      "provider_started_at": "2026-11-15T20:35:32.127Z",
+      "provider_finished_at": "2026-11-15T20:36:00.495Z",
+      "provider_durations": {
+        "schedulingSecs": 52,
+        "runningSecs": 28,
+        "totalSecs": 80
+      },
+      "cost_upper_usd": 0.0015,
+      "cost_upper_basis": "Provider totalSecs, including scheduling/starting; round up to minutes plus one billing-minute contingency"
+    },
+    {
+      "role": "build",
+      "job_id": "6afa188129dd05ff036923e6",
+      "url": "https://huggingface.co/jobs/Ruurd/6afa188129dd05ff036923e6",
+      "flavor": "cpu-upgrade",
+      "timeout_seconds": 3600,
+      "reserved_usd": 0.0305,
+      "created_at": "2026-11-15T20:39:29.031000+00:00",
+      "input_revision": "7c8e4c1a971eff8415a9dfed95c6f2bcb7a4dff1",
+      "status": "COMPLETED",
+      "provider_started_at": "2026-11-15T20:39:31.819Z",
+      "provider_finished_at": "2026-11-15T20:42:59.252Z",
+      "provider_durations": {
+        "schedulingSecs": 2,
+        "runningSecs": 207,
+        "totalSecs": 210
+      },
+      "cost_upper_usd": 0.0025,
+      "cost_upper_basis": "Provider totalSecs, including scheduling/starting; round up to minutes plus one billing-minute contingency"
+    },
+    {
+      "role": "training",
+      "job_id": "6afa1a8e29dd05ff03692743",
+      "url": "https://huggingface.co/jobs/Ruurd/6afa1a8e29dd05ff03692743",
+      "flavor": "rtx-pro-6000",
+      "timeout_seconds": 50400,
+      "reserved_usd": 38.545553,
+      "created_at": "2026-11-15T20:48:14.247000+00:00",
+      "status": "ERROR",
+      "confirmed_stopped_at": "2026-11-15T21:00:43.356323+00:00",
+      "cost_upper_usd": 0.320831,
+      "input_revision": "15e0841751e0fffcbf5fcf4c81ba92152a6bc974",
+      "provider_started_at": "2026-11-15T20:48:18.036Z",
+      "provider_finished_at": "2026-11-15T20:53:18.066Z",
+      "provider_durations": {
+        "schedulingSecs": 3,
+        "runningSecs": 300,
+        "totalSecs": 303
+      },
+      "cost_upper_basis": "Provider totalSecs, including scheduling/starting; round up to minutes plus one billing-minute contingency"
+    },
+    {
+      "role": "training",
+      "job_id": "6afa1def23985fb9cd83bc2c",
+      "url": "https://huggingface.co/jobs/Ruurd/6afa1def23985fb9cd83bc2c",
+      "flavor": "rtx-pro-6000",
+      "input_revision": "ac79d63b638c28fe95ff554eaff39042a3026f06",
+      "runtime_revision": "ac79d63b638c28fe95ff554eaff39042a3026f06",
+      "timeout_seconds": 50040,
+      "reserved_usd": 38.270555,
+      "created_at": "2026-11-15T21:02:39.409000+00:00",
+      "status": "COMPLETED",
+      "provider_started_at": "2026-11-15T21:04:13.240Z",
+      "provider_finished_at": "2026-11-16T06:13:57.620Z",
+      "provider_durations": {
+        "schedulingSecs": 93,
+        "runningSecs": 32984,
+        "totalSecs": 33078
+      },
+      "cost_upper_usd": 25.345648999999998,
+      "cost_upper_basis": "Provider totalSecs, including scheduling/starting; round up to minutes plus one billing-minute contingency"
+    },
+    {
+      "role": "training-1024",
+      "job_id": "6afaaed223985fb9cd8452fa",
+      "url": "https://huggingface.co/jobs/Ruurd/6afaaed223985fb9cd8452fa",
+      "flavor": "rtx-pro-6000",
+      "input_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+      "runtime_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+      "timeout_seconds": 18000,
+      "reserved_usd": 13.795733,
+      "created_at": "2026-11-16T07:20:50.758000+00:00"
+    }
+  ],
+  "repo": "Ruurd/iclr2027-rank-ablation",
+  "input_revision": "c333ae2669d7d76faab394c7f9db9272bccc7ff6",
+  "image": "pytorch/pytorch@sha256:a7103283ea7113e10ae5d014bd2342acebda0bc53164b2f7b1dd6eb7a766bdb6",
+  "format_fix": "FP8 recovery uses Torch serialization and explicitly retains calibration state; failed attempt preserved in rank-2048/, corrected study in fp8-checkpoint-v2/.",
+  "planning_envelope_usd": 41.466212999999996,
+  "startup_contingency_usd": 2.0,
+  "rank1024_additional_cap_usd": 17,
+  "rank1024_startup_contingency_usd": 2
+}

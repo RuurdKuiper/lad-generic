@@ -21,7 +21,7 @@
 \maketitle
 
 \begin{abstract}
-Unlike autoregressive (AR) models, diffusion language models (DLMs) permit parallel token updates, flexible generation, and bidirectional attention, but leading systems rely on costly pretraining or full-model fine-tuning. We present Build Your Own DLM (BYOD), a generalizable LoRA-only recipe for parameter-efficient AR-to-DLM conversion. Without architecture-specific tuning, BYOD induces diffusion generation in Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B; to our knowledge, this is the first reported AR-to-DLM conversion of a Mistral-8B model. The adapters comprise 4.1--5.8\% of final parameters while every base-model parameter remains frozen; each 25,000-iteration conversion needs at most 102.4M tokens, processed in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use bidirectional context in a controlled attention test, and retain substantial parent-model knowledge. BYOD-Gemma is the strongest BYOD conversion on our nine-task evaluation, reaching 52.4\% average accuracy compared with 49.6\% for LLaDA 8B Instruct in the same harness. Open-generation quality at low network function evaluation (NFE) budgets remains the principal limitation: BYOD perplexity is 8.3--11.1 versus 4.1 for LLaDA when generating 128 tokens in 64 steps. To enable further experimentation and inspection, we release our training and evaluation code, converted models, and accessible interactive demos upon acceptance. BYOD thus provides a practical route for extending diffusion generation to other existing model families while identifying the gap that efficient conversion must next close.
+Unlike autoregressive (AR) models, diffusion language models (DLMs) permit parallel token updates, flexible generation, and bidirectional attention, but leading systems rely on costly pretraining or full-model fine-tuning. We present Build Your Own DLM (BYOD), a generalizable LoRA-only recipe for parameter-efficient AR-to-DLM conversion. Without architecture-specific tuning, BYOD induces diffusion generation in Gemma 2 9B, Llama 3.1 8B, Qwen2.5 7B, and Ministral 8B; to our knowledge, this is the first reported AR-to-DLM conversion of a Mistral-8B model. The adapters comprise 4.1--5.8\% of final parameters while every base-model parameter remains frozen; each 25,000-iteration conversion needs at most 102.4M tokens, processed in 3.1--4.0 hours on one Google Colab GPU. All four models generate from fully masked sequences, use bidirectional context in a controlled attention test, and show benchmark performance indicative of substantial parent-model knowledge retention. The BYOD converted models reach average accuracies between 47.9\% and 52.4\% on our nine-task evaluation, compared with 49.6\% for LLaDA 8B Instruct in the same harness. Open-generation quality at low network function evaluation (NFE) budgets remains the principal limitation: BYOD perplexity is 8.3--11.1 versus 4.1 for LLaDA when generating 128 tokens in 64 steps. To enable further experimentation and inspection, we release our training and evaluation code, converted models, and accessible interactive demos upon acceptance. BYOD thus provides a practical route for extending diffusion generation to other existing model families while identifying the gap that efficient conversion must next close.
 
 \noindent\textbf{Code:} After acceptance.\quad\textbf{BYOD demos:}
 \href{https://huggingface.co/spaces/Dovelove/byod-gemma-2-9b}{Gemma} $\mid$
@@ -111,19 +111,21 @@ We then combine the answer and padding losses:
 Here, $p_{\phi,\theta}$ is the conditional token distribution, $\phi$ denotes the frozen parent parameters, and $\theta$ the LoRA parameters. The first terminating EOS is included as a genuine answer token; all subsequent EOS tokens are treated as padding. The factor $1/t$ corrects for the sampled masking rate. Prompt and chat-template tokens remain visible to the model and are not part of the loss. Training masks are resampled online; validation masks are fixed by example index and seed.
 
 \begin{table}[t]
-\caption{Diffusion model names matched to parent models, their trainable parameter counts, and measured time for 25,000 updates. All trainable parameters are rank-1024 Q/V LoRA weights.}
+\caption{Parent-model and adapter parameter counts, and measured time for 25,000 updates. Parent counts include shared embedding/output weights once; totals add the rank-1024 Q/V LoRA weights.}
 \label{tab:models}
 \centering
 \small
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrrrr}
 \toprule
-Diffusion model & AR parent & Total parameters & Trainable & Trainable (\%) & Time (h) \\
+Diffusion model & AR parent & Parent parameters & Total parameters & Trainable & Trainable (\%) & Time (h) \\
 \midrule
-BYOD-Gemma & Gemma 2 9B IT & 10.732B & 572.5M & 5.33 & 4.0 \\
-BYOD-Qwen & Qwen2.5 7B Instruct & 7.939B & 323.0M & 4.07 & 3.1 \\
-BYOD-Ministral & Ministral 8B Instruct 2410 & 8.511B & 490.7M & 5.77 & 3.4 \\
-BYOD-Llama & Llama 3.1 8B Instruct & 8.466B & 436.2M & 5.15 & 3.2 \\
+% Original counts from the pinned parent configs in evaluation/hub_lock.json:
+% Gemma 9,241,705,984; Qwen 7,615,616,512; Ministral 8,019,808,256; Llama 8,030,261,248.
+BYOD-Gemma & Gemma 2 9B IT & 9.242B & 9.814B & 572.5M & 5.83 & 4.0 \\
+BYOD-Qwen & Qwen2.5 7B Instruct & 7.616B & 7.939B & 323.0M & 4.07 & 3.1 \\
+BYOD-Ministral & Ministral 8B Instruct 2410 & 8.020B & 8.511B & 490.7M & 5.77 & 3.4 \\
+BYOD-Llama & Llama 3.1 8B Instruct & 8.030B & 8.466B & 436.2M & 5.15 & 3.2 \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -251,7 +253,7 @@ Finally, the automatic generation metrics cover only part of text quality. Phi-4
 
 \section{Conclusion}
 
-\method{} converts instruction-tuned AR checkpoints across four families into bidirectional masked generators in a few hours on one Google Colab GPU while retaining substantial parent-model knowledge. Fluency and diversity nevertheless trail the AR parents and LLaDA, especially when NFE is below output length. A promising next step is partial or full diffusion fine-tuning initialized from the merged model, testing whether quality can improve without eroding retained capabilities. BYOD thereby enables rapid, controlled diffusion experiments across established model families with minimal compute infrastructure.
+\method{} converts instruction-tuned AR checkpoints across four families into bidirectional masked generators in a few hours on one Google Colab GPU while showing benchmark performance indicative of substantial parent-model knowledge retention. Fluency and diversity nevertheless trail the AR parents and LLaDA, especially when NFE is below output length. A promising next step is partial or full diffusion fine-tuning initialized from the merged model, testing whether quality can improve without eroding retained capabilities. BYOD thereby enables rapid, controlled diffusion experiments across established model families with minimal compute infrastructure.
 
 
 \section*{Reproducibility Statement}
@@ -336,7 +338,7 @@ Both 8B conversions start from Llama 3.1 8B Instruct, but their training and eva
 \section{LoRA-rank ablation}
 \label{app:rank-ablation}
 
-We run a separate validation-loss experiment on Llama 3.1 8B Instruct at ranks 128, 512, 1024 and 2048. All runs use Q/V adapters, $\alpha=r$, zero adapter dropout, frozen backbone parameters, the same data order and seed (42), batch size 16, sequence length 256, and a learning rate of $10^{-5}$ with cosine decay and 100 warmup updates. Each run completes 25,000 updates. The validation objective is $0.9\,\mathcal{L}_{\mathrm{answer}}+0.1\,\mathcal{L}_{\mathrm{padding}}$, with each term normalized separately. We evaluate the same 200 validation examples with fixed corruptions every 250 updates. These runs do not replace the original benchmarked BYOD-Llama model.
+We run a separate validation-loss experiment on Llama 3.1 8B Instruct at ranks 128, 512, 1024 and 2048. We evaluate the same 200 validation examples with fixed corruptions every 250 updates. These runs do not replace the original benchmarked BYOD-Llama model.
 
 \begin{figure}[ht]
 \centering
@@ -362,15 +364,13 @@ Rank & Adapter parameters (M) & Validation loss at 25k & Seconds/update \\
 \end{tabular}
 \end{table}
 
-Rank 1024 was chosen to balance validation quality with single-A100 training. In the original implementation, this accommodated per-device batch size 16 on an 80GB A100 or batch size 8 on a 40GB A100. These configurations describe the original implementation; the controlled rank study uses RTX PRO 6000 GPUs. Memory requirements depend on implementation and training settings.
+Rank 1024 was chosen to balance validation quality with single-A100 training. In the original implementation, this accommodated per-device batch size 16 on an 80GB A100 or batch size 8 on a 40GB A100, which were commonly available through Google Colab in 2025 and 2026. Memory requirements depend on implementation and training settings. For our final experimentation runs, RTX PRO 6000 GPUs were used.
 
 At 25,000 matched updates, increasing rank from 512 to 1024 reduces validation loss by 0.0427; increasing it from 1024 to 2048 reduces loss by 0.0504. The latter increase adds twice as many rank units and adapter parameters: 436.2M rather than 218.1M additional parameters. The loss reduction per added parameter is therefore about 41\% smaller for the latter increase. This is a diminishing return per added parameter, rather than necessarily a smaller absolute loss reduction.
 
-Rank 2048 takes about 7.6\% longer per update than rank 1024 and doubles its adapter parameter count. The runs use the same RTX PRO 6000 GPU type, with rank 1024 using separate allocations. At fixed precision and optimizer, adapter parameters, gradients and optimizer state grow with rank. This is not a measured comparison of peak GPU memory across ranks.
+Rank 2048 takes about 7.6\% longer per update than rank 1024 and doubles its adapter parameter count. The runs use the same RTX PRO 6000 GPU type, with rank 1024 using separate allocations. At fixed precision and optimizer, adapter parameters, gradients and optimizer state grow with rank.
 
-These results support rank 1024 as a practical quality/resource trade-off under the original single-GPU constraint; rank 2048 still gives lower validation loss. They do not establish a globally optimal rank or downstream benchmark gains: this is a validation-only experiment on one parent and one seed. Earlier exploratory tests of other attention-projection targets, MLP adapters and learning rates informed our configuration, but were not retained as a systematic controlled sweep. A full search over these interacting choices was outside this study's scope.
-
-Label alignment and the 0.9/0.1 answer/padding loss weights remain fixed throughout this rank study. Unshifted labels implement the same-position reconstruction target in Equation~\ref{eq:region-loss}; we have not independently ablated this alignment. Earlier exploratory loss-weight trials informed the configuration, but do not establish optimal weights or replace a controlled sensitivity study.
+These results support rank 1024 as a practical quality/resource trade-off under the original single-GPU constraint; rank 2048 still gives lower validation loss. Earlier exploratory tests of other attention-projection targets, MLP adapters and learning rates informed our configuration, but were not retained as a systematic controlled sweep. A full search over these interacting choices was outside this study's scope.
 
 
 \section{Benchmark coverage and uncertainty}
@@ -668,24 +668,24 @@ LLaDA 8B Instruct & 100\% & 0\% & +100 pp & 100\% \\
 Table~\ref{tab:published} places our primary Llama conversion beside values reported by other diffusion-model papers \citep{nie2025llada,ye2025dream,nie2026illada,fu2025efficientdlm}. The BYOD column uses our common harness, whereas every other column uses its source paper's evaluation protocol. Differences in prompts, subsets, generation budgets, answer extraction, and execution environments prevent direct ranking; the table is included only to provide scale and task coverage. NR means that the source did not report a value for that task.
 
 \begin{table}[h]
-\caption{Our Llama result and protocol-separated published diffusion-model accuracies. Bold marks the largest reported value in each row; it does not imply a controlled comparison. No cross-task averages are shown because task coverage differs by model.}
+\caption{Our revised BYOD-Llama-25k results from Table~\ref{tab:accuracy} and protocol-separated published diffusion-model accuracies. BYOD uses 250 questions per task, or all 164 HumanEval questions. Bold marks the largest reported value in each row; it does not imply a controlled comparison. No cross-task averages are shown because task coverage differs by model.}
 \label{tab:published}
 \centering
 \scriptsize
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
-Task & BYOD-Llama (ours) & LLaDA & Dream-Inst. & iLLaDA-Inst. & Efficient-DLM 8B \\
+Task & BYOD-Llama-25k (ours) & LLaDA & Dream-Inst. & iLLaDA-Inst. & Efficient-DLM 8B \\
 \midrule
-ARC-C     & .832 & \textbf{.885} & NR & NR & .619 \\
-GPQA      & .296 & \textbf{.333} & .330 & NR & NR \\
-GSM8K     & .656 & .694 & .810 & \textbf{.890} & .883 \\
-HellaSwag & .704 & \textbf{.746} & NR & NR & .725 \\
-HumanEval & .312 & .494 & .555 & .659 & \textbf{.683} \\
-MATH      & .256 & .319 & .392 & \textbf{.567} & .501 \\
-MBPP      & .432 & .410 & .588 & .580 & \textbf{.610} \\
-MMLU      & .592 & .655 & .670 & .716 & \textbf{.772} \\
-MMLU-Pro  & .304 & .370 & .433 & \textbf{.523} & NR \\
+ARC-C     & .828 & \textbf{.885} & NR & NR & .619 \\
+GPQA      & .276 & \textbf{.333} & .330 & NR & NR \\
+GSM8K     & .648 & .694 & .810 & \textbf{.890} & .883 \\
+HellaSwag & .728 & \textbf{.746} & NR & NR & .725 \\
+HumanEval & .250 & .494 & .555 & .659 & \textbf{.683} \\
+MATH      & .228 & .319 & .392 & \textbf{.567} & .501 \\
+MBPP      & .408 & .410 & .588 & .580 & \textbf{.610} \\
+MMLU      & .612 & .655 & .670 & .716 & \textbf{.772} \\
+MMLU-Pro  & .336 & .370 & .433 & \textbf{.523} & NR \\
 \bottomrule
 \end{tabular}}
 \end{table}
